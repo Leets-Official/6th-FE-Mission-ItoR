@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 커스텀 유틸리티 클래스*/
+.toast-container {
+  @apply inline-flex h-10 px-3 py-2 justify-center items-center gap-1 flex-shrink-0 rounded-[25px] border transition-all duration-200;
+}
+
+.page-header-container {
+  @apply flex max-w-page-header w-full p-page-header justify-between items-center bg-white/90 backdrop-blur-sm;
+}
