@@ -23,7 +23,6 @@ export default {
           DEFAULT: '#00a1ff',
           hover: '#0088e6',
           active: '#0070cc',
-          6: '#1890FF', // Primary-6
         },
 
         // 중성 색상
