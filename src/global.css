@@ -1,39 +1,37 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* === 색 변수 === */
+/* ===== Color tokens ===== */
 @layer base {
   :root {
-    --Gray96: #F5F5F5;
-    --Gray90: #E6E6E6;
-    --Black: #000000;
-    --Gray20: #333333;
-    --Gray56: #909090;
-    --Point: #00A1FF;
-    --White: #FFFFFF;
-    --Ink: #111112;
+    --Point:  #00A1FF;
+    --White:  #FFFFFF;
+
+    --Gray-7:  #111112;
+    --Gray20:  #333333;
+    --Gray56:  #909090;
+    --Gray90:  #E6E6E6;
   }
 
-  /* 전체 기본 폰트 */
   html, body, #root {
     height: 100%;
-    font-family: 'Noto Sans KR', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  }
+
+  /* ===== Base font (14 / 160% / -0.07px) ===== */
+  body {
+    font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 160%;
+    letter-spacing: -0.07px;
+    color: var(--Gray20);
+    background: #fafafa;
   }
 }
 
-/* === 공통 버튼 유틸 === */
+/* ===== Button reset (optional but tidy) ===== */
 @layer components {
-  .btn {
-    @apply inline-flex items-center justify-center rounded-full px-3 py-2
-           text-sm font-normal whitespace-nowrap transition-colors tracking-[-0.07px];
-    line-height: 1.6; /* 160% */
-  }
-  .btn-outline {
-    @apply border text-[var(--Point)] border-[var(--Point)]
-           bg-transparent hover:bg-[var(--Point)] hover:text-white;
-  }
-  .btn-ghost {
-    @apply border border-[var(--Gray56)] bg-[var(--White)] text-[var(--Gray20)] hover:bg-gray-50;
+  .btn-reset {
+    @apply outline-none select-none;
   }
 }
