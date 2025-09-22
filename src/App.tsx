@@ -1,15 +1,25 @@
 import Button from "./components/ui/Button";
+import SmallButton from "./components/ui/SmallButton";
 
 function App() {
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center gap-4 p-6">
-      <Button leftIcon variant="outlinePointWhite">깃로그 시작하기</Button>
-      <Button leftIcon variant="outlineGrayWhite">깃로그 시작하기</Button>
-      <Button leftIcon variant="outlineGrayGray90">깃로그 시작하기</Button>
-      <Button leftIcon variant="solidWhite">깃로그 시작하기</Button>
-      <Button leftIcon variant="solidGray90">깃로그 시작하기</Button>
-      <Button leftIcon variant="solidDark">깃로그 시작하기</Button>
+    <div className="min-h-dvh flex flex-col items-center justify-center gap-6 p-6 bg-gray-100">
+      {/* 큰 버튼들 */}
+      <div className="flex flex-col gap-4">
+        <Button leftIcon variant="outlinePointWhite">깃로그 시작하기</Button>
+        <Button leftIcon variant="outlineGrayWhite">깃로그 시작하기</Button>
+        <Button leftIcon variant="solidWhite">깃로그 시작하기</Button>
+        <Button leftIcon variant="outlineGrayGray90">깃로그 시작하기</Button>
+        <Button leftIcon variant="solidGray90">깃로그 시작하기</Button>
+        <Button leftIcon variant="solidDark">깃로그 시작하기</Button>
+        <Button leftIcon variant="solidDarkAlt">깃로그 시작하기</Button>
+      </div>
 
+      {/* 작은 버튼들 */}
+      <div className="flex flex-col gap-4">
+        <SmallButton leftIcon variant="ghost">깃로그 시작하기</SmallButton>
+        <SmallButton leftIcon variant="fill">깃로그 시작하기</SmallButton>
+      </div>
     </div>
   );
 }
