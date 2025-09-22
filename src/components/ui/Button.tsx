@@ -3,58 +3,53 @@ import React from "react";
 import PencilIconSvg from "../../assets/icons/pencil.svg?react";
 
 export type ButtonVariant =
-  | "outlinePointWhite"
-  | "outlineGrayWhite"
-  | "outlineGrayGray90"
-  | "solidWhite"
-  | "solidGray90"
-  | "solidDark";
+  | "outlinePointWhite"   // 1) 테두리 Point + 배경 White + 텍스트 Point
+  | "outlineGrayWhite"    // 2) 테두리 Gray56 + 배경 White + 텍스트 Gray56
+  | "solidWhite"          // 3) 배경 White + 텍스트 Gray56 (테두리 없음)
+  | "outlineGrayGray90"   // 4) 테두리 Gray56 + 배경 Gray90 + 텍스트 Gray56
+  | "solidGray90"         // 5) 배경 Gray90 + 텍스트 Gray56 (테두리 없음)
+  | "solidDark"           // 6) 배경 Gray7 + 텍스트 White
+  | "solidDarkAlt";       // 7) 배경 Gray7 + 텍스트 Gray56
 
 type ButtonProps = {
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: "button" | "submit" | "reset";
-  /** 왼쪽 아이콘 표시 여부 (연필 아이콘) */
   leftIcon?: boolean;
-  /** 스타일 변형 */
   variant?: ButtonVariant;
-  /** 비활성화 */
   disabled?: boolean;
-  /** 커스텀 클래스 추가 */
   className?: string;
 };
 
+const base =
+  // 공통 레이아웃 & 14 Regular 타이포 (line-height 160%, letter-spacing -0.07px)
+  "inline-flex h-10 px-3 py-2 items-center justify-center gap-1 shrink-0 " +
+  "rounded-[25px] " +
+  "text-[14px] leading-[22.4px] font-normal tracking-[-0.07px] " +
+  "transition-colors font-['Noto_Sans_KR']";
+
 const byVariant: Record<ButtonVariant, string> = {
-  outlinePointWhite: `
-    border border-[var(--Point)]
-    bg-[var(--White)]
-    text-[var(--Point)]
-  `,
-  outlineGrayWhite: `
-    border border-[var(--Gray56)]
-    bg-[var(--White)]
-    text-[var(--Gray20)]
-  `,
-  outlineGrayGray90: `
-    border border-[var(--Gray56)]
-    bg-[var(--Gray90)]
-    text-[var(--Gray20)]
-  `,
-  solidWhite: `
-    border-0
-    bg-[var(--White)]
-    text-[var(--Gray20)]
-  `,
-  solidGray90: `
-    border-0
-    bg-[var(--Gray90)]
-    text-[var(--Gray20)]
-  `,
-  solidDark: `
-    border-0
-    bg-[var(--Gray-7)]
-    text-[var(--White)]
-  `,
+  // 1)
+  outlinePointWhite:
+    "border border-[var(--Point)] bg-[var(--White)] text-[var(--Point)]",
+  // 2)
+  outlineGrayWhite:
+    "border border-[var(--Gray56)] bg-[var(--White)] text-[var(--Gray56)]",
+  // 3) (테두리 없음)
+  solidWhite:
+    "border-0 bg-[var(--White)] text-[var(--Gray56)]",
+  // 4)
+  outlineGrayGray90:
+    "border border-[var(--Gray56)] bg-[var(--Gray90)] text-[var(--Gray56)]",
+  // 5) (테두리 없음)
+  solidGray90:
+    "border-0 bg-[var(--Gray90)] text-[var(--Gray56)]",
+  // 6)
+  solidDark:
+    "border-0 bg-[var(--Gray7)] text-[var(--White)]",
+  // 7)
+  solidDarkAlt:
+    "border-0 bg-[var(--Gray7)] text-[var(--Gray56)]",
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -71,21 +66,16 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`btn-reset
-        inline-flex h-10 px-3 py-2
-        justify-center items-center
-        gap-1 shrink-0
-        rounded-[25px]
-        font-['Noto_Sans_KR'] text-[14px] font-normal leading-[160%] tracking-[-0.07px]
-        transition-colors
-        ${byVariant[variant]}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-95"}
-        ${className}
-      `}
+      className={[
+        base,
+        byVariant[variant],
+        disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-95",
+        className,
+      ].join(" ")}
     >
       {leftIcon && (
         <PencilIconSvg
-          className="w-5 h-5 shrink-0 fill-current stroke-current"
+          className="w-5 h-5 mr-1 shrink-0 fill-current stroke-current"
           aria-hidden
         />
       )}
