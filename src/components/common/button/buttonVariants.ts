@@ -1,7 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
-  // 기본 btn-container 스타일을 그대로 유지
   'inline-flex h-10 px-3 py-2 justify-center items-center gap-1 flex-shrink-0 rounded-[25px] border transition-all duration-200 cursor-pointer',
   {
     variants: {

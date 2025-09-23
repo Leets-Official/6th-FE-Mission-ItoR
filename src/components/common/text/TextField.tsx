@@ -1,4 +1,4 @@
-import { inputVariants, textFieldVariants } from '@/components/common/text/textFieldVariants';
+import { inputVariants, textFieldVariants } from '@/components/common/text/TextFieldVariants';
 import { TextFieldProps } from '@/types/text';
 import clsx from 'clsx';
 import React from 'react';

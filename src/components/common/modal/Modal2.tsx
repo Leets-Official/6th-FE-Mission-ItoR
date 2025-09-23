@@ -4,7 +4,7 @@ import {
   modalContainerVariants,
   modalContentVariants,
   modalDeleteButtonVariants,
-} from '@/components/common/modal/modalVariants';
+} from '@/components/common/modal/ModalVariants';
 import clsx from 'clsx';
 import React from 'react';
 

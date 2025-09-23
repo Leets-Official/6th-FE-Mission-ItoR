@@ -1,5 +1,5 @@
 import { ButtonProps } from '@/components/common/button/ButtonTypes';
-import { buttonIconVariants, buttonTextVariants, buttonVariants } from '@/components/common/button/buttonVariants';
+import { buttonIconVariants, buttonTextVariants, buttonVariants } from '@/components/common/button/ButtonVariants';
 import Icon from '@/components/common/icon/Icon';
 import clsx from 'clsx';
 import React from 'react';

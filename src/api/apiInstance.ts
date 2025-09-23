@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 // import { InternalAxiosRequestConfig } from 'axios';
-import { ENV } from './env';
+// import { ENV } from './env';
 
 // declare module 'axios' {
 //   export interface InternalAxiosRequestConfig {
@@ -67,7 +67,7 @@ const setRefreshToken = (token: string | null): void => {
 
 // 메인 axios 인스턴스
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: ENV.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
   responseType: 'json',
