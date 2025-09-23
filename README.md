@@ -25,7 +25,7 @@ Figma :[ https://www.figma.com/team_invite/redeem/DjdTfdfKC0X3ImzDcw0wbi](https:
 - 공통 컴포넌트 / UI 컴포넌트 / 페이지 별 필요한 컴포넌트로 모듈화 하여 작업합니다.
 - Error, Success 상태를 관리하고, 상태에 따른 결과를 사용자에게 UI로 보여 주셔야 합니다.
 - 모든 방식에는 근거가 있어야 합니다. 왜 해당 방식을 / 기능을 선택하였는지 문서화 하여 매주 미션 PR에 남겨주세요.
-  
+
 ## ⚙️ 기능 요구사항
 
 백엔드 스웨거 : https://blog.leets.land/swagger-ui/index.html
@@ -44,7 +44,7 @@ Figma :[ https://www.figma.com/team_invite/redeem/DjdTfdfKC0X3ImzDcw0wbi](https:
 - 사용자는 등록한 이메일 주소 또는 카카오 로그인을 이용하여 로그인할 수 있어야 합니다.
 - (토큰 방식으로 구현시) refresh token을 통해 새로운 access token을 발급받을 수 있어야 합니다.
 - 토큰은 브라우저에 cookie / storage 중 원하는 방식을 골라 선택하신 후 저장 해 두셔야 합니다.
-  
+
 
 ### 게시물
 
@@ -55,7 +55,7 @@ Figma :[ https://www.figma.com/team_invite/redeem/DjdTfdfKC0X3ImzDcw0wbi](https:
 - 게시물 리스트는 한 페이지에 10개까지 보여야 하며, 초과시 다음 페이지에서 볼 수 있어야 합니다.
 - 게시물 조회시 댓글도 모두 조회할 수 있어야 합니다.
 - 게시물 작성 시, 텍스트와 이미지의 contentOrder도 트래킹 할 수 있어야 합니다.
-  - 추후 READ 기능 구현 시 텍스트 / 이미지의 순서를 맞추어 렌더링 할 수 있게 해야 합니다.
+    - 추후 READ 기능 구현 시 텍스트 / 이미지의 순서를 맞추어 렌더링 할 수 있게 해야 합니다.
 
 ### 댓글
 
