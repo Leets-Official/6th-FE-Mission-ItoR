@@ -23,7 +23,7 @@ export const modalButtonsVariants = cva('flex items-center gap-3 self-stretch');
 
 // 모달 취소 버튼 스타일
 export const modalCancelButtonVariants = cva(
-  'flex px-3 py-2 justify-center items-center gap-2 flex-1 text-sm font-normal text-black text-right'
+  'flex px-3 py-2 justify-center items-center gap-2 flex-1 text-sm font-normal text-black text-right rounded-sm border border-gray-96'
 );
 
 // 모달 삭제 버튼 스타일
