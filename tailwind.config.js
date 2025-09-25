@@ -105,6 +105,7 @@ export default {
         lg: '0 4px 8px 0 rgba(0, 0, 0, 0.1)',
         xl: '0 8px 16px 0 rgba(0, 0, 0, 0.1)',
         modal: '0 2px 8px 0 rgba(0, 0, 0, 0.1)',
+        'page-header': '0 4px 4px 0 rgba(0, 0, 0, 0.01)',
       },
 
       // 폰트 크기 토큰

@@ -23,3 +23,7 @@ body {
 .page-header-container {
   @apply flex max-w-page-header w-full p-page-header justify-between items-center bg-white/90 backdrop-blur-sm;
 }
+
+.page-header-legacy-container {
+  @apply flex w-[1366px] max-w-[1366px] p-3 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
+}
