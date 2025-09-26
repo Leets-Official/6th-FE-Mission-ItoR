@@ -1,5 +1,5 @@
 import { type VariantProps } from 'class-variance-authority';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { FC, ReactNode } from 'react';
 import { iconInnerVariants, iconVariants } from './IconVariants';
 
@@ -24,13 +24,8 @@ const Icon: FC<IconProps> = ({
   const isClickable = clickable || Boolean(onClick);
 
   return (
-    <div
-      className={clsx(iconVariants({ size, clickable: isClickable, padding }), containerClassName)}
-      onClick={onClick}
-    >
-      <div
-        className={clsx(iconInnerVariants({ size }), '[&>svg]:h-full [&>svg]:w-full [&>svg]:fill-current', className)}
-      >
+    <div className={cn(iconVariants({ size, clickable: isClickable, padding }), containerClassName)} onClick={onClick}>
+      <div className={cn(iconInnerVariants({ size }), '[&>svg]:h-full [&>svg]:w-full [&>svg]:fill-current', className)}>
         {children}
       </div>
     </div>

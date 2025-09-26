@@ -12,8 +12,7 @@ import Pagination from '@/components/common/pagination/Pagination';
 import TextField from '@/components/common/text/TextField';
 import Textarea from '@/components/common/text/Textarea';
 import TextBox from '@/components/common/textbox/TextBox';
-import ToastPositive from '@/components/common/toast/ToastPositive';
-import ToastWarning from '@/components/common/toast/ToastWarning';
+import Toast from '@/components/common/toast/Toast';
 import Sidebar from '@/layout/Sidebar';
 import { useState } from 'react';
 
@@ -89,8 +88,8 @@ function Playground() {
         <div className="rounded-lg bg-white p-4">
           <h2 className="mb-4 text-xl font-semibold">Toast 컴포넌트</h2>
           <div className="flex justify-center gap-4">
-            <ToastPositive>저장되었습니다</ToastPositive>
-            <ToastWarning>내용을 입력해주세요</ToastWarning>
+            <Toast type="positive">저장되었습니다</Toast>
+            <Toast type="warning">내용을 입력해주세요</Toast>
           </div>
         </div>
 

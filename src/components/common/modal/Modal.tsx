@@ -5,7 +5,7 @@ import {
   modalContentVariants,
   modalConfirmButtonVariants,
 } from '@/components/common/modal/ModalVariants';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { FC, ReactNode } from 'react';
 
 interface ModalProps {
@@ -35,7 +35,7 @@ const Modal: FC<ModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className={clsx(modalContainerVariants(), className)}>
+      <div className={cn(modalContainerVariants(), className)}>
         <div className={modalContentVariants()} style={{ padding: '0 4px' }}>
           {children}
         </div>

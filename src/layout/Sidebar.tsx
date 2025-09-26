@@ -1,6 +1,6 @@
 import { Profile1Icon } from '@/assets/icons/common';
 import { Button, Spacer } from '@/components';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { FC } from 'react';
 
 interface SidebarProps {
@@ -10,7 +10,7 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   return (
-    <div className={clsx('flex h-screen w-60 flex-col gap-2.5 border-r border-gray-90 bg-gray-96', className)}>
+    <div className={cn('flex h-screen w-60 flex-col gap-2.5 border-r border-gray-90 bg-gray-96', className)}>
       <div className="flex flex-1 flex-col py-6">
         <div className="flex flex-col gap-2.5">
           <div className="px-4">

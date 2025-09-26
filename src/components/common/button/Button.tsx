@@ -1,7 +1,7 @@
 import { ButtonProps } from '@/components/common/button/ButtonTypes';
 import { buttonIconVariants, buttonTextVariants, buttonVariants } from '@/components/common/button/ButtonVariants';
 import Icon from '@/components/common/icon/Icon';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { FC } from 'react';
 
 const Button: FC<ButtonProps> = ({
@@ -20,7 +20,7 @@ const Button: FC<ButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={clsx(buttonVariants({ intent, size, variant, fullWidth }), className)}
+      className={cn(buttonVariants({ intent, size, variant, fullWidth }), className)}
     >
       {showIcon && icon && (
         <Icon size="md" className={buttonIconVariants()}>
