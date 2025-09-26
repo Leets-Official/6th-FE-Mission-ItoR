@@ -14,13 +14,13 @@ const PageHeaderLegacy: FC<PageHeaderLegacyProps> = ({ className = '' }) => {
         <Icon size="sm" className="text-gray">
           <AddPhotoAlternateIcon />
         </Icon>
-        <span className="text-xs font-normal leading-[160%] text-gray">?�진 추�??�기</span>
+        <span className="text-xs font-normal leading-[160%] text-gray">사진 추가하기</span>
       </div>
       <div className="flex items-center justify-center gap-1 rounded-[2px] px-2 pb-1 pt-0.5">
         <Icon size="sm" className="text-gray">
           <FolderOpenIcon />
         </Icon>
-        <span className="text-xs font-normal leading-[160%] text-gray">?�일 추�??�기</span>
+        <span className="text-xs font-normal leading-[160%] text-gray">파일 추가하기</span>
       </div>
     </div>
   );

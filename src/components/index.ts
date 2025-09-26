@@ -4,10 +4,10 @@ export { default as DropdownMenu } from '@/components/common/Dropdown/DropdownMe
 export { default as DropdownMenuList } from '@/components/common/Dropdown/DropdownMenuList';
 export { default as Icon } from '@/components/common/Icon/Icon';
 export { default as Modal } from '@/components/common/Modal/Modal';
-export { default as PageHeader } from '@/components/common/pageHeader/PageHeader';
-export { default as PageHeaderLeft } from '@/components/common/pageHeader/PageHeaderLeft';
-export { default as PageHeaderLegacy } from '@/components/common/pageHeader/PageHeaderLegacy';
-export { default as PageHeaderRight } from '@/components/common/pageHeader/PageHeaderRight';
+export { default as PageHeader } from '@/components/common/PageHeader/PageHeader';
+export { default as PageHeaderLeft } from '@/components/common/PageHeader/PageHeaderLeft';
+export { default as PageHeaderLegacy } from '@/components/common/PageHeader/PageHeaderLegacy';
+export { default as PageHeaderRight } from '@/components/common/PageHeader/PageHeaderRight';
 export { default as Pagination } from '@/components/common/Pagination/Pagination';
 export { default as PaginationButton } from '@/components/common/Pagination/PaginationButton';
 export { default as Spacer } from '@/components/common/Spacer/Spacer';
