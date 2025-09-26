@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import PageHeaderLeft from '@/components/common/pageheader/PageHeaderLeft';
-import PageHeaderRight from '@/components/common/pageheader/PageHeaderRight';
+import PageHeaderLeft from '@/components/common/pageHeader/PageHeaderLeft';
+import PageHeaderRight from '@/components/common/pageHeader/PageHeaderRight';
 
 interface PageHeaderProps {
   className?: string;

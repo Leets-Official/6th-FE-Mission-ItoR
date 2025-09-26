@@ -1,6 +1,6 @@
-import { ButtonProps } from '@/components/common/button/ButtonTypes';
-import { buttonIconVariants, buttonTextVariants, buttonVariants } from '@/components/common/button/ButtonVariants';
-import Icon from '@/components/common/icon/Icon';
+import { ButtonProps } from '@/components/common/Button/ButtonTypes';
+import { buttonIconVariants, buttonTextVariants, buttonVariants } from '@/components/common/Button/ButtonVariants';
+import Icon from '@/components/common/Icon/Icon';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
 

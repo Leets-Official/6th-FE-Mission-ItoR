@@ -1,5 +1,5 @@
 import { ChatIcon, CreateIcon, MoreVertIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/icon/Icon';
+import Icon from '@/components/common/Icon/Icon';
 
 // 메인 타입 렌더링
 export const renderMainType = () => (

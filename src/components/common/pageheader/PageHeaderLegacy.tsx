@@ -1,5 +1,5 @@
 import { AddPhotoAlternateIcon, FolderOpenIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/icon/Icon';
+import Icon from '@/components/common/Icon/Icon';
 import clsx from 'clsx';
 import { FC } from 'react';
 

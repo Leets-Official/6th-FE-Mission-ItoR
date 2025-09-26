@@ -4,7 +4,7 @@ import {
   modalContainerVariants,
   modalContentVariants,
   modalConfirmButtonVariants,
-} from '@/components/common/modal/ModalVariants';
+} from '@/components/common/Modal/ModalVariants';
 import { cn } from '@/utils/cn';
 import { FC, ReactNode } from 'react';
 
