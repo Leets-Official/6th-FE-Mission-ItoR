@@ -29,7 +29,7 @@ const Icon: FC<IconProps> = ({
       onClick={onClick}
     >
       <div
-        className={clsx(iconInnerVariants({ size }), '[&>svg]:w-full [&>svg]:h-full [&>svg]:fill-current', className)}
+        className={clsx(iconInnerVariants({ size }), '[&>svg]:h-full [&>svg]:w-full [&>svg]:fill-current', className)}
       >
         {children}
       </div>

@@ -1,4 +1,3 @@
-
 import { ErrorOutlineIcon } from '@/assets/icons/common';
 import { FC, ReactNode } from 'react';
 
@@ -10,7 +9,7 @@ interface ToastWarningProps {
 const ToastWarning: FC<ToastWarningProps> = ({ children, className = '' }) => {
   return (
     <div
-      className={`toast-container bg-white/90 backdrop-blur-sm border-warning text-warning ${className}`}
+      className={`toast-container border-warning bg-white/90 text-warning backdrop-blur-sm ${className}`}
       style={{ cursor: 'default' }}
     >
       <div className="btn-icon text-warning">

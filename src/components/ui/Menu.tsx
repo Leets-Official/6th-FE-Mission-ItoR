@@ -13,12 +13,12 @@ interface MobileMenuIconProps {
 
 const MobileMenuIcon: FC<MobileMenuIconProps> = ({ children, className = '' }) => {
   return (
-    <div className={clsx('flex w-10 h-10 p-2 justify-center items-center aspect-square', className)}>{children}</div>
+    <div className={clsx('flex aspect-square h-10 w-10 items-center justify-center p-2', className)}>{children}</div>
   );
 };
 
 const MobileMenuContainer: FC<MobileMenuContainerProps> = ({ children, className = '' }) => {
-  return <div className={clsx('flex px-4 py-1 items-center gap-2.5', className)}>{children}</div>;
+  return <div className={clsx('flex items-center gap-2.5 px-4 py-1', className)}>{children}</div>;
 };
 
 export { MobileMenuIcon };

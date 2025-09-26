@@ -5,7 +5,7 @@ interface DividerProps {
 }
 
 const Divider: FC<DividerProps> = ({ className = '' }) => {
-  return <div className={`w-[580px] h-px bg-gray-96 ${className}`} />;
+  return <div className={`h-px w-[580px] bg-gray-96 ${className}`} />;
 };
 
 export default Divider;

@@ -24,7 +24,7 @@ const PaginationButton: FC<PaginationButtonProps> = ({
   const renderContent = () => {
     if (variant === 'navigation' && (direction === 'prev' || direction === 'next')) {
       const iconColorClass = state === 'disabled' ? 'text-character-disabled-25' : 'text-character-title-85';
-      return <NavigateBeforeIcon className={clsx('w-3 h-3', direction === 'next' && 'rotate-180', iconColorClass)} />;
+      return <NavigateBeforeIcon className={clsx('h-3 w-3', direction === 'next' && 'rotate-180', iconColorClass)} />;
     }
 
     if (variant === 'page') {
@@ -32,7 +32,7 @@ const PaginationButton: FC<PaginationButtonProps> = ({
         <span
           className={clsx(
             'flex flex-col justify-center',
-            'w-[18px] h-[30px]',
+            'h-[30px] w-[18px]',
             'text-center',
             'font-["Roboto"] text-sm font-regular',
             'leading-[22px]',

@@ -9,7 +9,7 @@ interface ToastProps {
 const ToastPositive: FC<ToastProps> = ({ children, className = '' }) => {
   return (
     <div
-      className={`toast-container bg-white/90 backdrop-blur-sm border-positive text-positive ${className}`}
+      className={`toast-container border-positive bg-white/90 text-positive backdrop-blur-sm ${className}`}
       style={{ cursor: 'default' }}
     >
       <div className="btn-icon text-positive">

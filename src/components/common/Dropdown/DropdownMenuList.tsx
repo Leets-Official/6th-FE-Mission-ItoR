@@ -12,7 +12,7 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
   return (
     <div
       className={clsx(
-        'absolute top-full mt-1 z-50',
+        'absolute top-full z-50 mt-1',
         'inline-flex flex-col items-end',
         'shadow-modal',
         position === 'right' ? 'right-0' : 'left-0',
@@ -21,7 +21,7 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
     >
       {/* ?�리�??�살??- �???*/}
       <svg
-        className="flex-shrink-0 absolute -top-2 right-4"
+        className="absolute -top-2 right-4 flex-shrink-0"
         xmlns="http://www.w3.org/2000/svg"
         width="16"
         height="8"
@@ -36,7 +36,7 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
         <path d="M8 -6.99382e-07L16 8L0 8L8 -6.99382e-07Z" fill="white" />
       </svg>
 
-      <div className="flex flex-col justify-center items-start py-1 bg-white rounded-md">
+      <div className="flex flex-col items-start justify-center rounded-md bg-white py-1">
         {items.map(item => (
           <button
             key={item.id}
@@ -45,7 +45,7 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
             className={clsx(
               'flex items-center gap-2.5 text-left',
               'hover:bg-gray-50 transition-colors duration-150',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
+              'disabled:cursor-not-allowed disabled:opacity-50',
               'first:rounded-t-lg last:rounded-b-lg'
             )}
             style={{
@@ -53,7 +53,7 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
               padding: '8px 12px 12px 12px',
             }}
           >
-            <span className="flex-1 text-black text-sm font-normal">{item.label}</span>
+            <span className="flex-1 text-sm font-normal text-black">{item.label}</span>
           </button>
         ))}
       </div>

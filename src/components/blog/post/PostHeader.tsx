@@ -8,10 +8,10 @@ interface PostHeaderProps {
 
 const PostHeader: FC<PostHeaderProps> = ({ title, subtitle, className = '' }) => {
   return (
-    <div className={`flex w-[688px] max-w-[688px] p-3 flex-col justify-center items-start gap-3 ${className}`}>
-      <h1 className="self-stretch text-black text-2xl font-medium leading-[160%]">{title}</h1>
+    <div className={`flex w-[688px] max-w-[688px] flex-col items-start justify-center gap-3 p-3 ${className}`}>
+      <h1 className="self-stretch text-2xl font-medium leading-[160%] text-black">{title}</h1>
       {subtitle && (
-        <p className="self-stretch text-gray-dark text-sm font-light leading-[160%] tracking-[-0.07px]">{subtitle}</p>
+        <p className="self-stretch text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-dark">{subtitle}</p>
       )}
     </div>
   );
