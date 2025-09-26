@@ -6,7 +6,6 @@ import DropdownMenu from '@/components/common/Dropdown/DropdownMenu';
 import Button from '@/components/common/button/Button';
 import Divider from '@/components/common/divider/Divider';
 import Modal from '@/components/common/modal/Modal';
-import Modal2 from '@/components/common/modal/Modal2';
 import PageHeader from '@/components/common/pageheader/PageHeader';
 import PageHeaderLegacy from '@/components/common/pageheader/PageHeaderLegacy';
 import Pagination from '@/components/common/pagination/Pagination';
@@ -16,11 +15,11 @@ import TextBox from '@/components/common/textbox/TextBox';
 import ToastPositive from '@/components/common/toast/ToastPositive';
 import ToastWarning from '@/components/common/toast/ToastWarning';
 import Sidebar from '@/layout/Sidebar';
-import React from 'react';
+import { useState } from 'react';
 
 function Playground() {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isModal2Open, setIsModal2Open] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTitleOnlyModalOpen, setIsTitleOnlyModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -234,22 +233,26 @@ function Playground() {
         <div className="bg-white rounded-lg p-4">
           <h2 className="text-xl font-semibold mb-4">Modal 컴포넌트</h2>
           <div className="flex justify-center gap-4 flex-wrap">
-            <Button onClick={() => setIsModalOpen(true)}>모달 열기</Button>
-            <Button onClick={() => setIsModal2Open(true)}>모달2 열기</Button>
+            <Button onClick={() => setIsModalOpen(true)}>모달 열기 (제목+내용)</Button>
+            <Button onClick={() => setIsTitleOnlyModalOpen(true)}>모달 열기 (제목만)</Button>
           </div>
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal with title and content */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onDelete={() => setIsModalOpen(false)}>
         <h3 className="self-stretch text-sm font-semibold text-black">모달 제목</h3>
         <p className="self-stretch text-xs font-normal text-gray">모달 내용입니다.</p>
       </Modal>
 
-      {/* Modal2 */}
-      <Modal2 isOpen={isModal2Open} onClose={() => setIsModal2Open(false)} onDelete={() => setIsModal2Open(false)}>
-        <h3 className="self-stretch text-sm font-semibold text-black">모달2 제목</h3>
-      </Modal2>
+      {/* Modal with title only */}
+      <Modal
+        isOpen={isTitleOnlyModalOpen}
+        onClose={() => setIsTitleOnlyModalOpen(false)}
+        onDelete={() => setIsTitleOnlyModalOpen(false)}
+      >
+        <h3 className="self-stretch text-sm font-semibold text-black">제목만 있는 모달</h3>
+      </Modal>
     </div>
   );
 }

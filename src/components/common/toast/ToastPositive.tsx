@@ -1,12 +1,12 @@
 import { DoneIcon } from '@/assets/icons/common';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
 interface ToastProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
-const ToastPositive: React.FC<ToastProps> = ({ children, className = '' }) => {
+const ToastPositive: FC<ToastProps> = ({ children, className = '' }) => {
   return (
     <div
       className={`toast-container bg-white/90 backdrop-blur-sm border-positive text-positive ${className}`}

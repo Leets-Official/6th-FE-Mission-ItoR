@@ -1,12 +1,12 @@
 import clsx from 'clsx';
-import React from 'react';
+import { FC } from 'react';
 
 interface SpacerProps {
   className?: string;
   height?: 'sm' | 'md' | 'lg';
 }
 
-const Spacer: React.FC<SpacerProps> = ({ className = '', height = 'sm' }) => {
+const Spacer: FC<SpacerProps> = ({ className = '', height = 'sm' }) => {
   const getHeightClass = (h: 'sm' | 'md' | 'lg') => {
     switch (h) {
       case 'sm':

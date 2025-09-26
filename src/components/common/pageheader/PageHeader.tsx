@@ -1,13 +1,13 @@
-import React from 'react';
-import PageHeaderLeft from './PageHeaderLeft';
-import PageHeaderRight from './PageHeaderRight';
+import { FC } from 'react';
+import PageHeaderLeft from '@/components/common/pageheader/PageHeaderLeft';
+import PageHeaderRight from '@/components/common/pageheader/PageHeaderRight';
 
 interface PageHeaderProps {
   className?: string;
   type: 'main' | 'detail' | 'write';
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ className = '', type }) => {
+const PageHeader: FC<PageHeaderProps> = ({ className = '', type }) => {
   return (
     <header className={`page-header-container ${className}`}>
       <PageHeaderLeft />

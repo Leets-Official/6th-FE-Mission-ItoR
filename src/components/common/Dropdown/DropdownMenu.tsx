@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import DropdownMenuList from './DropdownMenuList';
 import { DropdownMenuItem, DropdownMenuProps } from './DropdownMenuTypes';
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({
+const DropdownMenu: FC<DropdownMenuProps> = ({
   trigger,
   items,
   className = '',

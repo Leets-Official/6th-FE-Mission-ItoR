@@ -1,7 +1,7 @@
 import { ReorderIcon } from '@/assets/icons/common';
-import React from 'react';
 
-const PageHeaderLeft: React.FC = () => {
+
+const PageHeaderLeft: FC = () => {
   return (
     <div className="flex justify-center items-center gap-2">
       <div className="flex items-center gap-2.5">

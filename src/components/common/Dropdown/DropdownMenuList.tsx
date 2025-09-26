@@ -1,8 +1,9 @@
 import clsx from 'clsx';
-import React from 'react';
+import { FC } from 'react';
+
 import { DropdownMenuListProps } from './DropdownMenuTypes';
 
-const DropdownMenuList: React.FC<DropdownMenuListProps> = ({
+const DropdownMenuList: FC<DropdownMenuListProps> = ({
   items,
   onItemClick,
   position = 'right',
@@ -18,7 +19,7 @@ const DropdownMenuList: React.FC<DropdownMenuListProps> = ({
         menuClassName
       )}
     >
-      {/* 폴리곤 화살표 - 맨 위 */}
+      {/* ?�리�??�살??- �???*/}
       <svg
         className="flex-shrink-0 absolute -top-2 right-4"
         xmlns="http://www.w3.org/2000/svg"

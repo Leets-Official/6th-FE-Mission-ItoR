@@ -1,9 +1,9 @@
 import { inputVariants, textFieldVariants } from '@/components/common/text/TextFieldVariants';
 import { TextFieldProps } from '@/types/text';
 import clsx from 'clsx';
-import React from 'react';
+import { FC } from 'react';
 
-const TextField: React.FC<TextFieldProps> = ({
+const TextField: FC<TextFieldProps> = ({
   placeholder = 'Text field',
   className = '',
   value,

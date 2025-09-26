@@ -6,17 +6,17 @@ import {
   modalDeleteButtonVariants,
 } from '@/components/common/modal/ModalVariants';
 import clsx from 'clsx';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
 interface ModalProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   isOpen: boolean;
   onClose: () => void;
   onDelete?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ children, className = '', isOpen, onClose, onDelete }) => {
+const Modal: FC<ModalProps> = ({ children, className = '', isOpen, onClose, onDelete }) => {
   if (!isOpen) {
     return null;
   }

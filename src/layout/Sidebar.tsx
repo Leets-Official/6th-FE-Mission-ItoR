@@ -2,14 +2,14 @@ import { Profile1Icon } from '@/assets/icons/common';
 import Button from '@/components/common/button/Button';
 import Spacer from '@/components/common/spacer/Spacer';
 import clsx from 'clsx';
-import React from 'react';
+import { FC } from 'react';
 
 interface SidebarProps {
   className?: string;
   isLoggedIn?: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
+const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   return (
     <div className={clsx('flex w-60 h-screen flex-col gap-2.5 bg-gray-96 border-r border-gray-90', className)}>
       <div className="flex flex-1 py-6 flex-col">

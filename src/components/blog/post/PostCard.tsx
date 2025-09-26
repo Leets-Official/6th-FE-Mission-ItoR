@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 
 interface PostCardProps {
   title: string;
@@ -6,7 +6,7 @@ interface PostCardProps {
   className?: string;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ title, content, className = '' }) => {
+const PostCard: FC<PostCardProps> = ({ title, content, className = '' }) => {
   return (
     <div className={`flex w-[688px] max-w-[688px] p-3 flex-col justify-center items-start gap-2 ${className}`}>
       <h3 className="self-stretch text-black text-base font-medium leading-[160%] tracking-[-0.04px]">{title}</h3>

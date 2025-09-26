@@ -1,9 +1,9 @@
 import TextField from '@/components/common/text/TextField';
 import { TextareaProps } from '@/types/text';
 import clsx from 'clsx';
-import React from 'react';
+import { FC } from 'react';
 
-const Textarea: React.FC<TextareaProps> = ({
+const Textarea: FC<TextareaProps> = ({
   title,
   className = '',
   hintText,

@@ -1,12 +1,13 @@
+
 import { ErrorOutlineIcon } from '@/assets/icons/common';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
 interface ToastWarningProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
-const ToastWarning: React.FC<ToastWarningProps> = ({ children, className = '' }) => {
+const ToastWarning: FC<ToastWarningProps> = ({ children, className = '' }) => {
   return (
     <div
       className={`toast-container bg-white/90 backdrop-blur-sm border-warning text-warning ${className}`}

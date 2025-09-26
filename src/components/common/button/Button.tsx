@@ -2,9 +2,9 @@ import { ButtonProps } from '@/components/common/button/ButtonTypes';
 import { buttonIconVariants, buttonTextVariants, buttonVariants } from '@/components/common/button/ButtonVariants';
 import Icon from '@/components/common/icon/Icon';
 import clsx from 'clsx';
-import React from 'react';
+import { FC } from 'react';
 
-const Button: React.FC<ButtonProps> = ({
+const Button: FC<ButtonProps> = ({
   children,
   onClick,
   className = '',

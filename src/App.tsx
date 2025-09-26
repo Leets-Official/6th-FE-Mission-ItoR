@@ -1,8 +1,8 @@
 import Playground from '@/playground/Playground';
-import React from 'react';
+import { useMemo } from 'react';
 
 function App() {
-  const isPlayground = React.useMemo(() => {
+  const isPlayground = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('playground') === '1') {
       return true;
