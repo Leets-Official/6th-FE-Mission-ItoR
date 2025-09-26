@@ -3,7 +3,7 @@ import {
   modalCancelButtonVariants,
   modalContainerVariants,
   modalContentVariants,
-  modalDeleteButtonVariants,
+  modalConfirmButtonVariants,
 } from '@/components/common/modal/ModalVariants';
 import clsx from 'clsx';
 import { FC, ReactNode } from 'react';
@@ -14,9 +14,21 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDelete?: () => void;
+  cancelButtonText?: string;
+  confirmButtonText?: string;
+  confirmButtonVariant?: 'primary' | 'danger' | 'secondary';
 }
 
-const Modal: FC<ModalProps> = ({ children, className = '', isOpen, onClose, onDelete }) => {
+const Modal: FC<ModalProps> = ({
+  children,
+  className = '',
+  isOpen,
+  onClose,
+  onDelete,
+  cancelButtonText = '취소',
+  confirmButtonText = '삭제하기',
+  confirmButtonVariant = 'danger',
+}) => {
   if (!isOpen) {
     return null;
   }
@@ -29,11 +41,11 @@ const Modal: FC<ModalProps> = ({ children, className = '', isOpen, onClose, onDe
         </div>
         <div className={modalButtonsVariants()}>
           <button onClick={onClose} className={modalCancelButtonVariants()}>
-            취소
+            {cancelButtonText}
           </button>
           {onDelete && (
-            <button onClick={onDelete} className={modalDeleteButtonVariants()}>
-              삭제하기
+            <button onClick={onDelete} className={modalConfirmButtonVariants({ variant: confirmButtonVariant })}>
+              {confirmButtonText}
             </button>
           )}
         </div>
