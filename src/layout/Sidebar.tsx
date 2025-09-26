@@ -1,6 +1,5 @@
 import { Profile1Icon } from '@/assets/icons/common';
-import Button from '@/components/common/button/Button';
-import Spacer from '@/components/common/spacer/Spacer';
+import { Button, Spacer } from '@/components';
 import clsx from 'clsx';
 import { FC } from 'react';
 
