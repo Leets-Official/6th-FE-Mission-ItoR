@@ -1,7 +1,7 @@
-import Button from "./components/ui/Button";
-import SmallButton from "./components/ui/SmallButton";
-import ToastButton from "./components/ui/ToastButton"; 
-import PageHeader from "./components/ui/PageHeader";
+import Button from "@ui/Button";
+import SmallButton from "@ui/SmallButton";
+import ToastButton from "@ui/Toast"; 
+import PageHeader from "@ui/PageHeader";
 
 function App() {
   return (
