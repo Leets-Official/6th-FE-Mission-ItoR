@@ -40,7 +40,7 @@ export default function PageHeader({
         "flex w-[1366px] h-[56px] pl-3 pr-4 justify-between items-center",
         // 스타일
         "bg-[rgba(255,255,255,0.90)] backdrop-blur-[2px]",
-        className
+        className,
       )}
     >
       {/* Left: 메뉴 + 타이틀 */}
@@ -54,20 +54,13 @@ export default function PageHeader({
           <ReorderIcon className="w-6 h-6" />
         </button>
 
-        <div className="logo-text select-none">
-          {title}
-        </div>
+        <div className="logo-text select-none">{title}</div>
       </div>
 
       {/* Right: variant별 액션 */}
       <div className="flex items-center gap-3">
         {variant === "write" && (
-          <SmallButton
-            leftIcon
-            variant="ghost"
-            onClick={onClickWrite}
-            className="min-w-[108px]"
-          >
+          <SmallButton leftIcon variant="ghost" onClick={onClickWrite} className="min-w-[108px]">
             깃로그 쓰기
           </SmallButton>
         )}

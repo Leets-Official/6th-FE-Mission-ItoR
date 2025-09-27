@@ -25,12 +25,7 @@ const Icons: Record<ToastVariant, React.FC<React.SVGProps<SVGSVGElement>>> = {
   positive: DoneIcon,
 };
 
-export default function Toast({
-  variant = "negative",
-  children,
-  className,
-  ...rest
-}: ToastProps) {
+export default function Toast({ variant = "negative", children, className, ...rest }: ToastProps) {
   const Icon = Icons[variant];
   return (
     <div className={clsx(base, byVariant[variant], className)} {...rest}>

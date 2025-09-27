@@ -3,26 +3,38 @@
 /* ===== Color tokens ===== */
 @layer base {
   :root {
-    --Point:  #00A1FF;
-    --White:  #FFFFFF;
+    --Point: #00a1ff;
+    --White: #ffffff;
 
-    --Gray7:  #111112;
+    --Gray7: #111112;
     --Gray20: #333333;
     --Gray56: #909090;
-    --Gray90: #E6E6E6;
+    --Gray90: #e6e6e6;
 
-    --Negative: #FF3F3F;
-    --Positive: #15DC5E;
-    --Black:    #000000;
+    --Negative: #ff3f3f;
+    --Positive: #15dc5e;
+    --Black: #000000;
   }
 
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
   }
 
   /* ===== Base font (14 / 160% / -0.07px) ===== */
   body {
-    font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    font-family:
+      "Noto Sans KR",
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      "Apple SD Gothic Neo",
+      "Malgun Gothic",
+      sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;

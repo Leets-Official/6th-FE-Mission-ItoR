@@ -21,7 +21,7 @@ const Button: React.FC<ButtonProps> = ({
         baseClass,
         byVariant[variant],
         disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-95",
-        className
+        className,
       )}
     >
       {leftIcon && <PencilIconSvg className="w-5 h-5 mr-1 shrink-0" aria-hidden />}

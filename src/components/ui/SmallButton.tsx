@@ -29,13 +29,8 @@ export default function SmallButton({
   ...rest
 }: SmallButtonProps) {
   return (
-    <button
-      className={clsx(base, byVariant[variant], className)}
-      {...rest}
-    >
-      {leftIcon && (
-        <Pencil className="w-3 h-3 mr-1 fill-current text-[var(--Gray56)]" />
-      )}
+    <button className={clsx(base, byVariant[variant], className)} {...rest}>
+      {leftIcon && <Pencil className="w-3 h-3 mr-1 fill-current text-[var(--Gray56)]" />}
       <span>{children}</span>
     </button>
   );
