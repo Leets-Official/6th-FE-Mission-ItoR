@@ -17,6 +17,8 @@ export default {
           300: "#909090",    // 텍스트/테두리에 쓰는 중간 회색
         },
         black: "#111112",
+        negative: "#FF3F3F", 
+        positive: "#15DC5E",
       },
     },
   },
