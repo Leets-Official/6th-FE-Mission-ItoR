@@ -1,4 +1,4 @@
-import { Button } from "../components/common/Button";
+import { Button } from "../components/Button/Button";
 import { EditIcon } from "../assets/icons/EditIcon";
 
 export default function ButtonTestPage() {
