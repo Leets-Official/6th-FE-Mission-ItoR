@@ -9,8 +9,16 @@ export default {
       fontFamily: {
         noto: ['"Noto Sans KR"', "sans-serif"],
       },
+      colors: {
+        primary: "#00A1FF",  // 버튼 파란색
+        gray: {
+          100: "#E6E6E6",    // 밝은 회색
+          200: "#D9D9D9",
+          300: "#909090",    // 텍스트/테두리에 쓰는 중간 회색
+        },
+        black: "#111112",
+      },
     },
   },
   plugins: [],
 }
-
