@@ -1,7 +1,7 @@
 // src/components/ui/SmallButton.tsx
 import clsx from "clsx";
 import React from "react";
-import Pencil from "../icons/Pencil";
+import Pencil from "@icons/pencil.svg?react";
 
 type SmallVariant = "ghost" | "fill";
 

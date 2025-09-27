@@ -1,6 +1,7 @@
 import Button from "./components/ui/Button";
 import SmallButton from "./components/ui/SmallButton";
 import ToastButton from "./components/ui/ToastButton"; 
+import PageHeader from "./components/ui/PageHeader";
 
 function App() {
   return (
@@ -27,7 +28,13 @@ function App() {
         <ToastButton variant="negative">내용을 입력해주세요</ToastButton>
         <ToastButton variant="positive">저장되었습니다!</ToastButton>
       </div>
-      
+
+      <div className="min-h-dvh flex flex-col items-center gap-6 p-6 bg-gray-100">
+       <PageHeader variant="write" />
+       <PageHeader variant="comment" />
+       <PageHeader variant="publish" />
+      </div>
+
     </div>
   );
 }

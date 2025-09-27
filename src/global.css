@@ -7,9 +7,13 @@
     --White:  #FFFFFF;
 
     --Gray7:  #111112;
-    --Gray20:  #333333;
-    --Gray56:  #909090;
-    --Gray90:  #E6E6E6;
+    --Gray20: #333333;
+    --Gray56: #909090;
+    --Gray90: #E6E6E6;
+
+    --Negative: #FF3F3F;
+    --Positive: #15DC5E;
+    --Black:    #000000;
   }
 
   html, body, #root {
@@ -29,9 +33,29 @@
   }
 }
 
-/* ===== Button reset (optional but tidy) ===== */
+/* ===== Components / Utilities ===== */
 @layer components {
+  /* 버튼 리셋 */
   .btn-reset {
-    @apply outline-none select-none;
+    @apply outline-none select-none bg-transparent border-0 p-0 appearance-none;
+  }
+
+  /* 14px 버튼 텍스트 */
+  .btn-text-14 {
+    @apply text-[14px] leading-[22.4px] font-normal tracking-[-0.07px];
+    font-family: "Noto Sans KR", sans-serif;
+  }
+
+  /* 12px 작은 버튼 텍스트 */
+  .btn-text-12 {
+    @apply text-[12px] leading-[19.2px] font-normal;
+    font-family: "Noto Sans KR", sans-serif;
+  }
+
+  /* 로고 텍스트 */
+  .logo-text {
+    @apply text-[20px] leading-[28px] font-normal;
+    font-family: "Smooch", cursive;
+    color: var(--Black);
   }
 }

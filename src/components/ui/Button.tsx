@@ -1,6 +1,6 @@
 // src/components/ui/Button.tsx
 import React from "react";
-import PencilIconSvg from "../../assets/icons/pencil.svg?react";
+import PencilIconSvg from "@icons/pencil.svg?react";
 
 export type ButtonVariant =
   | "outlinePointWhite"   // 1) 테두리 Point + 배경 White + 텍스트 Point

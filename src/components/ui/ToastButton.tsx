@@ -2,8 +2,8 @@
 import React from "react";
 import clsx from "clsx";
 // 파일명에 맞춰 수정
-import DoneIcon from "../../assets/icons/done.svg?react";
-import ErrorIcon from "../../assets/icons/error.svg?react";
+import DoneIcon from "@icons/done.svg?react";
+import ErrorIcon from "@icons/error.svg?react";
 
 type ToastVariant = "negative" | "positive";
 
