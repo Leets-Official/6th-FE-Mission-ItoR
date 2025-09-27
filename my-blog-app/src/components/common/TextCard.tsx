@@ -14,7 +14,7 @@ export default function TextCard({
   children,
 }: TextCardProps) {
   const baseStyle =
-    "w-[688px] max-w-[688px] px-4 py-3 bg-white font-['Noto_Sans_KR']";
+    "w-[688px] max-w-[688px] px-4 py-3 bg-white";
 
   const variants: Record<typeof variant, string> = {
     primary: "flex flex-col justify-center items-start gap-3",
@@ -29,9 +29,9 @@ export default function TextCard({
         <h2
           className={
             variant === "primary"
-              ? "text-[24px] font-medium leading-[160%] text-[#333]"
+              ? "text-[24px] font-medium leading-[160%] text-gray-800"
               : variant === "secondary"
-              ? "text-[16px] font-medium leading-[160%] text-[#333] truncate"
+              ? "text-[16px] font-medium leading-[160%] text-gray-800 truncate"
               : ""
           }
         >
@@ -41,14 +41,14 @@ export default function TextCard({
 
       {/* subtitle */}
       {subtitle && (
-        <p className="text-[14px] font-light leading-[160%] tracking-[-0.07px] text-[#333]">
+        <p className="text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800">
           {subtitle}
         </p>
       )}
 
       {/* children (body text) */}
     {children && (
-    <p className="flex-1 text-[14px] font-light leading-[160%] tracking-[-0.07px] text-[#333]">
+    <p className="flex-1 text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800">
         {children}
     </p>
     )}
