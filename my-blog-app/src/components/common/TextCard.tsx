@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/utils/cn";
 
 type TextCardProps = {
   variant?: "primary" | "secondary" | "body";
@@ -27,13 +28,11 @@ export default function TextCard({
       {/* title */}
       {title && (
         <h2
-          className={
-            variant === "primary"
-              ? "text-[24px] font-medium leading-[160%] text-gray-800"
-              : variant === "secondary"
-              ? "text-[16px] font-medium leading-[160%] text-gray-800 truncate"
-              : ""
-          }
+          className={cn(
+            "leading-[160%] text-gray-800", // 공통 스타일
+            variant === "primary" && "text-[24px] font-medium",
+            variant === "secondary" && "text-[16px] font-medium truncate"
+          )}
         >
           {title}
         </h2>
@@ -47,11 +46,11 @@ export default function TextCard({
       )}
 
       {/* children (body text) */}
-    {children && (
-    <p className="flex-1 text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800">
-        {children}
-    </p>
-    )}
+      {children && (
+        <p className="flex-1 text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800">
+          {children}
+        </p>
+      )}
     </div>
   );
 }
