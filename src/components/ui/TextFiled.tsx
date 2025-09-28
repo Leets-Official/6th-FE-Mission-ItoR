@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import type { TextFiledProps } from "./TextFiled.types";
+import type { TextFiledProps } from "@ui/TextFiled.types";
 import {
   wrapperBase,
   labelClass,

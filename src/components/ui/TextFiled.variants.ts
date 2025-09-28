@@ -1,4 +1,4 @@
-import type { TFSize, TFStyle } from "./TextFiled.types";
+import type { TFSize, TFStyle } from "@ui/TextFiled.types";
 
 export const fieldBase =
   "flex items-center gap-[10px] px-4 py-3 rounded-[4px] w-[656px]"; // padding: 12px 16px

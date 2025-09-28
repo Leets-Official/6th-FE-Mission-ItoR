@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import type { ModalProps } from "./Modal.types";
+import type { ModalProps } from "@ui/Modal.types";
 import {
   overlayBase,
   cardBase,

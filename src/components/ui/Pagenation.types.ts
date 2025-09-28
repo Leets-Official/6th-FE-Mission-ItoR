@@ -1,4 +1,4 @@
-export interface PaginationProps {
+export interface PagenationProps {
   page: number;             
   totalPages: number;        
   onChange: (next: number) => void;
