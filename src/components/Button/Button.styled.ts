@@ -1,7 +1,7 @@
-import { Variant } from "@/components/Button/Button.types";
+import { Variant } from "./Button.types";
 
 export const base =
-  "inline-flex items-center gap-3 rounded-full px-6 py-3 text-lg font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+  "inline-flex items-center gap-3 rounded-full px-6 py-3 text-lg font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer";
 
 export const variants: Record<Variant, string> = {
   primaryOutline: "border border-brand-blue text-brand-blue bg-white",

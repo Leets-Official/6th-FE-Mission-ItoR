@@ -1,6 +1,8 @@
+export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
+
 export interface AvatarProps {
   src?: string;
   alt?: string;
-  size?: number;
+  size?: AvatarSize;
   className?: string;
 }

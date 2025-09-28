@@ -11,7 +11,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   fullWidth,
   ...props
 }) => {
-  const cls = cn(base, variants[variant], sizes[size], fullWidth ? "w-full" : "", className);
+  const cls = cn(base, variants[variant], sizes[size], fullWidth && "w-full", className);
 
   return <input className={cls} disabled={disabled} {...props} />;
 };

@@ -15,18 +15,20 @@ export default function ButtonDemo() {
         <Button label="깃로그 시작하기" variant="secondaryOutline" leftIcon={icon} />
         <Button label="깃로그 시작하기" variant="tertiary" leftIcon={icon} />
         <Button label="깃로그 시작하기" variant="neutral" leftIcon={icon} />
-        <Button label="깃로그 시작하기" variant="disabled" leftIcon={icon} />
+        <Button label="깃로그 시작하기" variant="disabled" leftIcon={icon} disabled />
         <Button label="깃로그 시작하기" variant="inverse" leftIcon={icon} />
         <Button label="깃로그 시작하기" variant="inverseMuted" leftIcon={icon} />
       </div>
 
-      <div className="mt-[22px] flex max-w-md flex-col items-center space-y-4">
+      <div className="mt-[22px] mb-[22px] flex max-w-md flex-col items-center space-y-4">
         <SmallButton label="깃로그 시작하기" variant="secondaryOutline" leftIcon={smallIcon} />
         <SmallButton label="깃로그 시작하기" variant="disabled" leftIcon={smallIcon} disabled />
       </div>
 
-      <Link to="/" className="mt-[22px]">
-        <button className="text-blue-600 underline hover:text-blue-800">홈으로 돌아가기</button>
+      <Link to="/">
+        <button className="bg-brand-blue rounded-md px-4 py-2 font-medium text-white hover:bg-blue-500">
+          홈으로 돌아가기
+        </button>
       </Link>
     </div>
   );

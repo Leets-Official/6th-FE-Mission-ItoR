@@ -2,6 +2,7 @@ import React from "react";
 import CreateIcon from "@/assets/create.svg?react";
 import { ButtonProps } from "./Button.types";
 import { base, variants, disabledStyle } from "./Button.styled";
+import { cn } from "@/utils/cn";
 
 export const Button: React.FC<ButtonProps> = ({
   label,
@@ -12,15 +13,13 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth,
   ...props
 }) => {
-  const cls = [
+  const cls = cn(
     base,
     variants[variant],
-    fullWidth ? "w-full justify-center" : "",
-    disabled ? disabledStyle : "",
+    fullWidth && "w-full justify-center",
+    disabled && disabledStyle,
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  );
 
   return (
     <button className={cls} disabled={disabled} {...props}>
