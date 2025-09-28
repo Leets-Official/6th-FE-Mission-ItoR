@@ -4,6 +4,7 @@ import ButtonTest from "./pages/test-page/button-test";
 import TextTest from "./pages/test-page/text-test";
 import ToastTest from "./pages/test-page/toast-test";
 import ModalTest from "./pages/test-page/modal-test";
+import DropdownTest from "./pages/test-page/dropdown-test";
 
 function Home() {
   return (
@@ -38,6 +39,12 @@ function Home() {
             Modal 테스트 페이지로 이동
           </button>
         </Link>
+
+        <Link to="/dropdown-test">
+          <button className="w-52 rounded-md bg-pink-500 px-5 py-3 text-white hover:bg-pink-600">
+            Dropdown 테스트 페이지로 이동
+          </button>
+        </Link>
       </div>
     </div>
   );
@@ -52,6 +59,7 @@ function App() {
       <Route path="/text-test" element={<TextTest />} />
       <Route path="/toast-test" element={<ToastTest />} />
       <Route path="/modal-test" element={<ModalTest />} />
+      <Route path="/dropdown-test" element={<DropdownTest />} />
     </Routes>
   );
 }
