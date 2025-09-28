@@ -1,8 +1,15 @@
 {
   "semi": true,
   "singleQuote": false,
-  "trailingComma": "es5",
-  "printWidth": 80,
+  "trailingComma": "all",
   "tabWidth": 2,
+  "printWidth": 100,
+  "rules": {
+    "quotes": [
+      "error",
+      "backtick"
+    ],
+    "prefer-template": "off"
+  },
   "plugins": ["prettier-plugin-tailwindcss"]
 }
