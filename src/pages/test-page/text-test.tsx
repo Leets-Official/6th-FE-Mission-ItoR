@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "@/components/Text/TextField";
+import { Link } from "react-router-dom";
 
 export default function TextTest() {
   return (
@@ -26,6 +27,14 @@ export default function TextTest() {
         <TextField placeholder="Text field" size="sm" variant="input" />
         <TextField placeholder="Text field" size="sm" variant="active" />
         <TextField placeholder="Text field" size="sm" variant="disabled" disabled />
+      </div>
+
+      <div>
+        <Link to="/">
+          <button className="bg-brand-blue rounded-md px-4 py-2 font-medium text-white hover:bg-blue-500">
+            홈으로 돌아가기
+          </button>
+        </Link>
       </div>
     </div>
   );
