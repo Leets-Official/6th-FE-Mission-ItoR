@@ -22,7 +22,7 @@ function Playground() {
   const [isPrimaryModalOpen, setIsPrimaryModalOpen] = useState(false);
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+    <div className="min-h-screen p-8">
       <div className="mx-auto max-w-4xl space-y-8">
         <h1 className="mb-8 text-center text-3xl font-bold">Playground</h1>
 
