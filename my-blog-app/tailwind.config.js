@@ -21,6 +21,12 @@ export default {
         negative: "#FF3F3F", 
         positive: "#15DC5E",
       },
+      width: {
+        'check-icon': '17.6px',  
+      },
+      height: {
+        'check-icon': '13.4px',
+      },
     },
   },
   plugins: [],

@@ -2,7 +2,7 @@ type CheckIconProps = {
   className?: string;
 };
 
-export function CheckIcon({ className = "w-[17.6px] h-[13.4px] text-[#15DC5E]" }: CheckIconProps) {
+export function CheckIcon({ className = "w-check-icon h-check-icon text-positive" }: CheckIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
