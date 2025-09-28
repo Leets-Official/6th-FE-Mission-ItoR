@@ -7,3 +7,5 @@ export const variants: Record<SmallVariant, string> = {
   secondaryOutline: "border border-transparent text-[#909090] bg-transparent",
   disabled: "border border-transparent text-[#909090] bg-[#E6E6E6]",
 };
+
+export const disabledStyle = "cursor-not-allowed";

@@ -1,7 +1,7 @@
 import React from "react";
 import CreateIcon from "@/assets/create.svg?react";
-import { SmallButtonProps } from "@/components/SmallButton/SmallButton.types";
-import { base, variants, disabledStyle } from "@/components/Button/Button.styled";
+import { SmallButtonProps } from "./SmallButton.types";
+import { base, variants, disabledStyle } from "./SmallButton.styled";
 import { cn } from "@/utils/cn";
 
 export const SmallButton: React.FC<SmallButtonProps> = ({

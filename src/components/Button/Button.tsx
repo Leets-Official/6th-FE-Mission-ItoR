@@ -1,7 +1,7 @@
 import React from "react";
 import CreateIcon from "@/assets/create.svg?react";
 import { ButtonProps } from "./Button.types";
-import { base, variants, disabledStyle } from "@/components/Button/Button.styled";
+import { base, variants, disabledStyle } from "./Button.styled";
 
 export const Button: React.FC<ButtonProps> = ({
   label,
