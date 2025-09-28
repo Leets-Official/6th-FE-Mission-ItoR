@@ -6,9 +6,9 @@
   --color-brand-blue: #00A1FF;
   --color-brand-gray: #909090;
   --color-brand-lightGray: #E6E6E6;
-  --color-brand-borderGray: #e0e0e0;
+  --color-brand-borderGray: #F5F5F5;
   --color-brand-bgGray: #f0f0f0;
-  --color-brand-black: #111112;
+  --color-brand-black: #000000;
   --color-brand-red: #FF3F3F;
   --color-brand-green: #15DC5E;
   --color-brand-white: #FFFFFFE5;
@@ -26,6 +26,7 @@
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
 
   /* ==== Avatar Sizes ==== */
   --spacing-avatar-xs: 24px;
