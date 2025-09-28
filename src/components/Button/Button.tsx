@@ -1,5 +1,5 @@
 import React from "react";
-import CreateIcon from "@/assets/create.svg?react";
+import { CreateIcon } from "@/assets/icons";
 import { ButtonProps } from "./Button.types";
 import { base, variants, disabledStyle } from "./Button.styled";
 import { cn } from "@/utils/cn";

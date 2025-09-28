@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@/components/Button/Button";
 import SmallButton from "@/components/SmallButton/SmallButton";
-import CreateIcon from "@/assets/create.svg?react";
+import CreateIcon from "@/assets/icons/create.svg?react";
 import { Link } from "react-router-dom";
 
 export default function ButtonDemo() {

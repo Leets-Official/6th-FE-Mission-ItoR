@@ -9,6 +9,9 @@
   --color-brand-borderGray: #e0e0e0;
   --color-brand-bgGray: #f0f0f0;
   --color-brand-black: #111112;
+  --color-brand-red: #FF3F3F;
+  --color-brand-green: #15DC5E;
+  --color-brand-white: #FFFFFFE5;
 
   /* ==== Border Radius ==== */
   --radius-sm: 0.125rem;
