@@ -2,6 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Toast from './components/Toast';
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -26,7 +28,8 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        <Toast type="success" message="저장되었습니다!" />
+        <Toast type="warning" message="오류가 발생했습니다!" />
       </p>
     </>
   )
