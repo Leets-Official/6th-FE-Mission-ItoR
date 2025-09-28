@@ -3,6 +3,7 @@ import AvatarTest from "./pages/test-page/avatar-test";
 import ButtonTest from "./pages/test-page/button-test";
 import TextTest from "./pages/test-page/text-test";
 import ToastTest from "./pages/test-page/toast-test";
+import ModalTest from "./pages/test-page/modal-test";
 
 function Home() {
   return (
@@ -31,6 +32,12 @@ function Home() {
             Toast 테스트 페이지로 이동
           </button>
         </Link>
+
+        <Link to="/modal-test">
+          <button className="w-52 rounded-md bg-purple-500 px-5 py-3 text-white hover:bg-purple-600">
+            Modal 테스트 페이지로 이동
+          </button>
+        </Link>
       </div>
     </div>
   );
@@ -44,6 +51,7 @@ function App() {
       <Route path="/button-test" element={<ButtonTest />} />
       <Route path="/text-test" element={<TextTest />} />
       <Route path="/toast-test" element={<ToastTest />} />
+      <Route path="/modal-test" element={<ModalTest />} />
     </Routes>
   );
 }
