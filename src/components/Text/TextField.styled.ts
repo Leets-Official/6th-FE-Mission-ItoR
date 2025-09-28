@@ -1,13 +1,13 @@
-import { TextFieldVariant, TextFieldSize } from "./TextField.types";
+import { TextFieldVariant, TextFieldSize } from "@/components/Text/TextField.types";
 
 export const base = "rounded-sm transition-colors duration-150 outline-none h-auto";
 
 export const variants: Record<TextFieldVariant, string> = {
-  default: "border border-gray-100 text-black placeholder-gray-400 bg-transparent",
-  input: "border border-gray-100 text-black placeholder-black bg-transparent",
-  active: "border border-gray-500 text-black placeholder-black bg-transparent",
+  default: "border border-brand-lightGray text-black placeholder-brand-gray bg-transparent",
+  input: "border border-brand-lightGray text-black placeholder-black bg-transparent",
+  active: "border border-brand-gray text-black placeholder-black bg-transparent",
   disabled:
-    "border border-transparent text-black placeholder-gray-400 bg-gray-100 cursor-not-allowed",
+    "border border-transparent text-black placeholder-brand-gray bg-brand-lightGray cursor-not-allowed",
 };
 
 export const sizes: Record<TextFieldSize, string> = {
