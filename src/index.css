@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* ==== Brand Colors ==== */
+  --color-brand-blue: #00A1FF;
+  --color-brand-gray: #909090;
+  --color-brand-lightGray: #E6E6E6;
+  --color-brand-borderGray: #e0e0e0;
+  --color-brand-bgGray: #f0f0f0;
+  --color-brand-black: #111112;
+
+  /* ==== Border Radius ==== */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-full: 9999px;
+
+  /* ==== Font ==== */
+  --font-sans: "Noto Sans KR", system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  /* ==== Font Size ==== */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+
+  /* ==== Avatar Sizes ==== */
+  --spacing-avatar-xs: 24px;
+  --spacing-avatar-sm: 32px;
+  --spacing-avatar-md: 48px;
+  --spacing-avatar-lg: 64px;
+  --spacing-avatar-xl: 96px;
+}
+
+body {
+  @apply font-sans;
+}
