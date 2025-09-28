@@ -4,12 +4,5 @@
   "trailingComma": "all",
   "tabWidth": 2,
   "printWidth": 100,
-  "rules": {
-    "quotes": [
-      "error",
-      "backtick"
-    ],
-    "prefer-template": "off"
-  },
   "plugins": ["prettier-plugin-tailwindcss"]
 }
