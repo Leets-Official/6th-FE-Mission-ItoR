@@ -3,7 +3,6 @@
   background-color: white;
 }
 
-
 body {
   margin: 0;
   font-family:
@@ -38,4 +37,16 @@ body {
 
 .page-header-legacy-container {
   @apply flex w-[1366px] max-w-[1366px] p-3 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
+}
+
+.sidebar-container {
+  @apply fixed left-0 top-0 h-full z-50 transform transition-transform duration-300;
+}
+
+.sidebar-open {
+  @apply translate-x-0;
+}
+
+.sidebar-closed {
+  @apply -translate-x-full;
 }
