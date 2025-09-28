@@ -1,6 +1,6 @@
 // src/pages/text-test.tsx
 import React from "react";
-import TextField from "@/components/Text/TextFiled";
+import TextField from "@/components/Text/TextField";
 import SmallButton from "@/components/Button/SmallButton";
 
 export default function TextTest() {
