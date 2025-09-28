@@ -9,40 +9,41 @@ import DropdownTest from "./pages/test-page/dropdown-test";
 function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="flex flex-col gap-4">
+      {/* ✅ flex-wrap 적용 */}
+      <div className="flex max-w-4xl flex-wrap justify-center gap-4">
         <Link to="/avatar-test">
           <button className="w-52 rounded-md bg-indigo-500 px-5 py-3 text-white hover:bg-indigo-600">
-            Avatar 테스트 페이지로 이동
+            Avatar 테스트 페이지
           </button>
         </Link>
 
         <Link to="/button-test">
           <button className="w-52 rounded-md bg-green-600 px-5 py-3 text-white hover:bg-green-700">
-            Button 테스트 페이지로 이동
+            Button 테스트 페이지
           </button>
         </Link>
 
         <Link to="/text-test">
           <button className="w-52 rounded-md bg-orange-500 px-5 py-3 text-white hover:bg-orange-600">
-            TextField 테스트 페이지로 이동
+            TextField 테스트 페이지
           </button>
         </Link>
 
         <Link to="/toast-test">
           <button className="w-52 rounded-md bg-blue-500 px-5 py-3 text-white hover:bg-blue-600">
-            Toast 테스트 페이지로 이동
+            Toast 테스트 페이지
           </button>
         </Link>
 
         <Link to="/modal-test">
           <button className="w-52 rounded-md bg-purple-500 px-5 py-3 text-white hover:bg-purple-600">
-            Modal 테스트 페이지로 이동
+            Modal 테스트 페이지
           </button>
         </Link>
 
         <Link to="/dropdown-test">
           <button className="w-52 rounded-md bg-pink-500 px-5 py-3 text-white hover:bg-pink-600">
-            Dropdown 테스트 페이지로 이동
+            Dropdown 테스트 페이지
           </button>
         </Link>
       </div>
