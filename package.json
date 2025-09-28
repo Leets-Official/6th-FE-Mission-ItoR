@@ -37,6 +37,8 @@
     "@storybook/react-vite": "9.1.7",
     "@swc-node/register": "1.6.7",
     "@swc/core": "^1.4.8",
+    "@types/aria-query": "^5.0.4",
+    "@types/babel__generator": "^7.27.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.8",
