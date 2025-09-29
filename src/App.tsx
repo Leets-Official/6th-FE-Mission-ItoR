@@ -5,7 +5,8 @@ import TextTest from "./pages/test-page/text-test";
 import ToastTest from "./pages/test-page/toast-test";
 import ModalTest from "./pages/test-page/modal-test";
 import DropdownTest from "./pages/test-page/dropdown-test";
-import HeaderTest from "./pages/test-page/header-test"; // ✅ 추가
+import HeaderTest from "./pages/test-page/header-test";
+import SidebarTest from "./pages/test-page/sidebar-test"; // ✅ 추가
 
 function Home() {
   return (
@@ -46,6 +47,11 @@ function Home() {
             Header 테스트 페이지
           </button>
         </Link>
+        <Link to="/sidebar-test">
+          <button className="w-52 rounded-md bg-teal-500 px-5 py-3 text-white hover:bg-teal-600">
+            Sidebar 테스트 페이지
+          </button>
+        </Link>
       </div>
     </div>
   );
@@ -61,7 +67,8 @@ function App() {
       <Route path="/toast-test" element={<ToastTest />} />
       <Route path="/modal-test" element={<ModalTest />} />
       <Route path="/dropdown-test" element={<DropdownTest />} />
-      <Route path="/header-test" element={<HeaderTest />} /> {/* ✅ 추가 */}
+      <Route path="/header-test" element={<HeaderTest />} />
+      <Route path="/sidebar-test" element={<SidebarTest />} /> {/* ✅ 추가 */}
     </Routes>
   );
 }
