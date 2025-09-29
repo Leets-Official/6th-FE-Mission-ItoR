@@ -5,8 +5,8 @@ import CreateIcon from "@/assets/icons/create.svg?react";
 import { Link } from "react-router-dom";
 
 export default function ButtonDemo() {
-  const icon = <CreateIcon className="h-6 w-6 fill-current" />;
-  const smallIcon = <CreateIcon className="h-4 w-4 fill-current" />;
+  const icon = <CreateIcon />;
+  const smallIcon = <CreateIcon />;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#efefef] p-8">

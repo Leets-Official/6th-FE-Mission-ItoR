@@ -13,4 +13,14 @@ export const variants: Record<Variant, string> = {
   inverseMuted: "border border-transparent text-brand-gray bg-brand-black",
 };
 
+export const iconColors: Record<string, string> = {
+  primaryOutline: "text-brand-blue",
+  secondaryOutline: "text-brand-gray",
+  tertiary: "text-brand-gray",
+  neutral: "text-brand-gray",
+  disabled: "text-brand-gray",
+  inverse: "text-white",
+  inverseMuted: "text-brand-gray",
+};
+
 export const disabledStyle = "cursor-not-allowed";
