@@ -8,10 +8,10 @@ interface PostCardProps {
 
 const PostCard: FC<PostCardProps> = ({ title, content, className = '' }) => {
   return (
-    <div className={`flex w-[688px] max-w-[688px] flex-col items-start justify-center gap-2 p-3 ${className}`}>
-      <h3 className="self-stretch text-base font-medium leading-[160%] tracking-[-0.04px] text-black">{title}</h3>
+    <div className={`flex max-w-content px-4 py-3 flex-col justify-center items-start gap-2 self-stretch ${className}`}>
+      <h3 className="self-stretch text-base font-medium leading-[160%] tracking-[-0.08px] text-black overflow-hidden text-ellipsis whitespace-nowrap">{title}</h3>
       {content && (
-        <p className="h-12 self-stretch overflow-hidden text-ellipsis whitespace-nowrap text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-dark">
+        <p className="h-12 self-stretch overflow-hidden text-ellipsis text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-dark line-clamp-2">
           {content}
         </p>
       )}
