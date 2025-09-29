@@ -6,7 +6,8 @@ import ToastTest from "./pages/test-page/toast-test";
 import ModalTest from "./pages/test-page/modal-test";
 import DropdownTest from "./pages/test-page/dropdown-test";
 import HeaderTest from "./pages/test-page/header-test";
-import SidebarTest from "./pages/test-page/sidebar-test"; // ✅ 추가
+import SidebarTest from "./pages/test-page/sidebar-test";
+import PaginationTest from "./pages/test-page/pagination-test";
 
 function Home() {
   return (
@@ -52,6 +53,11 @@ function Home() {
             Sidebar 테스트 페이지
           </button>
         </Link>
+        <Link to="/pagination-test">
+          <button className="w-52 rounded-md bg-red-500 px-5 py-3 text-white hover:bg-red-600">
+            Pagination 테스트 페이지
+          </button>
+        </Link>
       </div>
     </div>
   );
@@ -68,7 +74,8 @@ function App() {
       <Route path="/modal-test" element={<ModalTest />} />
       <Route path="/dropdown-test" element={<DropdownTest />} />
       <Route path="/header-test" element={<HeaderTest />} />
-      <Route path="/sidebar-test" element={<SidebarTest />} /> {/* ✅ 추가 */}
+      <Route path="/sidebar-test" element={<SidebarTest />} />
+      <Route path="/pagination-test" element={<PaginationTest />} />
     </Routes>
   );
 }
