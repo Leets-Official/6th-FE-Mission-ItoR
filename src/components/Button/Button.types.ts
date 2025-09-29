@@ -9,9 +9,13 @@ export type Variant =
   | "inverse" // 검정 배경 + 흰 글자
   | "inverseMuted"; // 검정 배경 + 회색 글자
 
+export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   variant?: Variant;
-  leftIcon?: React.ReactElement<{ className?: string }>;
+  size?: ButtonSize;
+  leftIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+  disabled?: boolean;
   fullWidth?: boolean;
 }

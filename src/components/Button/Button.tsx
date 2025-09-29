@@ -1,11 +1,12 @@
 import React from "react";
 import { ButtonProps } from "./Button.types";
-import { base, variants, disabledStyle, iconColors } from "./Button.styled";
+import { base, variants, disabledStyle, iconColors, sizes } from "./Button.styled";
 import { cn } from "@/utils/cn";
 
 export const Button: React.FC<ButtonProps> = ({
   label,
   variant = "primaryOutline",
+  size = "md",
   leftIcon,
   className = "",
   disabled,
@@ -15,6 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   const cls = cn(
     base,
     variants[variant],
+    sizes[size],
     fullWidth && "w-full justify-center",
     disabled && disabledStyle,
     className,
