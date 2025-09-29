@@ -1,26 +1,20 @@
-// src/App.tsx
-import TextBox from "@ui/TextBox";
+import Frame from "@ui/Frame";
 
 export default function App() {
   return (
-    <div className="min-h-dvh bg-gray-100 p-8">
-      <div className="mx-auto max-w-[720px] space-y-4">
-        {/* 1번 */}
-        <TextBox
-          tbStyle="primary"
-          title="32 Title one line"
-          description="subtitle one line"
+    <div className="min-h-dvh bg-gray-100 p-6">
+      <div className="mx-auto flex max-w-[1024px] gap-6">
+        <Frame variant="guest" initial="G" onStart={() => console.log("start")} />
+        <Frame
+          variant="member"
+          name="%{닉네임}"
+          intro="%{한 줄 소개}"
+          initial="G"
+          onMyGitlog={() => console.log("my gitlog")}
+          onWrite={() => console.log("write")}
+          onSettings={() => console.log("settings")}
+          onLogout={() => console.log("logout")}
         />
-
-        {/* 2번 (한 줄 말줄임) */}
-        <TextBox
-          tbStyle="compact"
-          title="16 Title one line"
-          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.  "
-        />
-
-        {/* 3번 */}
-        <TextBox tbStyle="single" text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.  " />
       </div>
     </div>
   );
