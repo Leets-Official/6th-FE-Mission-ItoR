@@ -1,34 +1,27 @@
 import { FC } from 'react';
 import profileImage from '@/assets/profile.png';
+import { cn } from '@/utils/cn';
 
 interface MainPreviewImageProps {
   className?: string;
   src?: string;
-  alt?: string;
 }
 
 const MainPreviewImage: FC<MainPreviewImageProps> = ({ 
-  className = '', 
-  src,
-  alt = 'Preview image' 
+  className, 
+  src
 }) => {
   const imageUrl = src || profileImage;
   
   return (
     <div 
-      className={`flex w-[124px] h-[116px] items-center ${className}`}
-      style={{
-        padding: '12px 16px',
-        gap: '8px',
-        background: 'var(--fake-white, #FFF)'
-      }}
+      className={cn('flex w-[124px] h-[116px] px-4 py-3 items-center gap-2 bg-white', className)}
     >
       <div
+        className="flex-1 self-stretch rounded-sm bg-center bg-cover bg-no-repeat"
         style={{
-          flex: '1 0 0',
-          alignSelf: 'stretch',
-          borderRadius: '2px',
-          background: `url(${imageUrl}) lightgray 50% / cover no-repeat`
+          backgroundImage: `url(${imageUrl})`,
+          backgroundColor: 'lightgray'
         }}
       />
     </div>
