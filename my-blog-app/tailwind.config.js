@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        smooch: ['"Smooch"', 'cursive'],
         sans: ['"Noto Sans KR"', 'sans-serif'],
       },
       colors: {
