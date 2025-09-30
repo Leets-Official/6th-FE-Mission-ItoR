@@ -1,7 +1,14 @@
 import React from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import { Post } from "@/types/post";
-import * as styles from "./PostItem.styled";
+import {
+  listItem,
+  postTitle,
+  postContent,
+  postMeta,
+  postNickName,
+  postImage,
+} from "./PostItem.styled";
 
 interface PostItemProps {
   post: Post;
@@ -13,13 +20,13 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
   const firstImage = post.contents.find((c) => c.contentType === "IMAGE")?.content;
 
   return (
-    <li className={styles.listItem}>
+    <li className={listItem}>
       <div className="flex flex-1 flex-col">
-        <h2 className={styles.postTitle}>{post.title}</h2>
-        <p className={styles.postContent}>{firstTextContent}</p>
-        <div className={styles.postMeta}>
+        <h2 className={postTitle}>{post.title}</h2>
+        <p className={postContent}>{firstTextContent}</p>
+        <div className={postMeta}>
           <Avatar src={post.profileUrl} size="sm" />
-          <span>{post.nickName}</span>
+          <span className={postNickName}>{post.nickName}</span>
           <span>
             ·{" "}
             {new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -32,7 +39,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         </div>
       </div>
 
-      {firstImage && <img src={firstImage} alt={post.title} className={styles.postImage} />}
+      {firstImage && <img src={firstImage} alt={post.title} className={postImage} />}
     </li>
   );
 };

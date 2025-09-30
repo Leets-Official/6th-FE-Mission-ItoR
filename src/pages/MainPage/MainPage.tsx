@@ -63,7 +63,7 @@ export default function MainPage() {
           ))}
         </ul>
 
-        <div className="mt-6 flex justify-center">
+        <div className="border-brand-borderGray mt-6 flex justify-center border-t pt-6">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
