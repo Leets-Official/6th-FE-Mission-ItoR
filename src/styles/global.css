@@ -83,20 +83,4 @@ body {
   .login-page-row {
     @apply flex items-center justify-between self-stretch;
   }
-
-  .login-logo-text-wrapper {
-    @apply flex min-w-[391px] px-4 flex-col items-center gap-0.5 flex-1;
-  }
-
-  .login-logo-container {
-    @apply flex justify-center items-center self-stretch h-logo-container min-w-logo-container-min max-w-logo-container px-[login-logo-px];
-  }
-
-  .login-textbox-container {
-    @apply flex justify-center items-center self-stretch h-login-textbox-container min-w-login-textbox-container-min max-w-login-textbox-container px-4 py-3 gap-2.5;
-  }
-
-  .login-textbox-text {
-    @apply flex-1 text-center text-gray-56 text-sm font-light leading-[160%] tracking-[-0.07px];
-  }
 }
