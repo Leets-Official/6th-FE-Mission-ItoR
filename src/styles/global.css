@@ -12,8 +12,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 삭제: Tailwind 토큰 사용으로 대체 */
-
 #root {
   min-height: 100vh;
 }
@@ -29,12 +27,12 @@ body {
   }
 }
 
-/* 토스트 컨테이너*/
+/* 토스트 컨테이너 */
 .toast-container {
   @apply inline-flex h-10 px-3 py-2 justify-center items-center gap-1 flex-shrink-0 rounded-[25px] border transition-all duration-200;
 }
 
-/* 페이지헤더 컨테이너*/
+/* 페이지헤더 컨테이너 */
 .page-header-container {
   @apply fixed top-0 left-0 right-0 z-50 flex w-full max-w-[1440px] mx-auto p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
 }
@@ -57,7 +55,7 @@ body {
   }
 }
 
-/* 사이드바*/
+/* 사이드바 */
 .sidebar-container {
   @apply fixed left-0 top-0 h-full z-50 transform transition-transform duration-300;
 }
