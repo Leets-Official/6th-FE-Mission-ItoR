@@ -14,17 +14,36 @@ import Textarea from '@/components/common/Text/Textarea';
 import TextBox from '@/components/common/Textbox/TextBox';
 import Toast from '@/components/common/Toast/Toast';
 import Sidebar from '@/layout/Sidebar';
+import { LoginModal } from '@/components/auth';
+import LoginPage from '@/pages/auth/LoginPage';
 import { useState } from 'react';
 
 function Playground() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTitleOnlyModalOpen, setIsTitleOnlyModalOpen] = useState(false);
   const [isPrimaryModalOpen, setIsPrimaryModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen p-8">
       <div className="mx-auto max-w-4xl space-y-8">
         <h1 className="mb-8 text-center text-3xl font-bold">Playground</h1>
+
+        {/* 로그인 컴포넌트 테스트 */}
+        <div className="rounded-lg bg-white p-4">
+          <h2 className="mb-4 text-xl font-semibold">로그인 컴포넌트</h2>
+          <div className="space-y-4">
+            <div className="flex justify-center gap-4">
+              <Button onClick={() => setIsLoginModalOpen(true)} intent="primary">
+                로그인 모달 열기
+              </Button>
+            </div>
+            <div className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
+              <h3 className="mb-2 text-sm font-medium text-center">로그인 페이지 미리보기</h3>
+              <LoginPage />
+            </div>
+          </div>
+        </div>
 
         {/* PageHeader 테스트 */}
         <div className="rounded-lg bg-white p-4">
@@ -265,6 +284,12 @@ function Playground() {
       >
         <h3 className="self-stretch text-sm font-semibold text-black">저장되었습니다</h3>
       </Modal>
+
+      {/* 로그인 모달 */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 }
