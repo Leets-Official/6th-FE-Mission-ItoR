@@ -12,6 +12,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 삭제: Tailwind 토큰 사용으로 대체 */
+
 #root {
   min-height: 100vh;
 }
@@ -27,10 +29,12 @@ body {
   }
 }
 
+/* 토스트 컨테이너*/
 .toast-container {
   @apply inline-flex h-10 px-3 py-2 justify-center items-center gap-1 flex-shrink-0 rounded-[25px] border transition-all duration-200;
 }
 
+/* 페이지헤더 컨테이너*/
 .page-header-container {
   @apply fixed top-0 left-0 right-0 z-50 flex w-full max-w-[1440px] mx-auto p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
 }
@@ -53,6 +57,7 @@ body {
   }
 }
 
+/* 사이드바*/
 .sidebar-container {
   @apply fixed left-0 top-0 h-full z-50 transform transition-transform duration-300;
 }
@@ -63,4 +68,37 @@ body {
 
 .sidebar-closed {
   @apply -translate-x-full;
+}
+
+/* 로그인 모달 및 페이지 유틸리티 클래스 */
+@layer utilities {
+  /* 로그인 모달 */
+  .login-modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-modal-overlay backdrop-blur-modal;
+  }
+
+  .login-modal-container {
+    @apply relative flex w-login-page max-w-login-page max-h-login-modal py-20 justify-between items-center content-center flex-wrap rounded-login-modal bg-dark;
+  }
+
+  /* 로그인 페이지 레이아웃 */
+  .login-page-row {
+    @apply flex items-center justify-between self-stretch;
+  }
+
+  .login-logo-text-wrapper {
+    @apply flex min-w-[391px] px-4 flex-col items-center gap-0.5 flex-1;
+  }
+
+  .login-logo-container {
+    @apply flex justify-center items-center self-stretch h-logo-container min-w-logo-container-min max-w-logo-container px-[login-logo-px];
+  }
+
+  .login-textbox-container {
+    @apply flex justify-center items-center self-stretch h-login-textbox-container min-w-login-textbox-container-min max-w-login-textbox-container px-4 py-3 gap-2.5;
+  }
+
+  .login-textbox-text {
+    @apply flex-1 text-center text-gray-56 text-sm font-light leading-[160%] tracking-[-0.07px];
+  }
 }

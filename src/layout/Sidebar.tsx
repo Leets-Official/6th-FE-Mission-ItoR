@@ -1,8 +1,11 @@
 import { Profile1Icon } from '@/assets/icons/common';
 import { Button, Spacer } from '@/components';
+import { LoginModal } from '@/components/auth';
+import { useSidebar } from '@/hooks/useSidebar';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
-import { SIDEBAR_TEXTS } from '@/constants/sidebar.Constants';
+import { SIDEBAR_TEXTS } from '@/constants/sidebar.constants';
+import { sidebarStyles } from './Sidebar.styles';
 
 interface SidebarProps {
   className?: string;
@@ -10,56 +13,65 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
+  const { isLoginModalOpen, openLoginModal, closeLoginModal } = useSidebar();
+  
   return (
-    <div className={cn('flex h-screen w-sidebar flex-col gap-2.5 border-r border-gray-90 bg-gray-96', className)}>
-      <div className="flex flex-1 flex-col py-6">
-        <div className="flex flex-col gap-2.5">
-          <div className="px-4">
+    <div className={cn(sidebarStyles.container, className)}>
+      <div className={sidebarStyles.mainContent}>
+        <div className={sidebarStyles.profileSection}>
+          <div className={sidebarStyles.profileIconWrapper}>
             <Profile1Icon />
           </div>
           {isLoggedIn ? (
-            <div className="flex max-w-sidebar-content flex-col items-start justify-center gap-3 self-stretch px-5 py-3">
-              <h2 className="self-stretch text-2xl font-medium leading-[160%] text-black">사용자 이름</h2>
-              <p className="self-stretch text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-20">
-                한줄 소개 텍스트
-              </p>
+            <div className={sidebarStyles.userInfoContainer}>
+              <h2 className={sidebarStyles.userName}>사용자 이름</h2>
+              <p className={sidebarStyles.userBio}>한줄 소개 텍스트</p>
             </div>
           ) : (
-            <div className="px-5 py-3">
-              <span className="text-sm font-light text-gray-20">{SIDEBAR_TEXTS.NOT_LOGGED_IN.QUOTE}</span>
+            <div className={sidebarStyles.quoteContainer}>
+              <span className={sidebarStyles.quoteText}>
+                {SIDEBAR_TEXTS.NOT_LOGGED_IN.QUOTE}
+              </span>
             </div>
           )}
         </div>
         <Spacer />
-        <div className="px-4">
+        <div className={sidebarStyles.buttonContainer}>
           {isLoggedIn ? (
-            <div className="flex gap-2.5">
-              <Button intent="primary" className="w-sidebar-button">
+            <div className={sidebarStyles.buttonGroup}>
+              <Button intent="primary" className={sidebarStyles.sidebarButton}>
                 {SIDEBAR_TEXTS.LOGGED_IN.MY_GITLOG}
               </Button>
-              <Button intent="primary" className="w-sidebar-button">
+              <Button intent="primary" className={sidebarStyles.sidebarButton}>
                 {SIDEBAR_TEXTS.LOGGED_IN.WRITE_GITLOG}
               </Button>
             </div>
           ) : (
-            <Button intent="primary">{SIDEBAR_TEXTS.NOT_LOGGED_IN.START_GITLOG}</Button>
+            <Button intent="primary" onClick={openLoginModal}>
+              {SIDEBAR_TEXTS.NOT_LOGGED_IN.START_GITLOG}
+            </Button>
           )}
         </div>
       </div>
 
       {isLoggedIn && (
-        <div className="flex flex-col py-6">
+        <div className={sidebarStyles.bottomSection}>
           <Spacer />
-          <div className="flex gap-2.5 px-4">
-            <Button intent="gray" className="w-sidebar-button">
+          <div className={cn(sidebarStyles.buttonContainer, sidebarStyles.buttonGroup)}>
+            <Button intent="gray" className={sidebarStyles.sidebarButton}>
               {SIDEBAR_TEXTS.LOGGED_IN.SETTINGS}
             </Button>
-            <Button intent="gray" className="w-sidebar-button">
+            <Button intent="gray" className={sidebarStyles.sidebarButton}>
               {SIDEBAR_TEXTS.LOGGED_IN.LOGOUT}
             </Button>
           </div>
         </div>
       )}
+      
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={closeLoginModal} 
+      />
     </div>
   );
 };
