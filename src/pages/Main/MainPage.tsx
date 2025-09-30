@@ -1,12 +1,11 @@
 import BlogPreviewCard from '@/components/blog/Main/MainPreviewCard';
 import Spacer from '@/components/common/Spacer/Spacer';
-import { mockPosts } from '@/_mocks_/posts';
+import { mockPosts } from '@/_mocks_/mockposts';
 
 function MainPage() {
   return (
-    <div className="min-h-screen mx-auto max-w-6xl px-4 py-8">
+    <div>
       <Spacer height="md" />
-      
       {mockPosts.map((post) => (
         <BlogPreviewCard 
           key={post.id}

@@ -23,7 +23,7 @@ body {
 
 @media (max-width: 767px) {
   .global-layout {
-    @apply w-[390px] min-h-[844px];
+    @apply w-mobile min-h-mobile flex max-w-content py-2 px-0 items-start gap-4 self-stretch;
   }
 }
 
@@ -39,9 +39,18 @@ body {
   @apply flex w-[1366px] max-w-[1366px] p-3 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
 }
 
+
 /* 블로그 미리보기 행 레이아웃 */
 .blog-preview-row {
+  /* 기본 웹 레이아웃 */
   @apply flex max-w-content py-2 px-0 items-start gap-4 self-stretch border-b border-gray-96 bg-white;
+}
+
+/* 모바일 반응형 - 768px 이하에서 가로 배치 유지 */
+@media (max-width: 768px) {
+  .blog-preview-row {
+    @apply flex max-w-content py-2 px-0 items-start gap-4 self-stretch border-b border-gray-96 bg-white;
+  }
 }
 
 .sidebar-container {

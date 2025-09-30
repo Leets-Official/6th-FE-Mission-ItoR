@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import PostCard from '@/components/blog/Post/PostCard';
+import { PostCard } from '@/components/blog/Post';
 import MainPreviewImage from './MainPreviewImage';
 import PostDetails from '@/components/blog/Post/PostDetails';
 
@@ -14,7 +14,7 @@ const BlogPreviewCard: FC<BlogPreviewCardProps> = ({ className = '', title = '',
   return (
     <div className={`blog-preview-row ${className}`}>
       <div className="flex flex-col">
-        <PostCard title={title} content={content} />
+        <PostCard title={title} content={content} hasImage={!!imageSrc} />
         <PostDetails />
       </div>
       {imageSrc && <MainPreviewImage src={imageSrc} />}

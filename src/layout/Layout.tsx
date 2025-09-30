@@ -20,7 +20,7 @@ export default function Layout() {
         <div ref={sidebarRef} className={`sidebar-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
           <Sidebar />
         </div>
-      <div className="pt-20">
+      <div className="pt-16">
         <Outlet />
       </div>
     </div>
