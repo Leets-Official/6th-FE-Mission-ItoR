@@ -1,4 +1,4 @@
-import type { ButtonVariant } from "./Button.types";
+import type { ButtonVariant } from "@ui/Button.types";
 
 export const baseClass =
   "inline-flex h-10 px-3 py-2 items-center justify-center gap-1 shrink-0 " +

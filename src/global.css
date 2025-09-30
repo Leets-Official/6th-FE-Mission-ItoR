@@ -8,12 +8,18 @@
 
     --Gray7: #111112;
     --Gray20: #333333;
+    --Gray-33: #555555;
     --Gray56: #909090;
+    --Gray-78: #C8C8C8;
     --Gray90: #e6e6e6;
+    --Gray96: #f2f2f2;
 
     --Negative: #ff3f3f;
     --Positive: #15dc5e;
     --Black: #000000;
+    --Neutral-1: #ffffff;
+    --Neutral-5: #d9d9d9;
+    --Primary-6: #1890ff;
   }
 
   html,
