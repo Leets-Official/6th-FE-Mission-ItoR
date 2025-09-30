@@ -5,6 +5,7 @@ import MenuTestPage from './pages/MenuTestPage'
 import TextCardTestPage from './pages/TextCardTestPage'
 import ConfirmModalTestPage from './pages/ConfirmModalTestPage'
 import HeaderTestPage from './pages/HeaderTestPage'
+import DropdownTestPage from './pages/DropdownTestPage'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='/test/textcard' element={<TextCardTestPage />} />
         <Route path='/test/confirmmodal' element={<ConfirmModalTestPage />} />
         <Route path='/test/header' element={<HeaderTestPage />} />
+        <Route path='/test/dropdown' element={<DropdownTestPage />} />
       </Routes>
     </Router>
   )
