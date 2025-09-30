@@ -1,5 +1,5 @@
 export const base =
-  'inline-flex justify-center items-center gap-1 rounded-[25px] transition-colors duration-200 font-noto text-sm font-normal leading-[160%] tracking-[-0.07px] h-10 px-3 py-2'
+  'inline-flex justify-center items-center gap-1 rounded-[25px] transition-colors duration-200 font-noto text-sm font-sans leading-[160%] tracking-[-0.07px] h-10 px-3 py-2'
 
 export const commonDisabled =
   'disabled:border-gray-300 disabled:text-gray-300 disabled:cursor-not-allowed disabled:opacity-60'
