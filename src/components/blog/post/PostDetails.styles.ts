@@ -1,4 +1,3 @@
-// components/PostDetails.styles.ts
 import { cn } from '@/utils/cn';
 
 const baseTextStyle = 'text-xs leading-[160%]';
