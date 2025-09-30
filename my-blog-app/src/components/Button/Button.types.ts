@@ -18,4 +18,5 @@ export interface ButtonProps {
   onClick?: () => void
   variant?: ButtonVariant
   disabled?: boolean
+  className?: string
 }
