@@ -1,4 +1,3 @@
-// hooks/useFocusTrap.ts
 import { useEffect, RefObject } from 'react';
 
 /**
@@ -19,7 +18,7 @@ export const useFocusTrap = (ref: RefObject<HTMLElement>, isActive: boolean) => 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    // 모달이 열릴 때 첫 번째 요소에 포커스
+    // 모달 열릴 때 포커스
     firstElement?.focus();
 
     const handleTab = (e: KeyboardEvent) => {

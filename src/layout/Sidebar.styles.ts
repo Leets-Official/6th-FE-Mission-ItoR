@@ -1,5 +1,3 @@
-// layout/Sidebar.styles.ts
-
 export const sidebarStyles = {
   container: 'flex h-screen w-sidebar flex-col gap-2.5 border-r border-gray-90 bg-gray-96',
   mainContent: 'flex flex-1 flex-col py-6',

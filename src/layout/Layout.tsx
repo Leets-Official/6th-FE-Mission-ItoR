@@ -7,7 +7,7 @@ export default function Layout() {
   const location = useLocation();
   const { isSidebarOpen, sidebarRef, toggleSidebar } = useSidebar();
 
-  // 경로에 따른 PageHeader 타입 결정
+  // 경로에 따른 PageHeader
   const getPageHeaderType = () => {
     if (location.pathname === '/') {
       return 'main';

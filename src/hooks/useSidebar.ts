@@ -19,9 +19,8 @@ export const useSidebar = () => {
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
-    // 모달이 열릴 때 사이드바는 닫힘
     setIsSidebarOpen(false);
-    // 다른 훅 인스턴스에도 닫기 신호 브로드캐스트
+
     window.dispatchEvent(new CustomEvent('sidebar:close'));
   };
 

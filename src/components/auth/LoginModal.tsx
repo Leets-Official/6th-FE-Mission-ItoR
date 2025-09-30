@@ -16,7 +16,7 @@ interface LoginModalProps {
 const LoginModal: FC<LoginModalProps> = ({ className = '', isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // 커스텀 훅들
+  // 커스텀 훅
   useBodyScrollLock(isOpen);
   useFocusTrap(modalRef, isOpen);
 

@@ -1,4 +1,3 @@
-// hooks/useBodyScrollLock.ts
 import { useEffect } from 'react';
 
 /**
@@ -14,7 +13,7 @@ export const useBodyScrollLock = (isLocked: boolean) => {
     const previousOverflow = document.body.style.overflow;
     const previousPaddingRight = document.body.style.paddingRight;
 
-    // 스크롤바 너비 계산 (스크롤바가 사라질 때 레이아웃 shift 방지)
+    // 스크롤바 너비 계산
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
     document.body.style.overflow = 'hidden';
