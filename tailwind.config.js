@@ -90,13 +90,15 @@ export default {
         // 페이지 헤더 패딩
         'page-header': '16px 12px 16px 12px', // px-4 py-4 pl-3
         // 프리뷰 이미지 크기
-        'preview-w': '124px',
         'preview-h': '116px',
+        'preview-w': '124px',
       },
 
       // 크기 토큰
       width: {
         'mobile': '390px', // 모바일 디바이스 너비
+        'sidebar': '240px', // 사이드바 너비
+        'sidebar-button': '99px', // 사이드바 버튼 너비
       },
       height: {
         'mobile': '844px', // 모바일 디바이스 높이
@@ -108,12 +110,13 @@ export default {
       // 최대 너비 토큰
       maxWidth: {
         content: '688px', // 컨텐츠 최대 너비
+        modal: '326px',
+        'page-header': '1366px',
         'post-card': '548px', // 포스트카드 최대 너비 (데스크톱, 이미지 있음)
         'post-card-mobile': '250px', // 포스트카드 최대 너비 (모바일, 이미지 있음)
         'post-card-mobile-full': '390px', // 포스트카드 최대 너비 (모바일, 이미지 없음)
         sidebar: '240px', // 사이드바 너비
-        'page-header': '1366px',
-        modal: '326px',
+        'sidebar-content': '688px', // 사이드바 콘텐츠 최대 너비
       },
 
       // 보더 반지름 토큰
