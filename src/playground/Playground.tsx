@@ -38,8 +38,8 @@ function Playground() {
                 로그인 모달 열기
               </Button>
             </div>
-            <div className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
-              <h3 className="mb-2 text-sm font-medium text-center">로그인 페이지 미리보기</h3>
+            <div className="border-gray-200 bg-gray-50 rounded-lg border-2 p-4">
+              <h3 className="mb-2 text-center text-sm font-medium">로그인 페이지 미리보기</h3>
               <LoginPage />
             </div>
           </div>
@@ -286,10 +286,7 @@ function Playground() {
       </Modal>
 
       {/* 로그인 모달 */}
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
-      />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 }

@@ -8,7 +8,9 @@ import { useEffect, RefObject } from 'react';
  */
 export const useFocusTrap = (ref: RefObject<HTMLElement>, isActive: boolean) => {
   useEffect(() => {
-    if (!isActive || !ref.current) return;
+    if (!isActive || !ref.current) {
+      return;
+    }
 
     const container = ref.current;
     const focusableElements = container.querySelectorAll<HTMLElement>(
@@ -21,7 +23,9 @@ export const useFocusTrap = (ref: RefObject<HTMLElement>, isActive: boolean) => 
     firstElement?.focus();
 
     const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== 'Tab') {
+        return;
+      }
 
       if (e.shiftKey) {
         // Shift + Tab

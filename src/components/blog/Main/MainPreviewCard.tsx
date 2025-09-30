@@ -14,7 +14,7 @@ const BlogPreviewCard: FC<BlogPreviewCardProps> = ({ className = '', title = '',
   return (
     <div className={`blog-preview-row ${className}`}>
       <div className="flex flex-col">
-        <PostCard title={title} content={content} hasImage={!!imageSrc} />
+        <PostCard title={title} content={content} hasImage={Boolean(imageSrc)} />
         <PostDetails />
       </div>
       {imageSrc && <MainPreviewImage src={imageSrc} />}

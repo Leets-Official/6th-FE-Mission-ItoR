@@ -14,11 +14,11 @@ const PostDetails: FC<PostDetailsProps> = ({ className }) => {
       <div className={postDetailsStyles.profileContainer}>
         <div className={postDetailsStyles.userInfo}>
           <div className={postDetailsStyles.profileAndNickname}>
-            <div 
+            <div
               className={postDetailsStyles.profileImage}
               style={{
                 backgroundImage: `url(${profileImage})`,
-                backgroundColor: 'lightgray'
+                backgroundColor: 'lightgray',
               }}
             />
             <span className={postDetailsStyles.nickname}>닉네임</span>

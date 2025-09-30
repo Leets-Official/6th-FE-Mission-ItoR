@@ -26,9 +26,7 @@ const LoginLogo: FC = () => {
         <img src={LogoWebp} alt="Gitlog Logo" />
       </div>
       <div className={textboxContainerStyle}>
-        <div className={textboxTextStyle}>
-          You can make anything by writing
-        </div>
+        <div className={textboxTextStyle}>You can make anything by writing</div>
       </div>
     </div>
   );

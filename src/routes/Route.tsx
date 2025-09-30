@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from '@/layout/Layout';
-import MainPage from '@/pages/Main/MainPage';
+import MainPage from '@/pages/main/MainPage';
 
 export default function AppRoutes() {
   return (

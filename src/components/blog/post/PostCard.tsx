@@ -13,11 +13,7 @@ const PostCard: FC<PostCardProps> = ({ title, content, className, hasImage = fal
   return (
     <div className={cn(postCardVariants({ hasImage }), className)}>
       <h3 className={postTitleVariants()}>{title}</h3>
-      {content && (
-        <p className={postContentVariants()}>
-          {content}
-        </p>
-      )}
+      {content && <p className={postContentVariants()}>{content}</p>}
     </div>
   );
 };

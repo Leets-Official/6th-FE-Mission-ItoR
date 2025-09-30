@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import { cn } from '@/utils/cn';
 import Spacer from '@/components/common/Spacer/Spacer';
-import { 
+import {
   loginFormVariants,
   loginSectionContainerVariants,
   snsDividerContainerVariants,
   snsDividerLineVariants,
   snsDividerTextVariants,
-  inputContainerVariants, 
-  inputFieldVariants, 
+  inputContainerVariants,
+  inputFieldVariants,
   loginButtonVariants,
   snsButtonContentVariants,
   snsButtonTextVariants,
@@ -26,14 +26,10 @@ interface LoginFormProps {
 const InputSection = () => (
   <div className={loginSectionContainerVariants({ align: 'start', gap: 'small' })}>
     <div className={inputContainerVariants()}>
-      <input 
-        type="email"
-        placeholder={AUTH_TEXTS.LOGIN_FORM.PLACEHOLDERS.EMAIL}
-        className={inputFieldVariants()}
-      />
+      <input type="email" placeholder={AUTH_TEXTS.LOGIN_FORM.PLACEHOLDERS.EMAIL} className={inputFieldVariants()} />
     </div>
     <div className={inputContainerVariants()}>
-      <input 
+      <input
         type="password"
         placeholder={AUTH_TEXTS.LOGIN_FORM.PLACEHOLDERS.PASSWORD}
         className={inputFieldVariants()}
@@ -44,11 +40,7 @@ const InputSection = () => (
 
 const EmailLoginButton = ({ onClick }: { onClick: () => void }) => (
   <div className={loginSectionContainerVariants()}>
-    <button 
-      type="button"
-      onClick={onClick}
-      className={loginButtonVariants()}
-    >
+    <button type="button" onClick={onClick} className={loginButtonVariants()}>
       {AUTH_TEXTS.LOGIN_FORM.BUTTONS.EMAIL_LOGIN}
     </button>
   </div>
@@ -57,26 +49,17 @@ const EmailLoginButton = ({ onClick }: { onClick: () => void }) => (
 const SnsDivider = () => (
   <div className={snsDividerContainerVariants()}>
     <div className={snsDividerLineVariants()} />
-    <span className={snsDividerTextVariants()}>
-      {AUTH_TEXTS.LOGIN_FORM.DIVIDER.SNS}
-    </span>
+    <span className={snsDividerTextVariants()}>{AUTH_TEXTS.LOGIN_FORM.DIVIDER.SNS}</span>
     <div className={snsDividerLineVariants()} />
   </div>
 );
 
 const KakaoLoginButton = ({ onClick }: { onClick: () => void }) => (
   <div className={loginSectionContainerVariants()}>
-    <button 
-      type="button"
-      onClick={onClick}
-      className={loginButtonVariants({ variant: 'kakao' })}
-    >
+    <button type="button" onClick={onClick} className={loginButtonVariants({ variant: 'kakao' })}>
       <div className={snsButtonContentVariants()}>
         <KakaoIcon />
-        <span 
-          className={snsButtonTextVariants({ provider: 'kakao' })}
-          style={{ fontFamily: 'Apple SD Gothic Neo' }}
-        >
+        <span className={snsButtonTextVariants({ provider: 'kakao' })} style={{ fontFamily: 'Apple SD Gothic Neo' }}>
           {AUTH_TEXTS.LOGIN_FORM.BUTTONS.KAKAO_LOGIN}
         </span>
       </div>
@@ -85,14 +68,8 @@ const KakaoLoginButton = ({ onClick }: { onClick: () => void }) => (
 );
 
 const SignupButton = ({ onClick }: { onClick: () => void }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={signupButtonVariants()}
-  >
-    <span className={signupTextVariants()}>
-      {AUTH_TEXTS.LOGIN_FORM.BUTTONS.SIGNUP}
-    </span>
+  <button type="button" onClick={onClick} className={signupButtonVariants()}>
+    <span className={signupTextVariants()}>{AUTH_TEXTS.LOGIN_FORM.BUTTONS.SIGNUP}</span>
   </button>
 );
 
@@ -103,7 +80,7 @@ const LoginForm: FC<LoginFormProps> = ({ className }) => {
 
   return (
     <div className={cn(loginFormVariants(), className)}>
-      <Spacer height="md" className="min-w-login-form-min max-w-login-form-max px-4 py-1" />
+      <Spacer height="md" className="max-w-login-form-max min-w-login-form-min px-4 py-1" />
       <InputSection />
       <EmailLoginButton onClick={handleLogin} />
       <SnsDivider />

@@ -7,7 +7,9 @@ import { useEffect } from 'react';
  */
 export const useBodyScrollLock = (isLocked: boolean) => {
   useEffect(() => {
-    if (!isLocked) return;
+    if (!isLocked) {
+      return;
+    }
 
     const previousOverflow = document.body.style.overflow;
     const previousPaddingRight = document.body.style.paddingRight;

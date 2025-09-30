@@ -14,7 +14,7 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   const { isLoginModalOpen, openLoginModal, closeLoginModal } = useSidebar();
-  
+
   return (
     <div className={cn(sidebarStyles.container, className)}>
       <div className={sidebarStyles.mainContent}>
@@ -29,9 +29,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
             </div>
           ) : (
             <div className={sidebarStyles.quoteContainer}>
-              <span className={sidebarStyles.quoteText}>
-                {SIDEBAR_TEXTS.NOT_LOGGED_IN.QUOTE}
-              </span>
+              <span className={sidebarStyles.quoteText}>{SIDEBAR_TEXTS.NOT_LOGGED_IN.QUOTE}</span>
             </div>
           )}
         </div>
@@ -67,11 +65,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
           </div>
         </div>
       )}
-      
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={closeLoginModal} 
-      />
+
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </div>
   );
 };

@@ -22,8 +22,7 @@ export const mockPosts = Array.from({ length: 20 }, (_, i) => {
     content: Math.random() < 0.5 ? faker.lorem.paragraph() : faker.lorem.paragraphs(5),
     nickName: faker.internet.username(),
     createAt: createdAt,
-    image:
-      Math.random() < 0.5 ? `https://picsum.photos/seed/${faker.string.uuid()}/220/220` : undefined,
+    image: Math.random() < 0.5 ? `https://picsum.photos/seed/${faker.string.uuid()}/220/220` : undefined,
     commentCount: commentCount,
     comments: comments,
     profileImage: faker.image.avatar(),

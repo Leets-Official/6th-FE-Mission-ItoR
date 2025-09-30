@@ -6,13 +6,8 @@ function MainPage() {
   return (
     <div>
       <Spacer height="md" />
-      {mockPosts.map((post) => (
-        <BlogPreviewCard 
-          key={post.id}
-          title={post.title}
-          content={post.content}
-          imageSrc={post.image}
-        />
+      {mockPosts.map(post => (
+        <BlogPreviewCard key={post.id} title={post.title} content={post.content} imageSrc={post.image} />
       ))}
     </div>
   );
