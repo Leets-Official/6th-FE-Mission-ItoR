@@ -16,7 +16,11 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   const { isLoginModalOpen, openLoginModal, closeLoginModal } = useSidebar();
 
   return (
-    <div className={cn(sidebarStyles.container, className)}>
+    <aside
+      className={cn(sidebarStyles.container, className)}
+      role="complementary"
+      aria-label="Sidebar"
+    >
       <div className={sidebarStyles.mainContent}>
         <div className={sidebarStyles.profileSection}>
           <div className={sidebarStyles.profileIconWrapper}>
@@ -67,7 +71,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
       )}
 
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-    </div>
+    </aside>
   );
 };
 
