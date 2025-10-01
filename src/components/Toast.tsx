@@ -1,16 +1,51 @@
-import { ReactComponent as DoneIcon } from '../assets/icons/done.svg';
-import { ReactComponent as ErrorIcon } from '../assets/icons/error_outline.svg';
-import type { FC } from 'react';
+import React from "react";
+import { FaCheck } from "react-icons/fa";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
-const Toast: FC<{ type?: 'success' | 'warning'; message: string }> = ({ type = 'success', message }) => {
-  const getIcon = () => {
-    return type === 'success' ? <DoneIcon className="w-5 h-5 text-white" /> : <ErrorIcon className="w-5 h-5 text-white" />;
+type ToastVariant = "success" | "warning";
+
+interface ToastProps {
+  variant: ToastVariant;
+}
+
+const Toast: React.FC<ToastProps> = ({ variant }) => {
+  const variantStyles: Record<
+    ToastVariant,
+    {
+      borderColor: string;
+      textColor: string;
+      icon: React.ReactNode;
+      message: string;
+      width: string;
+      height: string;
+    }
+  > = {
+    success: {
+      borderColor: "border-[#15DC5E]",
+      textColor: "text-[#15DC5E]",
+      icon: <FaCheck size={24} className="text-[#15DC5E]" />,
+      message: "저장되었습니다!",
+      width: "w-[147px]",
+      height: "h-[40px]",
+    },
+    warning: {
+      borderColor: "border-[#FF3F3F]",
+      textColor: "text-[#FF3F3F]",
+      icon: <AiOutlineExclamationCircle size={24} className="text-[#FF3F3F]" />,
+      message: "내용을 입력해주세요!",
+      width: "w-[171px]",
+      height: "h-[40px]",
+    },
   };
 
+  const styles = variantStyles[variant];
+
   return (
-    <div className={`flex items-center px-4 py-2 rounded shadow ${type === 'success' ? 'bg-green-500' : 'bg-orange-400'}`}>
-      {getIcon()}
-      <span className="ml-2 text-white">{message}</span>
+    <div className={`flex items-center gap-2 px-4 py-2 rounded-full border bg-white ${styles.borderColor} ${styles.width} ${styles.height}`}>
+        {styles.icon}
+      <span className={`text-[14px] ${styles.textColor} whitespace-nowrap`}>
+        {styles.message}
+      </span>
     </div>
   );
 };
