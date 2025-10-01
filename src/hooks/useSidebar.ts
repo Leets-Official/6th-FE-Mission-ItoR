@@ -44,7 +44,7 @@ export const useSidebar = () => {
     };
   }, [isSidebarOpen]);
 
-  // 전역 사이드바 닫기 이벤트 구독
+  // 전역 사이드바 닫기 이벤트
   useEffect(() => {
     const handleGlobalSidebarClose = () => closeSidebar();
     window.addEventListener('sidebar:close', handleGlobalSidebarClose as EventListener);
