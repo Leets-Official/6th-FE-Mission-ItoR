@@ -39,9 +39,6 @@ export const snsDividerLineVariants = cva('w-sns-divider-line h-px bg-gray-20');
 // SNS 구분선 텍스트 variants
 export const snsDividerTextVariants = cva('text-gray-56 font-regular text-xs');
 
-// 사용 중단: 로그인 인풋 래퍼 (loginSectionContainerVariants로 대체)
-// export const loginInputsWrapperVariants = cva('flex min-w-login-form-min max-w-login-form-max px-login-inputs-px py-login-inputs-py flex-col items-start gap-login-inputs-gap self-stretch');
-
 // 인풋 컨테이너 variants
 export const inputContainerVariants = cva(
   'flex h-login-input px-4 py-3 items-center gap-2.5 self-stretch w-full rounded border bg-white',
