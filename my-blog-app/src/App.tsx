@@ -6,8 +6,8 @@ import TextCardTestPage from './pages/TextCardTestPage'
 import ConfirmModalTestPage from './pages/ConfirmModalTestPage'
 import HeaderTestPage from './pages/HeaderTestPage'
 import DropdownTestPage from './pages/DropdownTestPage'
-import TextFieldTestPage from './pages/TextFiledTestPage'
-import TextFieldSetTestPage from './pages/TextFiledSetTestPage'
+import TextFiledTestPage from './pages/TextFiledTestPage'
+import TextFiledSetTestPage from './pages/TextFiledSetTestPage'
 
 function App() {
   return (
@@ -21,8 +21,8 @@ function App() {
         <Route path='/test/confirmmodal' element={<ConfirmModalTestPage />} />
         <Route path='/test/header' element={<HeaderTestPage />} />
         <Route path='/test/dropdown' element={<DropdownTestPage />} />
-        <Route path='/test/textfield' element={<TextFieldTestPage />} />
-        <Route path='/test/textfieldset' element={<TextFieldSetTestPage />} />
+        <Route path='/test/textfiled' element={<TextFiledTestPage />} />
+        <Route path='/test/textfiledset' element={<TextFiledSetTestPage />} />
       </Routes>
     </Router>
   )
