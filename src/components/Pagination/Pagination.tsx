@@ -2,6 +2,7 @@ import React from "react";
 import { PaginationProps } from "./Pagination.types";
 import { basePagination, pageButtonBase, pageButtonStyles } from "./Pagination.styled";
 import { cn } from "@/utils/cn";
+import { NavigateBeforeIcon } from "@/assets/icons";
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
@@ -28,7 +29,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => handleClick(currentPage - 1)}
         disabled={currentPage === 1}
       >
-        {"<"}
+        <NavigateBeforeIcon width={20} height={20} />
       </button>
 
       {/* 페이지 숫자 */}
@@ -59,7 +60,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => handleClick(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
-        {">"}
+        <NavigateBeforeIcon width={20} height={20} style={{ transform: "scaleX(-1)" }} />
       </button>
     </div>
   );
