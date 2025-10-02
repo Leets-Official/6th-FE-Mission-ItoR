@@ -1,8 +1,14 @@
+import AppRoutes from '@/routes/Route';
 import Playground from '@/playground/Playground';
+import { BrowserRouter } from 'react-router-dom';
 import { useMemo } from 'react';
 
 function App() {
   const isPlayground = useMemo(() => {
+    // 빌드 시에는 플레이그라운드 비활성화
+    if (ENABLE_PLAYGROUND === 'false') {
+      return false;
+    }
     const params = new URLSearchParams(window.location.search);
     if (params.get('playground') === '1') {
       return true;
@@ -15,17 +21,10 @@ function App() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="py-12 text-center text-4xl font-bold">블로그 애플리케이션</h1>
-        <div className="text-gray-600 text-center">
-          <p>실제 블로그 애플리케이션 UI가 여기에 들어갑니다.</p>
-          <p className="mt-2">
-            컴포넌트 테스트를 보려면 <code className="bg-gray-200 rounded px-2 py-1">?playground=1</code>을 URL에
-            추가하세요.
-          </p>
-        </div>
-      </div>
+    <div className="global-layout">
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </div>
   );
 }

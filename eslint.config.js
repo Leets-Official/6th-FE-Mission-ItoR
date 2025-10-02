@@ -55,7 +55,6 @@ export default [
       'no-undef': 'off',
       indent: 'off',
       semi: 'off',
-      'linebreak-style': 'off',
       'no-extra-boolean-cast': 'off',
       'getter-return': 'warn',
       'no-async-promise-executor': 'warn',

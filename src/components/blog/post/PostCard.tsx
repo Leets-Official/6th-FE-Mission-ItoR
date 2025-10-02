@@ -1,20 +1,19 @@
 import { FC } from 'react';
+import { cn } from '@/utils/cn';
+import { postCardVariants, postTitleVariants, postContentVariants } from './PostCardVariants';
 
 interface PostCardProps {
   title: string;
   content?: string;
   className?: string;
+  hasImage?: boolean;
 }
 
-const PostCard: FC<PostCardProps> = ({ title, content, className = '' }) => {
+const PostCard: FC<PostCardProps> = ({ title, content, className, hasImage = false }) => {
   return (
-    <div className={`flex w-[688px] max-w-[688px] flex-col items-start justify-center gap-2 p-3 ${className}`}>
-      <h3 className="self-stretch text-base font-medium leading-[160%] tracking-[-0.04px] text-black">{title}</h3>
-      {content && (
-        <p className="h-12 self-stretch overflow-hidden text-ellipsis whitespace-nowrap text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-dark">
-          {content}
-        </p>
-      )}
+    <div className={cn(postCardVariants({ hasImage }), className)}>
+      <h3 className={postTitleVariants()}>{title}</h3>
+      {content && <p className={postContentVariants()}>{content}</p>}
     </div>
   );
 };

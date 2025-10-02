@@ -1,4 +1,4 @@
-import TextField from '@/components/common/text/TextField';
+import TextField from '@/components/common/Text/TextField';
 import { TextareaProps } from '@/types/text';
 import clsx from 'clsx';
 import { FC } from 'react';

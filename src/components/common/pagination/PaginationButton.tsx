@@ -2,7 +2,6 @@ import { NavigateBeforeIcon } from '@/assets/icons/common';
 import { type VariantProps } from 'class-variance-authority';
 import clsx from 'clsx';
 import { FC, ReactNode } from 'react';
-
 import { paginationButtonVariants } from '@/components/common/Pagination/PaginationButtonVariants';
 
 interface PaginationButtonProps
