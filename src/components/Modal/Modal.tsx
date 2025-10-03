@@ -9,7 +9,6 @@ import {
   buttonCancel,
   buttonConfirm,
 } from "./Modal.styled";
-import { cn } from "@/utils/cn";
 
 const Modal: React.FC<ModalProps> = ({
   open,
