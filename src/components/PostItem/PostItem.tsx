@@ -21,10 +21,13 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
   return (
     <li className={listItem}>
-      <div className="flex flex-1 flex-col">
-        <h2 className={postTitle}>{post.title}</h2>
-        <p className={postContent}>{firstTextContent}</p>
-        <div className={postMeta}>
+      <div className="flex h-[166px] flex-1 flex-col justify-start">
+        <div>
+          <h2 className={postTitle}>{post.title}</h2>
+          <p className={postContent}>{firstTextContent}</p>
+        </div>
+
+        <div className={`${postMeta} mt-auto mb-2`}>
           <Avatar src={post.profileUrl} size="sm" />
           <span className={postNickName}>{post.nickName}</span>
           <span>
@@ -39,7 +42,9 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         </div>
       </div>
 
-      {firstImage && <img src={firstImage} alt={post.title} className={postImage} />}
+      {firstImage && (
+        <img src={firstImage} alt={post.title} className={`${postImage} self-start`} />
+      )}
     </li>
   );
 };
