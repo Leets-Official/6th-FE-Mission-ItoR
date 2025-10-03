@@ -24,12 +24,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   onLogoutClick,
 }) => {
   return (
-    <aside className={cn(baseSidebar)}>
+    <aside className={baseSidebar}>
       {variant === "guest" && (
-        <div className={cn(profileSection)}>
+        <div className={profileSection}>
           <Avatar size="lg" src={profileSrc} />
-          <p className={cn(intro)}>{"You can make anything by writing"}</p>
-          <div className={cn(singleButtonWrapper)}>
+          <p className={intro}>{"You can make anything by writing"}</p>
+          <div className={singleButtonWrapper}>
             <Button label="깃로그 시작하기" variant="primaryOutline" size="sm" />
           </div>
         </div>
@@ -37,14 +37,14 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {variant === "user" && (
         <>
-          <div className={cn(container)}>
-            <div onClick={onMyPageClick} className={cn(profileSection)}>
+          <div className={container}>
+            <div onClick={onMyPageClick} className={profileSection}>
               <Avatar size="lg" src={profileSrc} />
-              <p className={cn(nickname)}>{userNickname ?? "%{닉네임}"}</p>
-              <p className={cn(intro)}>{userIntro ?? "한줄 소개"}</p>
+              <p className={nickname}>{userNickname ?? "%{닉네임}"}</p>
+              <p className={intro}>{userIntro ?? "한줄 소개"}</p>
             </div>
 
-            <div className={cn(doubleButtonWrapper)}>
+            <div className={doubleButtonWrapper}>
               <Button
                 label="나의 깃로그"
                 variant="primaryOutline"
@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
 
-          <div className={cn(footerButtons)}>
+          <div className={footerButtons}>
             <Button
               label="설정"
               variant="secondaryOutline"
