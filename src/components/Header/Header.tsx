@@ -24,10 +24,10 @@ const Header: React.FC<HeaderProps> = ({
   onPublishClick,
 }) => {
   return (
-    <header className={cn(baseHeader)}>
-      <div className={cn(leftGroup)}>
+    <header className={baseHeader}>
+      <div className={leftGroup}>
         <ReorderIcon />
-        <span className={cn(titleStyle)}>{title}</span>
+        <span className={titleStyle}>{title}</span>
       </div>
 
       {variant === "write" && (
@@ -35,22 +35,22 @@ const Header: React.FC<HeaderProps> = ({
       )}
 
       {variant === "chatMenu" && (
-        <div className={cn(chatMenuWrapper)}>
-          <button onClick={onChatClick} className={cn(chatMenuButton)}>
+        <div className={chatMenuWrapper}>
+          <button onClick={onChatClick} className={chatMenuButton}>
             <ChatIcon />
           </button>
-          <button onClick={onMenuClick} className={cn(chatMenuButton)}>
+          <button onClick={onMenuClick} className={chatMenuButton}>
             <MoreVertIcon />
           </button>
         </div>
       )}
 
       {variant === "action" && (
-        <div className={cn(actionWrapper)}>
-          <button className={cn(deleteButton)} onClick={onDeleteClick}>
+        <div className={actionWrapper}>
+          <button className={deleteButton} onClick={onDeleteClick}>
             삭제하기
           </button>
-          <button className={cn(publishButton)} onClick={onPublishClick}>
+          <button className={publishButton} onClick={onPublishClick}>
             게시하기
           </button>
         </div>
