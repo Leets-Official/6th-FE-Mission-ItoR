@@ -20,11 +20,10 @@ export function Button({
     >
       {icon && (
         <span
+          className='inline-flex items-center'
           style={{
             width: `${defaultIconSize}px`,
             height: `${defaultIconSize}px`,
-            display: 'inline-flex',
-            alignItems: 'center',
           }}
         >
           {icon}
