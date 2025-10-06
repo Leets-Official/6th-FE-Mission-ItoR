@@ -1,7 +1,7 @@
 import { CreateIcon } from '@/assets/icons/common';
-import PostBody from '@/components/blog/Poososo/PostBody';
-import PostCard from '@/components/blog/Poososo/PostCard';
-import PostHeader from '@/components/blog/Poososo/PostHeader';
+import PostBody from '@/components/blog/Post/PostBody';
+import PostCard from '@/components/blog/Post/PostCard';
+import PostHeader from '@/components/blog/Post/PostHeader';
 import DropdownMenu from '@/components/common/Dropdown/DropdownMenu';
 import Button from '@/components/common/Button/Button';
 import Divider from '@/components/common/Divider/Divider';

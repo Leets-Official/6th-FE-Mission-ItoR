@@ -17,9 +17,9 @@ export { default as TextBox } from '@/components/common/Textbox/TextBox';
 export { default as Toast } from '@/components/common/Toast/Toast';
 
 // Blog Components
-export { default as PostBody } from '@/components/blog/Poososo/PostBody';
-export { default as PostCard } from '@/components/blog/Poososo/PostCard';
-export { default as PostHeader } from '@/components/blog/Poososo/PostHeader';
+export { default as PostBody } from '@/components/blog/Post/PostBody';
+export { default as PostCard } from '@/components/blog/Post/PostCard';
+export { default as PostHeader } from '@/components/blog/Post/PostHeader';
 
 // UI Components
 export { default as Menu } from '@/components/ui/Menu';
