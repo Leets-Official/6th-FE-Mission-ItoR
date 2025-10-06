@@ -1,13 +1,18 @@
-import { Routes, Route } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/layout/Layout';
 import MainPage from '@/pages/main/MainPage';
 
-export default function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<MainPage />} />
-      </Route>
-    </Routes>
-  );
-}
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <MainPage />,
+      },
+    ],
+  },
+]);
+
+export default router;

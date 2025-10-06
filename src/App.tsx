@@ -1,6 +1,6 @@
-import AppRoutes from '@/routes/Route';
+import router from '@/routes/Route';
 import Playground from '@/playground/Playground';
-import { BrowserRouter } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import { useMemo } from 'react';
 
 function App() {
@@ -22,9 +22,7 @@ function App() {
 
   return (
     <div className="global-layout">
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </div>
   );
 }
