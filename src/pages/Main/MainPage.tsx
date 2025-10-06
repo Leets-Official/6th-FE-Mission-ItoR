@@ -2,7 +2,7 @@ import BlogPreviewCard from '@/components/blog/Main/MainPreviewCard';
 import Spacer from '@/components/common/Spacer/Spacer';
 import { mockPosts } from '@/_mocks_/mockposts';
 
-function MainPage() {
+const MainPage = () => {
   return (
     <div>
       <Spacer height="md" />
@@ -11,6 +11,6 @@ function MainPage() {
       ))}
     </div>
   );
-}
+};
 
 export default MainPage;
