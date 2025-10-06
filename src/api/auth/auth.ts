@@ -9,7 +9,7 @@ import {
   RegisterOAuthResponse,
   RegisterRequest,
   RegisterResponse,
-} from './types';
+} from './authTypes';
 
 // 토큰 저장을 위한 임시 함수들 (axios.ts에서 가져와야 함)
 // const _getAccessToken = (): string | null => {

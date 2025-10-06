@@ -4,7 +4,7 @@ export interface TextFieldProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
-  // 새로운 cva API
+  // cva API
   variant?: 'default' | 'dark' | 'light';
   backgroundColor?: 'transparent' | 'filled';
   textColor?: 'black' | 'gray56' | 'gray78';

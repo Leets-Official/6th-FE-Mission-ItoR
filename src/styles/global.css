@@ -4,9 +4,8 @@
 
 body {
   margin: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
+  background-color: white;
+  font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -16,14 +15,70 @@ body {
 }
 
 /* 커스텀 유틸리티 클래스*/
+.global-layout {
+  @apply flex w-full min-h-screen flex-col items-center flex-shrink-0;
+}
+
+@media (max-width: 767px) {
+  .global-layout {
+    @apply w-mobile min-h-mobile flex max-w-content py-2 px-0 items-start gap-4 self-stretch;
+  }
+}
+
+/* 토스트 컨테이너 */
 .toast-container {
   @apply inline-flex h-10 px-3 py-2 justify-center items-center gap-1 flex-shrink-0 rounded-[25px] border transition-all duration-200;
 }
 
+/* 페이지헤더 컨테이너 */
 .page-header-container {
-  @apply flex max-w-page-header w-full p-page-header justify-between items-center bg-white/90 backdrop-blur-sm;
+  @apply fixed top-0 left-0 right-0 z-50 flex w-full max-w-[1440px] mx-auto p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
 }
 
 .page-header-legacy-container {
   @apply flex w-[1366px] max-w-[1366px] p-3 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
+}
+
+
+/* 블로그 미리보기 행 레이아웃 */
+.blog-preview-row {
+  /* 기본 웹 레이아웃 */
+  @apply flex max-w-content py-2 px-0 items-start gap-4 self-stretch border-b border-gray-96 bg-white;
+}
+
+/* 모바일 반응형 - 768px 이하에서 가로 배치 유지 */
+@media (max-width: 768px) {
+  .blog-preview-row {
+    @apply flex max-w-content py-2 px-0 items-start gap-4 self-stretch border-b border-gray-96 bg-white;
+  }
+}
+
+/* 사이드바 */
+.sidebar-container {
+  @apply fixed left-0 top-0 h-full z-50 transform transition-transform duration-300;
+}
+
+.sidebar-open {
+  @apply translate-x-0;
+}
+
+.sidebar-closed {
+  @apply -translate-x-full;
+}
+
+/* 로그인 모달 및 페이지 유틸리티 클래스 */
+@layer utilities {
+  /* 로그인 모달 */
+  .login-modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-modal-overlay backdrop-blur-modal;
+  }
+
+  .login-modal-container {
+    @apply relative flex w-login-page max-w-login-page max-h-login-modal py-20 justify-between items-center content-center flex-wrap rounded-login-modal bg-dark;
+  }
+
+  /* 로그인 페이지 레이아웃 */
+  .login-page-row {
+    @apply flex items-center justify-between self-stretch;
+  }
 }

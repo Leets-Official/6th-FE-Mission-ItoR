@@ -7,6 +7,7 @@ import DeleteForeverIcon from './delete_forever.svg?react';
 import DoneIcon from './done.svg?react';
 import ErrorOutlineIcon from './error_outline.svg?react';
 import FolderOpenIcon from './folder_open.svg?react';
+import MiddleDotIcon from './middledot.svg?react';
 import MoreVertIcon from './more_vert.svg?react';
 import NavigateBeforeIcon from './navigate_before.svg?react';
 import Profile1Icon from './profile_1.svg?react';
@@ -14,6 +15,7 @@ import Profile2Icon from './profile_2.svg?react';
 import Profile3Icon from './profile_3.svg?react';
 import ReorderIcon from './reorder.svg?react';
 import SettingsIcon from './settings.svg?react';
+import KakaoIcon from './kakao.svg?react';
 
 export {
   AddPhotoAlternateIcon,
@@ -24,6 +26,7 @@ export {
   DoneIcon,
   ErrorOutlineIcon,
   FolderOpenIcon,
+  MiddleDotIcon,
   MoreVertIcon,
   NavigateBeforeIcon,
   Profile1Icon,
@@ -31,4 +34,5 @@ export {
   Profile3Icon,
   ReorderIcon,
   SettingsIcon,
+  KakaoIcon,
 };

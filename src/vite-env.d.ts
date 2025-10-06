@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 
+declare const ENABLE_PLAYGROUND: string;
+
 declare module '*.svg?react' {
   import { FC, SVGProps } from 'react';
   const ReactComponent: FC<SVGProps<SVGSVGElement>>;
