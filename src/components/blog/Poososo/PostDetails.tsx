@@ -2,7 +2,7 @@ import { FC } from 'react';
 import profileImage from '@/assets/profile.png';
 import { cn } from '@/utils/cn';
 import { MiddleDotIcon } from '@/assets/icons/common';
-import { postDetailsStyles } from '@/components/blog/Post/PostDetails.styles';
+import { postDetailsStyles } from '@/components/blog/Poososo/PostDetails.styles';
 
 interface PostDetailsProps {
   className?: string;

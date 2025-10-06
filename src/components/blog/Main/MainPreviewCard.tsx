@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { PostCard } from '@/components/blog/Post';
+import { PostCard } from '@/components/blog/Poososo';
 import MainPreviewImage from './MainPreviewImage';
-import PostDetails from '@/components/blog/Post/PostDetails';
+import PostDetails from '@/components/blog/Poososo/PostDetails';
 
 interface BlogPreviewCardProps {
   className?: string;
