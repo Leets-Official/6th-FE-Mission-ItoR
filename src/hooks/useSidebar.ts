@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
+import { useModalStore } from '@/stores/useModalStore';
 
 export const useSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { modalType, openModal, closeModal } = useModalStore();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -18,14 +19,9 @@ export const useSidebar = () => {
   };
 
   const openLoginModal = () => {
-    setIsLoginModalOpen(true);
+    openModal('login');
     setIsSidebarOpen(false);
-
     window.dispatchEvent(new CustomEvent('sidebar:close'));
-  };
-
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
   };
 
   useEffect(() => {
@@ -59,8 +55,8 @@ export const useSidebar = () => {
     toggleSidebar,
     openSidebar,
     closeSidebar,
-    isLoginModalOpen,
+    isLoginModalOpen: modalType === 'login',
     openLoginModal,
-    closeLoginModal,
+    closeLoginModal: closeModal,
   };
 };
