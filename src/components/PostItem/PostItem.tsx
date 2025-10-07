@@ -8,6 +8,7 @@ import {
   postNickName,
   postImage,
 } from "./PostItem.styled";
+import { formatPostDate } from "@/utils/dateUtils"; // ✅ 추가
 
 interface PostItemProps {
   post: Post;
@@ -29,14 +30,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         <div className={`${postMeta} mt-auto mb-2`}>
           <Avatar src={post.profileUrl} size="sm" />
           <span className={postNickName}>{post.nickName}</span>
-          <span>
-            ·{" "}
-            {new Date(post.createdAt).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
+          <span>· {formatPostDate(post.createdAt)}</span> {/* ✅ 수정 */}
           <span>· 댓글 {post.comments.length}</span>
         </div>
       </div>
