@@ -1,13 +1,4 @@
-import api from "./index";
-
-export interface PostResponse {
-  code: number;
-  message: string;
-  data: {
-    post: Post[];
-    pageMax: number;
-  };
-}
+import api, { ApiResponse } from "./index";
 
 export interface Post {
   postId: string;
@@ -28,6 +19,13 @@ export interface Post {
   profileUrl: string;
   createdAt: string;
 }
+
+interface PostData {
+  post: Post[];
+  pageMax: number;
+}
+
+export type PostResponse = ApiResponse<PostData>;
 
 export const fetchPosts = async (page: number, size: number = 10) => {
   const res = await api.get<PostResponse>("/posts/all", { params: { page, size } });
