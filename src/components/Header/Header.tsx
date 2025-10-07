@@ -1,6 +1,5 @@
 import React from "react";
 import { ReorderIcon, ChatIcon, MoreVertIcon } from "@/assets/icons/index";
-import { cn } from "@/utils/cn";
 import { HeaderProps } from "./Header.types";
 import {
   baseHeader,
@@ -22,6 +21,9 @@ const Header: React.FC<HeaderProps> = ({
   onMenuClick,
   onDeleteClick,
   onPublishClick,
+  onEditClick,
+  onSaveClick,
+  onCancelClick,
 }) => {
   return (
     <header className={baseHeader}>
@@ -52,6 +54,27 @@ const Header: React.FC<HeaderProps> = ({
           </button>
           <button className={publishButton} onClick={onPublishClick}>
             게시하기
+          </button>
+        </div>
+      )}
+
+      {variant === "plain" && <></>}
+
+      {variant === "edit" && (
+        <div className={actionWrapper}>
+          <button className={publishButton} onClick={onEditClick}>
+            수정하기
+          </button>
+        </div>
+      )}
+
+      {variant === "saveCancel" && (
+        <div className={actionWrapper}>
+          <button className={deleteButton} onClick={onCancelClick}>
+            취소하기
+          </button>
+          <button className={publishButton} onClick={onSaveClick}>
+            저장하기
           </button>
         </div>
       )}

@@ -1,4 +1,4 @@
-export type HeaderVariant = "write" | "chatMenu" | "action";
+export type HeaderVariant = "write" | "chatMenu" | "action" | "plain" | "edit" | "saveCancel";
 
 export interface HeaderProps {
   title?: string;
@@ -8,4 +8,7 @@ export interface HeaderProps {
   onMenuClick?: () => void;
   onDeleteClick?: () => void;
   onPublishClick?: () => void;
+  onEditClick?: () => void;
+  onSaveClick?: () => void;
+  onCancelClick?: () => void;
 }
