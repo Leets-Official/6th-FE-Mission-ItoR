@@ -1,4 +1,3 @@
-import React from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
 import { SidebarProps } from "./Sidebar.types";
@@ -12,7 +11,6 @@ import {
   doubleButtonWrapper,
   footerButtons,
 } from "./Sidebar.styled";
-import { cn } from "@/utils/cn";
 
 const Sidebar: React.FC<SidebarProps> = ({
   variant,

@@ -1,4 +1,3 @@
-import React from "react";
 import defaultAvatarUrl from "@/assets/default-avatar.svg?url";
 import { AvatarProps, AvatarSize } from "./Avatar.types";
 

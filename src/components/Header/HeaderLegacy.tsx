@@ -1,4 +1,3 @@
-import React from "react";
 import { AddPhotoAlternateIcon, FolderOpenIcon } from "@/assets/icons/index";
 import { legacyHeader, legacyButtonGroup, legacyButton } from "./Header.styled";
 

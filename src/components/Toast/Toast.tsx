@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { ToastProps } from "./Toast.types";
 import { base, variants } from "./Toast.styled";
 import { cn } from "@/utils/cn";

@@ -1,4 +1,3 @@
-import React from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import { Post } from "@/types/post";
 import {

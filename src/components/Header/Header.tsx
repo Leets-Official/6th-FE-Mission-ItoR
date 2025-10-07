@@ -1,4 +1,3 @@
-import React from "react";
 import { ReorderIcon, ChatIcon, MoreVertIcon } from "@/assets/icons/index";
 import { HeaderProps } from "./Header.types";
 import {

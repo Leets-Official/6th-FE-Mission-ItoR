@@ -1,4 +1,3 @@
-import React from "react";
 import { PaginationProps } from "./Pagination.types";
 import { basePagination, pageButtonBase, pageButtonStyles } from "./Pagination.styled";
 import { cn } from "@/utils/cn";

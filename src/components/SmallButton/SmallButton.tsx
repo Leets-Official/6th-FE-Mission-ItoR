@@ -1,4 +1,3 @@
-import React from "react";
 import CreateIcon from "@/assets/icons/create.svg?react";
 import { SmallButtonProps } from "./SmallButton.types";
 import { base, variants, disabledStyle } from "./SmallButton.styled";

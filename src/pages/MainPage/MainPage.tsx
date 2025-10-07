@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "@/components/Header/Header";
 import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/PostItem/PostItem";
