@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Smooch&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -6,9 +7,14 @@
   --color-brand-blue: #00A1FF;
   --color-brand-gray: #909090;
   --color-brand-lightGray: #E6E6E6;
-  --color-brand-borderGray: #e0e0e0;
+  --color-brand-midGray: #555555;
+  --color-brand-darkGray: #333333;
+  --color-brand-borderGray: #F5F5F5;
   --color-brand-bgGray: #f0f0f0;
-  --color-brand-black: #111112;
+  --color-brand-black: #000000;
+  --color-brand-red: #FF3F3F;
+  --color-brand-green: #15DC5E;
+  --color-brand-white: #FFFFFFE5;
 
   /* ==== Border Radius ==== */
   --radius-sm: 0.125rem;
@@ -17,12 +23,16 @@
 
   /* ==== Font ==== */
   --font-sans: "Noto Sans KR", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-smooch: "Smooch", cursive;
 
   /* ==== Font Size ==== */
+  --text-xxs: 0.6rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.65rem;
 
   /* ==== Avatar Sizes ==== */
   --spacing-avatar-xs: 24px;
@@ -34,4 +44,8 @@
 
 body {
   @apply font-sans;
+}
+
+.font-smooch {
+  font-family: var(--font-smooch), cursive;
 }

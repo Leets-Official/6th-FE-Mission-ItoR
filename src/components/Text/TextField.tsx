@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "@/utils/cn";
 import { TextFieldProps } from "./TextField.types";
 import { base, variants, sizes } from "./TextField.styled";

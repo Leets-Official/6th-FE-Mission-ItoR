@@ -1,4 +1,3 @@
-import React from "react";
 import defaultAvatarUrl from "@/assets/default-avatar.svg?url";
 import { AvatarProps, AvatarSize } from "./Avatar.types";
 
@@ -15,7 +14,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, alt = "Avatar", size = "md", class
 
   return (
     <div
-      className={`border-brand-borderGray bg-brand-bgGray flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 ${sizeClassMap[size]} ${className}`}
+      className={`bg-brand-bgGray flex shrink-0 items-center justify-center overflow-hidden rounded-full ${sizeClassMap[size]} ${className}`}
     >
       <img src={avatarSrc} alt={alt} className="h-full w-full object-cover" />
     </div>
