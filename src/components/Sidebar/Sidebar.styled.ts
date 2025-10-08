@@ -1,4 +1,4 @@
-export const baseSidebar = "flex h-full w-60 flex-col justify-between bg-white p-4 shadow";
+export const baseSidebar = "flex h-full w-60 flex-col justify-between bg-brand-borderGray p-4";
 
 export const container = "flex flex-col gap-2";
 

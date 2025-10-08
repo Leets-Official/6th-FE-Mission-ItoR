@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Header from "@/components/Header/Header";
 import Pagination from "@/components/Pagination/Pagination";
-import PostItem from "@/components/PostItem/PostItem";
+import PostItem from "@/components/Blog/PostItem/PostItem";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import { usePosts } from "@/hooks/usePosts";
 import { Post } from "@/types/post";
 import * as styles from "./MainPage.styled";
@@ -41,6 +43,9 @@ const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
 
 export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   const { posts, pageMax, loading } = usePosts(currentPage, 10);
 
   const dataToShow = posts.length > 0 ? posts : dummyPosts;
@@ -53,8 +58,24 @@ export default function MainPage() {
   const pagedData = dataToShow.slice((currentPage - 1) * 10, currentPage * 10);
 
   return (
-    <div className={styles.container}>
-      <Header title="GITLOG" variant="write" onWriteClick={() => console.log("깃로그 쓰기 클릭")} />
+    <div className="relative">
+      <Header title="GITLOG" variant="write" onMenuClick={() => setIsSidebarOpen(true)} />
+
+      {isSidebarOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
+
+          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64 bg-white">
+            <Sidebar
+              variant="guest"
+              onLoginClick={() => {
+                setIsLoginOpen(true);
+                setIsSidebarOpen(false);
+              }}
+            />
+          </aside>
+        </>
+      )}
 
       <main className={styles.mainWrapper}>
         <ul className={styles.listWrapper}>
@@ -71,6 +92,8 @@ export default function MainPage() {
           />
         </div>
       </main>
+
+      <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </div>
   );
 }

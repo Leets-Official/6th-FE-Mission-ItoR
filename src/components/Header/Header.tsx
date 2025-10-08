@@ -27,7 +27,15 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className={baseHeader}>
       <div className={leftGroup}>
-        <ReorderIcon />
+        {/* ✅ 메뉴 클릭 이벤트 연결 */}
+        <button
+          onClick={onMenuClick}
+          aria-label="메뉴 열기"
+          className="transition hover:opacity-70"
+        >
+          <ReorderIcon width={28} height={28} />
+        </button>
+
         <span className={titleStyle}>{title}</span>
       </div>
 

@@ -20,15 +20,21 @@ const Sidebar: React.FC<SidebarProps> = ({
   onMyPageClick,
   onSettingClick,
   onLogoutClick,
+  onLoginClick,
 }) => {
   return (
     <aside className={baseSidebar}>
       {variant === "guest" && (
         <div className={profileSection}>
           <Avatar size="lg" src={profileSrc} />
-          <p className={intro}>{"You can make anything by writing"}</p>
+          <p className={intro}>You can make anything by writing</p>
           <div className={singleButtonWrapper}>
-            <Button label="깃로그 시작하기" variant="primaryOutline" size="sm" />
+            <Button
+              label="깃로그 시작하기"
+              variant="primaryOutline"
+              size="sm"
+              onClick={onLoginClick}
+            />
           </div>
         </div>
       )}

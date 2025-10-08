@@ -6,7 +6,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<MainPage />} />
-
       <Route path="/playground/*" element={<Playground />} />
     </Routes>
   );
