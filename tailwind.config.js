@@ -224,7 +224,7 @@ export default {
 
       // 스크린 브레이크포인트
       screens: {
-        'mobile-max': { 'max': '813px' }, // 모바일 최대 너비
+        'mobile-max': '813px', // 모바일 최대 너비
       },
     },
   },

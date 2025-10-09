@@ -10,20 +10,20 @@ const Spacer: FC<SpacerProps> = ({ className = '', height = 'sm' }) => {
   const getHeightClass = (h: 'sm' | 'md' | 'lg') => {
     switch (h) {
       case 'sm':
-        return 'h-5 max-h-5'; // 20px
+        return 'h-5'; // 20px // 20px
       case 'md':
-        return 'h-8 max-h-8'; // 32px
+        return 'h-8'; // 32px // 32px
       case 'lg':
-        return 'h-16 max-h-16'; // 64px
+        return 'h-16'; // 64px; // 64px
       default:
-        return 'h-5 max-h-5';
+        return 'h-5';
     }
   };
 
   return (
     <div
       className={clsx(
-        'flex max-w-content flex-shrink-0 items-start gap-2.5 px-2.5 py-2.5',
+        'flex max-w-content flex-shrink-0 items-start',
         getHeightClass(height),
         className
       )}
