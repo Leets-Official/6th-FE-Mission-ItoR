@@ -22,12 +22,12 @@ export default function Layout() {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <PageHeader type={getPageHeaderType()} onHamburgerClick={toggleSidebar} />
       <div ref={sidebarRef} className={`sidebar-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <Sidebar />
       </div>
-      <div className="pt-16">
+      <div className="flex w-full flex-col items-center pt-16">
         <Outlet />
       </div>
     </div>

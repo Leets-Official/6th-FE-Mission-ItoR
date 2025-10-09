@@ -23,7 +23,7 @@ const Spacer: FC<SpacerProps> = ({ className = '', height = 'sm' }) => {
   return (
     <div
       className={clsx(
-        'flex max-w-content flex-shrink-0 items-start gap-2.5 self-stretch px-2.5 py-2.5',
+        'flex max-w-content flex-shrink-0 items-start gap-2.5 px-2.5 py-2.5',
         getHeightClass(height),
         className
       )}
