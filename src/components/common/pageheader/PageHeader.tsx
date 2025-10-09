@@ -4,7 +4,7 @@ import PageHeaderRight from '@/components/common/Pageheader/PageHeaderRight';
 
 interface PageHeaderProps {
   className?: string;
-  type: 'main' | 'detail' | 'write';
+  type: 'main' | 'detail' | 'write' | 'mypage';
   onHamburgerClick?: () => void;
 }
 

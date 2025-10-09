@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { renderDetailType, renderMainType, renderWriteType } from './PageHeaderRightRenderers';
+import { renderDetailType, renderMainType, renderWriteType, renderMypageType } from './PageHeaderRightRenderers';
 
 interface PageHeaderRightProps {
-  type: 'main' | 'detail' | 'write';
+  type: 'main' | 'detail' | 'write' | 'mypage';
 }
 
 const PageHeaderRight: FC<PageHeaderRightProps> = ({ type }) => {
@@ -13,6 +13,8 @@ const PageHeaderRight: FC<PageHeaderRightProps> = ({ type }) => {
       return renderDetailType();
     case 'write':
       return renderWriteType();
+    case 'mypage':
+      return renderMypageType();
     default:
       return null;
   }

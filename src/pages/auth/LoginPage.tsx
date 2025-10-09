@@ -4,13 +4,14 @@ import { LoginLogo, LoginForm } from '@/components/auth';
 
 interface LoginPageProps {
   className?: string;
+  onClose?: () => void;
 }
 
-const LoginPage: FC<LoginPageProps> = ({ className }) => {
+const LoginPage: FC<LoginPageProps> = ({ className, onClose }) => {
   return (
     <div className={cn('login-page-row', className)}>
       <LoginLogo />
-      <LoginForm />
+      <LoginForm onClose={onClose} />
     </div>
   );
 };

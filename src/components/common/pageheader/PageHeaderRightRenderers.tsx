@@ -34,3 +34,6 @@ export const renderWriteType = () => (
     </div>
   </div>
 );
+
+// 마이페이지 타입 렌더링 (빈 렌더링)
+export const renderMypageType = () => null;

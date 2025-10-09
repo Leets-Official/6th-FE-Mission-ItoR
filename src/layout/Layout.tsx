@@ -15,6 +15,9 @@ export default function Layout() {
     if (location.pathname.includes('/write')) {
       return 'write';
     }
+    if (location.pathname === '/mypage') {
+      return 'mypage';
+    }
     return 'detail';
   };
 

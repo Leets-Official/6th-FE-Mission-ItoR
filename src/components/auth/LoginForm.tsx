@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import Spacer from '@/components/common/Spacer/Spacer';
 import {
@@ -20,6 +21,7 @@ import { AUTH_TEXTS } from '@/constants/auth.constants';
 
 interface LoginFormProps {
   className?: string;
+  onClose?: () => void;
 }
 
 // 섹션별 함수들
@@ -73,10 +75,15 @@ const SignupButton = ({ onClick }: { onClick: () => void }) => (
   </button>
 );
 
-const LoginForm: FC<LoginFormProps> = ({ className }) => {
+const LoginForm: FC<LoginFormProps> = ({ className, onClose }) => {
+  const navigate = useNavigate();
+
   const handleLogin = () => {};
   const handleKakaoLogin = () => {};
-  const handleSignup = () => {};
+  const handleSignup = () => {
+    onClose?.();
+    navigate('/mypage');
+  };
 
   return (
     <div className={cn(loginFormVariants(), className)}>

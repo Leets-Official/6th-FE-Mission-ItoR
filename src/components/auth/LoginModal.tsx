@@ -43,7 +43,7 @@ const LoginModal: FC<LoginModalProps> = ({ className = '', isOpen, onClose }) =>
             <ClearIcon />
           </Icon>
         </button>
-        <LoginPage />
+        <LoginPage onClose={onClose} />
       </div>
     </div>,
     document.body

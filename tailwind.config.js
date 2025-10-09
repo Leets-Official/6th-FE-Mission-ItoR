@@ -154,12 +154,14 @@ export default {
 
       // 최대 높이 토큰
       maxHeight: {
-        'login-modal': '469px', // 로그인 모달 최대 높이
+        'login-modal': '469px', // 로그인 모달 최대 높이 (데스크톱)
+        'login-modal-mobile': '675px', // 로그인 모달 최대 높이 (모바일)
       },
 
       // 최대 너비 토큰
       maxWidth: {
         content: '688px', // 컨텐츠 최대 너비
+        mobile: '390px', // 모바일 최대 너비
         'login-page': '782px', // 로그인 페이지 최대 너비
         'logo-container': '344px', // 로고 컨테이너 최대 너비
         'login-textbox-container': '344px', // 텍스트박스 컨테이너 최대 너비
