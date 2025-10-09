@@ -7,40 +7,40 @@ export default function ButtonTestPage() {
       <h1 className='text-xl font-bold'>Button Test</h1>
 
       <div className='space-x-4'>
-        <Button variant='primary' icon={<EditIcon color='#00A1FF' />}>
+        <Button intent='primary' icon={<EditIcon color='#00A1FF' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='secondary' icon={<EditIcon color='#909090' />}>
+        <Button intent='secondary' icon={<EditIcon color='#909090' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='flat' icon={<EditIcon color='#909090' />}>
+        <Button intent='flat' icon={<EditIcon color='#909090' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='tertiary' icon={<EditIcon color='#909090' />}>
+        <Button intent='tertiary' icon={<EditIcon color='#909090' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='ghost' icon={<EditIcon color='#909090' />}>
+        <Button intent='ghost' icon={<EditIcon color='#909090' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='black' icon={<EditIcon color='#FFF' />}>
+        <Button intent='black' icon={<EditIcon color='#FFF' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='blackMuted' icon={<EditIcon color='#909090' />}>
+        <Button intent='blackMuted' icon={<EditIcon color='#909090' />}>
           깃로그 시작하기
         </Button>
-        <Button variant='tag' icon={<EditIcon color='#909090' />} iconSize={10.5}>
+        <Button intent='tag' icon={<EditIcon color='#909090' />} iconSize={10.5}>
           깃로그 시작하기
         </Button>
-        <Button variant='tagFilled' icon={<EditIcon color='#909090' />} iconSize={10.5}>
+        <Button intent='tagFilled' icon={<EditIcon color='#909090' />} iconSize={10.5}>
           깃로그 시작하기
         </Button>
       </div>
 
       <div className='space-x-4'>
-        <Button variant='primary' disabled>
+        <Button intent='primary' disabled>
           Disabled Primary
         </Button>
-        <Button variant='black' disabled>
+        <Button intent='black' disabled>
           Disabled Black
         </Button>
       </div>
