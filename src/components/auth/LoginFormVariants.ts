@@ -7,7 +7,7 @@ const fieldBase =
 
 // 로그인 폼 컨테이너 variants
 export const loginFormVariants = tv({
-  base: 'flex min-w-login-form-min-wide px-login-form-px py-0 flex-col items-center gap-login-form-gap flex-1',
+  base: 'flex min-w-login-form-min-wide px-8 py-0 flex-col items-center gap-login-form-gap flex-1 max-[813px]:max-w-login-form-min',
 });
 
 // 로그인 섹션 컨테이너 variants (인풋, 버튼 등을 감싸는 공통 컨테이너)
@@ -89,7 +89,7 @@ export const loginButtonVariants = tv({
 
 // SNS 버튼 내부 컨텐츠 wrapper variants
 export const snsButtonContentVariants = tv({
-  base: 'flex px-[72px] justify-center items-center gap-2 flex-1',
+  base: 'flex px-[60px] justify-center items-center gap-2 flex-1',
 });
 
 // SNS 버튼 텍스트 variants

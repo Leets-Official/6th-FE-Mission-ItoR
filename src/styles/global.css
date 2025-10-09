@@ -21,7 +21,7 @@ body {
 
 @media (max-width: 767px) {
   .global-layout {
-    @apply w-mobile min-h-mobile flex max-w-content py-2 px-0 items-start gap-4 self-stretch;
+    @apply w-full min-h-mobile flex py-2 px-0 items-center gap-4;
   }
 }
 
@@ -47,7 +47,7 @@ body {
 }
 
 /* 모바일 반응형 - 768px 이하에서 가로 배치 유지 */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .blog-preview-row {
     @apply flex max-w-content py-2 px-0 items-start gap-4 self-stretch border-b border-gray-96 bg-white;
   }
@@ -83,7 +83,7 @@ body {
   }
 
   /* 로그인 모달 모바일 반응형 - 768px 이하 */
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .login-modal-overlay {
       @apply px-4;
     }

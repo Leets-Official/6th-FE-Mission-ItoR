@@ -20,7 +20,7 @@ const PageHeaderLeft: FC<PageHeaderLeftProps> = ({ onHamburgerClick }) => {
           className="flex items-center justify-center px-1.5 py-1.5 text-xl font-normal leading-[140%] text-black"
           style={{ fontFamily: 'Smooch, cursive' }}
         >
-          Gitlog
+          GITLOG
         </div>
       </div>
     </div>
