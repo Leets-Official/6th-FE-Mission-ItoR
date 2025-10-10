@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { MenuIcon } from '../../assets/icons/MenuIcon'
 type PageHeaderProps = {
   title: string
