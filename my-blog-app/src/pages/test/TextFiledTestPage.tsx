@@ -1,4 +1,4 @@
-import TextFiled from '../components/TextFiled/TextFiled'
+import TextFiled from '../../components/TextFiled/TextFiled'
 
 export default function TextFiledTestPage() {
   return (

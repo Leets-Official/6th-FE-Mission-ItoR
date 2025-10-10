@@ -1,4 +1,4 @@
-import TextFiledSet from '../components/TextFiled/TextFiledSet'
+import TextFiledSet from '../../components/TextFiled/TextFiledSet'
 
 export default function TextFiledSetTestPage() {
   return (

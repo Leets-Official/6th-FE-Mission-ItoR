@@ -1,6 +1,6 @@
-import Toast from '../components/common/Toast'
-import { WarningIcon } from '../assets/icons/WarningIcon'
-import { CheckIcon } from '../assets/icons/CheckIcon'
+import Toast from '../../components/common/Toast'
+import { WarningIcon } from '../../assets/icons/WarningIcon'
+import { CheckIcon } from '../../assets/icons/CheckIcon'
 
 export default function ToastTestPage() {
   return (
