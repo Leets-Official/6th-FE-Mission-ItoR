@@ -3,41 +3,42 @@
 // import viteLogo from '/vite.svg'
 import './App.css'
 
-import { Pencil } from "lucide-react";
+
 import Button from "./components/Button";
-import Toast from "./components/Toast"; 
+// import Toast from "./components/Toast"; 
 import Modal from "./components/Modal";
-import Header from './components/Header';
+// import Header from './components/Header';
 import PaginationLeft from './components/PaginationLeft';
 import PaginationRight from './components/PaginationRight';
 import Pagination from './components/Pagination';
+import { IconMap } from "./assets/icons/icons";
 
 function App() {
   return (
     <>
-      <p>Header Component</p>
+      {/* <p>Header Component</p>
       <div className="flex flex-col gap-6 p-6">
         <Header variant="write" />
         <Header variant="detail" />
         <Header variant="edit" />
-      </div>
+      </div> */}
 
       <p>Button Component</p>
       <div className="flex flex-col gap-3 p-6">
-        <Button variant="blueBorder" icon={<Pencil />}>깃로그 시작하기</Button>
-        <Button variant="grayBorder" icon={<Pencil />}>깃로그 시작하기</Button>
-        <Button variant="whiteGrayIcon" icon={<Pencil />}>깃로그 시작하기</Button>
-        <Button variant="lightGray" icon={<Pencil />}>깃로그 시작하기</Button>
-        <Button variant="grayBorderLightBg" icon={<Pencil />}>깃로그 시작하기</Button>
-        <Button variant="blackWhite" icon={<Pencil />}>깃로그 시작하기</Button>
-        <Button variant="blackGray" icon={<Pencil />}>깃로그 시작하기</Button>
+        <Button variant="blueBorder" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="grayBorder" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="whiteGrayIcon" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="lightGray" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="grayBorderLightBg" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="blackWhite" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="blackGray" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
       </div>
 
-      <p>Toast Component</p>
+      {/* <p>Toast Component</p>
       <div className="flex flex-col gap-3 p-6">
         <Toast variant="success" />
         <Toast variant="warning" />
-      </div>  
+      </div>   */}
       <p>Modal Component</p>
       <div className="p-6 flex flex-col gap-4">
       <Modal 
