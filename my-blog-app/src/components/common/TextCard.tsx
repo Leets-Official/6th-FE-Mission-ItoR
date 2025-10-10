@@ -9,7 +9,7 @@ type TextCardProps = {
 }
 
 export default function TextCard({ variant = 'body', title, subtitle, children }: TextCardProps) {
-  const baseStyle = 'w-[688px] max-w-[688px] px-4 py-3 bg-white'
+  const baseStyle = 'w-[688px] max-w-[688px] px-4 py-3 bg-white font-sans'
 
   const variants: Record<typeof variant, string> = {
     primary: 'flex flex-col justify-center items-start gap-3',
@@ -19,11 +19,11 @@ export default function TextCard({ variant = 'body', title, subtitle, children }
 
   return (
     <div className={`${baseStyle} ${variants[variant]}`}>
-      {/* title */}
+      {/* Title */}
       {title && (
         <h2
           className={cn(
-            'leading-[160%] text-gray-800', // 공통 스타일
+            'leading-[160%] text-gray-800',
             variant === 'primary' && 'text-[24px] font-medium',
             variant === 'secondary' && 'text-[16px] font-medium truncate',
           )}
@@ -32,14 +32,14 @@ export default function TextCard({ variant = 'body', title, subtitle, children }
         </h2>
       )}
 
-      {/* subtitle */}
+      {/* Subtitle */}
       {subtitle && (
-        <p className='text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800'>
+        <p className='text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-300'>
           {subtitle}
         </p>
       )}
 
-      {/* children (body text) */}
+      {/* Children */}
       {children && (
         <p className='flex-1 text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800'>
           {children}
