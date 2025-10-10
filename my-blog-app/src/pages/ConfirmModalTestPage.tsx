@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ConfirmModal from '../components/common/ConfirmModal'
+import ConfirmModal from '../components/common/ConfirmModal/ConfirmModal'
 
 export default function ConfirmModalTestPage() {
   const [isOpenWithDesc, setIsOpenWithDesc] = useState(false)

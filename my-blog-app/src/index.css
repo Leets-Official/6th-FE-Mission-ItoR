@@ -1,6 +1,6 @@
 /* 기본 렌더링 품질 및 폰트만 유지 */
 :root {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
