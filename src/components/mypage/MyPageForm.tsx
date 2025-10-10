@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import LoginLogo from '@/components/auth/LoginLogo';
 import LoginForm from '@/components/auth/LoginForm';
@@ -16,7 +17,11 @@ interface MyPageFormProps {
 }
 
 const MyPageForm: FC<MyPageFormProps> = ({ className, children }) => {
-  const handleEmailSignup = () => {};
+  const navigate = useNavigate();
+
+  const handleEmailSignup = () => {
+    navigate('/mypage/signup');
+  };
 
   const handleKakaoSignup = () => {};
 

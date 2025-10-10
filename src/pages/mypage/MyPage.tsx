@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { cn } from '@/utils/cn';
+import { Outlet } from 'react-router-dom';
 import Spacer from '@/components/common/Spacer/Spacer';
-import MyPageForm from '@/components/mypage/MyPageForm';
 
 interface MyPageProps {
   className?: string;
@@ -26,7 +26,7 @@ const MyPage: FC<MyPageProps> = ({ className }) => {
         </div>
         <Spacer height="sm" className={STYLES.spacerBottom} />
       </div>
-      <MyPageForm />
+      <Outlet />
     </div>
   );
 };

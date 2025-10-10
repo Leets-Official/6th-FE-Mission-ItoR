@@ -1,0 +1,25 @@
+import React, { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/useAuthStore';
+
+interface PublicRouteProps {
+  children: React.ReactElement;
+}
+
+export const PublicRoute = ({ children }: PublicRouteProps) => {
+  const { isLoggedIn, isLoading, checkLoginStatus } = useAuthStore();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, [checkLoginStatus]);
+
+  if (isLoading) {
+    return null; // TODO: 로딩 스피너 추가
+  }
+
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
