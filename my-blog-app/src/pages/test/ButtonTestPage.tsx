@@ -1,5 +1,5 @@
-import { Button } from '../components/Button/Button'
-import { EditIcon } from '../assets/icons/EditIcon'
+import { Button } from '../../components/Button/Button'
+import { EditIcon } from '../../assets/icons/EditIcon'
 
 export default function ButtonTestPage() {
   return (

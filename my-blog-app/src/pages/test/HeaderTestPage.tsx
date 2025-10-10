@@ -1,8 +1,8 @@
-import PageHeader from '../components/common/PageHeader'
-import { ChatIcon } from '../assets/icons/ChatIcon'
-import { MoreIcon } from '../assets/icons/MoreIcon'
-import { EditIcon } from '../assets/icons/EditIcon'
-import { Button } from '../components/Button/Button'
+import PageHeader from '../../components/common/PageHeader'
+import { ChatIcon } from '../../assets/icons/ChatIcon'
+import { MoreIcon } from '../../assets/icons/MoreIcon'
+import { EditIcon } from '../../assets/icons/EditIcon'
+import { Button } from '../../components/Button/Button'
 
 export default function HeaderTestPage() {
   return (
@@ -11,7 +11,7 @@ export default function HeaderTestPage() {
       <PageHeader
         title='GITLOG'
         rightContent={
-          <Button variant='flat' className='text-gray-300' icon={<EditIcon color='#909090' />}>
+          <Button intent='flat' className='text-gray-300' icon={<EditIcon color='#909090' />}>
             깃로그 쓰기
           </Button>
         }
@@ -33,10 +33,10 @@ export default function HeaderTestPage() {
         title='GITLOG'
         rightContent={
           <div className='flex gap-4'>
-            <Button variant='flat' className='!text-negative'>
+            <Button intent='flat' className='!text-negative'>
               삭제하기
             </Button>
-            <Button variant='flat' className='!text-black'>
+            <Button intent='flat' className='!text-black'>
               게시하기
             </Button>
           </div>

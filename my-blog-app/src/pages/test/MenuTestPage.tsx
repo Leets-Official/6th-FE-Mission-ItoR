@@ -1,5 +1,5 @@
-import Menu from '../components/common/Menu'
-import { TrashIcon } from '../assets/icons/TrashIcon'
+import Menu from '../../components/common/Menu'
+import { TrashIcon } from '../../assets/icons/TrashIcon'
 
 export default function MenuTestPage() {
   return (

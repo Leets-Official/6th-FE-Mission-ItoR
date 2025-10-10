@@ -1,4 +1,4 @@
-import DropdownMenu from '../components/Dropdown/DropdownMenu'
+import DropdownMenu from '../../components/Dropdown/DropdownMenu'
 
 export default function DropdownTestPage() {
   const oneItem = [{ label: 'menu 1', onClick: () => alert('menu 1 클릭') }]

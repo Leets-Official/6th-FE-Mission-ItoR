@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import ButtonTestPage from './pages/ButtonTestPage'
-import ToastTestPage from './pages/ToastTestPage'
-import MenuTestPage from './pages/MenuTestPage'
-import TextCardTestPage from './pages/TextCardTestPage'
-import ConfirmModalTestPage from './pages/ConfirmModalTestPage'
-import HeaderTestPage from './pages/HeaderTestPage'
-import DropdownTestPage from './pages/DropdownTestPage'
-import TextFiledTestPage from './pages/TextFiledTestPage'
-import TextFiledSetTestPage from './pages/TextFiledSetTestPage'
+import ButtonTestPage from './pages/test/ButtonTestPage'
+import ToastTestPage from './pages/test/ToastTestPage'
+import MenuTestPage from './pages/test/MenuTestPage'
+import TextCardTestPage from './pages/test/TextCardTestPage'
+import ConfirmModalTestPage from './pages/test/ConfirmModalTestPage'
+import HeaderTestPage from './pages/test/HeaderTestPage'
+import DropdownTestPage from './pages/test/DropdownTestPage'
+import TextFiledTestPage from './pages/test/TextFiledTestPage'
+import TextFiledSetTestPage from './pages/test/TextFiledSetTestPage'
 
 function App() {
   return (

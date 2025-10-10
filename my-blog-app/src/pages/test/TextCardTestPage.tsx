@@ -1,4 +1,4 @@
-import TextCard from '../components/common/TextCard'
+import TextCard from '../../components/common/TextCard'
 
 export default function TextCardTestPage() {
   return (
