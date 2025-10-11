@@ -4,6 +4,7 @@ import MainPage from '@/pages/main/MainPage';
 import MyPage from '@/pages/mypage/MyPage';
 import MyPageForm from '@/components/mypage/MyPageForm';
 import SignupForm from '@/components/mypage/SignupForm';
+import Playground from '@/playground/Playground';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { PrivateRoute } from '@/routes/PrivateRoute';
 
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: 'playground',
+        element: <Playground />,
       },
     ],
   },
