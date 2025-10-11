@@ -8,6 +8,7 @@ const TextField: FC<TextFieldProps> = ({
   className = '',
   value,
   onChange,
+  type = 'text',
   variant = 'default',
   backgroundColor = 'transparent',
   textColor = 'gray56',
@@ -18,7 +19,7 @@ const TextField: FC<TextFieldProps> = ({
   return (
     <div className={clsx(textFieldVariants({ variant, backgroundColor, disabled, fullWidth }), className)}>
       <input
-        type="text"
+        type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}

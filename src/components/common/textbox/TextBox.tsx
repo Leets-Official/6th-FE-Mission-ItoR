@@ -8,21 +8,45 @@ interface TextBoxProps {
   children: ReactNode;
   className?: string;
   showIcon?: boolean;
-  color?: 'default' | 'primary' | 'positive' | 'gray';
-  borderColor?: 'default' | 'primary' | 'positive' | 'gray' | 'transparent';
+  icon?: ReactNode;
+  color?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90';
+  borderColor?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90' | 'transparent';
+  onClick?: () => void;
+  asButton?: boolean;
 }
 
-const TextBox: FC<TextBoxProps> = ({ children, className = '', showIcon = false, color, borderColor }) => {
-  return (
-    <div className={clsx(textBoxVariants({ color, borderColor }), className)}>
+const TextBox: FC<TextBoxProps> = ({
+  children,
+  className = '',
+  showIcon = false,
+  icon,
+  color,
+  borderColor,
+  onClick,
+  asButton = false,
+}) => {
+  const content = (
+    <>
       {showIcon && (
         <Icon size="sm">
-          <CreateIcon />
+          {icon || <CreateIcon />}
         </Icon>
       )}
       <span className={textBoxTextVariants({ color })}>{children}</span>
-    </div>
+    </>
   );
+
+  const baseClassName = clsx(textBoxVariants({ color, borderColor }), 'group', className);
+
+  if (asButton || onClick) {
+    return (
+      <button type="button" onClick={onClick} className={baseClassName}>
+        {content}
+      </button>
+    );
+  }
+
+  return <div className={baseClassName}>{content}</div>;
 };
 
 export default TextBox;

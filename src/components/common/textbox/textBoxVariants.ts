@@ -8,12 +8,14 @@ export const textBoxVariants = tv({
       primary: 'text-primary',
       positive: 'text-positive',
       gray: 'text-gray',
+      'gray-90': 'text-gray-90 hover:text-gray-78',
     },
     borderColor: {
       default: 'border-transparent',
       primary: 'border-primary',
       positive: 'border-positive',
       gray: 'border-gray',
+      'gray-90': 'border-gray-90 hover:border-gray-78 hover:bg-gray-96',
       transparent: 'border-transparent',
     },
   },
@@ -24,13 +26,14 @@ export const textBoxVariants = tv({
 });
 
 export const textBoxTextVariants = tv({
-  base: 'text-xs font-normal',
+  base: 'text-xs font-normal transition-colors duration-200',
   variants: {
     color: {
       default: '',
       primary: 'text-primary',
       positive: 'text-positive',
       gray: 'text-gray',
+      'gray-90': 'text-gray-90 group-hover:text-gray-78',
     },
   },
   defaultVariants: {

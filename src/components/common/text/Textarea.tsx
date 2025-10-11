@@ -8,6 +8,7 @@ const Textarea: FC<TextareaProps> = ({
   className = '',
   hintText,
   placeholder,
+  type = 'text',
   textFieldColor,
   textFieldBackgroundColor,
   textFieldFontSize,
@@ -20,6 +21,7 @@ const Textarea: FC<TextareaProps> = ({
           <span className="flex-1 text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-56">{title}</span>
         )}
         <TextField
+          type={type}
           placeholder={placeholder}
           textColor={textFieldColor}
           backgroundColor={textFieldBackgroundColor}
