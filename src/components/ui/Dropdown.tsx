@@ -8,6 +8,9 @@ import {
   itemBase,
   itemInteractive,
   itemDisabled,
+  caretBase,
+  caretRightOffset,
+  caretLeftOffset,
 } from "./Dropdown.variants";
 import Caret from "@icons/dropdown-caret.svg?react";
 
@@ -19,7 +22,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   menuClassName,
   onOpenChange,
   showArrow = true,
-  caretOffsetX = 16,
+  caretOffset = "md",
 }) => {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -70,11 +73,12 @@ const Dropdown: React.FC<DropdownProps> = ({
         >
           {showArrow && (
             <Caret
-              className="absolute -top-2"
-              style={{
-                right: position === "right" ? `${caretOffsetX}px` : "auto",
-                left: position === "left" ? `${caretOffsetX}px` : "auto",
-              }}
+              className={clsx(
+                caretBase,
+                position === "right"
+                  ? caretRightOffset[caretOffset]
+                  : caretLeftOffset[caretOffset]
+              )}
               aria-hidden
             />
           )}
