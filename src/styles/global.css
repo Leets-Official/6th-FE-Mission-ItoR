@@ -8,6 +8,8 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100vw;
 }
 
 #root {
@@ -32,7 +34,9 @@ body {
 
 /* 페이지헤더 컨테이너 */
 .page-header-container {
-  @apply fixed top-0 left-0 right-0 z-50 flex w-full max-w-[1440px] mx-auto p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
+  @apply fixed top-0 z-50 flex h-[72px] w-full max-w-[1440px] p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .page-header-legacy-container {

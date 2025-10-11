@@ -27,16 +27,12 @@ const TextBox: FC<TextBoxProps> = ({
 }) => {
   const content = (
     <>
-      {showIcon && (
-        <Icon size="sm">
-          {icon || <CreateIcon />}
-        </Icon>
-      )}
+      {showIcon && <Icon size="sm">{icon || <CreateIcon />}</Icon>}
       <span className={textBoxTextVariants({ color })}>{children}</span>
     </>
   );
 
-  const baseClassName = clsx(textBoxVariants({ color, borderColor }), 'group', className);
+  const baseClassName = clsx(textBoxVariants({ color, borderColor }), className);
 
   if (asButton || onClick) {
     return (
