@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "@ui/PageHeader";
-import Pagenation from "@ui/Pagenation";
+import Pagination from "@ui/Pagination";
 import type { Post } from "../types/post";
 
 const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
@@ -93,7 +93,7 @@ export default function HomePage() {
 
           {totalPages > 1 && (
             <div className="mt-6 mb-10 flex justify-center">
-              <Pagenation
+              <Pagination
                 page={current}
                 totalPages={totalPages}
                 onChange={setPage}

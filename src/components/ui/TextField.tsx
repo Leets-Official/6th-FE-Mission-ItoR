@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import type { TextFiledProps } from "@ui/TextFiled.types";
+import type { TextFieldProps } from "@ui/TextField.types";
 import {
   wrapperBase,
   labelClass,
@@ -8,9 +8,9 @@ import {
   inputClass,
   bySize,
   byStyle,
-} from "./TextFiled.variants";
+} from "./TextField.variants";
 
-const TextFiled = React.forwardRef<HTMLInputElement, TextFiledProps>(
+const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
       id,
@@ -29,8 +29,8 @@ const TextFiled = React.forwardRef<HTMLInputElement, TextFiledProps>(
     const genId = React.useId();
     const inputId = id ?? genId;
 
-    // disabled 우선
-    const styleKey = disabled ? "disabled" : tfStyle;
+    const styleKey: Parameters<typeof Object.keys>[0] & keyof typeof byStyle =
+      (disabled ? "disabled" : tfStyle);
 
     return (
       <label className={clsx(wrapperBase, fullWidth && "w-full")}>
@@ -62,5 +62,5 @@ const TextFiled = React.forwardRef<HTMLInputElement, TextFiledProps>(
   }
 );
 
-TextFiled.displayName = "TextFiled";
-export default TextFiled;
+TextField.displayName = "TextField";
+export default TextField;

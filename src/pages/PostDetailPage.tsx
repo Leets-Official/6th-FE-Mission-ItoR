@@ -1,9 +1,8 @@
-import React from "react";
 import { useParams, Navigate } from "react-router-dom";
 
 import PageHeader from "../components/ui/PageHeader";
 import TextBox from "../components/ui/TextBox";
-import TextFiled from "../components/ui/TextFiled";
+import TextField from "../components/ui/TextField";
 import ProfilePhoto from "../components/ui/Profile";
 import type { Post } from "../types/post";
 
@@ -168,7 +167,7 @@ export default function PostDetailPage() {
 
             <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-center gap-[10px] self-stretch">
               <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-center gap-[10px] self-stretch h-[66px]">
-                <TextFiled
+                <TextField
                   placeholder="댓글을 입력하세요..."
                   fullWidth
                   size="lg"

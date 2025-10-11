@@ -8,8 +8,8 @@ import {
   itemDefault,
   itemActive,
   itemDisabled,
-} from "./Pagenation.variants";
-import type { PagenationProps } from "./Pagenation.types";
+} from "./Pagination.variants";
+import type { PaginationProps } from "./Pagination.types";
 
 function PageButton({
   children,
@@ -39,7 +39,7 @@ function PageButton({
 }
 
 
-const Pagenation: React.FC<PagenationProps> = ({
+const Pagenation: React.FC<PaginationProps> = ({
   page,
   totalPages,
   onChange,

@@ -3,7 +3,7 @@ import type React from "react";
 export type TFSize = "lg" | "sm";
 export type TFStyle = "placeholder" | "default" | "emphasis" | "disabled";
 
-export interface TextFiledProps
+export interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
   size?: TFSize;
