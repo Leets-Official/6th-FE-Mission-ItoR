@@ -1,8 +1,9 @@
-export type ButtonProps = {
-  children: React.ReactNode
-  icon?: React.ReactNode
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
+
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+  children: ReactNode
+  icon?: ReactNode
   iconSize?: number
-  onClick?: () => void
   intent?:
     | 'primary'
     | 'secondary'
@@ -14,6 +15,5 @@ export type ButtonProps = {
     | 'tag'
     | 'tagFilled'
   size?: 'sm' | 'md' | 'lg'
-  disabled?: boolean
   className?: string
 }
