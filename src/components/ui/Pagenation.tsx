@@ -1,4 +1,5 @@
-import React from "react";
+import { makeRange } from "@src/lib/utils/pagination";
+
 import clsx from "clsx";
 import {
   containerBase,
@@ -37,11 +38,6 @@ function PageButton({
   );
 }
 
-function makeRange(current: number, total: number, max: number) {
-  const count = Math.min(total, Math.max(1, max));
-  const pages = Array.from({ length: count }, (_, i) => i + 1);
-  return pages;
-}
 
 const Pagenation: React.FC<PagenationProps> = ({
   page,
