@@ -19,7 +19,7 @@ const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
 
 function TinyAvatar({ initial = "N" }: { initial?: string }) {
   return (
-    <div className="w-5 h-5 rounded-full bg-[var(--Gray7)] flex items-center justify-center text-white text-[10px] leading-[10px]">
+    <div className="w-5 h-5 rounded-full bg-gray-7 flex items-center justify-center text-white text-[10px] leading-[10px]">
       {initial}
     </div>
   );
@@ -39,7 +39,7 @@ export default function HomePage() {
   const headerContainer = "w-full px-4 sm:px-6 md:px-8";
 
   return (
-    <div className="min-h-dvh w-full bg-[var(--White)] flex flex-col">
+    <div className="min-h-dvh w-full bg-white flex flex-col">
       <header className="w-full bg-white/90 backdrop-blur-[2px]">
         <div className={headerContainer}>
           <PageHeader variant="write" className="!w-full" />
@@ -48,7 +48,7 @@ export default function HomePage() {
 
       <main className="flex-1 w-full">
         <div className={mainContainer}>
-          <ul className="divide-y divide-[var(--Gray90)]">
+          <ul className="divide-y divide-gray-90">
             {sliced.map((p) => (
               <li key={String(p.id)} className="py-5 md:py-6">
                 <Link
@@ -57,22 +57,22 @@ export default function HomePage() {
                 >
                   <div className="min-w-0">
                     <div className="flex items-start gap-4 py-2">
-                      <h3 className="text-[16px] md:text-[18px] leading-[1.6] font-medium tracking-[-0.04px] text-[var(--Black)] group-hover:underline">
+                      <h3 className="text-[16px] md:text-[18px] leading-[1.6] font-medium tracking-[-0.04px] text-black group-hover:underline">
                         {p.title}
                       </h3>
                     </div>
-                    <p className="h-12 overflow-hidden text-ellipsis whitespace-nowrap text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[#555]">
+                    <p className="h-12 overflow-hidden text-ellipsis whitespace-nowrap text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-gray-33">
                       {p.excerpt}
                     </p>
                     <div className="mt-3 flex items-center gap-2">
                       <TinyAvatar initial={p.author.avatarInitial} />
-                      <span className="text-[12px] leading-[19.2px] text-[var(--Gray20)]">
+                      <span className="text-[12px] leading-[19.2px] text-gray-20">
                         {p.author.name}
                       </span>
-                      <span className="text-[12px] leading-[19.2px] text-[var(--Gray56)]">
+                      <span className="text-[12px] leading-[19.2px] text-gray-56">
                         · {p.date}
                       </span>
-                      <span className="text-[12px] leading-[19.2px] text-[var(--Gray56)]">
+                      <span className="text-[12px] leading-[19.2px] text-gray-56">
                         · 댓글0
                       </span>
                     </div>

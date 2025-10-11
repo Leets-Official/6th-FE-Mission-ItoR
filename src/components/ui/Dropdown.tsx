@@ -9,8 +9,6 @@ import {
   itemInteractive,
   itemDisabled,
 } from "./Dropdown.variants";
-
-// 말풍선 뾰족 삼각형 SVG 
 import Caret from "@icons/dropdown-caret.svg?react";
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -21,7 +19,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   menuClassName,
   onOpenChange,
   showArrow = true,
-  caretOffsetX = 16, // caret이 오른쪽에서 얼마나 떨어질지(px)
+  caretOffsetX = 16,
 }) => {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -31,7 +29,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     onOpenChange?.(v);
   };
 
-  // 바깥 클릭/ESC 닫기
   React.useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (!rootRef.current) return;
@@ -54,7 +51,6 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div ref={rootRef} className={clsx(rootBase, className)}>
-      {/* Trigger */}
       <div
         role="button"
         tabIndex={0}
@@ -67,13 +63,11 @@ const Dropdown: React.FC<DropdownProps> = ({
         {trigger}
       </div>
 
-      {/* Panel */}
       {open && (
         <div
           className={clsx(panelWrap, position === "right" ? "right-0" : "left-0", menuClassName)}
           role="menu"
         >
-          {/* 말풍선 삼각형 (SVG) */}
           {showArrow && (
             <Caret
               className="absolute -top-2"
@@ -85,7 +79,6 @@ const Dropdown: React.FC<DropdownProps> = ({
             />
           )}
 
-          {/* 시트 */}
           <div className={sheetBase}>
             {items.map((it) => (
               <button
@@ -100,7 +93,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   "first:rounded-t-[4px] last:rounded-b-[4px]"
                 )}
               >
-                <span className="flex-1 text-left [font-family:'Noto Sans KR']">{it.label}</span>
+                <span className="flex-1 text-left">{it.label}</span>
               </button>
             ))}
           </div>
