@@ -4,7 +4,7 @@ import { LoginModal } from '@/components/auth';
 import { useSidebar } from '@/hooks/useSidebar';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
-import { SIDEBAR_TEXTS } from '@/constants/sidebar.constants';
+import { SIDEBAR_TEXTS } from '@/constants';
 import { sidebarStyles } from './Sidebar.styles';
 
 interface SidebarProps {

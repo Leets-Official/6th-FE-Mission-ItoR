@@ -17,7 +17,7 @@ import {
   signupTextVariants,
 } from './LoginFormVariants';
 import { KakaoIcon } from '@/assets/icons/common';
-import { AUTH_TEXTS } from '@/constants/auth.constants';
+import { AUTH_TEXTS } from '@/constants';
 
 interface LoginFormProps {
   className?: string;

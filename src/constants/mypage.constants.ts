@@ -7,3 +7,14 @@ export const MYPAGE_TEXTS = {
     OR: '또는',
   },
 } as const;
+
+export const MYPAGE_HEADER_CONTENT = {
+  '/mypage': {
+    title: '회원가입',
+    subtitle: undefined,
+  },
+  '/mypage/signup': {
+    title: '회원가입',
+    subtitle: '가입을 위해 회원님의 정보를 입력해주세요.',
+  },
+} as const;

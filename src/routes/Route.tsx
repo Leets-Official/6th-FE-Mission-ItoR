@@ -6,7 +6,7 @@ import MyPageForm from '@/components/mypage/MyPageForm';
 import SignupForm from '@/components/mypage/SignupForm';
 import Playground from '@/playground/Playground';
 import { PublicRoute } from '@/routes/PublicRoute';
-import { PrivateRoute } from '@/routes/PrivateRoute';
+//import { PrivateRoute } from '@/routes/PrivateRoute';
 
 const router = createBrowserRouter([
   {
