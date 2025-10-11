@@ -8,7 +8,7 @@ type ToastProps = {
 
 export default function Toast({ type = 'negative', message, icon }: ToastProps) {
   const baseStyle =
-    "inline-flex h-10 px-3 justify-center items-center gap-1 shrink-0 rounded-[25px] border backdrop-blur-[2px] bg-white/90 text-[14px] leading-[160%] tracking-[-0.07px] font-['Noto_Sans_KR']"
+    'inline-flex h-10 px-3 justify-center items-center gap-1 shrink-0 rounded-[25px] border backdrop-blur-[2px] bg-white/90 text-[14px] leading-[160%] tracking-[-0.07px] font-sans'
 
   const variants: Record<'negative' | 'positive', string> = {
     negative: 'border-negative text-negative',
