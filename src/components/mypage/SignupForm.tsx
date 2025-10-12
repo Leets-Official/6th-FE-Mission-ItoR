@@ -51,8 +51,8 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
   };
 
   const handleLoginRedirect = () => {
-    setIsCompleteModalOpen(false); // 완료 모달 닫기
-    openModal('login'); // 로그인 모달 열기
+    setIsCompleteModalOpen(false); // 완료 모달
+    openModal('login'); // 로그인 모달
   };
 
   return (
@@ -116,7 +116,7 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
         confirmButtonVariant="primary"
         onDelete={handleLoginRedirect}
       >
-        <p className="py-4 text-center text-sm text-gray-600">
+        <p className="text-center text-sm">
           {MYPAGE_TEXTS.MODAL.SIGNUP_COMPLETE}
         </p>
       </Modal>

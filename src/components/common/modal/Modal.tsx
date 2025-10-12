@@ -7,6 +7,7 @@ import {
 } from '@/components/common/Modal/ModalVariants';
 import { cn } from '@/utils/cn';
 import { FC, ReactNode } from 'react';
+import { useBodyScrollLock } from '@/hooks';
 
 interface ModalProps {
   children: ReactNode;
@@ -29,6 +30,8 @@ const Modal: FC<ModalProps> = ({
   confirmButtonText = '삭제하기',
   confirmButtonVariant = 'danger',
 }) => {
+  useBodyScrollLock(isOpen);
+
   if (!isOpen) {
     return null;
   }

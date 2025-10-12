@@ -1,7 +1,7 @@
 import { Profile1Icon } from '@/assets/icons/common';
 import { Button, Spacer } from '@/components';
-import { LoginModal } from '@/components/auth';
-import { useSidebar } from '@/hooks';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useModalStore } from '@/stores/useModalStore';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
 import { SIDEBAR_TEXTS } from '@/constants';
@@ -13,7 +13,12 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
-  const { isLoginModalOpen, openLoginModal, closeLoginModal } = useSidebar();
+  const user = useAuthStore(state => state.user);
+  const openModal = useModalStore(state => state.openModal);
+
+  const handleStartGitlog = () => {
+    openModal('login');
+  };
 
   return (
     <aside
@@ -28,8 +33,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
           </div>
           {isLoggedIn ? (
             <div className={sidebarStyles.userInfoContainer}>
-              <h2 className={sidebarStyles.userName}>사용자 이름</h2>
-              <p className={sidebarStyles.userBio}>한줄 소개 텍스트</p>
+              <h2 className={sidebarStyles.userName}>{user?.nickName || '사용자'}</h2>
+              <p className={sidebarStyles.userBio}>{user?.bio || '한줄 소개를 입력해주세요'}</p>
             </div>
           ) : (
             <div className={sidebarStyles.quoteContainer}>
@@ -49,7 +54,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
               </Button>
             </div>
           ) : (
-            <Button intent="primary" onClick={openLoginModal}>
+            <Button intent="primary" onClick={handleStartGitlog}>
               {SIDEBAR_TEXTS.NOT_LOGGED_IN.START_GITLOG}
             </Button>
           )}
@@ -69,8 +74,6 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
           </div>
         </div>
       )}
-
-      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </aside>
   );
 };

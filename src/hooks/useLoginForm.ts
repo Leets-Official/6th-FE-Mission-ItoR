@@ -1,9 +1,11 @@
 import { useState, KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mockUser } from '@/_mocks_/mockUser';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export const useLoginForm = (onClose?: () => void) => {
   const navigate = useNavigate();
+  const setUser = useAuthStore(state => state.setUser);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,6 +13,14 @@ export const useLoginForm = (onClose?: () => void) => {
   const handleLogin = () => {
     if (email === mockUser.email && password === mockUser.password) {
       setErrorMessage('');
+      // 로그인 상태 및 사용자 정보 업데이트
+      setUser({
+        id: mockUser.id,
+        email: mockUser.email,
+        nickName: mockUser.nickName,
+        bio: mockUser.bio,
+        profileImage: mockUser.profileImage,
+      });
       onClose?.();
       navigate('/');
     } else {
