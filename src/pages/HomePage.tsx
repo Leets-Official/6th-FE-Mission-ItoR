@@ -1,14 +1,13 @@
-import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import clsx from "clsx";
 import PageHeader from "@ui/PageHeader";
-import Pagination from "@ui/Pagination";
+import PostList from "../components/home/PostList";
 import type { Post } from "../types/post";
 
 const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
   id: i + 1,
   title: "16 Title one line",
-  excerpt:
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+  excerpt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   date: "Feb 17, 2025.",
   author: { name: "닉네임", avatarInitial: "N" },
   thumbnailUrl:
@@ -17,89 +16,27 @@ const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
       : undefined,
 }));
 
-function TinyAvatar({ initial = "N" }: { initial?: string }) {
-  return (
-    <div className="w-5 h-5 rounded-full bg-gray-7 flex items-center justify-center text-white text-[10px] leading-[10px]">
-      {initial}
-    </div>
-  );
-}
+const styles = {
+  container: {
+    main: "mx-auto w-full max-w-[688px] px-4 sm:px-6 md:px-8",
+    header: "w-full px-4 sm:px-6 md:px-8",
+  },
+} as const;
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
-  const pageSize = 5;
-  const totalPages = Math.max(1, Math.ceil(POSTS.length / pageSize));
-  const current = Math.min(page, totalPages);
-  const sliced = useMemo(
-    () => POSTS.slice((current - 1) * pageSize, current * pageSize),
-    [current],
-  );
-
-  const mainContainer = "mx-auto w-full max-w-[688px] px-4 sm:px-6 md:px-8";
-  const headerContainer = "w-full px-4 sm:px-6 md:px-8";
 
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
       <header className="w-full bg-white/90 backdrop-blur-[2px]">
-        <div className={headerContainer}>
+        <div className={clsx(styles.container.header)}>
           <PageHeader variant="write" className="!w-full" />
         </div>
       </header>
 
       <main className="flex-1 w-full">
-        <div className={mainContainer}>
-          <ul className="divide-y divide-gray-90">
-            {sliced.map((p) => (
-              <li key={String(p.id)} className="py-5 md:py-6">
-                <Link
-                  to={`/post/${p.id}`}
-                  className="grid grid-cols-[1fr_auto] gap-4 group"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-start gap-4 py-2">
-                      <h3 className="text-[16px] md:text-[18px] leading-[1.6] font-medium tracking-[-0.04px] text-black group-hover:underline">
-                        {p.title}
-                      </h3>
-                    </div>
-                    <p className="h-12 overflow-hidden text-ellipsis whitespace-nowrap text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-gray-33">
-                      {p.excerpt}
-                    </p>
-                    <div className="mt-3 flex items-center gap-2">
-                      <TinyAvatar initial={p.author.avatarInitial} />
-                      <span className="text-[12px] leading-[19.2px] text-gray-20">
-                        {p.author.name}
-                      </span>
-                      <span className="text-[12px] leading-[19.2px] text-gray-56">
-                        · {p.date}
-                      </span>
-                      <span className="text-[12px] leading-[19.2px] text-gray-56">
-                        · 댓글0
-                      </span>
-                    </div>
-                  </div>
-
-                  {p.thumbnailUrl && (
-                    <img
-                      src={p.thumbnailUrl}
-                      alt=""
-                      className="w-[124px] h-[116px] rounded-[2px] object-cover flex-shrink-0"
-                      loading="lazy"
-                    />
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {totalPages > 1 && (
-            <div className="mt-6 mb-10 flex justify-center">
-              <Pagination
-                page={current}
-                totalPages={totalPages}
-                onChange={setPage}
-              />
-            </div>
-          )}
+        <div className={clsx(styles.container.main)}>
+          <PostList posts={POSTS} page={page} onPageChange={setPage} />
         </div>
       </main>
     </div>
