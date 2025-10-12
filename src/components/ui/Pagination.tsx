@@ -1,5 +1,5 @@
+import React from "react";
 import { makeRange } from "@src/lib/utils/pagination";
-
 import clsx from "clsx";
 import {
   containerBase,
@@ -10,6 +10,8 @@ import {
   itemDisabled,
 } from "./Pagination.variants";
 import type { PaginationProps } from "./Pagination.types";
+import LeftIcon from "@icons/left.svg?react";
+import RightIcon from "@icons/right.svg?react";
 
 function PageButton({
   children,
@@ -27,10 +29,7 @@ function PageButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={clsx(
-        itemBase,
-        disabled ? itemDisabled : active ? itemActive : itemDefault
-      )}
+      className={clsx(itemBase, disabled ? itemDisabled : active ? itemActive : itemDefault)}
       aria-current={active ? "page" : undefined}
     >
       {children}
@@ -38,8 +37,7 @@ function PageButton({
   );
 }
 
-
-const Pagenation: React.FC<PaginationProps> = ({
+const Pagination: React.FC<PaginationProps> = ({
   page,
   totalPages,
   onChange,
@@ -61,7 +59,7 @@ const Pagenation: React.FC<PaginationProps> = ({
       <div className={listBase}>
         {showArrows && (
           <PageButton disabled={!canPrev} onClick={() => go(page - 1)}>
-            {"<"}
+            <LeftIcon className="w-4 h-4" aria-hidden />
           </PageButton>
         )}
 
@@ -73,7 +71,7 @@ const Pagenation: React.FC<PaginationProps> = ({
 
         {showArrows && (
           <PageButton disabled={!canNext} onClick={() => go(page + 1)}>
-            {">"}
+            <RightIcon className="w-4 h-4" aria-hidden />
           </PageButton>
         )}
       </div>
@@ -81,4 +79,4 @@ const Pagenation: React.FC<PaginationProps> = ({
   );
 };
 
-export default Pagenation;
+export default Pagination;
