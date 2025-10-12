@@ -42,12 +42,12 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    mode: 'onChange', // 실시간 유효성 검사
+    mode: 'onChange',
   });
 
   const onSubmit = (data: SignupFormData) => {
     console.log('Form submitted:', data);
-    setIsCompleteModalOpen(true); // 완료 모달 열기
+    setIsCompleteModalOpen(true)
   };
 
   const handleLoginRedirect = () => {
@@ -109,7 +109,6 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
 
       <Spacer height="lg" className={STYLES.spacer} />
 
-      {/* 회원가입 완료 모달 */}
       <Modal
         isOpen={isCompleteModalOpen}
         onClose={() => setIsCompleteModalOpen(false)}
@@ -122,7 +121,6 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
         </p>
       </Modal>
 
-      {/* 로그인 모달 */}
       <LoginModal isOpen={modalType === 'login'} onClose={closeModal} />
     </form>
   );
