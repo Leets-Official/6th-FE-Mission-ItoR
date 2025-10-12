@@ -4,12 +4,16 @@ export const MYPAGE_TEXTS = {
     KAKAO_SIGNUP: '카카오로 회원가입',
     SIGNUP_SUBMIT: '회원가입 완료',
     ADD_PROFILE_PHOTO: '프로필 사진 추가',
+    LOGIN_REDIRECT: '로그인 하러 가기',
   },
   DIVIDER: {
     OR: '또는',
   },
   LABELS: {
     PROFILE_PHOTO: '프로필 사진',
+  },
+  MODAL: {
+    SIGNUP_COMPLETE: '회원가입이 완료되었습니다.',
   },
 } as const;
 
@@ -25,11 +29,17 @@ export const MYPAGE_HEADER_CONTENT = {
 } as const;
 
 export const SIGNUP_FORM_FIELDS = [
-  { title: '이메일', type: 'email' as const, placeholder: '이메일', hintText: undefined },
-  { title: '비밀번호', type: 'password' as const, placeholder: '비밀번호', hintText: undefined },
-  { title: '비밀번호 확인', type: 'password' as const, placeholder: '비밀번호를 다시 입력하세요', hintText: undefined },
-  { title: '이름', type: undefined, placeholder: '이름', hintText: undefined },
-  { title: '생년월일', type: undefined, placeholder: 'YYYY-MM-DD', hintText: undefined },
-  { title: '닉네임', type: undefined, placeholder: '닉네임', hintText: '20글자 이내' },
-  { title: '한 줄 소개', type: undefined, placeholder: '한 줄 소개', hintText: undefined },
+  { name: 'email', title: '이메일', type: 'email' as const, placeholder: '이메일', hintText: undefined },
+  { name: 'password', title: '비밀번호', type: 'password' as const, placeholder: '비밀번호', hintText: undefined },
+  {
+    name: 'passwordConfirm',
+    title: '비밀번호 확인',
+    type: 'password' as const,
+    placeholder: '비밀번호를 다시 입력하세요',
+    hintText: undefined,
+  },
+  { name: 'name', title: '이름', type: undefined, placeholder: '이름', hintText: undefined },
+  { name: 'birthDate', title: '생년월일', type: undefined, placeholder: 'YYYY-MM-DD', hintText: undefined },
+  { name: 'nickname', title: '닉네임', type: undefined, placeholder: '닉네임', hintText: '20글자 이내' },
+  { name: 'bio', title: '한 줄 소개', type: undefined, placeholder: '한 줄 소개', hintText: undefined },
 ] as const;

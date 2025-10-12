@@ -1,9 +1,9 @@
 import TextField from '@/components/common/Text/TextField';
 import { TextareaProps } from '@/types/text';
 import clsx from 'clsx';
-import { FC } from 'react';
+import { forwardRef } from 'react';
 
-const Textarea: FC<TextareaProps> = ({
+const Textarea = forwardRef<HTMLInputElement, TextareaProps>(({
   title,
   className = '',
   hintText,
@@ -12,31 +12,47 @@ const Textarea: FC<TextareaProps> = ({
   textFieldColor,
   textFieldBackgroundColor,
   textFieldFontSize,
-}) => {
+  error,
+  name,
+  value,
+  onChange,
+  onBlur,
+}, ref) => {
   return (
     <div className={clsx('flex w-full max-w-content flex-col items-start gap-1 px-4 py-3', className)}>
-      {/* 제목과 텍스트 입력 필드 컨테이너 */}
       <div className="flex w-full flex-col items-start gap-3">
-        {title && (
-          <span className="flex-1 text-sm font-light text-gray-56">{title}</span>
-        )}
+        {title && <span className="flex-1 text-sm font-light text-gray-56">{title}</span>}
         <TextField
+          ref={ref}
           type={type}
+          name={name}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
           textColor={textFieldColor}
           backgroundColor={textFieldBackgroundColor}
           fontSize={textFieldFontSize}
+          error={!!error}
           fullWidth
         />
       </div>
 
-      {hintText && (
+      {error ? (
         <div className="flex items-center justify-center gap-2.5 self-stretch px-1.5 py-0">
-          <span className="flex-1 text-xs font-light text-gray-78">* {hintText}</span>
+          <span className="flex-1 text-xs font-light text-error">* {error}</span>
         </div>
+      ) : (
+        hintText && (
+          <div className="flex items-center justify-center gap-2.5 self-stretch px-1.5 py-0">
+            <span className="flex-1 text-xs font-light text-gray-78">* {hintText}</span>
+          </div>
+        )
       )}
     </div>
   );
-};
+});
+
+Textarea.displayName = 'Textarea';
 
 export default Textarea;

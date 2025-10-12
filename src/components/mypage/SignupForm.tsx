@@ -1,12 +1,18 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/utils/cn';
 import Spacer from '@/components/common/Spacer/Spacer';
 import TextBox from '@/components/common/Textbox/TextBox';
 import Textarea from '@/components/common/Text/Textarea';
 import Button from '@/components/common/Button/Button';
+import Modal from '@/components/common/Modal/Modal';
+import LoginModal from '@/components/auth/LoginModal';
 import { AddPhotoAlternateIcon } from '@/assets/icons/common';
 import { useSignup } from '@/hooks/useSignup';
+import { useModalStore } from '@/stores/useModalStore';
 import { MYPAGE_TEXTS, SIGNUP_FORM_FIELDS } from '@/constants';
+import { signupSchema, SignupFormData } from '@/utils/schemas';
 import profileImage from '@/assets/profile.png';
 
 interface SignupFormProps {
@@ -27,12 +33,32 @@ const STYLES = {
 
 const SignupForm: FC<SignupFormProps> = ({ className }) => {
   const { previewImage, fileInputRef, handleImageUpload, handleButtonClick } = useSignup(profileImage);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const { modalType, openModal, closeModal } = useModalStore();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onChange', // 실시간 유효성 검사
+  });
+
+  const onSubmit = (data: SignupFormData) => {
+    console.log('Form submitted:', data);
+    setIsCompleteModalOpen(true); // 완료 모달 열기
+  };
+
+  const handleLoginRedirect = () => {
+    setIsCompleteModalOpen(false); // 완료 모달 닫기
+    openModal('login'); // 로그인 모달 열기
+  };
 
   return (
-    <div className={cn(STYLES.container, className)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={cn(STYLES.container, className)}>
       <Spacer height="md" className={STYLES.spacer} />
 
-      {/* 프로필 사진 섹션 */}
       <div className={STYLES.profileSection}>
         <div className={STYLES.sectionTitle}>
           <span className="flex-1 text-sm font-light text-gray-56">{MYPAGE_TEXTS.LABELS.PROFILE_PHOTO}</span>
@@ -60,29 +86,45 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
         </div>
       </div>
 
-      {/* 폼 필드들 */}
       {SIGNUP_FORM_FIELDS.map((field) => (
         <Textarea
-          key={field.title}
+          key={field.name}
           title={field.title}
           type={field.type}
           placeholder={field.placeholder}
           hintText={field.hintText}
+          error={errors[field.name]?.message}
           className={STYLES.textareaCommon}
+          {...register(field.name)}
         />
       ))}
 
       <Spacer height="md" className={STYLES.spacer} />
 
-      {/* 제출 버튼 */}
       <div className={STYLES.buttonWrapper}>
-        <Button intent="primary" variant="solid" fullWidth>
+        <Button type="submit" intent="primary" variant="solid" fullWidth>
           {MYPAGE_TEXTS.BUTTONS.SIGNUP_SUBMIT}
         </Button>
       </div>
 
       <Spacer height="lg" className={STYLES.spacer} />
-    </div>
+
+      {/* 회원가입 완료 모달 */}
+      <Modal
+        isOpen={isCompleteModalOpen}
+        onClose={() => setIsCompleteModalOpen(false)}
+        confirmButtonText={MYPAGE_TEXTS.BUTTONS.LOGIN_REDIRECT}
+        confirmButtonVariant="primary"
+        onDelete={handleLoginRedirect}
+      >
+        <p className="py-4 text-center text-sm text-gray-600">
+          {MYPAGE_TEXTS.MODAL.SIGNUP_COMPLETE}
+        </p>
+      </Modal>
+
+      {/* 로그인 모달 */}
+      <LoginModal isOpen={modalType === 'login'} onClose={closeModal} />
+    </form>
   );
 };
 

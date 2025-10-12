@@ -3,7 +3,10 @@ export interface TextFieldProps {
   className?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   type?: 'text' | 'password' | 'email';
+  error?: boolean;
+  name?: string;
 
   // cva API
   variant?: 'default' | 'dark' | 'light';
@@ -23,4 +26,9 @@ export interface TextareaProps {
   textFieldColor?: 'black' | 'gray56' | 'gray78';
   textFieldBackgroundColor?: 'transparent' | 'filled';
   textFieldFontSize?: 'light' | 'medium';
+  error?: string;
+  name?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
