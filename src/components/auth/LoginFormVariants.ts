@@ -97,7 +97,7 @@ export const snsButtonTextVariants = tv({
   base: 'font-semibold leading-[150%]',
   variants: {
     provider: {
-      kakao: 'text-character-title-85 text-[15px]',
+      kakao: 'text-character-title-85 text-[15px] font-[Apple_SD_Gothic_Neo]',
     },
   },
   defaultVariants: {
@@ -113,4 +113,14 @@ export const signupButtonVariants = tv({
 // 회원가입 텍스트 variants
 export const signupTextVariants = tv({
   base: 'text-gray-56 text-sm font-light leading-[160%] tracking-[-0.07px]',
+});
+
+// 에러 메시지 컨테이너 variants
+export const errorMessageContainerVariants = tv({
+  base: 'flex items-center justify-center gap-2.5 self-stretch px-1.5',
+});
+
+// 에러 메시지 텍스트 variants
+export const errorMessageTextVariants = tv({
+  base: 'flex-1 font-sans text-xs font-light text-warning',
 });

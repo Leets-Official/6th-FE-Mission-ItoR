@@ -9,7 +9,7 @@ import Button from '@/components/common/Button/Button';
 import Modal from '@/components/common/Modal/Modal';
 import LoginModal from '@/components/auth/LoginModal';
 import { AddPhotoAlternateIcon } from '@/assets/icons/common';
-import { useSignup } from '@/hooks/useSignup';
+import { useSignup } from '@/hooks';
 import { useModalStore } from '@/stores/useModalStore';
 import { MYPAGE_TEXTS, SIGNUP_FORM_FIELDS } from '@/constants';
 import { signupSchema, SignupFormData } from '@/utils/schemas';

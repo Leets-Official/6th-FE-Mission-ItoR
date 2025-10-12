@@ -1,8 +1,7 @@
 import { FC, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { useBodyScrollLock, useFocusTrap } from '@/hooks';
 import LoginPage from '@/pages/auth/LoginPage';
 import Icon from '@/components/common/Icon/Icon';
 import { ClearIcon } from '@/assets/icons/common';
@@ -11,6 +10,7 @@ interface LoginModalProps {
   className?: string;
   isOpen: boolean;
   onClose: () => void;
+  message?: string;
 }
 
 const LoginModal: FC<LoginModalProps> = ({ className = '', isOpen, onClose }) => {

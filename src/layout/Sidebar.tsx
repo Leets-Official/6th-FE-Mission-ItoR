@@ -1,7 +1,7 @@
 import { Profile1Icon } from '@/assets/icons/common';
 import { Button, Spacer } from '@/components';
 import { LoginModal } from '@/components/auth';
-import { useSidebar } from '@/hooks/useSidebar';
+import { useSidebar } from '@/hooks';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
 import { SIDEBAR_TEXTS } from '@/constants';
