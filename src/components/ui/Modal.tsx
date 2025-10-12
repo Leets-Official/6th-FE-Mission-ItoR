@@ -10,7 +10,7 @@ import {
   actionsRow,
   btnBase,
   btnCancel,
-  btnConfirm,
+  btnConfirmByVariant,
 } from "./Modal.variants";
 
 const Modal: React.FC<ModalProps> = ({
@@ -24,6 +24,7 @@ const Modal: React.FC<ModalProps> = ({
   descriptionLines,
   className,
   closeOnOverlay = true,
+  confirmVariant = "negative",
 }) => {
   const baseId = React.useId();
   const labelId = `${baseId}-label`;
@@ -94,7 +95,11 @@ const Modal: React.FC<ModalProps> = ({
           <button type="button" className={clsx(btnBase, btnCancel)} onClick={handleCancel}>
             {cancelText}
           </button>
-          <button type="button" className={clsx(btnBase, btnConfirm)} onClick={handleConfirm}>
+          <button
+            type="button"
+            className={clsx(btnBase, btnConfirmByVariant[confirmVariant])}
+            onClick={handleConfirm}
+          >
             {confirmText}
           </button>
         </div>

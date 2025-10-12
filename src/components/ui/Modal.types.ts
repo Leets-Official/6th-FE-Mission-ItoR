@@ -1,5 +1,7 @@
 import type React from "react";
 
+export type ConfirmVariant = "negative" | "point" | "default";
+
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
@@ -20,4 +22,6 @@ export interface ModalProps {
   className?: string;
 
   closeOnOverlay?: boolean;
+
+  confirmVariant?: ConfirmVariant;
 }
