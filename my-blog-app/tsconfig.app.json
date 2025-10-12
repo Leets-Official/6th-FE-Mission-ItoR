@@ -16,7 +16,7 @@
     "jsx": "react-jsx",
 
     /* 경로 alias 추가 */
-    "baseUrl": ".", 
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },

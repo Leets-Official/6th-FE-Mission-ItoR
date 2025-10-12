@@ -22,7 +22,11 @@ export default defineConfig([
       prettier,
     ],
     rules: {
-      'prettier/prettier': 'error', 
+      'prettier/prettier': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { varsIgnorePattern: '^ReactNode$' },
+      ],
     },
     languageOptions: {
       ecmaVersion: 2020,
