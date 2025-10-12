@@ -16,8 +16,8 @@ export const descCommon =
   "text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-gray-20";
 
 export const titleCompact =
-  "text-[16px] leading-[25.6px] font-medium tracking-[-0.04px] " +
-  "text-black h-12 w-full overflow-hidden text-ellipsis whitespace-nowrap";
+  "text-[16px] leading-[25.6px] font-medium tracking-[-0.04px] text-black " +
+  "h-12 w-full overflow-hidden text-ellipsis whitespace-nowrap";
 
 export const textSingle =
   "text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-gray-20";
