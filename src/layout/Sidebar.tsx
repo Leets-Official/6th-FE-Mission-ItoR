@@ -1,11 +1,13 @@
 import { Profile1Icon } from '@/assets/icons/common';
 import { Button, Spacer } from '@/components';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useModalStore } from '@/stores/useModalStore';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
 import { SIDEBAR_TEXTS, MYPAGE_TEXTS } from '@/constants';
 import { sidebarStyles } from './Sidebar.styles';
 import { useSidebar } from '@/hooks';
+import { LoginModal } from '@/components/auth';
 
 interface SidebarProps {
   className?: string;
@@ -14,14 +16,16 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   const user = useAuthStore(state => state.user);
+  const { modalType, closeModal } = useModalStore();
   const { handleStartGitlog, handleMyGitlog, handleWriteGitlog, handleSettings, handleLogout } = useSidebar();
 
   return (
-    <aside
-      className={cn(sidebarStyles.container, className)}
-      role="complementary"
-      aria-label="Sidebar"
-    >
+    <>
+      <aside
+        className={cn(sidebarStyles.container, className)}
+        role="complementary"
+        aria-label="Sidebar"
+      >
       <div className={sidebarStyles.mainContent}>
         <div className={sidebarStyles.profileSection}>
           <div className={sidebarStyles.profileIconWrapper}>
@@ -70,7 +74,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
           </div>
         </div>
       )}
-    </aside>
+      </aside>
+
+      {modalType === 'login' && <LoginModal isOpen={true} onClose={closeModal} />}
+    </>
   );
 };
 
