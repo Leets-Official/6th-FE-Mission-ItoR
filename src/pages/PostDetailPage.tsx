@@ -33,7 +33,7 @@ const TitleSection: React.FC<{ title: string; author: Post["author"]; date: stri
       <TextBox
         tbStyle="primary"
         title={title}
-        className="!w-[688px] !max-w-[688px] !p-0 !bg-transparent [font-family:'Noto Sans KR']"
+        className="!w-[688px] !max-w-[688px] !p-0 !bg-transparent "
       />
     </div>
 
@@ -45,15 +45,15 @@ const TitleSection: React.FC<{ title: string; author: Post["author"]; date: stri
           <ProfilePhoto size="sm" initial={author.initial} name={author.name} />
         </div>
 
-        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)] [font-family:'Noto Sans KR']">
+        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)] ">
           {author.name}
         </span>
 
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)] [font-family:'Noto Sans KR']">
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)] ">
           · {date}
         </span>
 
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)] [font-family:'Noto Sans KR']">
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)] ">
           · 댓글 {commentCount}개
         </span>
       </div>
@@ -67,7 +67,7 @@ const BodySection: React.FC<{ detail?: string }> = ({ detail }) => (
       <TextBox
         tbStyle="single"
         text={detail ?? "detail"}
-        className="!m-0 !p-0 [font-family:'Noto Sans KR'] !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px]"
+        className="!m-0 !p-0  !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px]"
       />
     </div>
   </section>
@@ -78,16 +78,16 @@ const CommentsSection: React.FC<{ count: number }> = ({ count }) => (
     <div className="flex max-w-[688px] px-4 pt-4 pb-3 items-start gap-10 self-stretch" />
 
     <div className="flex max-w-[688px] px-4 items-center gap-2">
-      <span className="text-[16px] leading-[25.6px] font-normal [font-family:'Noto Sans KR'] tracking-[-0.04px] text-[var(--Black)]">
+      <span className="text-[16px] leading-[25.6px] font-normal  tracking-[-0.04px] text-[var(--Black)]">
         댓글
       </span>
-      <span className="text-[16px] leading-[25.6px] font-medium [font-family:'Noto Sans KR'] tracking-[-0.04px] text-[var(--Point)]">
+      <span className="text-[16px] leading-[25.6px] font-medium  tracking-[-0.04px] text-[var(--Point)]">
         {count}
       </span>
     </div>
 
     <div className="flex max-w-[688px] px-4 py-3 justify-center items-center gap-[10px] self-stretch">
-      <p className="text-center text-[14px] leading-[22.4px] font-light [font-family:'Noto Sans KR'] tracking-[-0.07px] text-[var(--Gray-78,#C8C8C8)]">
+      <p className="text-center text-[14px] leading-[22.4px] font-light  tracking-[-0.07px] text-[var(--Gray-78,#C8C8C8)]">
         댓글을 입력해 보세요.
       </p>
     </div>
@@ -100,7 +100,7 @@ const CommentsSection: React.FC<{ count: number }> = ({ count }) => (
           placeholder="댓글을 입력하세요..."
           fullWidth
           size="lg"
-          className="!h-[66px] placeholder:text-[var(--Gray-78,#C8C8C8)]"
+          className="!h-[66px] placeholder:text-gray-78"
         />
       </div>
     </div>
@@ -151,12 +151,12 @@ const PostDetailPage: React.FC = () => {
               <TextBox
                 tbStyle="single"
                 text={post.author.name}
-                className="!m-0 !p-0 !bg-transparent [font-family:'Noto Sans KR'] !text-[24px] !leading-[38.4px] !font-medium !text-[var(--Black)] !text-left w-full"
+                className="!m-0 !p-0 !bg-transparent  !text-[24px] !leading-[38.4px] !font-medium !text-[var(--Black)] !text-left w-full"
               />
               <TextBox
                 tbStyle="single"
                 text={post.author.bio ?? ""}
-                className="!m-0 !p-0 !bg-transparent [font-family:'Noto Sans KR'] !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px] !text-left w-full"
+                className="!m-0 !p-0 !bg-transparent  !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px] !text-left w-full"
               />
             </div>
           </div>
