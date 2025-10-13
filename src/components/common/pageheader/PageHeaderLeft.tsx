@@ -1,10 +1,7 @@
 import { ReorderIcon } from '@/assets/icons/common';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-
-interface PageHeaderLeftProps {
-  onHamburgerClick?: () => void;
-}
+import { PageHeaderLeftProps } from '@/types/pageheader';
 
 const PageHeaderLeft: FC<PageHeaderLeftProps> = ({ onHamburgerClick }) => {
   const handleClick = () => {

@@ -2,10 +2,7 @@ import { FC } from 'react';
 import Spacer from '@/components/common/Spacer/Spacer';
 import BlogPreviewCard from '@/components/blog/Main/MainPreviewCard';
 import { mockPosts } from '@/_mocks_/mockposts';
-
-interface MyProfileFormProps {
-  className?: string;
-}
+import { MyProfileFormProps } from '@/types/mypage';
 
 const MyProfileForm: FC<MyProfileFormProps> = ({ className }) => {
   // TODO: API 연동 시 로그인한 사용자가 작성한 글만 가져오도록 수정 필요

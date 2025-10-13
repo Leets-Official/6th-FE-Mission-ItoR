@@ -8,10 +8,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useEditModeStore } from '@/stores/useEditModeStore';
 import { SIGNUP_FORM_FIELDS } from '@/constants';
 import { signupSchema, SignupFormData } from '@/utils/schemas';
-
-interface EditProfileFormProps {
-  className?: string;
-}
+import { EditProfileFormProps } from '@/types/mypage';
 
 const STYLES = {
   container: 'flex flex-col items-center self-stretch',
@@ -19,9 +16,7 @@ const STYLES = {
   textareaCommon: 'w-full max-w-content px-0',
 } as const;
 
-// 수정 불가능한 필드
 const DISABLED_FIELDS = ['email', 'name'];
-// EditProfile에서 제외할 필드
 const EXCLUDED_FIELDS = ['nickname', 'bio'];
 
 const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {

@@ -43,6 +43,7 @@ const MyPage: FC<MyPageProps> = ({ className }) => {
             bio={user?.bio || MYPAGE_TEXTS.PROFILE.DEFAULT_BIO}
             onEditClick={handleEditProfile}
             showSettingsButton={isMyProfile}
+            isEditProfilePage={isEditProfile}
           />
         ) : (
           <PostHeader title={title} subtitle={subtitle} className="w-full px-1" />

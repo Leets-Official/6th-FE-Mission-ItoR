@@ -1,9 +1,6 @@
 import { FC } from 'react';
-import { PageHeaderRenderers, PageHeaderType, RenderProps } from '@/components/common/Pageheader/PageHeaderRightRenderers';
-
-interface PageHeaderRightProps extends RenderProps {
-  type: PageHeaderType;
-}
+import { PageHeaderRenderers } from '@/components/common/Pageheader/PageHeaderRightRenderers';
+import { PageHeaderRightProps } from '@/types/pageheader';
 
 const PageHeaderRight: FC<PageHeaderRightProps> = ({ type, onEdit, onCancel, onSave }) => {
   return PageHeaderRenderers[type]({ onEdit, onCancel, onSave });

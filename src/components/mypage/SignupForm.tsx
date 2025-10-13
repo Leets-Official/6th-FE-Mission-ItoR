@@ -13,10 +13,7 @@ import { useSignup } from '@/hooks';
 import { MYPAGE_TEXTS, SIGNUP_FORM_FIELDS } from '@/constants';
 import { signupSchema, SignupFormData } from '@/utils/schemas';
 import profileImage from '@/assets/profile.png';
-
-interface SignupFormProps {
-  className?: string;
-}
+import { SignupFormProps } from '@/types/mypage';
 
 const STYLES = {
   container: 'flex w-full flex-col items-center self-stretch',

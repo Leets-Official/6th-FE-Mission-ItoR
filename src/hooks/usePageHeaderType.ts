@@ -1,12 +1,9 @@
 import { useLocation } from 'react-router-dom';
 import { MYPAGE_ROUTES } from '@/constants';
-import { useEditModeStore } from '@/stores/useEditModeStore';
-
-type PageHeaderType = 'main' | 'detail' | 'write' | 'mypage' | 'editprofile';
+import { PageHeaderType } from '@/types/pageheader';
 
 export const usePageHeaderType = (): PageHeaderType => {
   const location = useLocation();
-  const isEditMode = useEditModeStore(state => state.isEditMode);
 
   if (location.pathname === '/') {
     return 'main';
@@ -21,7 +18,7 @@ export const usePageHeaderType = (): PageHeaderType => {
   }
 
   if (location.pathname === MYPAGE_ROUTES.EDIT_PROFILE) {
-    return isEditMode ? 'editprofile' : 'mypage';
+    return 'editprofile';
   }
 
   if (location.pathname.startsWith('/mypage')) {

@@ -1,15 +1,7 @@
 import { FC } from 'react';
 import PageHeaderLeft from '@/components/common/Pageheader/PageHeaderLeft';
 import PageHeaderRight from '@/components/common/Pageheader/PageHeaderRight';
-
-interface PageHeaderProps {
-  className?: string;
-  type: 'main' | 'detail' | 'write' | 'mypage' | 'editprofile';
-  onHamburgerClick?: () => void;
-  onEdit?: () => void;
-  onCancel?: () => void;
-  onSave?: () => void;
-}
+import { PageHeaderProps } from '@/types/pageheader';
 
 const PageHeader: FC<PageHeaderProps> = ({ className = '', type, onHamburgerClick, onEdit, onCancel, onSave }) => {
   return (

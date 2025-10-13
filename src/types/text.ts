@@ -1,35 +1,42 @@
-export interface TextFieldProps {
+import { ComponentWithBase } from './mypage';
+
+// 공통
+interface BaseInputProps {
   placeholder?: string;
-  className?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   type?: 'text' | 'password' | 'email';
-  error?: boolean;
   name?: string;
+  disabled?: boolean;
+}
 
-  // cva API
+// 색상 관련 타입
+type TextColor = 'black' | 'gray56' | 'gray78' | 'gray90' | 'title';
+type BackgroundColor = 'transparent' | 'filled';
+type FontSize = 'light' | 'medium';
+
+// TextField 스타일 Props
+interface TextFieldStyleProps {
   variant?: 'default' | 'dark' | 'light';
-  backgroundColor?: 'transparent' | 'filled';
-  textColor?: 'black' | 'gray56' | 'gray78' | 'gray90' | 'title';
-  fontSize?: 'light' | 'medium';
-  disabled?: boolean;
+  backgroundColor?: BackgroundColor;
+  textColor?: TextColor;
+  fontSize?: FontSize;
   fullWidth?: boolean;
+  error?: boolean;
 }
 
-export interface TextareaProps {
+// Textarea 스타일 Props
+interface TextareaStyleProps {
   title?: string;
-  className?: string;
   hintText?: string;
-  placeholder?: string;
-  type?: 'text' | 'password' | 'email';
   textFieldColor?: 'black' | 'gray56' | 'gray78';
-  textFieldBackgroundColor?: 'transparent' | 'filled';
-  textFieldFontSize?: 'light' | 'medium';
-  disabled?: boolean;
+  textFieldBackgroundColor?: BackgroundColor;
+  textFieldFontSize?: FontSize;
   error?: string;
-  name?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
+
+// 최종 Props 타입
+export type TextFieldProps = ComponentWithBase<BaseInputProps & TextFieldStyleProps>;
+
+export type TextareaProps = ComponentWithBase<BaseInputProps & TextareaStyleProps>;

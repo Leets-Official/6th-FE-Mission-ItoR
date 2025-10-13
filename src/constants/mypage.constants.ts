@@ -26,6 +26,9 @@ export const MYPAGE_TEXTS = {
     SETTINGS: '내 프로필 설정',
     DEFAULT_BIO: '한줄 소개를 입력해주세요',
     DEFAULT_USER_NAME: '사용자',
+    NICKNAME_PLACEHOLDER: '닉네임',
+    BIO_PLACEHOLDER: '한줄 소개',
+    NICKNAME_HINT: '*20글자 이내',
   },
 } as const;
 
