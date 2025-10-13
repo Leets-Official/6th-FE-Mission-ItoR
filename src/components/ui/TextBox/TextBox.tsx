@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import type { TextBoxProps } from "@ui/TextBox.types";
+import type { TextBoxProps } from "./TextBox.types";
 import {
   boxBase,
   byStyleWrap,
@@ -8,7 +8,7 @@ import {
   descCommon,
   titleCompact,
   textSingle,
-} from "@ui/TextBox.variants";
+} from "./TextBox.variants";
 
 const TextBox: React.FC<TextBoxProps> = ({
   tbStyle = "primary",

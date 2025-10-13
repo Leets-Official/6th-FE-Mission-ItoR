@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { FrameProps } from "@ui/Frame.types";
+import type { FrameProps } from "./Frame.types";
 import {
   frameBase,
   byVariant,
@@ -7,7 +7,7 @@ import {
   actionsRow,
   bottomWrap,
   avatarBox,
-} from "@ui/Frame.variants";
+} from "./Frame.variants";
 import ProfilePhoto from "@ui/Profile";
 import TextBox from "@ui/TextBox";
 import Button from "@ui/Button";

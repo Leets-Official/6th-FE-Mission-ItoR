@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import type { DropdownProps, DropdownItem } from "@ui/Dropdown.types";
+import type { DropdownProps, DropdownItem } from "./Dropdown.types";
 import {
   rootBase,
   panelWrap,
