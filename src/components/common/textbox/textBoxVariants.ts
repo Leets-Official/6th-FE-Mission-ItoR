@@ -9,6 +9,7 @@ export const textBoxVariants = tv({
       positive: 'text-positive',
       gray: 'text-gray',
       'gray-90': 'text-gray-90 hover:text-gray-78',
+      'gray-56': 'text-gray-56',
     },
     borderColor: {
       default: 'border-transparent',
@@ -34,6 +35,7 @@ export const textBoxTextVariants = tv({
       positive: 'text-positive',
       gray: 'text-gray',
       'gray-90': 'text-gray-90 group-hover:text-gray-78',
+      'gray-56': 'text-gray-56',
     },
   },
   defaultVariants: {

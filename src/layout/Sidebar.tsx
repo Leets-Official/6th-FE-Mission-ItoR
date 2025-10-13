@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { cn } from '@/utils/cn';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SIDEBAR_TEXTS } from '@/constants';
+import { SIDEBAR_TEXTS, MYPAGE_ROUTES, MYPAGE_TEXTS } from '@/constants';
 import { sidebarStyles } from './Sidebar.styles';
 import { LoginModal } from '@/components/auth';
 
@@ -23,7 +23,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   };
 
   const handleMyGitlog = () => {
-    navigate('/mypage/myprofile');
+    navigate(MYPAGE_ROUTES.MY_PROFILE);
     window.dispatchEvent(new CustomEvent('sidebar:close'));
   };
 
@@ -45,8 +45,8 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
           </div>
           {isLoggedIn ? (
             <div className={sidebarStyles.userInfoContainer}>
-              <h2 className={sidebarStyles.userName}>{user?.nickName || '사용자'}</h2>
-              <p className={sidebarStyles.userBio}>{user?.bio || '한줄 소개를 입력해주세요'}</p>
+              <h2 className={sidebarStyles.userName}>{user?.nickName || MYPAGE_TEXTS.PROFILE.DEFAULT_USER_NAME}</h2>
+              <p className={sidebarStyles.userBio}>{user?.bio || MYPAGE_TEXTS.PROFILE.DEFAULT_BIO}</p>
             </div>
           ) : (
             <div className={sidebarStyles.quoteContainer}>

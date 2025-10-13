@@ -1,3 +1,9 @@
+export const MYPAGE_ROUTES = {
+  BASE: '/mypage',
+  MY_PROFILE: '/mypage/myprofile',
+  SIGNUP: '/mypage/signup',
+} as const;
+
 export const MYPAGE_TEXTS = {
   BUTTONS: {
     EMAIL_SIGNUP: '이메일로 회원가입',
@@ -15,14 +21,19 @@ export const MYPAGE_TEXTS = {
   MODAL: {
     SIGNUP_COMPLETE: '회원가입이 완료되었습니다.',
   },
+  PROFILE: {
+    SETTINGS: '내 프로필 설정',
+    DEFAULT_BIO: '한줄 소개를 입력해주세요',
+    DEFAULT_USER_NAME: '사용자',
+  },
 } as const;
 
 export const MYPAGE_HEADER_CONTENT = {
-  '/mypage': {
+  [MYPAGE_ROUTES.BASE]: {
     title: '회원가입',
     subtitle: undefined,
   },
-  '/mypage/signup': {
+  [MYPAGE_ROUTES.SIGNUP]: {
     title: '회원가입',
     subtitle: '가입을 위해 회원님의 정보를 입력해주세요.',
   },

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import LoginLogo from '@/components/auth/LoginLogo';
 import LoginForm from '@/components/auth/LoginForm';
-import { MYPAGE_TEXTS } from '@/constants';
+import { MYPAGE_TEXTS, MYPAGE_ROUTES } from '@/constants';
 
 const STYLES = {
   formWrapper: 'flex h-post-card px-4 flex-col items-center gap-2.5 self-stretch',
@@ -20,7 +20,7 @@ const MyPageForm: FC<MyPageFormProps> = ({ className, children }) => {
   const navigate = useNavigate();
 
   const handleEmailSignup = () => {
-    navigate('/mypage/signup');
+    navigate(MYPAGE_ROUTES.SIGNUP);
   };
 
   const handleKakaoSignup = () => {};

@@ -3,6 +3,7 @@ import PageHeader from '@/components/common/Pageheader/PageHeader';
 import { useSidebar } from '@/hooks';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Outlet, useLocation } from 'react-router-dom';
+import { MYPAGE_ROUTES } from '@/constants';
 
 export default function Layout() {
   const location = useLocation();
@@ -17,7 +18,7 @@ export default function Layout() {
     if (location.pathname.includes('/write')) {
       return 'write';
     }
-    if (location.pathname === '/mypage/myprofile') {
+    if (location.pathname === MYPAGE_ROUTES.MY_PROFILE) {
       return 'main';
     }
     if (location.pathname.startsWith('/mypage')) {

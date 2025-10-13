@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/layout/Layout';
 import MainPage from '@/pages/main/MainPage';
 import MyPage from '@/pages/mypage/MyPage';
+import MyPageForm from '@/components/mypage/MyPageForm';
 import MyProfileForm from '@/components/mypage/MyProfileForm';
 import SignupForm from '@/components/mypage/SignupForm';
 import Playground from '@/playground/Playground';
@@ -21,6 +22,14 @@ const router = createBrowserRouter([
         path: 'mypage',
         element: <MyPage />,
         children: [
+          {
+            index: true,
+            element: (
+              <PublicRoute>
+                <MyPageForm />
+              </PublicRoute>
+            ),
+          },
           {
             path: 'myprofile',
             element: (
