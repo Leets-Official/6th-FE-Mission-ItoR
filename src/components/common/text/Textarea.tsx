@@ -12,6 +12,7 @@ const Textarea = forwardRef<HTMLInputElement, TextareaProps>(({
   textFieldColor,
   textFieldBackgroundColor,
   textFieldFontSize,
+  disabled,
   error,
   name,
   value,
@@ -33,6 +34,7 @@ const Textarea = forwardRef<HTMLInputElement, TextareaProps>(({
           textColor={textFieldColor}
           backgroundColor={textFieldBackgroundColor}
           fontSize={textFieldFontSize}
+          disabled={disabled}
           error={!!error}
           fullWidth
         />

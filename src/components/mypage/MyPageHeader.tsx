@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import PostHeader from '@/components/blog/Post/PostHeader';
 import TextBox from '@/components/common/Textbox/TextBox';
 import TextField from '@/components/common/Text/TextField';
 import { MYPAGE_TEXTS } from '@/constants';
@@ -11,6 +10,7 @@ interface MyPageHeaderProps {
   nickname: string;
   bio: string;
   onEditClick: () => void;
+  showSettingsButton?: boolean;
 }
 
 const STYLES = {
@@ -23,7 +23,7 @@ const STYLES = {
   hintText: 'flex-1 text-gray-78 font-light text-xs leading-[160%]',
 } as const;
 
-const MyPageHeader: FC<MyPageHeaderProps> = ({ isEditMode, nickname, bio, onEditClick }) => {
+const MyPageHeader: FC<MyPageHeaderProps> = ({ isEditMode, nickname, bio, onEditClick, showSettingsButton = true }) => {
   const [editNickname, setEditNickname] = useState(nickname);
   const [editBio, setEditBio] = useState(bio);
 
@@ -35,34 +35,32 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({ isEditMode, nickname, bio, onEdit
         </div>
       </div>
 
-      {isEditMode ? (
-        <div className={STYLES.profileEditFields}>
-          <TextField
-            value={editNickname}
-            onChange={e => setEditNickname(e.target.value)}
-            placeholder="닉네임"
-            fullWidth
-            fontSize="medium"
-            textColor="title"
-          />
-          <div className={STYLES.textFieldDivider}>
-            <span className={STYLES.hintText}>*20글자 이내</span>
-          </div>
-          <TextField
-            value={editBio}
-            onChange={e => setEditBio(e.target.value)}
-            placeholder="한줄 소개"
-            fullWidth
-            fontSize="light"
-            textColor="gray78"
-            className="mt-3 mb-3"
-          />
+      <div className={STYLES.profileEditFields}>
+        <TextField
+          value={editNickname}
+          onChange={e => setEditNickname(e.target.value)}
+          placeholder="닉네임"
+          fullWidth
+          fontSize="medium"
+          textColor="title"
+          disabled={!isEditMode}
+        />
+        <div className={STYLES.textFieldDivider}>
+          <span className={STYLES.hintText}>*20글자 이내</span>
         </div>
-      ) : (
-        <PostHeader title={nickname} subtitle={bio} className="w-full px-1" />
-      )}
+        <TextField
+          value={editBio}
+          onChange={e => setEditBio(e.target.value)}
+          placeholder="한줄 소개"
+          fullWidth
+          fontSize="light"
+          textColor="gray78"
+          className="mt-3 mb-3"
+          disabled={!isEditMode}
+        />
+      </div>
 
-      {!isEditMode && (
+      {!isEditMode && showSettingsButton && (
         <div className={STYLES.profileActions}>
           <TextBox
             showIcon

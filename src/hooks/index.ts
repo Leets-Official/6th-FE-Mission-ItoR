@@ -1,6 +1,8 @@
 export { useBodyScrollLock } from './useBodyScrollLock';
+export { useEditProfile } from './useEditProfile';
 export { useFocusTrap } from './useFocusTrap';
 export { useLoginForm } from './useLoginForm';
+export { useMyPage } from './useMyPage';
 export { usePageHeaderType } from './usePageHeaderType';
 export { useSidebar } from './useSidebar';
 export { useSignup } from './useSignup';

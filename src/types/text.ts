@@ -26,6 +26,7 @@ export interface TextareaProps {
   textFieldColor?: 'black' | 'gray56' | 'gray78';
   textFieldBackgroundColor?: 'transparent' | 'filled';
   textFieldFontSize?: 'light' | 'medium';
+  disabled?: boolean;
   error?: string;
   name?: string;
   value?: string;

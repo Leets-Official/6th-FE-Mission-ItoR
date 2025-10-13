@@ -1,23 +1,12 @@
 import { FC } from 'react';
-import { renderDetailType, renderMainType, renderWriteType, renderMypageType } from './PageHeaderRightRenderers';
+import { PageHeaderRenderers, PageHeaderType, RenderProps } from '@/components/common/Pageheader/PageHeaderRightRenderers';
 
-interface PageHeaderRightProps {
-  type: 'main' | 'detail' | 'write' | 'mypage';
+interface PageHeaderRightProps extends RenderProps {
+  type: PageHeaderType;
 }
 
-const PageHeaderRight: FC<PageHeaderRightProps> = ({ type }) => {
-  switch (type) {
-    case 'main':
-      return renderMainType();
-    case 'detail':
-      return renderDetailType();
-    case 'write':
-      return renderWriteType();
-    case 'mypage':
-      return renderMypageType();
-    default:
-      return null;
-  }
+const PageHeaderRight: FC<PageHeaderRightProps> = ({ type, onEdit, onCancel, onSave }) => {
+  return PageHeaderRenderers[type]({ onEdit, onCancel, onSave });
 };
 
 export default PageHeaderRight;

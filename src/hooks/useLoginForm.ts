@@ -17,6 +17,8 @@ export const useLoginForm = (onClose?: () => void) => {
       setUser({
         id: mockUser.id,
         email: mockUser.email,
+        name: mockUser.name,
+        birthDate: mockUser.birthDate,
         nickName: mockUser.nickName,
         bio: mockUser.bio,
         profileImage: mockUser.profileImage,

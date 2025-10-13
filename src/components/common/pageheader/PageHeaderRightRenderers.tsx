@@ -1,86 +1,25 @@
-import { FC, useState } from 'react';
-import { ChatIcon, CreateIcon, MoreVertIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/Icon/Icon';
-import { useAuthStore } from '@/stores/useAuthStore';
-import Modal from '@/components/common/Modal/Modal';
-import { LoginModal } from '@/components/auth';
+import {
+  MainTypeHeader,
+  DetailTypeHeader,
+  WriteTypeHeader,
+  MypageTypeHeader,
+  EditProfileTypeHeader,
+} from '@/components/common/Pageheader/RightRenders';
 
-// 메인 타입 렌더링
-export const renderMainType = () => {
-  const MainTypeComponent: FC = () => {
-    const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-    const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+type PageHeaderType = 'main' | 'detail' | 'write' | 'mypage' | 'editprofile';
 
-    const handleClick = () => {
-      if (!isLoggedIn) {
-        setIsMessageModalOpen(true);
-        return;
-      }
-      // TODO: 로그인 상태일 때 글쓰기 페이지로 이동
-    };
+interface RenderProps {
+  onEdit?: () => void;
+  onCancel?: () => void;
+  onSave?: () => void;
+}
 
-    const handleLoginConfirm = () => {
-      setIsMessageModalOpen(false);
-      setTimeout(() => {
-        setIsLoginModalOpen(true);
-      }, 0);
-    };
+export const PageHeaderRenderers = {
+  main: (_props?: RenderProps) => <MainTypeHeader />,
+  detail: (_props?: RenderProps) => <DetailTypeHeader />,
+  write: (_props?: RenderProps) => <WriteTypeHeader />,
+  mypage: (_props?: RenderProps) => <MypageTypeHeader />,
+  editprofile: (props?: RenderProps) => <EditProfileTypeHeader {...props} />,
+} as const;
 
-    return (
-      <>
-        <div
-          onClick={handleClick}
-          className="flex cursor-pointer items-center justify-center gap-1 rounded-[25px] px-3 py-2 text-sm font-normal leading-[160%] tracking-[-0.07px] text-gray hover:bg-gray-10"
-        >
-          <Icon size="lg">
-            <CreateIcon />
-          </Icon>
-          <span>깃로그 쓰기</span>
-        </div>
-
-        <Modal
-          isOpen={isMessageModalOpen}
-          onClose={() => setIsMessageModalOpen(false)}
-          onDelete={handleLoginConfirm}
-          cancelButtonText="취소"
-          confirmButtonText="로그인 하러 가기"
-          confirmButtonVariant="primary"
-        >
-          <p className="text-center text-sm">로그인이 필요합니다</p>
-        </Modal>
-
-        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
-      </>
-    );
-  };
-
-  return <MainTypeComponent />;
-};
-
-// 상세 타입 렌더링
-export const renderDetailType = () => (
-  <div className="flex items-center gap-2">
-    <Icon size="lg" clickable>
-      <ChatIcon />
-    </Icon>
-    <Icon size="lg" clickable>
-      <MoreVertIcon />
-    </Icon>
-  </div>
-);
-
-// 작성 타입 렌더링
-export const renderWriteType = () => (
-  <div className="flex items-center gap-2.5">
-    <button type="button" className="flex items-center justify-center gap-1 px-3 py-2">
-      <span className="text-sm font-regular text-warning">삭제하기</span>
-    </button>
-    <button type="button" className="flex items-center justify-center gap-1 px-3 py-2">
-      <span className="text-sm font-regular text-black">게시하기</span>
-    </button>
-  </div>
-);
-
-// 마이페이지 타입 렌더링 (빈 렌더링)
-export const renderMypageType = () => null;
+export type { PageHeaderType, RenderProps };
