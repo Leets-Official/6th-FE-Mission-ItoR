@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useModalStore } from '@/stores/useModalStore';
-import { MYPAGE_ROUTES } from '@/constants';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { MYPAGE_ROUTES, SIDEBAR_TEXTS } from '@/constants';
 
 export const useSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const openModal = useModalStore(state => state.openModal);
+  const { openModal, closeModal } = useModalStore();
+  const logout = useAuthStore(state => state.logout);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -69,8 +71,14 @@ export const useSidebar = () => {
   };
 
   const handleLogout = () => {
-    // TODO: 로그아웃 처리
-    dispatchClose();
+    const confirmLogout = () => {
+      logout();
+      closeModal();
+      navigate('/');
+      dispatchClose();
+    };
+
+    openModal('logout', SIDEBAR_TEXTS.MODAL.LOGOUT_MESSAGE, confirmLogout, SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM);
   };
 
   return {

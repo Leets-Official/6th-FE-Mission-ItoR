@@ -8,6 +8,7 @@ import { SIDEBAR_TEXTS, MYPAGE_TEXTS } from '@/constants';
 import { sidebarStyles } from './Sidebar.styles';
 import { useSidebar } from '@/hooks';
 import { LoginModal } from '@/components/auth';
+import Modal from '@/components/common/Modal/Modal';
 
 interface SidebarProps {
   className?: string;
@@ -16,7 +17,7 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   const user = useAuthStore(state => state.user);
-  const { modalType, closeModal } = useModalStore();
+  const { modalType, modalMessage, confirmButtonText, onModalConfirm, closeModal } = useModalStore();
   const { handleStartGitlog, handleMyGitlog, handleWriteGitlog, handleSettings, handleLogout } = useSidebar();
 
   return (
@@ -77,6 +78,19 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
       </aside>
 
       {modalType === 'login' && <LoginModal isOpen={true} onClose={closeModal} />}
+      
+      {modalType === 'logout' && (
+        <Modal
+          isOpen={true}
+          onClose={closeModal}
+          onDelete={onModalConfirm}
+          cancelButtonText={SIDEBAR_TEXTS.MODAL.CANCEL}
+          confirmButtonText={confirmButtonText || SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM}
+          confirmButtonVariant="primary"
+        >
+          <p className="text-center text-sm">{modalMessage}</p>
+        </Modal>
+      )}
     </>
   );
 };

@@ -11,5 +11,12 @@ export const SIDEBAR_TEXTS = {
       QUOTE: 'You can make anything by writing',
       START_GITLOG: '깃로그 시작하기',
     },
+
+    // 모달 텍스트
+    MODAL: {
+      LOGOUT_MESSAGE: '로그아웃을 진행할게요',
+      LOGOUT_CONFIRM: '로그아웃',
+      CANCEL: '취소',
+    },
   } as const;
   
