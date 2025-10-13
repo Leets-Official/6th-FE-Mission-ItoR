@@ -10,7 +10,6 @@ import Modal from '@/components/common/Modal/Modal';
 import LoginModal from '@/components/auth/LoginModal';
 import { AddPhotoAlternateIcon } from '@/assets/icons/common';
 import { useSignup } from '@/hooks';
-import { useModalStore } from '@/stores/useModalStore';
 import { MYPAGE_TEXTS, SIGNUP_FORM_FIELDS } from '@/constants';
 import { signupSchema, SignupFormData } from '@/utils/schemas';
 import profileImage from '@/assets/profile.png';
@@ -34,7 +33,7 @@ const STYLES = {
 const SignupForm: FC<SignupFormProps> = ({ className }) => {
   const { previewImage, fileInputRef, handleImageUpload, handleButtonClick } = useSignup(profileImage);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-  const { modalType, openModal, closeModal } = useModalStore();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const {
     register,
@@ -51,8 +50,10 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
   };
 
   const handleLoginRedirect = () => {
-    setIsCompleteModalOpen(false); // 완료 모달
-    openModal('login'); // 로그인 모달
+    setIsCompleteModalOpen(false);
+    setTimeout(() => {
+      setIsLoginModalOpen(true);
+    }, 0);
   };
 
   return (
@@ -121,7 +122,7 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
         </p>
       </Modal>
 
-      <LoginModal isOpen={modalType === 'login'} onClose={closeModal} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </form>
   );
 };

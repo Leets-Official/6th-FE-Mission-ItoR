@@ -1,11 +1,12 @@
 import { Profile1Icon } from '@/assets/icons/common';
 import { Button, Spacer } from '@/components';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useModalStore } from '@/stores/useModalStore';
 import { cn } from '@/utils/cn';
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SIDEBAR_TEXTS } from '@/constants';
 import { sidebarStyles } from './Sidebar.styles';
+import { LoginModal } from '@/components/auth';
 
 interface SidebarProps {
   className?: string;
@@ -14,18 +15,29 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
   const user = useAuthStore(state => state.user);
-  const openModal = useModalStore(state => state.openModal);
+  const navigate = useNavigate();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleStartGitlog = () => {
-    openModal('login');
+    setIsLoginModalOpen(true);
+  };
+
+  const handleMyGitlog = () => {
+    navigate('/mypage/myprofile');
+    window.dispatchEvent(new CustomEvent('sidebar:close'));
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
   };
 
   return (
-    <aside
-      className={cn(sidebarStyles.container, className)}
-      role="complementary"
-      aria-label="Sidebar"
-    >
+    <>
+      <aside
+        className={cn(sidebarStyles.container, className)}
+        role="complementary"
+        aria-label="Sidebar"
+      >
       <div className={sidebarStyles.mainContent}>
         <div className={sidebarStyles.profileSection}>
           <div className={sidebarStyles.profileIconWrapper}>
@@ -46,7 +58,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
         <div className={sidebarStyles.buttonContainer}>
           {isLoggedIn ? (
             <div className={sidebarStyles.buttonGroup}>
-              <Button intent="primary" className={sidebarStyles.sidebarButton}>
+              <Button intent="primary" className={sidebarStyles.sidebarButton} onClick={handleMyGitlog}>
                 {SIDEBAR_TEXTS.LOGGED_IN.MY_GITLOG}
               </Button>
               <Button intent="primary" className={sidebarStyles.sidebarButton}>
@@ -74,7 +86,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
           </div>
         </div>
       )}
-    </aside>
+      </aside>
+
+      <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
+    </>
   );
 };
 

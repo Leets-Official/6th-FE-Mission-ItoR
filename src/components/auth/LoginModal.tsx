@@ -1,10 +1,10 @@
 import { FC, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import { useBodyScrollLock, useFocusTrap } from '@/hooks';
 import LoginPage from '@/pages/auth/LoginPage';
 import Icon from '@/components/common/Icon/Icon';
 import { ClearIcon } from '@/assets/icons/common';
+import Portal from '@/components/common/Portal/Portal';
 
 interface LoginModalProps {
   className?: string;
@@ -24,29 +24,30 @@ const LoginModal: FC<LoginModalProps> = ({ className = '', isOpen, onClose }) =>
     return null;
   }
 
-  return createPortal(
-    <div
-      className="login-modal-overlay"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="login-modal-title"
-    >
-      <div ref={modalRef} className={cn('login-modal-container', className)} onClick={e => e.stopPropagation()}>
-        <button
-          type="button"
-          aria-label="닫기"
-          onClick={onClose}
-          className="absolute right-4 top-4 flex items-center gap-2.5 text-white transition-colors hover:text-gray-90"
-        >
-          <Icon size="md" clickable>
-            <ClearIcon />
-          </Icon>
-        </button>
-        <LoginPage onClose={onClose} />
+  return (
+    <Portal>
+      <div
+        className="login-modal-overlay"
+        onClick={onClose}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-modal-title"
+      >
+        <div ref={modalRef} className={cn('login-modal-container', className)} onClick={e => e.stopPropagation()}>
+          <button
+            type="button"
+            aria-label="닫기"
+            onClick={onClose}
+            className="absolute right-4 top-4 flex items-center gap-2.5 text-white transition-colors hover:text-gray-90"
+          >
+            <Icon size="md" clickable>
+              <ClearIcon />
+            </Icon>
+          </button>
+          <LoginPage onClose={onClose} />
+        </div>
       </div>
-    </div>,
-    document.body
+    </Portal>
   );
 };
 

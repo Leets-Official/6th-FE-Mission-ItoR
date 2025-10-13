@@ -8,6 +8,7 @@ import {
 import { cn } from '@/utils/cn';
 import { FC, ReactNode } from 'react';
 import { useBodyScrollLock } from '@/hooks';
+import Portal from '@/components/common/Portal/Portal';
 
 interface ModalProps {
   children: ReactNode;
@@ -37,23 +38,25 @@ const Modal: FC<ModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className={cn(modalContainerVariants(), className)}>
-        <div className={modalContentVariants()} style={{ padding: '0 4px' }}>
-          {children}
-        </div>
-        <div className={modalButtonsVariants()}>
-          <button onClick={onClose} className={modalCancelButtonVariants()}>
-            {cancelButtonText}
-          </button>
-          {onDelete && (
-            <button onClick={onDelete} className={modalConfirmButtonVariants({ variant: confirmButtonVariant })}>
-              {confirmButtonText}
+    <Portal>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className={cn(modalContainerVariants(), className)}>
+          <div className={modalContentVariants()} style={{ padding: '0 4px' }}>
+            {children}
+          </div>
+          <div className={modalButtonsVariants()}>
+            <button onClick={onClose} className={modalCancelButtonVariants()}>
+              {cancelButtonText}
             </button>
-          )}
+            {onDelete && (
+              <button onClick={onDelete} className={modalConfirmButtonVariants({ variant: confirmButtonVariant })}>
+                {confirmButtonText}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </Portal>
   );
 };
 
