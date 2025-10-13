@@ -6,7 +6,7 @@ export const mockPosts = Array.from({ length: 20 }, (_, i) => {
   const randomMinutesAgo = faker.number.int({ min: 0, max: 7200 });
   const createdAt = new Date(now.getTime() - randomMinutesAgo * 60 * 1000).toISOString();
 
-  const commentCount = faker.number.int({ min: 0, max: 20 });
+  const commentCount = faker.number.int({ min: 0, max: 50 });
 
   const comments = Array.from({ length: commentCount }, (_, idx) => ({
     id: idx + 1,

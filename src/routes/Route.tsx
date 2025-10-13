@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/layout/Layout';
 import MainPage from '@/pages/main/MainPage';
+import BlogDetailPage from '@/pages/blog/BlogDetailPage';
 import MyPage from '@/pages/mypage/MyPage';
 import MyPageForm from '@/components/mypage/MyPageForm';
 import MyProfileForm from '@/components/mypage/MyProfileForm';
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <MainPage />,
+      },
+      {
+        path: 'blog/:id',
+        element: <BlogDetailPage />,
       },
       {
         path: 'mypage',

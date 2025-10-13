@@ -15,7 +15,13 @@ const MyProfileForm: FC<MyProfileFormProps> = ({ className }) => {
     <div className={className}>
       <Spacer height="md" className="w-full max-w-content" />
       {userPosts.map(post => (
-        <BlogPreviewCard key={post.id} title={post.title} content={post.content} imageSrc={post.image} />
+        <BlogPreviewCard 
+          key={post.id} 
+          id={post.id}
+          title={post.title} 
+          content={post.content} 
+          imageSrc={post.image} 
+        />
       ))}
     </div>
   );
