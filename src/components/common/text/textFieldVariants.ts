@@ -38,6 +38,8 @@ export const inputVariants = tv({
       black: 'text-black placeholder:text-black',
       gray56: 'text-gray-56 placeholder:text-gray-56',
       gray78: 'text-gray-78 placeholder:text-gray-78',
+      gray90: 'text-gray-90 placeholder:text-gray-90',
+      title: 'text-gray-56 placeholder:text-gray-56',
     },
     fontSize: {
       light: 'text-sm font-light leading-[160%] tracking-[-0.07px]',

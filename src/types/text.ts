@@ -11,7 +11,7 @@ export interface TextFieldProps {
   // cva API
   variant?: 'default' | 'dark' | 'light';
   backgroundColor?: 'transparent' | 'filled';
-  textColor?: 'black' | 'gray56' | 'gray78';
+  textColor?: 'black' | 'gray56' | 'gray78' | 'gray90' | 'title';
   fontSize?: 'light' | 'medium';
   disabled?: boolean;
   fullWidth?: boolean;

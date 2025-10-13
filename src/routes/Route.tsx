@@ -4,6 +4,7 @@ import MainPage from '@/pages/main/MainPage';
 import MyPage from '@/pages/mypage/MyPage';
 import MyPageForm from '@/components/mypage/MyPageForm';
 import MyProfileForm from '@/components/mypage/MyProfileForm';
+import EditProfileForm from '@/components/mypage/EditProfileForm';
 import SignupForm from '@/components/mypage/SignupForm';
 import Playground from '@/playground/Playground';
 import { PublicRoute } from '@/routes/PublicRoute';
@@ -35,6 +36,14 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoute>
                 <MyProfileForm />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: 'editprofile',
+            element: (
+              <PrivateRoute>
+                <EditProfileForm />
               </PrivateRoute>
             ),
           },

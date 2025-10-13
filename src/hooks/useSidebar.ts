@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useModalStore } from '@/stores/useModalStore';
+import { MYPAGE_ROUTES } from '@/constants';
 
 export const useSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const openModal = useModalStore(state => state.openModal);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -41,11 +46,43 @@ export const useSidebar = () => {
     };
   }, []);
 
+  const dispatchClose = () => window.dispatchEvent(new CustomEvent('sidebar:close'));
+
+  // 네비게이션
+  const handleStartGitlog = () => {
+    openModal('login');
+  };
+
+  const handleMyGitlog = () => {
+    navigate(MYPAGE_ROUTES.MY_PROFILE);
+    dispatchClose();
+  };
+
+  const handleWriteGitlog = () => {
+    // TODO: 글쓰기 페이지 라우팅
+    dispatchClose();
+  };
+
+  const handleSettings = () => {
+    // TODO: 설정 페이지 라우팅
+    dispatchClose();
+  };
+
+  const handleLogout = () => {
+    // TODO: 로그아웃 처리
+    dispatchClose();
+  };
+
   return {
     isSidebarOpen,
     sidebarRef,
     toggleSidebar,
     openSidebar,
     closeSidebar,
+    handleStartGitlog,
+    handleMyGitlog,
+    handleWriteGitlog,
+    handleSettings,
+    handleLogout,
   };
 };

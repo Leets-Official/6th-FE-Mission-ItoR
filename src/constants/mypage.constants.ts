@@ -1,6 +1,7 @@
 export const MYPAGE_ROUTES = {
   BASE: '/mypage',
   MY_PROFILE: '/mypage/myprofile',
+  EDIT_PROFILE: '/mypage/editprofile',
   SIGNUP: '/mypage/signup',
 } as const;
 
