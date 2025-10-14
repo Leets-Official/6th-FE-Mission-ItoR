@@ -15,7 +15,7 @@ const PostInput: FC<PostInputProps> = ({ value, onChange, placeholder = '댓글�
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="flex-1 resize-none text-sm font-light leading-[160%] tracking-[-0.07px] text-gray-dark placeholder:text-gray-78 focus:outline-none"
-        rows={1}
+        rows={3}
       />
     </div>
   );
