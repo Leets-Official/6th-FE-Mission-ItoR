@@ -42,7 +42,6 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
   });
 
   const onSubmit = (data: SignupFormData) => {
-    console.log('Form submitted:', data);
     setIsCompleteModalOpen(true)
   };
 

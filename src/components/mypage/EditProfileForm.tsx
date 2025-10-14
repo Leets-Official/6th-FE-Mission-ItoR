@@ -55,7 +55,6 @@ const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {
   });
 
   const onSubmit = (data: SignupFormData) => {
-    console.log('Profile update:', data);
     // TODO: API 호출로 프로필 업데이트
   };
 
