@@ -1,7 +1,5 @@
-import { FC, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { cn } from '@/utils/cn';
+import { FC } from 'react';
+import { tv } from 'tailwind-variants';
 import Spacer from '@/components/common/Spacer/Spacer';
 import TextBox from '@/components/common/Textbox/TextBox';
 import Textarea from '@/components/common/Text/Textarea';
@@ -11,66 +9,56 @@ import LoginModal from '@/components/auth/LoginModal';
 import { AddPhotoAlternateIcon } from '@/assets/icons/common';
 import { useSignup } from '@/hooks';
 import { MYPAGE_TEXTS, SIGNUP_FORM_FIELDS } from '@/constants';
-import { signupSchema, SignupFormData } from '@/utils/schemas';
 import profileImage from '@/assets/profile.png';
 import { SignupFormProps } from '@/types/mypage';
 
-const STYLES = {
-  container: 'flex w-full flex-col items-center self-stretch',
-  spacer: 'w-full max-w-content',
-  profileSection: 'flex w-full max-w-content flex-col items-start justify-center gap-4 py-3 px-4',
-  sectionTitle: 'flex items-center justify-center gap-2.5 self-stretch px-1.5',
-  profileContent: 'flex flex-col items-start justify-center gap-4',
-  profileImage: 'flex h-[90px] w-[90px] items-center gap-2.5 aspect-square rounded-sm',
-  image: 'h-full w-full rounded-sm object-cover',
-  textareaCommon: 'w-full max-w-content px-0',
-  buttonWrapper: 'flex w-full max-w-content items-start gap-2.5 px-4',
-} as const;
+const signupFormStyles = tv({
+  slots: {
+    container: 'flex w-full flex-col items-center self-stretch',
+    spacer: 'w-full max-w-content',
+    profileSection: 'flex w-full max-w-content flex-col items-start justify-center gap-4 py-3 px-4',
+    sectionTitle: 'flex items-center justify-center gap-2.5 self-stretch px-1.5',
+    profileContent: 'flex flex-col items-start justify-center gap-4',
+    profileImage: 'flex h-[90px] w-[90px] items-center gap-2.5 aspect-square rounded-sm',
+    image: 'h-full w-full rounded-sm object-cover',
+    textareaCommon: 'w-full max-w-content px-0',
+    buttonWrapper: 'flex w-full max-w-content items-start gap-2.5 px-4',
+  },
+});
 
 const SignupForm: FC<SignupFormProps> = ({ className }) => {
-  const { previewImage, fileInputRef, handleImageUpload, handleButtonClick } = useSignup(profileImage);
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
-    mode: 'onChange',
-  });
+    previewImage,
+    fileInputRef,
+    handleImageUpload,
+    handleButtonClick,
+    form: {
+      register,
+      handleSubmit,
+      formState: { errors },
+    },
+    onSubmit,
+    handleLoginRedirect,
+    isCompleteModalOpen,
+    setIsCompleteModalOpen,
+    isLoginModalOpen,
+    setIsLoginModalOpen,
+  } = useSignup(profileImage);
 
-  const onSubmit = (data: SignupFormData) => {
-    setIsCompleteModalOpen(true)
-  };
-
-  const handleLoginRedirect = () => {
-    setIsCompleteModalOpen(false);
-    setTimeout(() => {
-      setIsLoginModalOpen(true);
-    }, 0);
-  };
+  const styles = signupFormStyles();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={cn(STYLES.container, className)}>
-      <Spacer height="md" className={STYLES.spacer} />
-
-      <div className={STYLES.profileSection}>
-        <div className={STYLES.sectionTitle}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.container({ className })}>
+      <Spacer height="md" className={styles.spacer()} />
+      <div className={styles.profileSection()}>
+        <div className={styles.sectionTitle()}>
           <span className="flex-1 text-sm font-light text-gray-56">{MYPAGE_TEXTS.LABELS.PROFILE_PHOTO}</span>
         </div>
-        <div className={STYLES.profileContent}>
-          <div className={STYLES.profileImage}>
-            <img src={previewImage} alt="Profile" className={STYLES.image} />
+        <div className={styles.profileContent()}>
+          <div className={styles.profileImage()}>
+            <img src={previewImage} alt="Profile" className={styles.image()} />
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
           <TextBox
             showIcon
             icon={<AddPhotoAlternateIcon />}
@@ -82,8 +70,7 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
           </TextBox>
         </div>
       </div>
-
-      {SIGNUP_FORM_FIELDS.map((field) => (
+      {SIGNUP_FORM_FIELDS.map(field => (
         <Textarea
           key={field.name}
           title={field.title}
@@ -91,21 +78,17 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
           placeholder={field.placeholder}
           hintText={field.hintText}
           error={errors[field.name]?.message}
-          className={STYLES.textareaCommon}
+          className={styles.textareaCommon()}
           {...register(field.name)}
         />
       ))}
-
-      <Spacer height="md" className={STYLES.spacer} />
-
-      <div className={STYLES.buttonWrapper}>
+      <Spacer height="md" className={styles.spacer()} />
+      <div className={styles.buttonWrapper()}>
         <Button type="submit" intent="primary" variant="solid" fullWidth>
           {MYPAGE_TEXTS.BUTTONS.SIGNUP_SUBMIT}
         </Button>
       </div>
-
-      <Spacer height="lg" className={STYLES.spacer} />
-
+      <Spacer height="lg" className={styles.spacer()} />
       <Modal
         isOpen={isCompleteModalOpen}
         onClose={() => setIsCompleteModalOpen(false)}
@@ -113,11 +96,8 @@ const SignupForm: FC<SignupFormProps> = ({ className }) => {
         confirmButtonVariant="primary"
         onDelete={handleLoginRedirect}
       >
-        <p className="text-center text-sm">
-          {MYPAGE_TEXTS.MODAL.SIGNUP_COMPLETE}
-        </p>
+        <p className="text-center text-sm">{MYPAGE_TEXTS.MODAL.SIGNUP_COMPLETE}</p>
       </Modal>
-
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </form>
   );
