@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useModalStore } from '@/stores/useModalStore';
 import { tv } from 'tailwind-variants';
 import Spacer from '@/components/common/Spacer/Spacer';
 import CommentItem from '@/components/blog/Comment/CommentItem';
@@ -32,9 +33,10 @@ const blogCommentSection = tv({
 
 const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments, isLoggedIn = false, currentUserNickName = 'User' }) => {
   const styles = blogCommentSection();
+  const { openModal } = useModalStore();
 
   return (
-    <div className={styles.container()}>
+    <div className={styles.container()} data-comment-section>
       <div className={styles.header()}>
         <div className={styles.headerInner()}>
           <div className={styles.titleWrapper()}>
@@ -73,9 +75,13 @@ const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments, isLoggedIn 
       ) : (
         <div className={styles.loginPromptWrapper()}>
           <div className={styles.loginPromptInner()}>
-            <div className={styles.loginPromptTextWrapper()}>
+            <button
+              type="button"
+              className={styles.loginPromptTextWrapper()}
+              onClick={() => openModal('login')}
+            >
               <p className={styles.loginPromptText()}>{BLOG_TEXTS.COMMENTS.LOGIN_PROMPT}</p>
-            </div>
+            </button>
           </div>
         </div>
       )}

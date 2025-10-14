@@ -7,10 +7,12 @@ import MoreVertIcon from '@/assets/icons/common/more_vert.svg?react';
 import { formatCommentDate } from '@/utils/date';
 import { CommentItemProps } from '@/components/blog/Comment/CommentTypes';
 import { profileStyles, commentItemStyles } from '@/components/blog/Comment/Comment.styles';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const CommentItem: FC<CommentItemProps> = ({ commentId, content, nickName, profileUrl, createdAt, isOwner }) => {
   const styles = commentItemStyles();
   const profileStyle = profileStyles();
+  const { isLoggedIn } = useAuthStore();
 
   return (
     <div className={styles.container()}>
@@ -28,7 +30,7 @@ const CommentItem: FC<CommentItemProps> = ({ commentId, content, nickName, profi
             </div>
           </div>
         </div>
-        {isOwner && (
+        {isLoggedIn && isOwner && (
           <Icon size="md">
             <MoreVertIcon />
           </Icon>
