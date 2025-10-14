@@ -9,12 +9,12 @@ type TextCardProps = {
 }
 
 export default function TextCard({ variant = 'body', title, subtitle, children }: TextCardProps) {
-  const baseStyle = 'w-[688px] max-w-[688px] px-4 py-3 bg-white font-sans'
+  const baseStyle = 'w-[688px] max-w-[688px] px-4 py-3 bg-[#F5F5F5] font-sans'
 
   const variants: Record<typeof variant, string> = {
-    primary: 'flex flex-col justify-center items-start gap-3',
+    primary: 'flex flex-col justify-center items-start gap-3 w-full max-w-full',
     secondary: 'flex flex-col justify-center items-start gap-2',
-    body: 'flex items-start gap-[10px]',
+    body: 'flex items-start gap-[10px] w-full max-w-full',
   }
 
   return (
@@ -23,7 +23,7 @@ export default function TextCard({ variant = 'body', title, subtitle, children }
       {title && (
         <h2
           className={cn(
-            'leading-[160%] text-gray-800',
+            'leading-[160%] text-black',
             variant === 'primary' && 'text-[24px] font-medium',
             variant === 'secondary' && 'text-[16px] font-medium truncate',
           )}
@@ -34,7 +34,7 @@ export default function TextCard({ variant = 'body', title, subtitle, children }
 
       {/* Subtitle */}
       {subtitle && (
-        <p className='text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-300'>
+        <p className='text-[14px] font-light leading-[160%] tracking-[-0.07px] text-gray-800'>
           {subtitle}
         </p>
       )}
