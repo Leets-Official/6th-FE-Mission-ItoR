@@ -30,14 +30,5 @@ export const commentInputStyles = tv({
     inputWrapper: 'flex flex-col items-center self-stretch rounded-md border border-gray-90 py-2',
     contentLayout: 'flex flex-col items-start gap-10 self-stretch px-4 py-3',
     buttonWrapper: 'flex flex-col items-end gap-2.5 self-stretch px-4 py-2',
-    submitButton: 'flex h-[38px] w-16 items-center justify-center gap-1 px-3 py-2',
-  },
-  variants: {
-    hasContent: {
-      true: {
-        submitButton: 'bg-dark text-white border-dark',
-      },
-      false: {},
-    },
   },
 });

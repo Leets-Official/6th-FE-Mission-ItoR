@@ -10,7 +10,7 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
   const [comment, setComment] = useState('');
   const hasContent = comment.trim().length > 0;
 
-  const styles = commentInputStyles({ hasContent });
+  const styles = commentInputStyles();
   const profileStyle = profileStyles();
 
   return (
@@ -35,8 +35,7 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
           <Button
             intent="gray"
             variant={hasContent ? 'solid' : 'outline'}
-            size="md"
-            className={styles.submitButton()}
+            size="comment"
           >
             {BLOG_TEXTS.COMMENTS.SUBMIT_BUTTON}
           </Button>

@@ -6,13 +6,14 @@ export const buttonVariants = tv({
     intent: {
       primary: 'text-primary border-primary hover:text-white hover:bg-primary hover:border-primary',
       secondary: 'text-gray border-gray hover:text-gray hover:bg-gray-96',
-      gray: 'text-gray border-gray hover:text-gray hover:bg-gray-96',
+      gray: 'text-gray border-gray',
       danger: 'text-white bg-error border-error hover:bg-error/90',
     },
     size: {
       sm: 'h-8 px-2 text-sm',
       md: 'h-10 px-3 text-sm', // 기본 크기
       lg: 'h-12 px-4 text-base',
+      comment: 'h-[38px] w-16 px-3 text-sm', // 댓글 버튼 전용 크기
     },
     variant: {
       solid: '',
@@ -25,6 +26,7 @@ export const buttonVariants = tv({
     },
   },
   compoundVariants: [
+    { intent: 'gray', variant: 'solid', class: '!bg-dark !text-white hover:!bg-dark/50' },
     { intent: 'gray', variant: 'outline', class: 'text-gray border-gray bg-transparent hover:bg-gray-96' },
     {
       intent: 'primary',

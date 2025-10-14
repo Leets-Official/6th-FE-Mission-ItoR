@@ -66,10 +66,10 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
         <div className={sidebarStyles.bottomSection}>
           <Spacer />
           <div className={cn(sidebarStyles.buttonContainer, sidebarStyles.buttonGroup)}>
-            <Button intent="gray" className={sidebarStyles.sidebarButton} onClick={handleSettings}>
+            <Button intent="gray" variant="outline" className={sidebarStyles.sidebarButton} onClick={handleSettings}>
               {SIDEBAR_TEXTS.LOGGED_IN.SETTINGS}
             </Button>
-            <Button intent="gray" className={sidebarStyles.sidebarButton} onClick={handleLogout}>
+            <Button intent="gray" variant="outline" className={sidebarStyles.sidebarButton} onClick={handleLogout}>
               {SIDEBAR_TEXTS.LOGGED_IN.LOGOUT}
             </Button>
           </div>
