@@ -1,0 +1,13 @@
+import CreateIcon from "@/assets/svgs/create.svg?react";
+import Button from "./components/Button";
+
+      <p>Button Component</p>
+      <div className="flex flex-col gap-3 p-6">
+        <Button variant="blueBorder" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+        <Button variant="grayBorder" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+        <Button variant="whiteGrayIcon" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+        <Button variant="lightGray" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+        <Button variant="grayBorderLightBg" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+        <Button variant="blackWhite" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+        <Button variant="blackGray" icon={<CreateIcon/>}>깃로그 시작하기</Button>
+      </div>
