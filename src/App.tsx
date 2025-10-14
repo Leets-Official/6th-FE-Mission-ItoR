@@ -11,7 +11,6 @@ import Modal from "./components/Modal";
 import PaginationLeft from './components/PaginationLeft';
 import PaginationRight from './components/PaginationRight';
 import Pagination from './components/Pagination';
-import { IconMap } from "./assets/icons/icons";
 
 function App() {
   return (
@@ -23,7 +22,7 @@ function App() {
         <Header variant="edit" />
       </div> */}
 
-      <p>Button Component</p>
+      {/* <p>Button Component</p>
       <div className="flex flex-col gap-3 p-6">
         <Button variant="blueBorder" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
         <Button variant="grayBorder" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
@@ -32,7 +31,7 @@ function App() {
         <Button variant="grayBorderLightBg" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
         <Button variant="blackWhite" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
         <Button variant="blackGray" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
-      </div>
+      </div> */}
 
       {/* <p>Toast Component</p>
       <div className="flex flex-col gap-3 p-6">
