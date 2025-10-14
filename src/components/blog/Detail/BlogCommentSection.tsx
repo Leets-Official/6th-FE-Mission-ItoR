@@ -2,16 +2,19 @@ import { FC } from 'react';
 import { tv } from 'tailwind-variants';
 import Spacer from '@/components/common/Spacer/Spacer';
 import CommentItem from '@/components/blog/Comment/CommentItem';
+import CommentInput from '@/components/blog/Comment/CommentInput';
 import { BLOG_TEXTS } from '@/constants';
 import { Comment } from '@/types/blog';
 
 interface BlogCommentSectionProps {
   comments: Comment[];
+  isLoggedIn?: boolean;
+  currentUserNickName?: string;
 }
 
 const blogCommentSection = tv({
   slots: {
-    container: 'flex flex-col items-center self-stretch pb-14',
+    container: 'flex flex-col items-center self-stretch',
     header: 'flex w-full max-w-content items-start gap-10 bg-white px-4 pb-3 pt-4',
     headerInner: 'flex flex-1 flex-col items-start gap-10',
     titleWrapper: 'flex items-start gap-2',
@@ -27,7 +30,7 @@ const blogCommentSection = tv({
   },
 });
 
-const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments }) => {
+const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments, isLoggedIn = false, currentUserNickName = 'User' }) => {
   const styles = blogCommentSection();
 
   return (
@@ -65,13 +68,17 @@ const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments }) => {
         </div>
       )}
       <Spacer height="sm" className="w-full max-w-content" />
-      <div className={styles.loginPromptWrapper()}>
-        <div className={styles.loginPromptInner()}>
-          <div className={styles.loginPromptTextWrapper()}>
-            <p className={styles.loginPromptText()}>{BLOG_TEXTS.COMMENTS.LOGIN_PROMPT}</p>
+      {isLoggedIn ? (
+        <CommentInput nickName={currentUserNickName} />
+      ) : (
+        <div className={styles.loginPromptWrapper()}>
+          <div className={styles.loginPromptInner()}>
+            <div className={styles.loginPromptTextWrapper()}>
+              <p className={styles.loginPromptText()}>{BLOG_TEXTS.COMMENTS.LOGIN_PROMPT}</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <Spacer height="lg" className="w-full max-w-content" />
     </div>
   );

@@ -1,37 +1,47 @@
-import { FC } from 'react';
-import { tv } from 'tailwind-variants';
+import { FC, useState } from 'react';
 import profileImage from '@/assets/profile.png';
-
-interface CommentInputProps {
-  nickName: string;
-  onSubmit?: (content: string) => void;
-}
-
-const commentInput = tv({
-  slots: {
-    container: 'flex w-full max-w-content flex-col items-start',
-    profileSection: 'flex items-start gap-1.5',
-    profileImageWrapper: 'flex aspect-square h-5 w-5 items-center gap-2.5 overflow-hidden rounded-full',
-    profileImage: 'h-full w-full object-cover',
-    userInfo: 'flex flex-col items-start justify-center',
-    nickName: 'text-sm font-regular text-gray-20',
-  },
-});
+import PostInput from '@/components/blog/Post/PostInput';
+import Button from '@/components/common/Button/Button';
+import { BLOG_TEXTS } from '@/constants';
+import { CommentInputProps } from '@/components/blog/Comment/CommentTypes';
+import { profileStyles, commentInputStyles } from '@/components/blog/Comment/Comment.styles';
 
 const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
-  const styles = commentInput();
+  const [comment, setComment] = useState('');
+  const hasContent = comment.trim().length > 0;
+
+  const styles = commentInputStyles({ hasContent });
+  const profileStyle = profileStyles();
 
   return (
     <div className={styles.container()}>
-      <div className={styles.profileSection()}>
-        <div className={styles.profileImageWrapper()}>
-          <img src={profileImage} alt="profile" className={styles.profileImage()} />
+      <div className={styles.inputWrapper()}>
+        <div className={styles.contentLayout()}>
+          <div className={profileStyle.profileSection()}>
+            <div className={profileStyle.profileImageWrapper()}>
+              <img src={profileImage} alt="profile" className={profileStyle.profileImage()} />
+            </div>
+            <div className={profileStyle.userInfo()}>
+              <span className={profileStyle.nickName()}>{nickName}</span>
+            </div>
+          </div>
         </div>
-        <div className={styles.userInfo()}>
-          <span className={styles.nickName()}>{nickName}</span>
+        <PostInput
+          value={comment}
+          onChange={setComment}
+          placeholder={BLOG_TEXTS.COMMENTS.INPUT_PLACEHOLDER}
+        />
+        <div className={styles.buttonWrapper()}>
+          <Button
+            intent="gray"
+            variant={hasContent ? 'solid' : 'outline'}
+            size="md"
+            className={styles.submitButton()}
+          >
+            {BLOG_TEXTS.COMMENTS.SUBMIT_BUTTON}
+          </Button>
         </div>
       </div>
-      {/* 입력창 영역 */}
     </div>
   );
 };
