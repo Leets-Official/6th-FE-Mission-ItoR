@@ -25,13 +25,13 @@ function App() {
 
       <p>Button Component</p>
       <div className="flex flex-col gap-3 p-6">
-        <Button variant="blueBorder" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
-        <Button variant="grayBorder" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
-        <Button variant="whiteGrayIcon" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
-        <Button variant="lightGray" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
-        <Button variant="grayBorderLightBg" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
-        <Button variant="blackWhite" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
-        <Button variant="blackGray" icon={<IconMap.IC_create width={20} height={20} />}>깃로그 시작하기</Button>
+        <Button variant="blueBorder" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
+        <Button variant="grayBorder" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
+        <Button variant="whiteGrayIcon" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
+        <Button variant="lightGray" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
+        <Button variant="grayBorderLightBg" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
+        <Button variant="blackWhite" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
+        <Button variant="blackGray" icon={<IconMap.IC_create />}>깃로그 시작하기</Button>
       </div>
 
       {/* <p>Toast Component</p>

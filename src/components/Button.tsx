@@ -13,7 +13,7 @@ type ButtonVariant =
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
-  icon?: React.ReactNode;
+  icon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
   children: React.ReactNode;
 }
 
@@ -56,7 +56,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={props.disabled}
       {...props}
     >
-      {icon && <span className={iconColorStyles[variant]}>{icon}</span>}
+      {icon && React.cloneElement(icon, {className : clsx(icon.props.className, iconColorStyles[variant], "w-5 h-5")})}
       <span className="flex items-center justify-center w-[93px] h-[22px] text-[14px]">
         {children}
       </span>
