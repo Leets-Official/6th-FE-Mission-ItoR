@@ -9,6 +9,7 @@ import DropdownTestPage from '../pages/test/DropdownTestPage'
 import TextFiledTestPage from '../pages/test/TextFiledTestPage'
 import TextFiledSetTestPage from '../pages/test/TextFiledSetTestPage'
 import ProfileImageTestPage from '@/pages/test/ProfileImageTestPage'
+import SidebarTestPage from '@/pages/test/SidebarTestPage'
 
 const router = createBrowserRouter([
   { path: '/', element: <div>홈 화면</div> },
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
   { path: '/test/textfiled', element: <TextFiledTestPage /> },
   { path: '/test/textfiledset', element: <TextFiledSetTestPage /> },
   { path: '/test/profileimage', element: <ProfileImageTestPage /> },
+  { path: '/test/sidebar', element: <SidebarTestPage /> },
 ])
 
 export default router
