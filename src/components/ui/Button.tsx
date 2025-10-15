@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import PencilIconSvg from "@icons/pencil.svg?react";
-import type { ButtonProps } from "./Button.types";
-import { baseClass, byVariant } from "./Button.variants";
+import type { ButtonProps } from "@ui/Button.types";
+import { baseClass, byVariant } from "@ui/Button.variants";
 
 const Button: React.FC<ButtonProps> = ({
   children,

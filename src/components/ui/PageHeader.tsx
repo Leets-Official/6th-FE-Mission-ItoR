@@ -1,7 +1,7 @@
 // src/components/ui/PageHeader.tsx
 import React from "react";
 import clsx from "clsx";
-import SmallButton from "./SmallButton";
+import SmallButton from "@ui/SmallButton";
 
 import ReorderIcon from "@icons/reorder.svg?react";
 import ChatIcon from "@icons/chat.svg?react";
