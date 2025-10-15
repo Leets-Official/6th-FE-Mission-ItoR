@@ -1,6 +1,6 @@
 import React from "react";
-import { FaCheck } from "react-icons/fa";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import ErrorOutline from "@/assets/svgs/error_outline.svg?react";
+import Done from "@/assets/svgs/done.svg?react";
 
 type ToastVariant = "success" | "warning";
 
@@ -23,7 +23,7 @@ const Toast: React.FC<ToastProps> = ({ variant }) => {
     success: {
       borderColor: "border-[#15DC5E]",
       textColor: "text-[#15DC5E]",
-      icon: <FaCheck size={24} className="text-[#15DC5E]" />,
+      icon: <ErrorOutline className="text-[#15DC5E]" />,
       message: "저장되었습니다!",
       width: "w-[147px]",
       height: "h-[40px]",
@@ -31,7 +31,7 @@ const Toast: React.FC<ToastProps> = ({ variant }) => {
     warning: {
       borderColor: "border-[#FF3F3F]",
       textColor: "text-[#FF3F3F]",
-      icon: <AiOutlineExclamationCircle size={24} className="text-[#FF3F3F]" />,
+      icon: <Done  className="text-[#FF3F3F]" />,
       message: "내용을 입력해주세요!",
       width: "w-[171px]",
       height: "h-[40px]",
