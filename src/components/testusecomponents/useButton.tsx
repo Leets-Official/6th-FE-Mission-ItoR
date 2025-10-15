@@ -1,6 +1,10 @@
 import CreateIcon from "@/assets/svgs/create.svg?react";
-import Button from "./components/Button";
+import Button from "../Button";
+import React from "react";
 
+const TestButton = () => {
+  return (
+    <>
       <p>Button Component</p>
       <div className="flex flex-col gap-3 p-6">
         <Button variant="blueBorder" icon={<CreateIcon/>}>깃로그 시작하기</Button>
@@ -11,3 +15,8 @@ import Button from "./components/Button";
         <Button variant="blackWhite" icon={<CreateIcon/>}>깃로그 시작하기</Button>
         <Button variant="blackGray" icon={<CreateIcon/>}>깃로그 시작하기</Button>
       </div>
+    </>
+  )
+}
+
+export default TestButton;
