@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z as zod } from 'zod';
 
 export const VALIDATION_MESSAGES = {
   email: {
@@ -36,13 +36,13 @@ export const VALIDATION_MESSAGES = {
 
 export const validators = {
   email: () =>
-    z
+    zod
       .string()
       .min(1, VALIDATION_MESSAGES.email.required)
       .email(VALIDATION_MESSAGES.email.invalid),
 
   password: () =>
-    z
+    zod
       .string()
       .min(1, VALIDATION_MESSAGES.password.required)
       .min(8, VALIDATION_MESSAGES.password.minLength)
@@ -50,16 +50,16 @@ export const validators = {
       .regex(/[0-9]/, VALIDATION_MESSAGES.password.requireNumber),
 
   passwordConfirm: () =>
-    z.string().min(1, VALIDATION_MESSAGES.passwordConfirm.required),
+    zod.string().min(1, VALIDATION_MESSAGES.passwordConfirm.required),
 
   name: () =>
-    z
+    zod
       .string()
       .min(1, VALIDATION_MESSAGES.name.required)
       .min(2, VALIDATION_MESSAGES.name.minLength),
 
   birthDate: () =>
-    z
+    zod
       .string()
       .min(1, VALIDATION_MESSAGES.birthDate.required)
       .regex(/^\d{4}-\d{2}-\d{2}$/, VALIDATION_MESSAGES.birthDate.format)
@@ -73,16 +73,16 @@ export const validators = {
       ),
 
   nickname: () =>
-    z
+    zod
       .string()
       .min(1, VALIDATION_MESSAGES.nickname.required)
       .min(2, VALIDATION_MESSAGES.nickname.minLength)
       .max(20, VALIDATION_MESSAGES.nickname.maxLength),
 
   bio: () =>
-    z
+    zod
       .string()
       .max(100, VALIDATION_MESSAGES.bio.maxLength)
       .optional()
-      .or(z.literal('')),
+      .or(zod.literal('')),
 } as const;
