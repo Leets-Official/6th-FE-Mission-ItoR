@@ -1,11 +1,33 @@
-export const listItem = "mx-auto flex w-[688px] h-[166px] items-start gap-4";
+export const listItem = `
+  flex flex-col border-b border-brand-borderGray pb-5
+  w-full overflow-hidden
+`;
 
-export const postTitle = "mb-6 text-base font-bold";
+export const upperWrapper = `
+  flex justify-between items-start gap-3 w-full
+`;
 
-export const postContent = "line-clamp-2 text-sm text-brand-midGray";
+export const textSection = `
+  flex flex-col flex-1 min-w-0
+`;
 
-export const postMeta = "mt-auto mb-4 flex items-center gap-2 text-xs text-brand-gray";
+export const postTitle = `
+  text-base font-semibold text-brand-black mb-1
+`;
 
-export const postImage = "h-24 w-24 flex-shrink-0 rounded object-cover self-start";
+export const postContent = `
+  text-sm text-brand-darkGray leading-snug line-clamp-2
+`;
 
-export const postNickName = "font-medium text-brand-darkGray";
+export const postMeta = `
+  flex items-center gap-2 text-xs text-brand-gray mt-3
+`;
+
+export const postNickName = `
+  text-brand-black font-medium
+`;
+
+export const postImage = `
+  w-[90px] h-[90px] md:w-[120px] md:h-[120px]
+  rounded-md object-cover aspect-square flex-shrink-0
+`;
