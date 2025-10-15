@@ -1,5 +1,4 @@
 import Modal from "../Modal";
-import React from "react";
 
 const TestModal = () => {
   return (

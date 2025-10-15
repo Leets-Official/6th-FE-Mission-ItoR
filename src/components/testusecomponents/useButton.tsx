@@ -1,6 +1,5 @@
 import CreateIcon from "@/assets/svgs/create.svg?react";
 import Button from "../Button";
-import React from "react";
 
 const TestButton = () => {
   return (

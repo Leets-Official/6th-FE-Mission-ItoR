@@ -1,7 +1,6 @@
 import PaginationButton from '../PaginationButton'
 import LeftIcon from '@/assets/svgs/navigate_before.svg?react';
 import RightIcon from '@/assets/svgs/Right.svg?react';
-import React from "react";
 
 const TestPagination = () => {
   return (
