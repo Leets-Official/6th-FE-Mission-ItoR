@@ -1,16 +1,8 @@
-// src/App.tsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import PostDetailPage from "./pages/PostDetailPage";
+import router from './routes/Route';
+import { RouterProvider } from 'react-router-dom';
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/post/:id" element={<PostDetailPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
+function App() {
+  return <RouterProvider router={router} />;
 }
+
+export default App;
