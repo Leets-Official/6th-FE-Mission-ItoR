@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@/components/Text/TextField";
 import { KakaoIcon } from "@/assets/icons";
 import {
@@ -27,6 +27,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   if (!open) return null;
 
   const handleLogin = () => {
@@ -36,18 +47,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
   return (
     <div className={backdrop}>
       <div className={wrapper}>
-        {/* Close Button */}
         <button className={closeButton} onClick={onClose}>
           <XIcon size={20} />
         </button>
 
-        {/* Left: Logo */}
         <div className={leftSection}>
           <h1 className={title}>GITLOG</h1>
           <p className={subtitle}>You can make anything by writing</p>
         </div>
 
-        {/* Right: Form */}
         <div className={rightSection}>
           <div className={inputGroup}>
             <TextField

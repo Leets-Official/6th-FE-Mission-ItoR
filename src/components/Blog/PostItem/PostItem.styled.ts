@@ -12,7 +12,7 @@ export const textSection = `
 `;
 
 export const postTitle = `
-  text-base font-semibold text-brand-black mb-1
+  text-base font-semibold text-brand-black mb-3
 `;
 
 export const postContent = `
