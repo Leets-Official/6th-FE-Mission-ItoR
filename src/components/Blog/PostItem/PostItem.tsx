@@ -29,7 +29,6 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
   return (
     <li className={`${listItem} cursor-pointer`} onClick={handleClick}>
-      {/* 제목 + 본문 + 이미지 */}
       <div className={upperWrapper}>
         <div className={textSection}>
           <h2 className={postTitle}>{post.title}</h2>
@@ -39,7 +38,6 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         {firstImage && <img src={firstImage} alt={post.title} className={postImage} />}
       </div>
 
-      {/* 닉네임/날짜/댓글 */}
       <div className={postMeta}>
         <Avatar src={post.profileUrl} size="sm" />
         <span className={postNickName}>{post.nickName}</span>
