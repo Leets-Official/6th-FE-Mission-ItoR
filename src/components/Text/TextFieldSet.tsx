@@ -16,8 +16,8 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-brand-gray text-base">
-        {title} {required && <span className="text-red-500">*</span>}
+      <label className="text-brand-gray text-sm">
+        {title} {required && <span>*</span>}
       </label>
       <TextField placeholder={placeholder} size="lg" variant="default" />
       {helperText && <p className="mt-1 text-xs text-gray-400">* {helperText}</p>}

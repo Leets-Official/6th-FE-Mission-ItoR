@@ -4,7 +4,7 @@ export const container = "flex flex-col gap-2";
 
 // 프로필 + 소개
 export const profileSection = "flex flex-col items-left gap-3 text-left";
-export const nickname = "text-2xl font-medium";
+export const nickname = "text-xl font-medium";
 export const intro = "text-sm text-brand-darkGray";
 
 // 게스트 전용 버튼 하나짜리

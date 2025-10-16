@@ -27,7 +27,6 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className={baseHeader}>
       <div className={leftGroup}>
-        {/* ✅ 메뉴 클릭 이벤트 연결 */}
         <button
           onClick={onMenuClick}
           aria-label="메뉴 열기"

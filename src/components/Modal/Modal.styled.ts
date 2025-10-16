@@ -3,9 +3,9 @@ export const overlay =
 
 export const container = "bg-white rounded-lg shadow-lg w-full max-w-md p-6 flex flex-col gap-4";
 
-export const title = "text-xl leading-snug py-3";
+export const title = "text-sm leading-snug py-3";
 
-export const description = "text-brand-gray text-base py-2";
+export const description = "text-brand-gray text-xs py-2";
 
 export const actions = "flex gap-3 mt-4";
 

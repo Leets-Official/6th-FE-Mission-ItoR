@@ -27,13 +27,12 @@
   --font-smooch: "Smooch", cursive;
 
   /* ==== Font Size ==== */
-  --text-xxs: 0.6rem;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.65rem;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
 
   /* ==== Avatar Sizes ==== */
   --spacing-avatar-xs: 24px;
