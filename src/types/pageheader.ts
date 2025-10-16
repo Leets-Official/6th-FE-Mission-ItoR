@@ -13,11 +13,12 @@ export interface HeaderActionProps {
 // 제네릭 타입
 export type ComponentWithActions<T = {}> = HeaderActionProps & T;
 
-// PageHeader 컴포넌트 
+// PageHeader 컴포넌트
 export type PageHeaderProps = ComponentWithBase<
   ComponentWithActions<{
     type: PageHeaderType;
     onHamburgerClick?: () => void;
+    isOwner?: boolean;
   }>
 >;
 
@@ -29,8 +30,11 @@ export type PageHeaderLeftProps = {
 // PageHeaderRight
 export type PageHeaderRightProps = ComponentWithActions<{
   type: PageHeaderType;
+  isOwner?: boolean;
 }>;
 
 // RightRenders
-export type RenderProps = HeaderActionProps;
+export type RenderProps = HeaderActionProps & {
+  isOwner?: boolean;
+};
 

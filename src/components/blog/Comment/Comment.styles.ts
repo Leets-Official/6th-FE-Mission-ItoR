@@ -14,7 +14,7 @@ export const profileStyles = tv({
 // CommentItem 전용 스타일
 export const commentItemStyles = tv({
   slots: {
-    container: 'flex w-[688px] max-w-[688px] flex-col items-start',
+    container: 'flex w-full max-w-content flex-col items-start',
     header: 'flex items-center self-stretch',
     headerContent: 'flex w-full flex-col items-start gap-10 px-4 py-3',
     headerLayout: 'flex items-center self-stretch gap-2.5',

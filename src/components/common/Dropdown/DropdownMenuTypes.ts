@@ -3,6 +3,7 @@ export interface DropdownMenuItem {
   label: string;
   onClick?: () => void;
   disabled?: boolean;
+  color?: 'default' | 'danger';
 }
 
 export interface DropdownMenuProps {

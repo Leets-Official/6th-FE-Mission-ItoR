@@ -23,7 +23,7 @@ const blogCommentSection = tv({
     count: 'text-base font-regular text-primary',
     noCommentsWrapper: 'flex w-full max-w-content items-center justify-center px-3 py-3',
     noCommentsText: 'flex-1 text-center text-sm font-light text-gray-78',
-    commentsList: 'flex flex-col items-start gap-2.5',
+    commentsList: 'flex w-full max-w-content flex-col items-start gap-2.5',
     loginPromptWrapper: 'flex w-full max-w-content flex-col items-center justify-center gap-2.5 px-4 py-3',
     loginPromptInner: 'flex flex-col items-start gap-2.5 self-stretch rounded border border-gray-90 py-2',
     loginPromptTextWrapper: 'flex w-full items-center justify-center p-3',

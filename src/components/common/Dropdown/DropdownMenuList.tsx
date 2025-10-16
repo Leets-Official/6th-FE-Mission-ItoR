@@ -44,7 +44,8 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
             disabled={item.disabled}
             className={clsx(
               'flex items-center gap-2.5 text-left',
-              'hover:bg-gray-50 transition-colors duration-150',
+              'transition-colors duration-150',
+              'hover:bg-gray-96',
               'disabled:cursor-not-allowed disabled:opacity-50',
               'first:rounded-t-lg last:rounded-b-lg'
             )}
@@ -53,7 +54,14 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
               padding: '8px 12px 12px 12px',
             }}
           >
-            <span className="flex-1 text-sm font-normal text-black">{item.label}</span>
+            <span
+              className={clsx(
+                'flex-1 text-sm font-normal',
+                item.color === 'danger' ? 'text-warning' : 'text-black'
+              )}
+            >
+              {item.label}
+            </span>
           </button>
         ))}
       </div>

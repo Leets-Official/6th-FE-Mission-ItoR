@@ -11,7 +11,7 @@ interface BlogAuthorSectionProps {
 
 const blogAuthorSection = tv({
   slots: {
-    container: 'flex h-[354px] flex-col items-center self-stretch border-b border-gray-96 bg-gray-96',
+    container: 'flex flex-col items-center self-stretch border-b border-gray-96 bg-gray-96 pb-[42px]',
   },
 });
 
@@ -20,7 +20,7 @@ const BlogAuthorSection: FC<BlogAuthorSectionProps> = ({ nickName, introduction 
 
   return (
     <div className={styles.container()}>
-      <Spacer height="lg" className="w-full max-w-content" />
+      <Spacer height="lg" className="w-full max-w-content max-md:h-8 lg:h-16" />
       <MyPageHeader
         isEditMode={false}
         nickname={nickName}
@@ -29,7 +29,7 @@ const BlogAuthorSection: FC<BlogAuthorSectionProps> = ({ nickName, introduction 
         showSettingsButton={false}
         isEditProfilePage={false}
       />
-      <Spacer height="lg" className="w-full max-w-content" />
+      <Spacer height="lg" className="w-full max-w-content max-md:h-8 lg:h-16" />
     </div>
   );
 };

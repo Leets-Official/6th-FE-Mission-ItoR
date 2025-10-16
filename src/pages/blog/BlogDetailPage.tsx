@@ -2,14 +2,18 @@ import { useParams } from 'react-router-dom';
 import BlogPostSection from '@/components/blog/Detail/BlogPostSection';
 import BlogCommentSection from '@/components/blog/Detail/BlogCommentSection';
 import BlogAuthorSection from '@/components/blog/Detail/BlogAuthorSection';
-import { mockPostDetail, mockPostDetailNoComments, mockPostDetailWithMyComments } from '@/_mocks_/mockPostDetail';
+import { mockPostDetail, mockPostDetailNoComments, mockPostDetailWithMyComments, mockPostDetailByHongGilDong } from '@/_mocks_/mockPostDetail';
 import Spacer from '@/components/common/Spacer/Spacer';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 const BlogDetailPage = () => {
   const { id } = useParams();
   const { isLoggedIn, user } = useAuthStore();
-  const postData = id === '998' ? mockPostDetailNoComments : id === '997' ? mockPostDetailWithMyComments : mockPostDetail;
+  const postData =
+    id === '1001' ? mockPostDetailByHongGilDong :
+    id === '998' ? mockPostDetailNoComments :
+    id === '997' ? mockPostDetailWithMyComments :
+    mockPostDetail;
 
   return (
     <>

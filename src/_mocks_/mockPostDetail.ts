@@ -163,3 +163,59 @@ export const mockPostDetailWithMyComments: PostDetail = {
   createdAt: new Date('2025-02-17').toISOString(),
 };
 
+// 홍길동(깃로그)이 작성한 블로그 포스트
+export const mockPostDetailByHongGilDong: PostDetail = {
+  postId: 1001,
+  title: '깃로그와 함께하는 개발 여정',
+  contents: [
+    {
+      contentOrder: 1,
+      content: '안녕하세요, 깃로그입니다! 오늘은 개발자로서 성장하는 과정에서 배운 것들을 공유하고자 합니다.',
+      contentType: 'TEXT',
+    },
+    {
+      contentOrder: 2,
+      content: 'https://picsum.photos/seed/gitlog1/800/400',
+      contentType: 'IMAGE',
+    },
+    {
+      contentOrder: 3,
+      content: '개발을 하면서 가장 중요한 것은 꾸준함이라고 생각합니다. 매일 조금씩이라도 코드를 작성하고, 새로운 것을 배우려는 자세가 중요합니다.',
+      contentType: 'TEXT',
+    },
+    {
+      contentOrder: 4,
+      content: 'https://picsum.photos/seed/gitlog2/800/400',
+      contentType: 'IMAGE',
+    },
+    {
+      contentOrder: 5,
+      content: '앞으로도 더 많은 개발 이야기를 공유하겠습니다. 함께 성장해요!',
+      contentType: 'TEXT',
+    },
+  ],
+  isOwner: true,
+  comments: [
+    {
+      commentId: 201,
+      content: '깃로그님 글 항상 잘 보고 있습니다!',
+      nickName: 'DevFan',
+      profileUrl: 'https://i.pravatar.cc/150?img=5',
+      createdAt: new Date('2024-10-15').toISOString(),
+      isOwner: false,
+    },
+    {
+      commentId: 202,
+      content: '정말 공감되는 내용이네요. 감사합니다.',
+      nickName: 'Coder123',
+      profileUrl: 'https://i.pravatar.cc/150?img=6',
+      createdAt: new Date('2024-10-15').toISOString(),
+      isOwner: false,
+    },
+  ],
+  nickName: '깃로그',
+  profileUrl: 'https://i.pravatar.cc/150?img=30',
+  introduction: '개발자의 성장을 기록하는 공간',
+  createdAt: new Date('2024-10-15').toISOString(),
+};
+

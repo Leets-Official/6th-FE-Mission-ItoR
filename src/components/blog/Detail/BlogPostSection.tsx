@@ -26,7 +26,7 @@ const BlogPostSection: FC<BlogPostSectionProps> = ({ title, contents }) => {
   return (
     <>
       <div className={styles.section()}>
-        <Spacer height="lg" className="w-full max-w-content" />
+        <Spacer height="lg" className="w-full max-w-content max-md:h-8 lg:h-16" />
         <div className={styles.headerWrapper()}>
           <PostHeader title={title} className="w-full" />
           <Spacer height="md" className="w-full max-w-content" />

@@ -9,7 +9,7 @@ import { RenderProps } from '@/types/pageheader';
 
 export const PageHeaderRenderers = {
   main: (_props?: RenderProps) => <MainTypeHeader />,
-  detail: (_props?: RenderProps) => <DetailTypeHeader />,
+  detail: (props?: RenderProps) => <DetailTypeHeader isOwner={props?.isOwner} />,
   write: (_props?: RenderProps) => <WriteTypeHeader />,
   mypage: (_props?: RenderProps) => <MypageTypeHeader />,
   editprofile: (props?: RenderProps) => <EditProfileTypeHeader {...props} />,
