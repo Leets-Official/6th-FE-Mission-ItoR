@@ -18,7 +18,7 @@ export const leftSection = `
 `;
 
 export const title = `
-  font-smooch text-[72px] tracking-wide leading-none text-brand-white
+  font-smooch text-3xl tracking-wide leading-none text-brand-white
 `;
 
 export const subtitle = `

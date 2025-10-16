@@ -16,6 +16,7 @@ import {
   closeButton,
 } from "./LoginModal.styled";
 import { XIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
   open: boolean;
@@ -26,6 +27,7 @@ interface LoginModalProps {
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
@@ -42,6 +44,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
 
   const handleLogin = () => {
     if (onLogin) onLogin(email, password);
+  };
+
+  const handleSignupClick = () => {
+    onClose();
+    navigate("/signup");
   };
 
   return (
@@ -83,7 +90,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
             <KakaoIcon className="h-5 w-5" />
             카카오로 로그인
           </button>
-          <p className={footer}>또는 회원가입</p>
+
+          <p
+            className={`${footer} hover:text-brand-blue cursor-pointer transition`}
+            onClick={handleSignupClick}
+          >
+            또는 회원가입
+          </p>
         </div>
       </div>
     </div>

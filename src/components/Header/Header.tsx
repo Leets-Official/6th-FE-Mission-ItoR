@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({
           aria-label="메뉴 열기"
           className="transition hover:opacity-70"
         >
-          <ReorderIcon width={28} height={28} />
+          <ReorderIcon width={22} height={24} />
         </button>
 
         <span className={titleStyle}>{title}</span>

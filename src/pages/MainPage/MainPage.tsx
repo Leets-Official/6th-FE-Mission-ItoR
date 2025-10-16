@@ -65,7 +65,7 @@ export default function MainPage() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
 
-          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64 bg-white">
+          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
             <Sidebar
               variant="guest"
               onLoginClick={() => {
