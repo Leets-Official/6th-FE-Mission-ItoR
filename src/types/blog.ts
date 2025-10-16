@@ -25,3 +25,19 @@ export interface PostDetail {
   createdAt: string;
 }
 
+// 게시물 생성
+export interface CreatePostPayload {
+  title: string;
+  contents: ContentItem[];
+}
+
+// 에디터 모드 타입
+export type EditorMode = 'basic' | 'markdown';
+
+// 에디터 데이터 타입
+export interface EditableBlock {
+  id: string;
+  type: 'text' | 'image';
+  content: string;
+  order: number;
+}

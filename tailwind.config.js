@@ -137,6 +137,7 @@ export default {
         'login-textbox-container': '46px', // 로그인 텍스트박스 컨테이너 높이
         'login-input': '46px', // 로그인 인풋 높이
         'login-button': '45px', // 로그인 버튼 높이
+        'page-header-legacy': '50px', // 레거시 페이지 헤더 높이
         'spacer-mobile-top': '18px', // 마이페이지 상단 스페이서 높이 (모바일)
         'spacer-lg': '36px', // 블로그 포스트 스페이서 높이 (모바일)
       },

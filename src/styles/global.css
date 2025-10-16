@@ -39,7 +39,7 @@ body {
 }
 
 .page-header-legacy-container {
-  @apply flex w-[1366px] max-w-[1366px] p-3 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
+  @apply flex w-full max-w-content h-page-header-legacy px-4 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
 }
 
 

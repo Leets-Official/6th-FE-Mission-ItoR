@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CreateIcon } from '@/assets/icons/common';
 import Icon from '@/components/common/Icon/Icon';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -9,13 +10,14 @@ export const MainTypeHeader: FC = () => {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (!isLoggedIn) {
       setIsMessageModalOpen(true);
       return;
     }
-    // TODO: 로그인 상태일 때 글쓰기 페이지로 이동
+    navigate('/blog/write');
   };
 
   const handleLoginConfirm = () => {

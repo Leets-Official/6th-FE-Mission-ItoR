@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Layout from '@/layout/Layout';
 import MainPage from '@/pages/main/MainPage';
 import BlogDetailPage from '@/pages/blog/BlogDetailPage';
+import BlogWritePage from '@/pages/blog/BlogWritePage';
 import MyPage from '@/pages/mypage/MyPage';
 import MyPageForm from '@/components/mypage/MyPageForm';
 import MyProfileForm from '@/components/mypage/MyProfileForm';
@@ -23,6 +24,14 @@ const router = createBrowserRouter([
       {
         path: 'blog/:id',
         element: <BlogDetailPage />,
+      },
+      {
+        path: 'blog/write',
+        element: (
+          <PrivateRoute>
+            <BlogWritePage />
+          </PrivateRoute>
+        ),
       },
       {
         path: 'mypage',

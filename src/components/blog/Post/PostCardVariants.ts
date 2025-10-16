@@ -15,7 +15,16 @@ export const postCardVariants = tv({
 });
 
 export const postTitleVariants = tv({
-  base: 'self-stretch text-base sm:text-lg font-medium leading-[160%] tracking-[-0.08px] text-black overflow-hidden text-ellipsis whitespace-nowrap',
+  base: 'self-stretch font-medium leading-[160%] tracking-[-0.08px] text-black overflow-hidden text-ellipsis whitespace-nowrap',
+  variants: {
+    size: {
+      md: 'text-base sm:text-lg',
+      xl: 'text-2xl',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
 });
 
 export const postContentVariants = tv({
