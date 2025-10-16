@@ -39,7 +39,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
       </div>
 
       <div className={postMeta}>
-        <Avatar src={post.profileUrl} size="sm" />
+        <Avatar src={post.profileUrl} size="xs" />
         <span className={postNickName}>{post.nickName}</span>
         <span>· {formatPostDate(post.createdAt)}</span>
         <span>· 댓글 {post.comments.length}</span>
