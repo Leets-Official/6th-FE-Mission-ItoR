@@ -38,3 +38,29 @@ export type RenderProps = HeaderActionProps & {
   isOwner?: boolean;
 };
 
+// DetailTypeHeader 훅 반환 타입
+export interface DetailTypeHeaderReturn {
+  handleChatClick: () => void;
+  handleEdit: () => void;
+  handleDelete: () => void;
+  handleConfirmDelete: () => void;
+  handleCloseDeleteModal: () => void;
+  isDeleteModalOpen: boolean;
+  modalTexts: {
+    confirm: string;
+    cancel: string;
+    deleteTitle: string;
+    deleteDescription: string;
+  };
+}
+
+// WriteTypeHeader 훅 반환 타입
+export interface WriteTypeHeaderReturn {
+  handleDeleteClick: () => void;
+  handlePublishClick: () => void;
+  modalType: 'login' | 'message' | 'logout' | 'delete' | null;
+  confirmButtonText: string | null;
+  onModalConfirm: (() => void) | null;
+  closeModal: () => void;
+}
+

@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Spacer from '@/components/common/Spacer/Spacer';
 import PostHeader from '@/components/blog/Post/PostHeader';
 import MyPageHeader from '@/components/mypage/MyPageHeader';
-import { useMyPage } from '@/hooks/useMyPage';
+import { useMyPage } from '@/hooks';
 import { MYPAGE_TEXTS } from '@/constants';
 
 interface MyPageProps {

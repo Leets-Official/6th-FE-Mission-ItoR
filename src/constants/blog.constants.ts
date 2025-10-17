@@ -6,6 +6,11 @@ export const BLOG_TEXTS = {
     LOGIN_PROMPT: '로그인을 하고 댓글을 달아보세요!',
     INPUT_PLACEHOLDER: '댓글을 입력하세요.',
     SUBMIT_BUTTON: '등록',
+    DELETE_MODAL: {
+      TITLE: '댓글을 삭제하시겠어요?',
+      CANCEL: '취소',
+      CONFIRM: '삭제하기',
+    },
   },
   WRITE: {
     PLACEHOLDERS: {
