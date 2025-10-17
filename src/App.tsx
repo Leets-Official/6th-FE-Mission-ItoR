@@ -1,10 +1,10 @@
 import React from "react";
-import TestTextFieldSet from "./components/testusecomponents/useTextFieldSet";
+import TestFrame from "./components/testusecomponents/useFrame";
 
 function App() {
   return (
     <>
-      <TestTextFieldSet/>
+      <TestFrame/>
     </>
   )
 }
