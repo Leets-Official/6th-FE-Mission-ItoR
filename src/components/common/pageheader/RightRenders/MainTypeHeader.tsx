@@ -5,6 +5,7 @@ import Icon from '@/components/common/Icon/Icon';
 import { useAuthStore } from '@/stores/useAuthStore';
 import Modal from '@/components/common/Modal/Modal';
 import { LoginModal } from '@/components/auth';
+import { PAGEHEADER_TEXTS } from '@/constants';
 
 export const MainTypeHeader: FC = () => {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
@@ -36,18 +37,18 @@ export const MainTypeHeader: FC = () => {
         <Icon size="lg">
           <CreateIcon />
         </Icon>
-        <span>깃로그 쓰기</span>
+        <span>{PAGEHEADER_TEXTS.MAIN.WRITE_BUTTON}</span>
       </div>
 
       <Modal
         isOpen={isMessageModalOpen}
         onClose={() => setIsMessageModalOpen(false)}
         onDelete={handleLoginConfirm}
-        cancelButtonText="취소"
-        confirmButtonText="로그인 하러 가기"
+        cancelButtonText={PAGEHEADER_TEXTS.MAIN.MODAL.CANCEL}
+        confirmButtonText={PAGEHEADER_TEXTS.MAIN.MODAL.GO_TO_LOGIN}
         confirmButtonVariant="primary"
       >
-        <p className="text-center text-sm">로그인이 필요합니다</p>
+        <p className="text-center text-sm">{PAGEHEADER_TEXTS.MAIN.MODAL.LOGIN_REQUIRED}</p>
       </Modal>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />

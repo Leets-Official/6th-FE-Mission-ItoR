@@ -4,6 +4,7 @@ import Icon from '@/components/common/Icon/Icon';
 import DropdownMenu from '@/components/common/Dropdown/DropdownMenu';
 import Modal from '@/components/common/Modal/Modal';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { PAGEHEADER_TEXTS } from '@/constants';
 
 interface DetailTypeHeaderProps {
   isOwner?: boolean;
@@ -14,7 +15,7 @@ export const DetailTypeHeader: FC<DetailTypeHeaderProps> = ({ isOwner = false })
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleChatClick = () => {
-    // 댓글 섹션으로 스크롤
+    // 댓글 섹션 스크롤
     const commentSection = document.querySelector('[data-comment-section]');
     if (commentSection) {
       commentSection.scrollIntoView({ behavior: 'smooth' });
@@ -37,12 +38,12 @@ export const DetailTypeHeader: FC<DetailTypeHeaderProps> = ({ isOwner = false })
   const dropdownItems = [
     {
       id: 'edit',
-      label: '수정하기',
+      label: PAGEHEADER_TEXTS.DETAIL.DROPDOWN.EDIT,
       onClick: handleEdit,
     },
     {
       id: 'delete',
-      label: '삭제하기',
+      label: PAGEHEADER_TEXTS.DETAIL.DROPDOWN.DELETE,
       onClick: handleDelete,
       color: 'danger' as const,
     },
@@ -76,13 +77,13 @@ export const DetailTypeHeader: FC<DetailTypeHeaderProps> = ({ isOwner = false })
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onDelete={handleConfirmDelete}
-        confirmButtonText="삭제하기"
-        cancelButtonText="취소"
+        confirmButtonText={PAGEHEADER_TEXTS.DETAIL.MODAL.CONFIRM}
+        cancelButtonText={PAGEHEADER_TEXTS.DETAIL.MODAL.CANCEL}
         confirmButtonVariant="danger"
       >
         <div className="flex flex-col items-start gap-2">
-          <p className="text-base font-medium text-black">해당 블로그를 삭제할까요?</p>
-          <p className="text-sm font-light text-gray-56">삭제된 블로그는 다시 확인할 수 없어요.</p>
+          <p className="text-base font-medium text-black">{PAGEHEADER_TEXTS.DETAIL.MODAL.DELETE_TITLE}</p>
+          <p className="text-sm font-light text-gray-56">{PAGEHEADER_TEXTS.DETAIL.MODAL.DELETE_DESCRIPTION}</p>
         </div>
       </Modal>
     </>

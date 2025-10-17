@@ -71,7 +71,7 @@ export const mockPostDetailNoComments: PostDetail = {
   contents: [
     {
       contentOrder: 1,
-      content: '이 게시물에는 아직 댓글이 없습니다. 첫 번째 댓글을 달아주세요!',
+      content: '이 게시물에는 아직 댓글이 없습니다. 댓글이 필요합니다. 첫 번째 댓글을 달아주세요! 부탁드립니다.',
       contentType: 'TEXT',
     },
     {

@@ -78,7 +78,7 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
       </aside>
 
       {modalType === 'login' && <LoginModal isOpen={true} onClose={closeModal} />}
-      
+
       {modalType === 'logout' && (
         <Modal
           isOpen={true}
