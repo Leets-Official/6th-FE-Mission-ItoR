@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import PostHeader from '@/components/blog/Post/PostHeader';
 import TextBox from '@/components/common/Textbox/TextBox';
 import TextField from '@/components/common/Text/TextField';
@@ -6,6 +6,7 @@ import { MYPAGE_TEXTS } from '@/constants';
 import { SettingsIcon } from '@/assets/icons/common';
 import profileImage from '@/assets/profile.png';
 import { MyPageHeaderProps } from '@/types/mypage';
+import { useEditProfile } from '@/hooks';
 
 const STYLES = {
   profileContent: 'flex flex-col w-full max-w-content py-3 px-4 items-start gap-2.5',
@@ -25,8 +26,11 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({
   showSettingsButton = true,
   isEditProfilePage = false,
 }) => {
-  const [editNickname, setEditNickname] = useState(nickname);
-  const [editBio, setEditBio] = useState(bio);
+  const { register, errors, watchedNickname, watchedBio } = useEditProfile({
+    nickname,
+    bio,
+    isEditMode,
+  });
 
   return (
     <>
@@ -39,26 +43,30 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({
       {isEditProfilePage ? (
         <div className={STYLES.profileEditFields}>
           <TextField
-            value={editNickname}
-            onChange={e => setEditNickname(e.target.value)}
+            {...register('nickname')}
+            value={watchedNickname}
             placeholder={MYPAGE_TEXTS.PROFILE.NICKNAME_PLACEHOLDER}
             fullWidth
             fontSize="medium"
             textColor="title"
             disabled={!isEditMode}
+            error={!!errors.nickname?.message}
+            errorMessage={errors.nickname?.message}
           />
           <div className={STYLES.textFieldDivider}>
             <span className={STYLES.hintText}>{MYPAGE_TEXTS.PROFILE.NICKNAME_HINT}</span>
           </div>
           <TextField
-            value={editBio}
-            onChange={e => setEditBio(e.target.value)}
+            {...register('bio')}
+            value={watchedBio}
             placeholder={MYPAGE_TEXTS.PROFILE.BIO_PLACEHOLDER}
             fullWidth
             fontSize="light"
             textColor="gray78"
             className="mt-3 mb-3"
             disabled={!isEditMode}
+            error={!!errors.bio?.message}
+            errorMessage={errors.bio?.message}
           />
         </div>
       ) : (

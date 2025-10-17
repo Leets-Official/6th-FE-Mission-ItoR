@@ -11,6 +11,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({
   onBlur,
   type = 'text',
   error = false,
+  errorMessage,
   name,
   variant = 'default',
   backgroundColor = 'transparent',
@@ -20,25 +21,30 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({
   fullWidth = false,
 }, ref) => {
   return (
-    <div
-      className={clsx(
-        textFieldVariants({ variant, backgroundColor, disabled, fullWidth }),
-        error && 'border-error',
-        className
+    <>
+      <div
+        className={clsx(
+          textFieldVariants({ variant, backgroundColor, disabled, fullWidth }),
+          error && 'border-error',
+          className
+        )}
+      >
+        <input
+          ref={ref}
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          disabled={disabled}
+          className={inputVariants({ textColor, fontSize })}
+        />
+      </div>
+      {error && errorMessage && (
+        <span className="text-error text-xs mt-1">{errorMessage}</span>
       )}
-    >
-      <input
-        ref={ref}
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        disabled={disabled}
-        className={inputVariants({ textColor, fontSize })}
-      />
-    </div>
+    </>
   );
 });
 

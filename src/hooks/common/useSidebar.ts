@@ -61,7 +61,7 @@ export const useSidebar = () => {
   };
 
   const handleWriteGitlog = () => {
-    // TODO: 글쓰기 페이지 라우팅
+    navigate('/blog/write');
     dispatchClose();
   };
 

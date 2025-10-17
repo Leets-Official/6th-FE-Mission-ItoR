@@ -24,6 +24,7 @@ interface TextFieldStyleProps {
   fontSize?: FontSize;
   fullWidth?: boolean;
   error?: boolean;
+  errorMessage?: string;
 }
 
 // Textarea 스타일 Props

@@ -40,6 +40,7 @@ const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: 'onChange',
@@ -54,7 +55,22 @@ const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {
     },
   });
 
-  const onSubmit = (data: SignupFormData) => {
+  // isEditMode가 false로 변경되면 폼을 초기값으로 리셋
+  useEffect(() => {
+    if (!isEditMode) {
+      reset({
+        email: user?.email || '',
+        password: '',
+        passwordConfirm: '',
+        name: user?.name || '',
+        birthDate: user?.birthDate || '',
+        nickname: user?.nickName || '',
+        bio: user?.bio || '',
+      });
+    }
+  }, [isEditMode, user, reset]);
+
+  const onSubmit = (_data: SignupFormData) => {
     // TODO: API 호출로 프로필 업데이트
   };
 
