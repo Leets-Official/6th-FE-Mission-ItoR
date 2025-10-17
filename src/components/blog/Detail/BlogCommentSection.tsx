@@ -1,9 +1,11 @@
 import { FC } from 'react';
 import { useModalStore } from '@/stores/useModalStore';
+import { useBlogComment } from '@/hooks';
 import { tv } from 'tailwind-variants';
 import Spacer from '@/components/common/Spacer/Spacer';
 import CommentItem from '@/components/blog/Comment/CommentItem';
 import CommentInput from '@/components/blog/Comment/CommentInput';
+import Modal from '@/components/common/Modal/Modal';
 import { BLOG_TEXTS } from '@/constants';
 import { Comment } from '@/types/blog';
 
@@ -31,9 +33,10 @@ const blogCommentSection = tv({
   },
 });
 
-const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments, isLoggedIn = false, currentUserNickName = 'User' }) => {
+const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments: initialComments, isLoggedIn = false, currentUserNickName = 'User' }) => {
   const styles = blogCommentSection();
-  const { openModal } = useModalStore();
+  const { modalType, confirmButtonText, onModalConfirm, openModal, closeModal } = useModalStore();
+  const { comments, handleCommentSubmit, handleCommentDeleteClick } = useBlogComment(initialComments, currentUserNickName);
 
   return (
     <div className={styles.container()} data-comment-section>
@@ -65,13 +68,14 @@ const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments, isLoggedIn 
               profileUrl={comment.profileUrl}
               createdAt={comment.createdAt}
               isOwner={comment.isOwner}
+              onDelete={handleCommentDeleteClick}
             />
           ))}
         </div>
       )}
       <Spacer height="sm" className="w-full max-w-content" />
       {isLoggedIn ? (
-        <CommentInput nickName={currentUserNickName} />
+        <CommentInput nickName={currentUserNickName} onSubmit={handleCommentSubmit} />
       ) : (
         <div className={styles.loginPromptWrapper()}>
           <div className={styles.loginPromptInner()}>
@@ -86,6 +90,19 @@ const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments, isLoggedIn 
         </div>
       )}
       <Spacer height="lg" className="w-full max-w-content" />
+
+      {modalType === 'delete' && (
+        <Modal
+          isOpen={true}
+          onClose={closeModal}
+          onDelete={onModalConfirm}
+          cancelButtonText={BLOG_TEXTS.COMMENTS.DELETE_MODAL.CANCEL}
+          confirmButtonText={confirmButtonText || BLOG_TEXTS.COMMENTS.DELETE_MODAL.CONFIRM}
+          confirmButtonVariant="danger"
+        >
+          <p className="text-sm font-regular text-black">{BLOG_TEXTS.COMMENTS.DELETE_MODAL.TITLE}</p>
+        </Modal>
+      )}
     </div>
   );
 };

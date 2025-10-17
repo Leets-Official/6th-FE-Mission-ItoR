@@ -13,6 +13,14 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
   const styles = commentInputStyles();
   const profileStyle = profileStyles();
 
+  const handleSubmit = () => {
+    if (!hasContent) return;
+    if (onSubmit) {
+      onSubmit(comment);
+      setComment(''); // 입력창 초기화
+    }
+  };
+
   return (
     <div className={styles.container()}>
       <div className={styles.inputWrapper()}>
@@ -36,6 +44,7 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
             intent="gray"
             variant={hasContent ? 'solid' : 'outline'}
             size="comment"
+            onClick={handleSubmit}
           >
             {BLOG_TEXTS.COMMENTS.SUBMIT_BUTTON}
           </Button>

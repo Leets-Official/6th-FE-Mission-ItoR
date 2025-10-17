@@ -5,6 +5,7 @@ export interface CommentItemProps {
   profileUrl: string;
   createdAt: string;
   isOwner: boolean;
+  onDelete?: (commentId: number) => void;
 }
 
 export interface CommentInputProps {
