@@ -20,8 +20,8 @@ const TextField: React.FC<TextFieldProps> = ({
   const baseStyles = "border rounded-[4px] focus:outline-none transition-colors duration-200";
 
   const sizeStyles: Record<TextFieldSize, string> = {
-    sm: "w-[656px] h-[46px] px-[16px] py-[12px] text-[14px]",
-    lg: "w-[656px] h-[62px] px-[16px] py-[12px] text-[32px]",
+    sm: "w-full h-[46px] px-[16px] py-[12px] text-[14px]",
+    lg: "w-full h-[62px] px-[16px] py-[12px] text-[32px]",
   };
 
   const variantStyles: Record<TextFieldVariant, string> = {

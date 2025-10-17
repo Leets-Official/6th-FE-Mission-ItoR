@@ -1,10 +1,10 @@
 import React from "react";
-import TestFrame from "./components/testusecomponents/useFrame";
+import Blogfind from "./pages/Blogfind";
 
 function App() {
   return (
     <>
-      <TestFrame/>
+      <Blogfind/>
     </>
   )
 }

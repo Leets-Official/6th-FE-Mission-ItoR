@@ -4,7 +4,7 @@ import CreateIcon from "@/assets/svgs/create.svg?react";
 import ChatIcon from "@/assets/svgs/chat.svg?react";
 import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
 import ReorderIcon from "@/assets/svgs/reorder.svg?react";
-
+import GitLog from "@/assets/svgs/Frame7.svg?react";
 
 type HeaderVariant = "write" | "detail" | "edit";
 
@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ variant }) => {
             <ReorderIcon className="w-6 h-6 text-gray-700" />
           </button>
           <div className="font-normal" style={{ fontFamily: "Smooch, sans-serif", fontSize: "20px" }}>
-            GITLOG
+            <GitLog/>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PaginationButton from "./PaginationButton";
-import LeftIcon from "@/assets/svgs/left.svg?react";
+import LeftIcon from "@/assets/svgs/Left.svg?react";
 import RightIcon from "@/assets/svgs/right.svg?react";
 
 
@@ -14,8 +14,7 @@ type PaginationProps = {
 
 const Pagination: React.FC<PaginationProps> = ({
   variant = "grayBlack",
-  totalPages = 5,
-  currentPage = 1,
+  totalPages = 5, //현재는 하드코딩 추후 API 연동 필요
 }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
