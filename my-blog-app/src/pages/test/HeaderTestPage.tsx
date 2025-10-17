@@ -21,7 +21,7 @@ export default function HeaderTestPage() {
       <PageHeader
         title='GITLOG'
         rightContent={
-          <div className='flex gap-2'>
+          <div className='flex gap-6'>
             <ChatIcon />
             <MoreIcon />
           </div>
