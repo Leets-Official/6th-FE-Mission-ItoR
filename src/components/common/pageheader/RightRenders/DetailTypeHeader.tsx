@@ -1,9 +1,10 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { ChatIcon, MoreVertIcon } from '@/assets/icons/common';
 import Icon from '@/components/common/Icon/Icon';
 import DropdownMenu from '@/components/common/Dropdown/DropdownMenu';
 import Modal from '@/components/common/Modal/Modal';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useDetailTypeHeader } from '@/hooks';
 import { PAGEHEADER_TEXTS } from '@/constants';
 
 interface DetailTypeHeaderProps {
@@ -12,28 +13,15 @@ interface DetailTypeHeaderProps {
 
 export const DetailTypeHeader: FC<DetailTypeHeaderProps> = ({ isOwner = false }) => {
   const { isLoggedIn } = useAuthStore();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const handleChatClick = () => {
-    // 댓글 섹션 스크롤
-    const commentSection = document.querySelector('[data-comment-section]');
-    if (commentSection) {
-      commentSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleEdit = () => {
-    // TODO: 수정하기 기능 구현
-  };
-
-  const handleDelete = () => {
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    // TODO: 실제 삭제 API 호출
-    setIsDeleteModalOpen(false);
-  };
+  const {
+    handleChatClick,
+    handleEdit,
+    handleDelete,
+    handleConfirmDelete,
+    handleCloseDeleteModal,
+    isDeleteModalOpen,
+    modalTexts,
+  } = useDetailTypeHeader();
 
   const dropdownItems = [
     {
@@ -75,15 +63,15 @@ export const DetailTypeHeader: FC<DetailTypeHeaderProps> = ({ isOwner = false })
       </div>
       <Modal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={handleCloseDeleteModal}
         onDelete={handleConfirmDelete}
-        confirmButtonText={PAGEHEADER_TEXTS.DETAIL.MODAL.CONFIRM}
-        cancelButtonText={PAGEHEADER_TEXTS.DETAIL.MODAL.CANCEL}
+        confirmButtonText={modalTexts.confirm}
+        cancelButtonText={modalTexts.cancel}
         confirmButtonVariant="danger"
       >
         <div className="flex flex-col items-start gap-2">
-          <p className="text-base font-medium text-black">{PAGEHEADER_TEXTS.DETAIL.MODAL.DELETE_TITLE}</p>
-          <p className="text-sm font-light text-gray-56">{PAGEHEADER_TEXTS.DETAIL.MODAL.DELETE_DESCRIPTION}</p>
+          <p className="text-base font-medium text-black">{modalTexts.deleteTitle}</p>
+          <p className="text-sm font-light text-gray-56">{modalTexts.deleteDescription}</p>
         </div>
       </Modal>
     </>
