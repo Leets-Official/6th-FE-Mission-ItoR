@@ -10,9 +10,11 @@ import TextFiledTestPage from '../pages/test/TextFiledTestPage'
 import TextFiledSetTestPage from '../pages/test/TextFiledSetTestPage'
 import ProfileImageTestPage from '@/pages/test/ProfileImageTestPage'
 import SidebarTestPage from '@/pages/test/SidebarTestPage'
+import PaginationTestPage from '@/pages/test/PaginationTestPage'
+import HomePage from '@/pages/HomePage'
 
 const router = createBrowserRouter([
-  { path: '/', element: <div>홈 화면</div> },
+  { path: '/', element: <HomePage /> },
   { path: '/test/button', element: <ButtonTestPage /> },
   { path: '/test/toast', element: <ToastTestPage /> },
   { path: '/test/menu', element: <MenuTestPage /> },
@@ -24,6 +26,7 @@ const router = createBrowserRouter([
   { path: '/test/textfiledset', element: <TextFiledSetTestPage /> },
   { path: '/test/profileimage', element: <ProfileImageTestPage /> },
   { path: '/test/sidebar', element: <SidebarTestPage /> },
+  { path: '/test/pagination', element: <PaginationTestPage /> },
 ])
 
 export default router
