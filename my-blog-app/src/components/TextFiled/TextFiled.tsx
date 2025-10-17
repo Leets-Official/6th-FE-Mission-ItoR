@@ -7,6 +7,7 @@ type TextFiledProps = {
   placeholder?: string
   value?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  className?: string
 }
 
 export default function TextFiled({
@@ -15,6 +16,7 @@ export default function TextFiled({
   placeholder = 'Text field',
   value,
   onChange,
+  className = '',
 }: TextFiledProps) {
   const baseStyle =
     'flex items-center gap-[10px] w-[656px] px-4 py-3 rounded border font-sans bg-transparent'
@@ -39,7 +41,7 @@ export default function TextFiled({
       onChange={onChange}
       placeholder={placeholder}
       disabled={state === 'disabled'}
-      className={clsx(baseStyle, sizeStyle[size], stateStyle[state])}
+      className={clsx(baseStyle, sizeStyle[size], stateStyle[state], className)}
     />
   )
 }

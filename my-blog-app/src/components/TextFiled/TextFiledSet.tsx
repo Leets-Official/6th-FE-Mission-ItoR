@@ -5,6 +5,9 @@ type TextFiledSetProps = {
   placeholder?: string
   helperText?: string
   showHelper?: boolean
+  value?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  inputClassName?: string
 }
 
 export default function TextFiledSet({
@@ -12,6 +15,9 @@ export default function TextFiledSet({
   placeholder = 'Text filed',
   helperText,
   showHelper = false,
+  value,
+  onChange,
+  inputClassName,
 }: TextFiledSetProps) {
   return (
     <div className={`flex flex-col w-[688px] ${showHelper ? 'gap-1' : 'gap-3'}`}>
@@ -21,7 +27,14 @@ export default function TextFiledSet({
       </label>
 
       {/* 인풋 */}
-      <TextFiled size='small' state='default' placeholder={placeholder} />
+      <TextFiled
+        size='small'
+        state='default'
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={inputClassName}
+      />
 
       {/* 주의 문구 */}
       {showHelper && helperText && (
