@@ -6,5 +6,7 @@ export interface ModalProps {
   onConfirm?: () => void;
   confirmText?: string;
   cancelText?: string;
+  confirmColor?: string;
+  cancelColor?: string;
   children?: React.ReactNode;
 }

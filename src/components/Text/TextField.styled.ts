@@ -5,7 +5,7 @@ export const base =
 
 export const variants: Record<TextFieldVariant, string> = {
   default:
-    "border border-brand-lightGray text-brand-black placeholder-brand-gray bg-brand-white focus:border-brand-blue",
+    "border border-brand-lightGray text-brand-black placeholder-brand-lightGray bg-brand-white focus:border-brand-blue",
   input:
     "border border-brand-lightGray text-brand-black placeholder-brand-black bg-brand-white focus:border-brand-blue",
   active:

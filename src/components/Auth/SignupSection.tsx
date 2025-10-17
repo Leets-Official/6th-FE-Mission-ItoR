@@ -1,7 +1,11 @@
 import { KakaoIcon } from "@/assets/icons";
-import * as styles from "./SignupSection.styled";
+import * as styles from "./Signup.styled";
 
-const SignupSection = () => {
+interface SignupSectionProps {
+  onSelect?: (type: "email" | "kakao") => void;
+}
+
+const SignupSection: React.FC<SignupSectionProps> = ({ onSelect }) => {
   return (
     <div className={styles.container}>
       <div className={styles.logoBox}>
@@ -10,9 +14,13 @@ const SignupSection = () => {
       </div>
 
       <div className={styles.buttonGroup}>
-        <button className={styles.emailButton}>이메일로 회원가입</button>
+        <button className={styles.emailButton} onClick={() => onSelect && onSelect("email")}>
+          이메일로 회원가입
+        </button>
+
         <p className={styles.divider}>또는</p>
-        <button className={styles.kakaoButton}>
+
+        <button className={styles.kakaoButton} onClick={() => onSelect && onSelect("kakao")}>
           <KakaoIcon className="h-5 w-5" />
           카카오로 회원가입
         </button>

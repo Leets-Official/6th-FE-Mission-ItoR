@@ -18,6 +18,8 @@ export default function Modal({
   onConfirm,
   confirmText = "삭제하기",
   cancelText = "취소",
+  confirmColor,
+  cancelColor,
   children,
 }: ModalProps): JSX.Element | null {
   if (!open) return null;
@@ -35,10 +37,10 @@ export default function Modal({
             </div>
 
             <div className={actions}>
-              <button onClick={onClose} className={buttonCancel}>
+              <button onClick={onClose} className={`${buttonCancel} ${cancelColor ?? ""}`}>
                 {cancelText}
               </button>
-              <button onClick={onConfirm} className={buttonConfirm}>
+              <button onClick={onConfirm} className={`${buttonConfirm} ${confirmColor ?? ""}`}>
                 {confirmText}
               </button>
             </div>

@@ -3,14 +3,13 @@ export const overlay =
 
 export const container = "bg-white rounded-lg shadow-lg w-full max-w-md p-6 flex flex-col gap-4";
 
-export const title = "text-sm leading-snug py-3";
+export const title = "text-base leading-snug py-3";
 
 export const description = "text-brand-gray text-xs py-2";
 
 export const actions = "flex gap-3 mt-4";
 
 export const buttonCancel =
-  "flex-1 px-4 py-3 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 text-center";
+  "flex-1 px-4 py-3 rounded-md text-center transition-colors border border-brand-lightGray";
 
-export const buttonConfirm =
-  "flex-1 px-4 py-3 rounded-md border border-red-500 bg-red-500 text-white hover:bg-red-600 text-center";
+export const buttonConfirm = "flex-1 px-4 py-3 rounded-md text-center transition-colors";

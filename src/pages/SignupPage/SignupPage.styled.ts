@@ -11,5 +11,9 @@ export const signupHeaderText = `
 `;
 
 export const signupSection = `
-  flex flex-1 items-start justify-center py-4 md:py-20 md:px-14
+  flex flex-1 items-center justify-center py-4 md:py-10 md:px-14
+`;
+
+export const subtitle = `
+  text-sm text-brand-gray mt-2
 `;
