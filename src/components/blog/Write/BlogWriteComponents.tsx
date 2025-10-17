@@ -1,6 +1,6 @@
 import { FC } from 'react';
+import { tv } from 'tailwind-variants';
 import Button from '@/components/common/Button/Button';
-import { cn } from '@/utils/cn';
 import { BLOG_TEXTS } from '@/constants/blog.constants';
 import type { EditorMode } from '@/types/blog';
 
@@ -19,45 +19,59 @@ interface ModeToggleButtonsProps {
   };
 }
 
+const titleInputVariants = tv({
+  base: [
+    'w-full bg-transparent outline-none self-stretch',
+    'text-2xl font-medium leading-[160%] tracking-[-0.08px]',
+    'text-black placeholder:text-gray-56',
+    'overflow-hidden text-ellipsis whitespace-nowrap',
+  ],
+});
+
+// ModeToggleButtons 스타일 variants
+const modeToggleVariants = tv({
+  slots: {
+    container: 'flex gap-2 mb-4',
+    markdownButton: 'hidden md:inline-flex',
+  },
+});
+
 // TitleInput 컴포넌트
 export const TitleInput: FC<TitleInputProps> = ({ title, setTitle }) => {
-  const titleInputClasses = cn(
-    "w-full bg-transparent outline-none self-stretch",
-    "text-2xl font-medium leading-[160%] tracking-[-0.08px]",
-    "text-black placeholder:text-gray-56",
-    "overflow-hidden text-ellipsis whitespace-nowrap"
-  );
-
   return (
     <input
       type="text"
       placeholder={BLOG_TEXTS.WRITE.PLACEHOLDERS.TITLE}
       value={title}
       onChange={(e) => setTitle(e.target.value)}
-      className={titleInputClasses}
+      className={titleInputVariants()}
     />
   );
 };
 
 // ModeToggleButtons 컴포넌트
-export const ModeToggleButtons: FC<ModeToggleButtonsProps> = ({ 
-  setMode, 
-  getButtonProps 
-}) => (
-  <div className="flex gap-2 mb-4">
-    <Button
-      onClick={() => setMode('basic')}
-      {...getButtonProps('basic')}
-    >
-      {BLOG_TEXTS.WRITE.MODES.BASIC}
-    </Button>
-    
-    <Button
-      onClick={() => setMode('markdown')}
-      {...getButtonProps('markdown')}
-      className="hidden md:inline-flex"
-    >
-      {BLOG_TEXTS.WRITE.MODES.MARKDOWN}
-    </Button>
-  </div>
-);
+export const ModeToggleButtons: FC<ModeToggleButtonsProps> = ({
+  setMode,
+  getButtonProps
+}) => {
+  const styles = modeToggleVariants();
+
+  return (
+    <div className={styles.container()}>
+      <Button
+        onClick={() => setMode('basic')}
+        {...getButtonProps('basic')}
+      >
+        {BLOG_TEXTS.WRITE.MODES.BASIC}
+      </Button>
+
+      <Button
+        onClick={() => setMode('markdown')}
+        {...getButtonProps('markdown')}
+        className={styles.markdownButton()}
+      >
+        {BLOG_TEXTS.WRITE.MODES.MARKDOWN}
+      </Button>
+    </div>
+  );
+};

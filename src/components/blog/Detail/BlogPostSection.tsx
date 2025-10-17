@@ -39,7 +39,9 @@ const BlogPostSection: FC<BlogPostSectionProps> = ({ title, contents }) => {
           .sort((a, b) => a.contentOrder - b.contentOrder)
           .map((item, index) => {
             if (item.contentType === 'TEXT') {
-              return <PostBody key={index} content={item.content} />;
+              return <PostBody key={index} content={item.content} isMarkdown={false} />;
+            } else if (item.contentType === 'MARKDOWN') {
+              return <PostBody key={index} content={item.content} isMarkdown={true} />;
             } else if (item.contentType === 'IMAGE') {
               return (
                 <div key={index} className={styles.imageWrapper()}>

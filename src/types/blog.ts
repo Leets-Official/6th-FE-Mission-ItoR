@@ -1,7 +1,7 @@
 export interface ContentItem {
   contentOrder: number;
   content: string;
-  contentType: 'TEXT' | 'IMAGE';
+  contentType: 'TEXT' | 'IMAGE' | 'MARKDOWN';
 }
 
 export interface Comment {

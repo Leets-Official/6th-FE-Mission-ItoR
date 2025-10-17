@@ -1,19 +1,36 @@
 import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import BlogPostSection from '@/components/blog/Detail/BlogPostSection';
 import BlogCommentSection from '@/components/blog/Detail/BlogCommentSection';
 import BlogAuthorSection from '@/components/blog/Detail/BlogAuthorSection';
 import { mockPostDetail, mockPostDetailNoComments, mockPostDetailWithMyComments, mockPostDetailByHongGilDong } from '@/_mocks_/mockPostDetail';
 import Spacer from '@/components/common/Spacer/Spacer';
 import { useAuthStore } from '@/stores/useAuthStore';
+import type { PostDetail } from '@/types/blog';
 
 const BlogDetailPage = () => {
   const { id } = useParams();
   const { isLoggedIn, user } = useAuthStore();
-  const postData =
-    id === '1001' ? mockPostDetailByHongGilDong :
-    id === '998' ? mockPostDetailNoComments :
-    id === '997' ? mockPostDetailWithMyComments :
-    mockPostDetail;
+  const [postData, setPostData] = useState<PostDetail>(mockPostDetail);
+
+  useEffect(() => {
+    // TODO: API 연결 시 삭제예정 - localStorage에서 저장된 블로그 찾기
+    const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    const savedPost = savedPosts.find((post: PostDetail) => post.postId === Number(id));
+
+    if (savedPost) {
+      // TODO: API 연결 시 삭제예정 - localStorage에서 찾은 경우
+      setPostData(savedPost);
+    } else {
+      // Mock 데이터에서 찾기
+      const mockData =
+        id === '1001' ? mockPostDetailByHongGilDong :
+        id === '998' ? mockPostDetailNoComments :
+        id === '997' ? mockPostDetailWithMyComments :
+        mockPostDetail;
+      setPostData(mockData);
+    }
+  }, [id]);
 
   return (
     <>

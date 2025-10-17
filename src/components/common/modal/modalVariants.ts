@@ -29,7 +29,7 @@ export const modalCancelButtonVariants = tv({
   base: 'flex px-3 py-2 justify-center items-center gap-2 flex-1 text-sm font-normal text-black text-right rounded-sm border border-gray-96',
 });
 
-// 모달 확인 버튼 스타일 (variant 지원)
+// 모달 확인 버튼 스타일
 export const modalConfirmButtonVariants = tv({
   base: 'flex px-3 py-2 justify-center items-center gap-2 flex-1 rounded-sm text-sm font-normal border-0 cursor-pointer',
   variants: {

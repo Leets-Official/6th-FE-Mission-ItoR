@@ -1,16 +1,22 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import type ReactQuill from 'react-quill';
-import type { EditorMode } from '@/types/blog';
 import { BLOG_TEXTS } from '@/constants/blog.constants';
 import { getEditorStyles } from '@/styles/editor.styles';
 import { useImageUpload } from './useImageUpload';
+import { useBlogWriteStore } from '@/stores/useBlogWriteStore';
 
 export const useBlogWrite = () => {
-  // 1. 에디터 상태 관리
-  const [title, setTitle] = useState('');
-  const [mode, setMode] = useState<EditorMode>('basic');
-  const [basicContent, setBasicContent] = useState('');
-  const [markdownContent, setMarkdownContent] = useState('');
+  // 1. 에디터 상태 관리 (Store에서 가져오기)
+  const {
+    title,
+    setTitle,
+    mode,
+    setMode,
+    basicContent,
+    setBasicContent,
+    markdownContent,
+    setMarkdownContent,
+  } = useBlogWriteStore();
 
   // ReactQuill 에디터 ref
   const quillRef = useRef<ReactQuill>(null);
