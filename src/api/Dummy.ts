@@ -1,13 +1,23 @@
-import Img from "@/assets/svgs/Img.png";
+import Img from "@/assets/svgs/Img.png"; // 게시글/프로필 기본 이미지
+
+export interface Comment {
+  id: number;
+  author: string;
+  content: string;
+  createdAt: string;
+}
 
 export interface Post {
   id: number;
-  title: string;      // 게시글 제목
-  content: string;    // 게시글 내용
-  author: string;     // 작성자
-  createdAt: string;  // 작성일
+  title: string;      
+  content: string;    
+  author: string;     
+  createdAt: string;  
   commentsCount: number;
-  photoUrl?: string;  // 사진 있을 때
+  comments?: Comment[];
+  photoUrl?: string;      // 게시글 사진
+  profileUrl?: string;    // 작성자 프로필 사진
+  profileIntro?: string;  // 작성자 한줄소개
 }
 
 export const dummyPosts: Post[] = [
@@ -19,7 +29,14 @@ export const dummyPosts: Post[] = [
     author: "닉네임",
     createdAt: "2025-10-17",
     commentsCount: 3,
+    comments: [
+      { id: 1, author: "철수", content: "응원합니다!", createdAt: "2025-10-17" },
+      { id: 2, author: "영희", content: "좋은 글이에요!", createdAt: "2025-10-17" },
+      { id: 3, author: "민수", content: "많이 배우고 갑니다.", createdAt: "2025-10-17" },
+    ],
     photoUrl: Img,
+    profileUrl: Img,
+    profileIntro: "블로그 운영자 한줄소개 예시",
   },
   {
     id: 2,
@@ -29,6 +46,8 @@ export const dummyPosts: Post[] = [
     author: "김철수",
     createdAt: "2025-10-16",
     commentsCount: 0,
+    profileUrl: Img,
+    profileIntro: "김철수 소개",
   },
   {
     id: 3,
@@ -37,16 +56,23 @@ export const dummyPosts: Post[] = [
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Mapper가 어떻게 작동하는지 부터 다시 되짚어보며 문제를 해결해봤다.",
     author: "이영희",
     createdAt: "2025-10-15",
-    commentsCount: 5,
+    commentsCount: 2,
+    comments: [
+      { id: 1, author: "민수", content: "정말 유익한 글이에요.", createdAt: "2025-10-15" },
+      { id: 2, author: "철수", content: "많이 배우고 갑니다.", createdAt: "2025-10-15" },
+    ],
     photoUrl: Img,
+    profileUrl: Img,
+    profileIntro: "이영희 블로그 소개",
   },
   {
     id: 4,
     title: "16 Title one line",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+    content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
     author: "박민수",
     createdAt: "2025-10-14",
-    commentsCount: 2,
+    commentsCount: 0,
+    profileUrl: Img,
+    profileIntro: "박민수 소개",
   },
 ];
