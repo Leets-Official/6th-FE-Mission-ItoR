@@ -38,10 +38,11 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
     <div ref={dropdownRef} className={clsx('relative inline-block', className)}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="cursor-pointer bg-transparent border-none p-0"
+        className="cursor-pointer bg-transparent border-none p-0 m-0 font-inherit inline-flex items-center"
         aria-label={ariaLabel}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        type="button"
       >
         {trigger}
       </button>

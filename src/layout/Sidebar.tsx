@@ -30,7 +30,15 @@ const Sidebar: FC<SidebarProps> = ({ className = '', isLoggedIn = false }) => {
       <div className={sidebarStyles.mainContent}>
         <div className={sidebarStyles.profileSection}>
           <div className={sidebarStyles.profileIconWrapper}>
-            <Profile1Icon />
+            {isLoggedIn && user?.profileImage ? (
+              <img
+                src={user.profileImage}
+                alt={`${user.nickName}의 프로필`}
+                className={sidebarStyles.profileImage}
+              />
+            ) : (
+              <Profile1Icon />
+            )}
           </div>
           {isLoggedIn ? (
             <div className={sidebarStyles.userInfoContainer}>

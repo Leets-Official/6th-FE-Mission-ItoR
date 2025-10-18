@@ -10,7 +10,7 @@ import { useEditProfile } from '@/hooks';
 
 const STYLES = {
   profileContent: 'flex flex-col w-full max-w-content py-3 px-4 items-start gap-2.5',
-  profileImageWrapper: 'relative flex w-16 h-16 items-center gap-2.5 aspect-square rounded-sm overflow-hidden',
+  profileImageWrapper: 'relative flex w-16 h-16 items-center gap-2.5 aspect-square rounded-full overflow-hidden',
   profileImage: 'w-full h-full object-cover',
   profileEditIcon: 'absolute right-0 bottom-0 w-6 h-6 flex-shrink-0',
   profileEditFields: 'flex flex-col w-full max-w-content px-4 items-start',

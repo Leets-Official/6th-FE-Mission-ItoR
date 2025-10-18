@@ -6,6 +6,7 @@ export const sidebarStyles = {
   //프로필
   profileSection: 'flex flex-col gap-2.5',
   profileIconWrapper: 'px-4',
+  profileImage: 'w-16 h-16 rounded-full object-cover',
 
   // 사용자 정보
   userInfoContainer: 'flex max-w-sidebar-content flex-col items-start justify-center gap-3 self-stretch px-5 py-3',
