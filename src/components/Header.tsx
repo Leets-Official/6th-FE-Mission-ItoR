@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; 
 import Button from "./Button";
 import CreateIcon from "@/assets/svgs/create.svg?react";
 import ChatIcon from "@/assets/svgs/chat.svg?react";
@@ -10,9 +11,23 @@ type HeaderVariant = "write" | "detail" | "edit";
 
 interface HeaderProps {
   variant: HeaderVariant;
+  onPost?: () => void; // 게시하기 클릭 시 호출
 }
 
-const Header: React.FC<HeaderProps> = ({ variant }) => {
+const Header: React.FC<HeaderProps> = ({ variant, onPost }) => {
+  const navigate = useNavigate(); 
+
+  // 깃로그 쓰기 버튼 클릭 시 이동 처리
+  const handleWriteClick = () => {
+    // 로그인 여부를 가정: true라고 치고 바로 이동
+    const isLoggedIn = true;
+    if (isLoggedIn) {
+      navigate("/write");
+    } else {
+      navigate("/login"); // 로그인 안 되어 있으면 로그인 페이지로
+    }
+  };
+
   return (
     <header className="relative w-[1366px] h-[72px] bg-white/90 backdrop-blur-sm">
       <div className="absolute inset-0 flex items-center justify-between pl-[12px] pr-[16px]">
@@ -21,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ variant }) => {
             <ReorderIcon className="w-6 h-6 text-gray-700" />
           </button>
           <div className="font-normal" style={{ fontFamily: "Smooch, sans-serif", fontSize: "20px" }}>
-            <GitLog/>
+            <GitLog />
           </div>
         </div>
 
@@ -30,6 +45,7 @@ const Header: React.FC<HeaderProps> = ({ variant }) => {
             <Button
               variant="whiteGrayIcon"
               icon={<CreateIcon className="w-6 h-6 text-gray-700" />}
+              onClick={handleWriteClick}
             >
               깃로그 쓰기
             </Button>
@@ -44,10 +60,17 @@ const Header: React.FC<HeaderProps> = ({ variant }) => {
 
           {variant === "edit" && (
             <div className="flex items-center gap-6">
-              <button type="button" className="text-[14px] text-[#FF3F3F]">
+              <button
+                type="button"
+                className="text-[14px] text-[#FF3F3F]"
+              >
                 삭제하기
               </button>
-              <button type="button" className="text-[14px] text-black">
+              <button
+                type="button"
+                className="text-[14px] text-black"
+                onClick={onPost} // 여기서 BlogWrite에서 넘긴 handlePost 호출
+              >
                 게시하기
               </button>
             </div>

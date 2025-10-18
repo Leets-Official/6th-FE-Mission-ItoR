@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-
 import Blogfind from "./pages/Blogfind";
 import BlogDetail from "./pages/BlogDetail";
 import { dummyPosts } from "@/api/Dummy";
+import BlogWrite from "./pages/BlogWrite";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* 블로그 찾기 페이지 */}
         <Route path="/" element={<Blogfind />} />
-        {/* 블로그 상세 페이지 */}
         <Route path="/post/:id" element={<BlogDetailWrapper />} />
+        <Route path="/write" element={<BlogWrite/>} />
       </Routes>
     </Router>
   );

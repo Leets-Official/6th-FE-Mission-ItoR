@@ -13,6 +13,17 @@ const Blogfind: React.FC = () => {
     navigate(`/post/${post.id}`);
   };
 
+  const handleClickWrite = () => {
+    // 로그인 상태 확인 (지금은 true로 가정)
+    const isLoggedIn = true;
+    if (!isLoggedIn) {
+      navigate("/login");
+    } else {
+      navigate("/write"); // BlogWrite 페이지로 이동
+    }
+  };
+
+
   return (
     <div className="flex flex-col items-center w-full">
       <Header variant="write" />

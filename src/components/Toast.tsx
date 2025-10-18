@@ -32,7 +32,7 @@ const Toast: React.FC<ToastProps> = ({ variant }) => {
       borderColor: "border-[#FF3F3F]",
       textColor: "text-[#FF3F3F]",
       icon: <Done  className="text-[#FF3F3F]" />,
-      message: "내용을 입력해주세요!",
+      message: "내용을 입력해주세요",
       width: "w-[171px]",
       height: "h-[40px]",
     },
