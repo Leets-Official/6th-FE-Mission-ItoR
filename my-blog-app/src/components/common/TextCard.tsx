@@ -6,6 +6,7 @@ type TextCardProps = {
   title?: string
   subtitle?: string
   children?: ReactNode
+  className?: string
 }
 
 export default function TextCard({ variant = 'body', title, subtitle, children }: TextCardProps) {
