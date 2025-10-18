@@ -1,12 +1,8 @@
 import { FC } from 'react';
 import { tv } from 'tailwind-variants';
-import Spacer from '@/components/common/Spacer/Spacer';
-import TextBox from '@/components/common/Textbox/TextBox';
-import Textarea from '@/components/common/Text/Textarea';
-import Button from '@/components/common/Button/Button';
-import Modal from '@/components/common/Modal/Modal';
+import { Spacer, TextBox, Textarea, Button, Modal } from '@/components';
 import LoginModal from '@/components/auth/LoginModal';
-import { AddPhotoAlternateIcon } from '@/assets/icons/common';
+import { AddPhotoAlternateIcon } from '@/assets/icons';
 import { useSignup } from '@/hooks';
 import { MYPAGE_TEXTS, SIGNUP_FORM_FIELDS } from '@/constants';
 import profileImage from '@/assets/profile.png';

@@ -1,8 +1,6 @@
 import { FC } from 'react';
-import { ChatIcon, MoreVertIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/Icon/Icon';
-import DropdownMenu from '@/components/common/Dropdown/DropdownMenu';
-import Modal from '@/components/common/Modal/Modal';
+import { ChatIcon, MoreVertIcon } from '@/assets/icons';
+import { Icon, DropdownMenu, Modal } from '@/components';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useDetailTypeHeader } from '@/hooks';
 import { PAGEHEADER_TEXTS } from '@/constants';

@@ -1,10 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import BlogPostSection from '@/components/blog/Detail/BlogPostSection';
-import BlogCommentSection from '@/components/blog/Detail/BlogCommentSection';
-import BlogAuthorSection from '@/components/blog/Detail/BlogAuthorSection';
+import { BlogPostSection, BlogCommentSection, BlogAuthorSection, Spacer } from '@/components';
 import { mockPostDetail, mockPostDetailNoComments, mockPostDetailWithMyComments, mockPostDetailByHongGilDong } from '@/_mocks_/mockPostDetail';
-import Spacer from '@/components/common/Spacer/Spacer';
 import { useAuthStore } from '@/stores/useAuthStore';
 import type { PostDetail } from '@/types/blog';
 

@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { tv } from 'tailwind-variants';
-import Spacer from '@/components/common/Spacer/Spacer';
-import MyPageHeader from '@/components/mypage/MyPageHeader';
+import { Spacer, MyPageHeader } from '@/components';
 import { MYPAGE_TEXTS } from '@/constants';
 
 interface BlogAuthorSectionProps {

@@ -2,10 +2,7 @@ import { FC } from 'react';
 import { useModalStore } from '@/stores/useModalStore';
 import { useBlogComment } from '@/hooks';
 import { tv } from 'tailwind-variants';
-import Spacer from '@/components/common/Spacer/Spacer';
-import CommentItem from '@/components/blog/Comment/CommentItem';
-import CommentInput from '@/components/blog/Comment/CommentInput';
-import Modal from '@/components/common/Modal/Modal';
+import { Spacer, CommentItem, CommentInput, Modal } from '@/components';
 import { BLOG_TEXTS } from '@/constants';
 import { Comment } from '@/types/blog';
 

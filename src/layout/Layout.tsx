@@ -1,5 +1,5 @@
 import Sidebar from '@/layout/Sidebar';
-import PageHeader from '@/components/common/Pageheader/PageHeader';
+import { PageHeader } from '@/components';
 import { useSidebar, usePageHeaderType, useEditProfile } from '@/hooks';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Outlet, useParams, useLocation } from 'react-router-dom';

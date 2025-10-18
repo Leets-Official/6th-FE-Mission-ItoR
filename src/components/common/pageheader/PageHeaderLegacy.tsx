@@ -1,5 +1,5 @@
-import { AddPhotoAlternateIcon, FolderOpenIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/Icon/Icon';
+import { AddPhotoAlternateIcon, FolderOpenIcon } from '@/assets/icons';
+import { Icon } from '@/components';
 import clsx from 'clsx';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';

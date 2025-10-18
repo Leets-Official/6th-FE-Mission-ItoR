@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import Spacer from '@/components/common/Spacer/Spacer';
-import BlogPreviewCard from '@/components/blog/Main/MainPreviewCard';
+import { Spacer, MainPreviewCard as BlogPreviewCard } from '@/components';
 import { mockPosts } from '@/_mocks_/mockposts';
 import { MyProfileFormProps } from '@/types/mypage';
 

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Modal from '@/components/common/Modal/Modal';
+import { Modal } from '@/components';
 import { PAGEHEADER_TEXTS } from '@/constants';
 import { useWriteTypeHeader } from '@/hooks';
 

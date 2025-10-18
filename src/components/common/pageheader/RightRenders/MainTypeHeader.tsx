@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreateIcon } from '@/assets/icons/common';
+import { CreateIcon } from '@/assets/icons';
 import Icon from '@/components/common/Icon/Icon';
 import { useAuthStore } from '@/stores/useAuthStore';
 import Modal from '@/components/common/Modal/Modal';

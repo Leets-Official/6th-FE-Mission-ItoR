@@ -1,9 +1,7 @@
 import { FC } from 'react';
 import { cn } from '@/utils/cn';
 import { Outlet } from 'react-router-dom';
-import Spacer from '@/components/common/Spacer/Spacer';
-import PostHeader from '@/components/blog/Post/PostHeader';
-import MyPageHeader from '@/components/mypage/MyPageHeader';
+import { Spacer, PostHeader, MyPageHeader } from '@/components';
 import { useMyPage } from '@/hooks';
 import { MYPAGE_TEXTS } from '@/constants';
 

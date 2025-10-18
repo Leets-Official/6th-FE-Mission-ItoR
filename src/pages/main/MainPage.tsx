@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import BlogPreviewCard from '@/components/blog/Main/MainPreviewCard';
-import Spacer from '@/components/common/Spacer/Spacer';
+import { MainPreviewCard as BlogPreviewCard, Spacer } from '@/components';
 import { mockPosts } from '@/_mocks_/mockposts';
 import { mockPostDetail, mockPostDetailNoComments } from '@/_mocks_/mockPostDetail';
 import type { PostDetail } from '@/types/blog';

@@ -2,9 +2,8 @@ import { FC, useRef } from 'react';
 import { cn } from '@/utils/cn';
 import { useBodyScrollLock, useFocusTrap } from '@/hooks';
 import LoginPage from '@/pages/auth/LoginPage';
-import Icon from '@/components/common/Icon/Icon';
-import { ClearIcon } from '@/assets/icons/common';
-import Portal from '@/components/common/Portal/Portal';
+import { Icon, Portal } from '@/components';
+import { ClearIcon } from '@/assets/icons';
 
 interface LoginModalProps {
   className?: string;

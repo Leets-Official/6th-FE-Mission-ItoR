@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode, FC, useCallback } from 'react';
-import Toast from '@/components/common/Toast/Toast';
-import Portal from '@/components/common/Portal/Portal';
+import { Toast, Portal } from '@/components';
 import { tv } from 'tailwind-variants';
 
 export type ToastType = 'positive' | 'warning';

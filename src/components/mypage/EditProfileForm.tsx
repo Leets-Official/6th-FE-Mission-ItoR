@@ -2,8 +2,7 @@ import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { cn } from '@/utils/cn';
-import Spacer from '@/components/common/Spacer/Spacer';
-import Textarea from '@/components/common/Text/Textarea';
+import { Spacer, Textarea } from '@/components';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useEditModeStore } from '@/stores/useEditModeStore';
 import { SIGNUP_FORM_FIELDS } from '@/constants';
@@ -24,13 +23,13 @@ const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {
   const { isEditMode, setEditMode } = useEditModeStore();
 
   useEffect(() => {
-    // 페이지 진입 시 편집 모드 초기화
+    // 초기화
     return () => {
       setEditMode(false);
     };
   }, [setEditMode]);
 
-  // 편집 모드에 따라 필드 활성화/비활성화
+  // 필드 활성화/비활성화
   const isFieldDisabled = (fieldName: string) => {
     if (!isEditMode) return true;
     return DISABLED_FIELDS.includes(fieldName);
@@ -55,7 +54,7 @@ const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {
     },
   });
 
-  // isEditMode가 false로 변경되면 폼을 초기값으로 리셋
+  // 초기값으로 리셋
   useEffect(() => {
     if (!isEditMode) {
       reset({

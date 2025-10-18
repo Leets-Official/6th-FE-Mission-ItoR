@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import profileImage from '@/assets/profile.png';
-import PostInput from '@/components/blog/Post/PostInput';
-import Button from '@/components/common/Button/Button';
+import { PostInput, Button } from '@/components';
 import { BLOG_TEXTS } from '@/constants';
 import { CommentInputProps } from '@/components/blog/Comment/CommentTypes';
 import { profileStyles, commentInputStyles } from '@/components/blog/Comment/Comment.styles';

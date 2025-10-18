@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { cn } from '@/utils/cn';
 import { useLoginForm } from '@/hooks';
-import Spacer from '@/components/common/Spacer/Spacer';
+import { Spacer } from '@/components';
 import * as variants from '@/components/auth/LoginFormVariants';
 import { AUTH_TEXTS } from '@/constants';
 import { InputSection, ErrorMessage, SnsDivider } from '@/components/auth/LoginFormComponents';

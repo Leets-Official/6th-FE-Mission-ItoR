@@ -1,5 +1,5 @@
 import * as variants from '@/components/auth/LoginFormVariants';
-import { KakaoIcon } from '@/assets/icons/common';
+import { KakaoIcon } from '@/assets/icons';
 import { AUTH_TEXTS } from '@/constants';
 
 interface EmailLoginButtonProps {

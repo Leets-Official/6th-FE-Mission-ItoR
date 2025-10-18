@@ -1,5 +1,5 @@
-import { CreateIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/Icon/Icon';
+import { CreateIcon } from '@/assets/icons';
+import { Icon } from '@/components';
 import { textBoxTextVariants, textBoxVariants } from '@/components/common/Textbox/TextBoxVariants';
 import clsx from 'clsx';
 import { FC, ReactNode } from 'react';

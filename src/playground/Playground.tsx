@@ -1,4 +1,4 @@
-import { CreateIcon } from '@/assets/icons/common';
+import { CreateIcon } from '@/assets/icons';
 import PostBody from '@/components/blog/Post/PostBody';
 import PostCard from '@/components/blog/Post/PostCard';
 import PostHeader from '@/components/blog/Post/PostHeader';

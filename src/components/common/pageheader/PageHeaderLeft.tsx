@@ -1,4 +1,4 @@
-import { ReorderIcon } from '@/assets/icons/common';
+import { ReorderIcon } from '@/assets/icons';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHeaderLeftProps } from '@/types/pageheader';

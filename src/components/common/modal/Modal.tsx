@@ -8,7 +8,7 @@ import {
 import { cn } from '@/utils/cn';
 import { FC, ReactNode } from 'react';
 import { useBodyScrollLock } from '@/hooks';
-import Portal from '@/components/common/Portal/Portal';
+import { Portal } from '@/components';
 
 interface ModalProps {
   children: ReactNode;

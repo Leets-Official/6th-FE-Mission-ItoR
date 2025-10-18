@@ -1,9 +1,6 @@
 import { FC } from 'react';
 import { tv } from 'tailwind-variants';
-import Spacer from '@/components/common/Spacer/Spacer';
-import PostHeader from '@/components/blog/Post/PostHeader';
-import PostDetails from '@/components/blog/Post/PostDetails';
-import PostBody from '@/components/blog/Post/PostBody';
+import { Spacer, PostHeader, PostDetails, PostBody } from '@/components';
 import { ContentItem } from '@/types/blog';
 
 interface BlogPostSectionProps {
@@ -23,6 +20,20 @@ const blogPostSection = tv({
 const BlogPostSection: FC<BlogPostSectionProps> = ({ title, contents }) => {
   const styles = blogPostSection();
 
+  const contentRenderers = {
+    TEXT: (content: string, index: number) => (
+      <PostBody key={index} content={content} isMarkdown={false} />
+    ),
+    MARKDOWN: (content: string, index: number) => (
+      <PostBody key={index} content={content} isMarkdown={true} />
+    ),
+    IMAGE: (content: string, index: number) => (
+      <div key={index} className={styles.imageWrapper()}>
+        <img src={content} alt={`content-${index}`} className={styles.image()} />
+      </div>
+    ),
+  };
+
   return (
     <>
       <div className={styles.section()}>
@@ -38,18 +49,8 @@ const BlogPostSection: FC<BlogPostSectionProps> = ({ title, contents }) => {
         {contents
           .sort((a, b) => a.contentOrder - b.contentOrder)
           .map((item, index) => {
-            if (item.contentType === 'TEXT') {
-              return <PostBody key={index} content={item.content} isMarkdown={false} />;
-            } else if (item.contentType === 'MARKDOWN') {
-              return <PostBody key={index} content={item.content} isMarkdown={true} />;
-            } else if (item.contentType === 'IMAGE') {
-              return (
-                <div key={index} className={styles.imageWrapper()}>
-                  <img src={item.content} alt={`content-${index}`} className={styles.image()} />
-                </div>
-              );
-            }
-            return null;
+            const renderer = contentRenderers[item.contentType];
+            return renderer ? renderer(item.content, index) : null;
           })}
         <Spacer height="md" className="w-full max-w-content" />
       </div>

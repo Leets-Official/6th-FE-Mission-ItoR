@@ -1,5 +1,5 @@
-import { Profile1Icon } from '@/assets/icons/common';
-import { Button, Spacer } from '@/components';
+import { Profile1Icon } from '@/assets/icons';
+import { Button, Spacer, Modal } from '@/components';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useModalStore } from '@/stores/useModalStore';
 import { cn } from '@/utils/cn';
@@ -8,7 +8,6 @@ import { SIDEBAR_TEXTS, MYPAGE_TEXTS } from '@/constants';
 import { sidebarStyles } from './Sidebar.styles';
 import { useSidebar } from '@/hooks';
 import { LoginModal } from '@/components/auth';
-import Modal from '@/components/common/Modal/Modal';
 
 interface SidebarProps {
   className?: string;

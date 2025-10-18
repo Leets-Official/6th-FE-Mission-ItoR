@@ -1,8 +1,7 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PostCard } from '@/components/blog/Post';
+import { PostCard, PostDetails } from '@/components';
 import MainPreviewImage from './MainPreviewImage';
-import PostDetails from '@/components/blog/Post/PostDetails';
 
 interface BlogPreviewCardProps {
   className?: string;

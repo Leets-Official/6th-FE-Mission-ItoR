@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import PostHeader from '@/components/blog/Post/PostHeader';
-import TextBox from '@/components/common/Textbox/TextBox';
-import TextField from '@/components/common/Text/TextField';
+import { PostHeader, TextBox, TextField } from '@/components';
 import { MYPAGE_TEXTS } from '@/constants';
-import { SettingsIcon, EditProfileIcon } from '@/assets/icons/common';
+import { SettingsIcon, EditProfileIcon } from '@/assets/icons';
 import profileImage from '@/assets/profile.png';
 import { MyPageHeaderProps } from '@/types/mypage';
 import { useEditProfile } from '@/hooks';

@@ -1,10 +1,7 @@
 import { FC } from 'react';
 import profileImage from '@/assets/profile.png';
-import PostBody from '@/components/blog/Post/PostBody';
-import Spacer from '@/components/common/Spacer/Spacer';
-import Icon from '@/components/common/Icon/Icon';
-import DropdownMenu from '@/components/common/Dropdown/DropdownMenu';
-import MoreVertIcon from '@/assets/icons/common/more_vert.svg?react';
+import { PostBody, Spacer, Icon, DropdownMenu } from '@/components';
+import { MoreVertIcon } from '@/assets/icons';
 import { formatCommentDate } from '@/utils/date';
 import { CommentItemProps } from '@/components/blog/Comment/CommentTypes';
 import { profileStyles, commentItemStyles } from '@/components/blog/Comment/Comment.styles';

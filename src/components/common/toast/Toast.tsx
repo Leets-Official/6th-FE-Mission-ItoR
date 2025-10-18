@@ -1,4 +1,4 @@
-import { DoneIcon, ErrorOutlineIcon } from '@/assets/icons/common';
+import { DoneIcon, ErrorOutlineIcon } from '@/assets/icons';
 import { cn } from '@/utils/cn';
 import { type VariantProps } from 'class-variance-authority';
 import { FC, ReactNode } from 'react';
