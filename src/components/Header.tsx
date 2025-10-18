@@ -7,41 +7,33 @@ import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
 import ReorderIcon from "@/assets/svgs/reorder.svg?react";
 import GitLog from "@/assets/svgs/Frame7.svg?react";
 import DropdownMenu from "./DropdownMenu";
+import { type Post } from "@/api/Dummy";
 
 type HeaderVariant = "write" | "detail" | "edit";
 
 interface HeaderProps {
   variant: HeaderVariant;
-  onPost?: () => void; // 게시하기 클릭 시 호출
+  onPost?: () => void; // 게시하기 클릭 시
   isLoggedIn?: boolean; 
   isAuthor?: boolean;
+  post?: Post; // Detail에서 전달받는 post
 }
-
- const dropdownItems = [
-    {
-      label: "수정하기",
-    },
-    {
-      label: "삭제하기",
-    },
-  ];
 
 const Header: React.FC<HeaderProps> = ({ 
   variant, 
   onPost,
-  isLoggedIn = false, // 기본값 설정
-  isAuthor = false,   // 기본값 설정
+  isLoggedIn = false,
+  isAuthor = false,
+  post,
 }) => {
   const navigate = useNavigate(); 
 
-  // 깃로그 쓰기 버튼 클릭 시 이동 처리
   const handleWriteClick = () => {
-    // 로그인 여부를 가정: true라고 치고 바로 이동
-    const isLoggedIn = true;
-    if (isLoggedIn) {
+    const loggedIn = true; // 실제 로그인 체크 로직으로 교체 가능
+    if (loggedIn) {
       navigate("/write");
     } else {
-      navigate("/login"); // 로그인 안 되어 있으면 로그인 페이지로
+      navigate("/login");
     }
   };
 
@@ -71,16 +63,22 @@ const Header: React.FC<HeaderProps> = ({
           {variant === "detail" && (
             <div className="flex items-center gap-4">
               <ChatIcon className="w-6 h-6 text-gray-700" />
-              {isLoggedIn && isAuthor && (
-              <DropdownMenu
-                trigger={<MoreVertIcon className="w-6 h-6 text-gray-700 cursor-pointer" />}
-                items={[
-                  { label: "수정하기", onClick: () => navigate("/write") },
-                  { label: "삭제하기", onClick: () => console.log("삭제 기능 실행") },
-                ]}
-                position="right"
-              />
-            )}
+              {isLoggedIn && isAuthor && post && (
+                <DropdownMenu
+                  trigger={<MoreVertIcon className="w-6 h-6 text-gray-700 cursor-pointer" />}
+                  items={[
+                    { 
+                      label: "수정하기", 
+                      onClick: () => navigate("/write", { state: post }) // 기존 내용 전달
+                    },
+                    { 
+                      label: "삭제하기", 
+                      onClick: () => console.log("삭제 기능 실행") 
+                    },
+                  ]}
+                  position="right"
+                />
+              )}
             </div>
           )}
 
@@ -95,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 className="text-[14px] text-black"
-                onClick={onPost} // 여기서 BlogWrite에서 넘긴 handlePost 호출
+                onClick={onPost}
               >
                 게시하기
               </button>
