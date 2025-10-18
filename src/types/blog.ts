@@ -31,7 +31,7 @@ export interface CreatePostPayload {
   contents: ContentItem[];
 }
 
-// 에디터 모드 타입
+// 에디터 모드
 export type EditorMode = 'basic' | 'markdown';
 
 // 에디터 데이터 타입

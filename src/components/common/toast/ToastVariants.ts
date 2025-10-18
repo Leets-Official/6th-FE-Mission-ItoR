@@ -27,7 +27,7 @@ export const toastIconVariants = tv({
 });
 
 export const toastTextVariants = tv({
-  base: 'btn-text',
+  base: 'btn-text whitespace-nowrap',
   variants: {
     type: {
       positive: 'text-positive',

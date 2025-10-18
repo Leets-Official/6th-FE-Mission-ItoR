@@ -16,7 +16,7 @@ interface BlogWriteStore {
 
   // 유틸리티
   reset: () => void; // 페이지 이탈 시 초기화
-  getCurrentContent: () => string; // 현재 모드에 맞는 content 반환
+  getCurrentContent: () => string; // content 반환
 }
 
 const initialState = {

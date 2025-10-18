@@ -14,7 +14,7 @@ export const PublicRoute = ({ children }: PublicRouteProps) => {
   }, [checkLoginStatus]);
 
   if (isLoading) {
-    return null; // TODO: 로딩 스피너 추가
+    return null;
   }
 
   if (isLoggedIn) {

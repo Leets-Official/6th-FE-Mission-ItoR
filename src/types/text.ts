@@ -37,7 +37,5 @@ interface TextareaStyleProps {
   error?: string;
 }
 
-// 최종 Props 타입
 export type TextFieldProps = ComponentWithBase<BaseInputProps & TextFieldStyleProps>;
-
 export type TextareaProps = ComponentWithBase<BaseInputProps & TextareaStyleProps>;

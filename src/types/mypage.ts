@@ -21,9 +21,6 @@ export type MyPageHeaderProps = ComponentWithBase<{
 }>;
 
 export type MyPageFormProps = ComponentWithChildren;
-
 export type EditProfileFormProps = BaseComponentProps;
-
 export type MyProfileFormProps = BaseComponentProps;
-
 export type SignupFormProps = BaseComponentProps;

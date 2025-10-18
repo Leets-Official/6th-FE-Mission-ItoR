@@ -19,13 +19,14 @@ export const useWriteTypeHeader = () => {
       undefined,
       () => {
         reset();
+        closeModal();
         navigate(-1);
       },
       PAGEHEADER_TEXTS.WRITE.MODAL.CONFIRM
     );
   };
 
-  //게시하기 버튼 클릭 핸들러
+  //게시 버튼 클릭 핸들러
   const handlePublishClick = () => {
     const content = getCurrentContent();
     const { mode } = useBlogWriteStore.getState();
@@ -73,7 +74,7 @@ export const useWriteTypeHeader = () => {
 
     reset();
 
-    // 작성한 블로그 상세 페이지로 이동하고 성공 토스트 표시
+    // 토스트 표시
     navigate(`/blog/${newPostId}`);
     showToast('저장되었습니다!', 'positive');
   };
@@ -82,7 +83,7 @@ export const useWriteTypeHeader = () => {
     // 핸들러
     handleDeleteClick,
     handlePublishClick,
-    // 모달 상태 (컴포넌트에서 모달 렌더링에 사용)
+    // 모달 상태
     modalType,
     confirmButtonText,
     onModalConfirm,

@@ -38,7 +38,7 @@ export type RenderProps = HeaderActionProps & {
   isOwner?: boolean;
 };
 
-// DetailTypeHeader 훅 반환 타입
+// DetailTypeHeader 훅
 export interface DetailTypeHeaderReturn {
   handleChatClick: () => void;
   handleEdit: () => void;
@@ -54,7 +54,7 @@ export interface DetailTypeHeaderReturn {
   };
 }
 
-// WriteTypeHeader 훅 반환 타입
+// WriteTypeHeader 훅
 export interface WriteTypeHeaderReturn {
   handleDeleteClick: () => void;
   handlePublishClick: () => void;
