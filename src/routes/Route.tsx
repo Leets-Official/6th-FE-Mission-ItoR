@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import PostDetailPage from '../pages/PostDetailPage';
 
+
 // 라우터 "객체" 생성
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },

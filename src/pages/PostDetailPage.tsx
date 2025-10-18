@@ -1,3 +1,4 @@
+// src/pages/PostDetailPage.tsx
 import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useParams, useSearchParams, Navigate } from 'react-router-dom';
@@ -62,7 +63,7 @@ const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({ blocks }) =>
   const sorted = useMemo(() => [...blocks].sort((a, b) => a.order - b.order), [blocks]);
   return (
     <section className="flex flex-col items-center self-stretch">
-      {sorted.map(b =>
+      {sorted.map((b) =>
         b.type === 'IMAGE' ? (
           <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
             <img src={b.value} alt="" className="w-full h-auto object-cover rounded-[2px] bg-[var(--Gray96)]" />
@@ -161,22 +162,23 @@ const PostDetailPage: React.FC = () => {
   const [search] = useSearchParams();
   const isLoggedIn = search.get('login') === '1';
 
-  const post = POSTS.find(p => String(p.id) === id);
-  if (!post) return <Navigate to="/" replace />;
-
+  // ✅ 모든 훅은 조건 없이 최상단에서 호출
   const detail = useMemo(() => postDetailMock, []);
+  const [comments, setComments] = useState<CommentModel[]>(detail.comments);
+  const [input, setInput] = useState('');
+
+  // 파생값
   const author: Post['author'] = {
     name: detail.author.nickName,
     initial: detail.author.nickName.charAt(0).toUpperCase(),
     bio: detail.author.introduction ?? '',
   };
-
-  /* 댓글 상태: mock 원본만 사용 */
-  const [comments, setComments] = useState<CommentModel[]>(detail.comments);
-  const [input, setInput] = useState('');
-
   const dateText = formatDate(detail.createdAt);
   const commentCount = comments.length;
+
+  // 라우팅 가드는 훅 호출 후에
+  const post = POSTS.find((p) => String(p.id) === id) ?? null;
+  if (!post) return <Navigate to="/" replace />;
 
   return (
     <div className="min-h-dvh w-full flex flex-col bg-[var(--White)]">
@@ -205,7 +207,7 @@ const PostDetailPage: React.FC = () => {
                 const v = input.trim();
                 if (!v || !isLoggedIn) return;
                 const next: CommentModel = {
-                  id: comments.length ? Math.max(...comments.map(x => x.id)) + 1 : 1,
+                  id: comments.length ? Math.max(...comments.map((x) => x.id)) + 1 : 1,
                   content: v,
                   nickName: author.name,
                   profileUrl: detail.author.profileUrl,
@@ -218,7 +220,7 @@ const PostDetailPage: React.FC = () => {
             />
 
             <div className="w-full">
-              {comments.map(c => (
+              {comments.map((c) => (
                 <CommentRow key={c.id} c={c} />
               ))}
             </div>
