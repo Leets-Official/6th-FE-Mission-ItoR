@@ -12,9 +12,11 @@ import ProfileImageTestPage from '@/pages/test/ProfileImageTestPage'
 import SidebarTestPage from '@/pages/test/SidebarTestPage'
 import PaginationTestPage from '@/pages/test/PaginationTestPage'
 import HomePage from '@/pages/HomePage'
+import SignUpPage from '@/pages/SignUpPage'
 
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
+  { path: 'signup', element: <SignUpPage /> },
   { path: '/test/button', element: <ButtonTestPage /> },
   { path: '/test/toast', element: <ToastTestPage /> },
   { path: '/test/menu', element: <MenuTestPage /> },
