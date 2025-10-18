@@ -12,7 +12,7 @@ export default function ProfileImage({ src, label = 'G', size = 'md' }: ProfileI
 
   return (
     <div
-      className='relative flex items-center justify-center'
+      className='relative flex items-start justify-start'
       style={{ width: `${svg}px`, height: `${svg}px` }}
     >
       <svg
