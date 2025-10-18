@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
-import type { ProfilePhotoProps } from "@ui/Profile.types";
-import { wrapBase, bySize, letterBase, letterBySize } from "@ui/Profile.variants";
+import type { ProfilePhotoProps } from "./Profile.types";
+import { wrapBase, bySize, letterBase, letterBySize } from "./Profile.variants";
 
 const ProfilePhoto: React.FC<ProfilePhotoProps> = ({
   size = "lg",
