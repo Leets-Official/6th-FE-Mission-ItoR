@@ -4,6 +4,8 @@ import { type Post } from "@/api/Dummy";
 import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 import Img from "@/assets/svgs/Img.png";
 import Button from "@/components/Button"; 
+import DropdownMenu from "@/components/DropdownMenu";
+import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
 
 interface BlogDetailProps {
   post: Post;

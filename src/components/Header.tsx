@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({
               <DropdownMenu
                 trigger={<MoreVertIcon className="w-6 h-6 text-gray-700 cursor-pointer" />}
                 items={[
-                  { label: "수정하기", onClick: () => navigate("/edit") },
+                  { label: "수정하기", onClick: () => navigate("/write") },
                   { label: "삭제하기", onClick: () => console.log("삭제 기능 실행") },
                 ]}
                 position="right"
