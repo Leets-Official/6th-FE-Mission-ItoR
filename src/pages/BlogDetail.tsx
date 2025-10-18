@@ -47,23 +47,19 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
       </div>
 
-      {/* 게시글 내용 */}
       <div className="w-[688px] p-4 text-gray-800 font-[Noto Sans KR] text-[14px] leading-[160%] mt-4 whitespace-pre-line">
         {post.content}
       </div>
 
       <LineEnd />
 
-      {/* 댓글 영역 */}
       <div className="flex flex-col w-[688px] max-w-[688px] mt-6">
         <div className="h-[54px] px-4 pt-4 pb-3 font-[Noto Sans KR] text-sm">
           댓글 <span className="text-[#00A1FF]">{post.commentsCount}</span>
         </div>
 
-        {/* 댓글 입력 영역 */}
         {isLoggedIn ? (
           <div className="w-[656px] border border-gray-300 rounded-md px-4 py-2 mb-4 flex flex-col gap-2">
-            {/* 상단 - 프로필 + 닉네임 */}
             <div className="flex items-center gap-2 mb-2 mt-2">
               <img
                 src={post.profileUrl || Img}
@@ -83,13 +79,12 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
               className="w-full h-[112px]  rounded-md px-4 py-3 text-[14px] font-light font-[Noto Sans KR] leading-[160%] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
             <LineEnd />
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-">
             <Button variant="grayBorder">
               등록
             </Button>
           </div>
           </div>
-          
           
         ) : (
           <div className="h-[130px] px-4 py-3 flex flex-col">
@@ -104,7 +99,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
 
       </div>
 
-      {/* 작성자 정보 영역 */}
       <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
         <div className="flex flex-col items-start w-[688px] py-4">
           <img
