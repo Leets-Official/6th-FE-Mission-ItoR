@@ -27,7 +27,7 @@ export const buttonVariants = tv({
   },
   compoundVariants: [
     { intent: 'gray', variant: 'solid', class: '!bg-dark !text-white hover:!bg-dark/50' },
-    { intent: 'gray', variant: 'outline', class: 'text-gray border-gray bg-transparent hover:bg-gray-96' },
+    { intent: 'gray', variant: 'outline', class: 'text-gray border-gray bg-transparent hover:bg-gray hover:text-white' },
     {
       intent: 'primary',
       variant: 'outline',

@@ -19,4 +19,16 @@ export const SIDEBAR_TEXTS = {
       CANCEL: '취소',
     },
   } as const;
+
+// 사이드바 관련 라우트
+export const SIDEBAR_ROUTES = {
+  HOME: '/',
+  BLOG_WRITE: '/blog/write',
+} as const;
+
+// 사이드바 관련 모달 타입
+export const SIDEBAR_MODAL_TYPES = {
+  LOGIN: 'login',
+  LOGOUT: 'logout',
+} as const;
   

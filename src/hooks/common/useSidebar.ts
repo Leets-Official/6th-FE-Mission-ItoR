@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useModalStore } from '@/stores/useModalStore';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { MYPAGE_ROUTES, SIDEBAR_TEXTS } from '@/constants';
+import { MYPAGE_ROUTES, SIDEBAR_TEXTS, SIDEBAR_ROUTES, SIDEBAR_MODAL_TYPES } from '@/constants';
 
 export const useSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -52,7 +52,7 @@ export const useSidebar = () => {
 
   // 네비게이션
   const handleStartGitlog = () => {
-    openModal('login');
+    openModal(SIDEBAR_MODAL_TYPES.LOGIN);
   };
 
   const handleMyGitlog = () => {
@@ -61,7 +61,7 @@ export const useSidebar = () => {
   };
 
   const handleWriteGitlog = () => {
-    navigate('/blog/write');
+    navigate(SIDEBAR_ROUTES.BLOG_WRITE);
     dispatchClose();
   };
 
@@ -74,11 +74,11 @@ export const useSidebar = () => {
     const confirmLogout = () => {
       logout();
       closeModal();
-      navigate('/');
+      navigate(SIDEBAR_ROUTES.HOME);
       dispatchClose();
     };
 
-    openModal('logout', SIDEBAR_TEXTS.MODAL.LOGOUT_MESSAGE, confirmLogout, SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM);
+    openModal(SIDEBAR_MODAL_TYPES.LOGOUT, SIDEBAR_TEXTS.MODAL.LOGOUT_MESSAGE, confirmLogout, SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM);
   };
 
   return {
