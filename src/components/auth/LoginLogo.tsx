@@ -1,12 +1,17 @@
 import { FC } from 'react';
+import { cn } from '@/utils/cn';
 import { LogoWebp } from '@/assets/logo';
 import { logoWrapperStyle, logoContainerStyle, textboxContainerStyle, textboxTextStyle } from './LoginLogo.styles';
 
-const LoginLogo: FC = () => {
+interface LoginLogoProps {
+  isDark?: boolean;
+}
+
+const LoginLogo: FC<LoginLogoProps> = ({ isDark = false }) => {
   return (
     <div className={logoWrapperStyle}>
       <div className={logoContainerStyle}>
-        <img src={LogoWebp} alt="Gitlog Logo" />
+        <img src={LogoWebp} alt="Gitlog Logo" className={cn(isDark && 'brightness-0')} />
       </div>
       <div className={textboxContainerStyle}>
         <div className={textboxTextStyle}>You can make anything by writing</div>

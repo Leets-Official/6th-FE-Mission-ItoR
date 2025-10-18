@@ -1,91 +1,72 @@
 import { FC } from 'react';
 import { cn } from '@/utils/cn';
-import Spacer from '@/components/common/Spacer/Spacer';
+import { useLoginForm } from '@/hooks';
+import { Spacer } from '@/components';
+import * as variants from '@/components/auth/LoginFormVariants';
+import { AUTH_TEXTS } from '@/constants';
 import {
-  loginFormVariants,
-  loginSectionContainerVariants,
-  snsDividerContainerVariants,
-  snsDividerLineVariants,
-  snsDividerTextVariants,
-  inputContainerVariants,
-  inputFieldVariants,
-  loginButtonVariants,
-  snsButtonContentVariants,
-  snsButtonTextVariants,
-  signupButtonVariants,
-  signupTextVariants,
-} from './LoginFormVariants';
-import { KakaoIcon } from '@/assets/icons/common';
-import { AUTH_TEXTS } from '@/constants/auth.constants';
+  InputSection,
+  ErrorMessage,
+  SnsDivider,
+  EmailLoginButton,
+  KakaoLoginButton,
+  SignupButton,
+} from '@/components/auth/LoginFormComponents';
 
 interface LoginFormProps {
   className?: string;
+  onClose?: () => void;
+  showInputSection?: boolean;
+  showSignupButton?: boolean;
+  emailButtonText?: string;
+  kakaoButtonText?: string;
+  dividerText?: string;
+  dividerLineColor?: string;
+  onEmailClick?: () => void;
+  onKakaoClick?: () => void;
 }
 
-// 섹션별 함수들
-const InputSection = () => (
-  <div className={loginSectionContainerVariants({ align: 'start', gap: 'small' })}>
-    <div className={inputContainerVariants()}>
-      <input type="email" placeholder={AUTH_TEXTS.LOGIN_FORM.PLACEHOLDERS.EMAIL} className={inputFieldVariants()} />
-    </div>
-    <div className={inputContainerVariants()}>
-      <input
-        type="password"
-        placeholder={AUTH_TEXTS.LOGIN_FORM.PLACEHOLDERS.PASSWORD}
-        className={inputFieldVariants()}
-      />
-    </div>
-  </div>
-);
-
-const EmailLoginButton = ({ onClick }: { onClick: () => void }) => (
-  <div className={loginSectionContainerVariants()}>
-    <button type="button" onClick={onClick} className={loginButtonVariants()}>
-      {AUTH_TEXTS.LOGIN_FORM.BUTTONS.EMAIL_LOGIN}
-    </button>
-  </div>
-);
-
-const SnsDivider = () => (
-  <div className={snsDividerContainerVariants()}>
-    <div className={snsDividerLineVariants()} />
-    <span className={snsDividerTextVariants()}>{AUTH_TEXTS.LOGIN_FORM.DIVIDER.SNS}</span>
-    <div className={snsDividerLineVariants()} />
-  </div>
-);
-
-const KakaoLoginButton = ({ onClick }: { onClick: () => void }) => (
-  <div className={loginSectionContainerVariants()}>
-    <button type="button" onClick={onClick} className={loginButtonVariants({ variant: 'kakao' })}>
-      <div className={snsButtonContentVariants()}>
-        <KakaoIcon />
-        <span className={snsButtonTextVariants({ provider: 'kakao' })} style={{ fontFamily: 'Apple SD Gothic Neo' }}>
-          {AUTH_TEXTS.LOGIN_FORM.BUTTONS.KAKAO_LOGIN}
-        </span>
-      </div>
-    </button>
-  </div>
-);
-
-const SignupButton = ({ onClick }: { onClick: () => void }) => (
-  <button type="button" onClick={onClick} className={signupButtonVariants()}>
-    <span className={signupTextVariants()}>{AUTH_TEXTS.LOGIN_FORM.BUTTONS.SIGNUP}</span>
-  </button>
-);
-
-const LoginForm: FC<LoginFormProps> = ({ className }) => {
-  const handleLogin = () => {};
-  const handleKakaoLogin = () => {};
-  const handleSignup = () => {};
+const LoginForm: FC<LoginFormProps> = ({
+  className,
+  onClose,
+  showInputSection = true,
+  showSignupButton = true,
+  emailButtonText = AUTH_TEXTS.LOGIN_FORM.BUTTONS.EMAIL_LOGIN,
+  kakaoButtonText = AUTH_TEXTS.LOGIN_FORM.BUTTONS.KAKAO_LOGIN,
+  dividerText = AUTH_TEXTS.LOGIN_FORM.DIVIDER.SNS,
+  dividerLineColor,
+  onEmailClick,
+  onKakaoClick,
+}) => {
+  const {
+    email,
+    password,
+    errorMessage,
+    setEmail,
+    setPassword,
+    handleLogin,
+    handleKeyDown,
+    handleKakaoLogin,
+    handleSignup,
+  } = useLoginForm(onClose);
 
   return (
-    <div className={cn(loginFormVariants(), className)}>
+    <div className={cn(variants.loginFormVariants(), className)}>
       <Spacer height="md" className="max-w-login-form-max min-w-login-form-min px-4 py-1" />
-      <InputSection />
-      <EmailLoginButton onClick={handleLogin} />
-      <SnsDivider />
-      <KakaoLoginButton onClick={handleKakaoLogin} />
-      <SignupButton onClick={handleSignup} />
+      {showInputSection && (
+        <InputSection
+          email={email}
+          password={password}
+          onEmailChange={setEmail}
+          onPasswordChange={setPassword}
+          onKeyDown={handleKeyDown}
+        />
+      )}
+      <ErrorMessage message={errorMessage} />
+      <EmailLoginButton onClick={onEmailClick || handleLogin} text={emailButtonText} />
+      <SnsDivider text={dividerText} lineColor={dividerLineColor} />
+      <KakaoLoginButton onClick={onKakaoClick || handleKakaoLogin} text={kakaoButtonText} />
+      {showSignupButton && <SignupButton onClick={handleSignup} />}
     </div>
   );
 };

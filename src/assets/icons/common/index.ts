@@ -16,6 +16,7 @@ import Profile3Icon from './profile_3.svg?react';
 import ReorderIcon from './reorder.svg?react';
 import SettingsIcon from './settings.svg?react';
 import KakaoIcon from './kakao.svg?react';
+import EditProfileIcon from './edit_profile.svg?react';
 
 export {
   AddPhotoAlternateIcon,
@@ -35,4 +36,5 @@ export {
   ReorderIcon,
   SettingsIcon,
   KakaoIcon,
+  EditProfileIcon,
 };

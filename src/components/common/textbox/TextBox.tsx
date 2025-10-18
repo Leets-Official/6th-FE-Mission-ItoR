@@ -1,5 +1,5 @@
-import { CreateIcon } from '@/assets/icons/common';
-import Icon from '@/components/common/Icon/Icon';
+import { CreateIcon } from '@/assets/icons';
+import { Icon } from '@/components';
 import { textBoxTextVariants, textBoxVariants } from '@/components/common/Textbox/TextBoxVariants';
 import clsx from 'clsx';
 import { FC, ReactNode } from 'react';
@@ -8,21 +8,41 @@ interface TextBoxProps {
   children: ReactNode;
   className?: string;
   showIcon?: boolean;
-  color?: 'default' | 'primary' | 'positive' | 'gray';
-  borderColor?: 'default' | 'primary' | 'positive' | 'gray' | 'transparent';
+  icon?: ReactNode;
+  color?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90' | 'gray-56';
+  borderColor?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90' | 'transparent';
+  onClick?: () => void;
+  asButton?: boolean;
 }
 
-const TextBox: FC<TextBoxProps> = ({ children, className = '', showIcon = false, color, borderColor }) => {
-  return (
-    <div className={clsx(textBoxVariants({ color, borderColor }), className)}>
-      {showIcon && (
-        <Icon size="sm">
-          <CreateIcon />
-        </Icon>
-      )}
+const TextBox: FC<TextBoxProps> = ({
+  children,
+  className = '',
+  showIcon = false,
+  icon,
+  color,
+  borderColor,
+  onClick,
+  asButton = false,
+}) => {
+  const content = (
+    <>
+      {showIcon && <Icon size="sm">{icon || <CreateIcon />}</Icon>}
       <span className={textBoxTextVariants({ color })}>{children}</span>
-    </div>
+    </>
   );
+
+  const baseClassName = clsx(textBoxVariants({ color, borderColor }), className);
+
+  if (asButton || onClick) {
+    return (
+      <button type="button" onClick={onClick} className={baseClassName}>
+        {content}
+      </button>
+    );
+  }
+
+  return <div className={baseClassName}>{content}</div>;
 };
 
 export default TextBox;

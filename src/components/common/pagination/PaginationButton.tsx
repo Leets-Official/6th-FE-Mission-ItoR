@@ -1,4 +1,4 @@
-import { NavigateBeforeIcon } from '@/assets/icons/common';
+import { NavigateBeforeIcon } from '@/assets/icons';
 import { type VariantProps } from 'class-variance-authority';
 import clsx from 'clsx';
 import { FC, ReactNode } from 'react';

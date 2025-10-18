@@ -3,32 +3,26 @@ import { FC } from 'react';
 
 interface SpacerProps {
   className?: string;
-  height?: 'sm' | 'md' | 'lg';
+  height?: 'sm' | 'md' | 'custom' | 'lg';
 }
 
 const Spacer: FC<SpacerProps> = ({ className = '', height = 'sm' }) => {
-  const getHeightClass = (h: 'sm' | 'md' | 'lg') => {
+  const getHeightClass = (h: 'sm' | 'md' | 'custom' | 'lg') => {
     switch (h) {
       case 'sm':
-        return 'h-5 max-h-5'; // 20px
+        return 'h-5'; // 20px
       case 'md':
-        return 'h-8 max-h-8'; // 32px
+        return 'h-8'; // 32px
+      case 'custom':
+        return 'h-14'; // 56px
       case 'lg':
-        return 'h-16 max-h-16'; // 64px
+        return 'h-16'; // 64px
       default:
-        return 'h-5 max-h-5';
+        return 'h-5';
     }
   };
 
-  return (
-    <div
-      className={clsx(
-        'flex max-w-content flex-shrink-0 items-start gap-2.5 self-stretch px-2.5 py-2.5',
-        getHeightClass(height),
-        className
-      )}
-    />
-  );
+  return <div className={clsx('flex max-w-content flex-shrink-0 items-start', getHeightClass(height), className)} />;
 };
 
 export default Spacer;
