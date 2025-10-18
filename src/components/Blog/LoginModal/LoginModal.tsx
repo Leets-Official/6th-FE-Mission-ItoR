@@ -14,27 +14,28 @@ import {
   kakaoButton,
   footer,
   closeButton,
+  errorText, // ✅ 추가
 } from "./LoginModal.styled";
 import { XIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import * as E from "@/utils/validators";
+import { LOGIN_ERROR_MESSAGES } from "@/utils/errorMessages";
 
 interface LoginModalProps {
   open: boolean;
   onClose: () => void;
-  onLogin?: (email: string, password: string) => void;
+  onLogin?: (email: string, password: string) => Promise<boolean> | void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -42,8 +43,29 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
 
   if (!open) return null;
 
-  const handleLogin = () => {
-    if (onLogin) onLogin(email, password);
+  const handleLogin = async () => {
+    const emailValidation = E.validateLoginEmail(email);
+    if (emailValidation) {
+      setEmailError(emailValidation);
+      setPasswordError("");
+      return;
+    }
+
+    setEmailError("");
+    setPasswordError("");
+
+    try {
+      const result = await onLogin?.(email, password);
+      if (result === false) {
+        if (email === "unknown@example.com") {
+          setEmailError(LOGIN_ERROR_MESSAGES.emailNotRegistered);
+        } else {
+          setPasswordError(LOGIN_ERROR_MESSAGES.wrongPassword);
+        }
+      }
+    } catch {
+      setPasswordError(LOGIN_ERROR_MESSAGES.wrongPassword);
+    }
   };
 
   const handleSignupClick = () => {
@@ -65,17 +87,22 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
 
         <div className={rightSection}>
           <div className={inputGroup}>
+            {/* 이메일 */}
             <TextField
               placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {emailError && <p className={errorText}>*{emailError}</p>}
+
+            {/* 비밀번호 */}
             <TextField
               placeholder="비밀번호"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {passwordError && <p className={errorText}>{passwordError}</p>}
           </div>
 
           <button className={loginButton} onClick={handleLogin}>

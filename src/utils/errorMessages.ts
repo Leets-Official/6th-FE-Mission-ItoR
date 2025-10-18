@@ -9,3 +9,9 @@ export const ERROR_MESSAGES = {
   BIRTH_INVALID: "날짜 형식이 올바르지 않습니다 (YYYY-MM-DD)",
   BIRTH_FUTURE: "2025년 10월 18일 이전의 수만 가능합니다",
 } as const;
+
+export const LOGIN_ERROR_MESSAGES = {
+  emailNotRegistered: "가입되지 않은 이메일입니다.",
+  invalidEmailFormat: "이메일 형식이 적합하지 않습니다.",
+  wrongPassword: "비밀번호가 일치하지 않습니다.",
+};

@@ -58,3 +58,5 @@ export const footer = `
 export const closeButton = `
   absolute top-4 right-4 text-brand-white hover:text-brand-gray
 `;
+
+export const errorText = "text-brand-red text-xs";
