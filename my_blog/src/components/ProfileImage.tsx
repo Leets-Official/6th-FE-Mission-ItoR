@@ -27,7 +27,10 @@ const ProfileImage = ({ src, size = 'md', onClick }: ProfileImageProps) => {
   return (
     <div onClick={onClick}>
       {src ? (
-        <img src={src} className={clsx('object-cover', sizeMap[size])} />
+        <img
+          src={src}
+          className={clsx('object-cover rounded-full', sizeMap[size])}
+        />
       ) : (
         <p
           className={clsx(
@@ -36,13 +39,13 @@ const ProfileImage = ({ src, size = 'md', onClick }: ProfileImageProps) => {
             fontSizeMap[size],
           )}
         >
-          <p
+          <span
             className={clsx(
               'absolute top-1/2 -translate-y-1/2 left-5/12 -translate-x-2/5 ',
             )}
           >
             {size !== 'xs' ? 'G' : ''}
-          </p>
+          </span>
         </p>
       )}
     </div>

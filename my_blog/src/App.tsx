@@ -1,25 +1,35 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {
+  TestForBlank,
+  TestForButton,
+  TestForDevider,
+  TestForDropdown,
+  TestForHeader,
+  TestForMenu,
+  TestForModal,
+  TestForPagination,
+  TestForProfileImage,
+  TestForProfileSidebar,
+  TestForText,
+  TestForTextField,
+  TestForToast,
+  TestForModalWrapper,
+} from './pages/test/index';
 
-// ? test pages 라우팅
-import TestForToast from './pages/test/TestForToast';
-import TestForMenu from './pages/test/TestForMenu';
-import TestForDropdown from './pages/test/TestForDropdown';
-import TestForModal from './pages/test/TestForModal';
-import TestForText from './pages/test/TestForText';
-import TestForBlank from './pages/test/TestForBlank';
-import TestForDevider from './pages/test/TestForDevider';
-import TestForTextField from './pages/test/TestForTextField';
-import TestForProfileImage from './pages/test/TestForProfileImage';
-import TestForButton from './pages/test/TestForButton';
-import TestForPagination from './pages/test/TestForPagination';
-import TestForHeader from './pages/test/TestForHeader';
-import TestForProfileSidebar from './pages/test/TestForProfileSidebar';
+import { MainPage } from './pages';
+import PostDetail from './pages/post/PostDetail';
+import PostNew from './pages/post/PostNew';
+// import { Layout } from './components/Layout';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home</div>} />
+        {/* <Route element={<Layout />}> */}
+        <Route path="/" element={<MainPage />} />
+        <Route path="/post/:postId" element={<PostDetail />} />
+        <Route path="/post/new" element={<PostNew />} />
+        {/* </Route> */}
 
         {/* Test Pages */}
         <Route path="/test/toast" element={<TestForToast />} />
@@ -38,6 +48,7 @@ function App() {
           path="/test/profile-sidebar"
           element={<TestForProfileSidebar />}
         />
+        <Route path="/test/modal-wrapper" element={<TestForModalWrapper />} />
       </Routes>
     </BrowserRouter>
   );
