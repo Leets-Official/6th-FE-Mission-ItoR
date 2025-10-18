@@ -29,6 +29,7 @@ export const MYPAGE_TEXTS = {
     NICKNAME_PLACEHOLDER: '닉네임',
     BIO_PLACEHOLDER: '한줄 소개',
     NICKNAME_HINT: '*20글자 이내',
+    SAVE_SUCCESS: '저장했습니다!',
   },
 } as const;
 

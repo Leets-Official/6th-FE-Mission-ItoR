@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { validators } from '@/utils/validation';
 import { useEditModeStore } from '@/stores/useEditModeStore';
+import { useToast } from '@/contexts/ToastContext';
+import { MYPAGE_ROUTES, MYPAGE_TEXTS } from '@/constants';
 
 // 닉네임 & 한줄소개 검증 스키마
 const profileHeaderSchema = z.object({
@@ -17,10 +20,15 @@ interface UseEditProfileProps {
   nickname?: string;
   bio?: string;
   isEditMode?: boolean;
+  defaultProfileImage?: string;
 }
 
-export const useEditProfile = ({ nickname = '', bio = '', isEditMode = false }: UseEditProfileProps = {}) => {
+export const useEditProfile = ({ nickname = '', bio = '', isEditMode = false, defaultProfileImage = '' }: UseEditProfileProps = {}) => {
   const { setEditMode } = useEditModeStore();
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const [previewImage, setPreviewImage] = useState<string>(defaultProfileImage);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -59,8 +67,25 @@ export const useEditProfile = ({ nickname = '', bio = '', isEditMode = false }: 
   };
 
   const handleSave = () => {
-    // TODO: 저장 로직 구현
+    // TODO: API 호출로 프로필 업데이트
     setEditMode(false);
+    showToast(MYPAGE_TEXTS.PROFILE.SAVE_SUCCESS, 'positive');
+    navigate(MYPAGE_ROUTES.MY_PROFILE);
+  };
+
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfileImageClick = () => {
+    fileInputRef.current?.click();
   };
 
   return {
@@ -69,6 +94,11 @@ export const useEditProfile = ({ nickname = '', bio = '', isEditMode = false }: 
     errors,
     watchedNickname,
     watchedBio,
+    // 이미지 관련
+    previewImage,
+    fileInputRef,
+    handleImageUpload,
+    handleProfileImageClick,
     // 액션 핸들러
     handleEdit,
     handleCancel,

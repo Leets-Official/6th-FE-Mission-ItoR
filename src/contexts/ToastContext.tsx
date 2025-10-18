@@ -24,7 +24,7 @@ interface ToastProviderProps {
 }
 
 const toastContainerVariants = tv({
-  base: 'fixed top-16 left-1/2 z-50 -translate-x-1/2 transition-all duration-300 ease-out',
+  base: 'fixed top-24 left-1/2 z-50 -translate-x-1/2 transition-all duration-300 ease-out',
   variants: {
     isAnimating: {
       true: 'opacity-100 translate-y-0',

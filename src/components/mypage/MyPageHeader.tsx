@@ -3,15 +3,16 @@ import PostHeader from '@/components/blog/Post/PostHeader';
 import TextBox from '@/components/common/Textbox/TextBox';
 import TextField from '@/components/common/Text/TextField';
 import { MYPAGE_TEXTS } from '@/constants';
-import { SettingsIcon } from '@/assets/icons/common';
+import { SettingsIcon, EditProfileIcon } from '@/assets/icons/common';
 import profileImage from '@/assets/profile.png';
 import { MyPageHeaderProps } from '@/types/mypage';
 import { useEditProfile } from '@/hooks';
 
 const STYLES = {
   profileContent: 'flex flex-col w-full max-w-content py-3 px-4 items-start gap-2.5',
-  profileImageWrapper: 'flex w-16 h-16 items-center gap-2.5 aspect-square rounded-sm overflow-hidden',
+  profileImageWrapper: 'relative flex w-16 h-16 items-center gap-2.5 aspect-square rounded-sm overflow-hidden',
   profileImage: 'w-full h-full object-cover',
+  profileEditIcon: 'absolute right-0 bottom-0 w-6 h-6 flex-shrink-0',
   profileEditFields: 'flex flex-col w-full max-w-content px-4 items-start',
   textFieldDivider: 'flex px-1.5 justify-center items-center gap-2.5 self-stretch mt-1',
   hintText: 'flex-1 text-gray-78 font-light text-xs leading-[160%]',
@@ -26,17 +27,46 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({
   showSettingsButton = true,
   isEditProfilePage = false,
 }) => {
-  const { register, errors, watchedNickname, watchedBio } = useEditProfile({
+  const {
+    register,
+    errors,
+    watchedNickname,
+    watchedBio,
+    previewImage,
+    fileInputRef,
+    handleImageUpload,
+    handleProfileImageClick,
+  } = useEditProfile({
     nickname,
     bio,
     isEditMode,
+    defaultProfileImage: profileImage,
   });
 
   return (
     <>
       <div className={STYLES.profileContent}>
         <div className={STYLES.profileImageWrapper}>
-          <img src={profileImage} alt="Profile" className={STYLES.profileImage} />
+          <img src={previewImage || profileImage} alt="Profile" className={STYLES.profileImage} />
+          {isEditMode && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={handleProfileImageClick}
+                className={STYLES.profileEditIcon}
+                aria-label="프로필 사진 변경"
+              >
+                <EditProfileIcon />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
