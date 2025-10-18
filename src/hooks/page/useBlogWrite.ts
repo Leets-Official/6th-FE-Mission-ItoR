@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef } from 'react';
+import { useMemo, useEffect, useRef, useCallback } from 'react';
 import type ReactQuill from 'react-quill';
 import { BLOG_TEXTS } from '@/constants/blog.constants';
 import { getEditorStyles } from '@/styles/editor.styles';
@@ -6,7 +6,7 @@ import { useImageUpload } from './useImageUpload';
 import { useBlogWriteStore } from '@/stores/useBlogWriteStore';
 
 export const useBlogWrite = () => {
-  // 1. 에디터 상태 관리 (Store에서 가져오기)
+  // 에디터 상태 관리
   const {
     title,
     setTitle,
@@ -21,7 +21,7 @@ export const useBlogWrite = () => {
   // ReactQuill 에디터 ref
   const quillRef = useRef<ReactQuill>(null);
 
-  // 모바일에서 마크다운 모드일 경우 자동으로 기본 모드로 전환
+  // 모바일 기본 모드로 전환
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768 && mode === 'markdown') {
@@ -37,7 +37,7 @@ export const useBlogWrite = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [mode]);
 
-  // 2. ReactQuill 모듈 설정
+  // ReactQuill 모듈 설정
   const modules = useMemo(() => ({
     toolbar: [
       BLOG_TEXTS.WRITE.TOOLBAR.HEADERS,
@@ -48,7 +48,7 @@ export const useBlogWrite = () => {
     ],
   }), []);
 
-  // 2-1. 모바일용 간단한 툴바 설정 (이미지만)
+  // 모바일용 툴바 설정
   const mobileModules = useMemo(() => ({
     toolbar: {
       container: [
@@ -57,11 +57,11 @@ export const useBlogWrite = () => {
     },
   }), []);
 
-  // 3. 에디터 스타일
+  // 에디터 스타일
   const editorStyles = getEditorStyles();
 
-  // 4. 모드 토글 버튼 props 생성 함수
-  const getButtonProps = (targetMode: 'basic' | 'markdown'): {
+  // 메모이제이션
+  const getButtonProps = useCallback((targetMode: 'basic' | 'markdown'): {
     intent: 'primary' | 'secondary';
     variant: 'solid' | 'outline';
     size: 'sm';
@@ -69,9 +69,9 @@ export const useBlogWrite = () => {
     intent: mode === targetMode ? 'primary' : 'secondary',
     variant: mode === targetMode ? 'solid' : 'outline',
     size: 'sm',
-  });
+  }), [mode]);
 
-  // 5. 이미지 업로드 기능
+  // 이미지 업로드
   const { handleImageUpload } = useImageUpload({
     mode,
     markdownContent,

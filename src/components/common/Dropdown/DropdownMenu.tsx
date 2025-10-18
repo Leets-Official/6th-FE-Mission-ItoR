@@ -9,6 +9,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   className = '',
   menuClassName = '',
   position = 'right',
+  ariaLabel = '메뉴',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,9 +36,15 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
 
   return (
     <div ref={dropdownRef} className={clsx('relative inline-block', className)}>
-      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="cursor-pointer bg-transparent border-none p-0"
+        aria-label={ariaLabel}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+      >
         {trigger}
-      </div>
+      </button>
 
       {isOpen && (
         <DropdownMenuList

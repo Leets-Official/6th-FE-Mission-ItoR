@@ -12,6 +12,7 @@ export interface DropdownMenuProps {
   className?: string;
   menuClassName?: string;
   position?: 'left' | 'right';
+  ariaLabel?: string;
 }
 
 export interface DropdownMenuListProps {

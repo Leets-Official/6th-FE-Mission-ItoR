@@ -11,7 +11,7 @@ const PageHeaderLeft: FC<PageHeaderLeftProps> = ({ onHamburgerClick }) => {
   return (
     <div className="flex items-center justify-center gap-2">
       <div className="flex items-center gap-2.5">
-        <button onClick={handleClick}>
+        <button onClick={handleClick} aria-label="메뉴 열기">
           <ReorderIcon />
         </button>
         <Link

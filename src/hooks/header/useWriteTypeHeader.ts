@@ -27,14 +27,24 @@ export const useWriteTypeHeader = () => {
     );
   };
 
-  
+
 //게시하기 버튼 클릭 핸들러
   const handlePublishClick = () => {
     const content = getCurrentContent();
     const { mode } = useBlogWriteStore.getState();
 
-    // Validation: 제목과 내용이 모두 비어있는지 확인
+    // Validation: 제목과 내용 확인
     if (!title.trim() && !content.trim()) {
+      showToast('내용을 입력해주세요', 'warning');
+      return;
+    }
+
+    if (!title.trim()) {
+      showToast('제목을 입력해주세요', 'warning');
+      return;
+    }
+
+    if (!content.trim()) {
       showToast('내용을 입력해주세요', 'warning');
       return;
     }
