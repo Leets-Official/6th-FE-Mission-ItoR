@@ -41,10 +41,6 @@ export const signupFormContainer = `
   w-full max-w-[720px] mx-auto flex flex-col items-stretch gap-5
 `;
 
-export const signupFormSubText = `
-  text-sm text-brand-gray text-center
-`;
-
 export const signupFormFields = `
   flex flex-col gap-5 w-full mb-8
 `;

@@ -10,9 +10,8 @@ export const signupHeaderText = `
   text-xl font-medium text-brand-black
 `;
 
-export const signupSection = `
-  flex flex-1 items-center justify-center py-4 md:py-10 md:px-14
-`;
+export const signupSection =
+  "flex flex-col items-center justify-center w-full max-w-[900px] mx-auto px-4 box-border py-6";
 
 export const subtitle = `
   text-sm text-brand-gray mt-2
