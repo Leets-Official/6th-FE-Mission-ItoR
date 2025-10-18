@@ -43,7 +43,7 @@ export const dummyPosts: Post[] = [
     title: "16 Title one line",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
-    author: "김철수",
+    author: "홍길동",
     createdAt: "2025-10-16",
     commentsCount: 0,
     profileUrl: Img,
@@ -54,7 +54,7 @@ export const dummyPosts: Post[] = [
     title: "16 Title one line",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Mapper가 어떻게 작동하는지 부터 다시 되짚어보며 문제를 해결해봤다.",
-    author: "이영희",
+    author: "홍길동",
     createdAt: "2025-10-15",
     commentsCount: 2,
     comments: [

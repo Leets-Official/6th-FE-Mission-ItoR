@@ -6,15 +6,32 @@ import ChatIcon from "@/assets/svgs/chat.svg?react";
 import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
 import ReorderIcon from "@/assets/svgs/reorder.svg?react";
 import GitLog from "@/assets/svgs/Frame7.svg?react";
+import DropdownMenu from "./DropdownMenu";
 
 type HeaderVariant = "write" | "detail" | "edit";
 
 interface HeaderProps {
   variant: HeaderVariant;
   onPost?: () => void; // 게시하기 클릭 시 호출
+  isLoggedIn?: boolean; 
+  isAuthor?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ variant, onPost }) => {
+ const dropdownItems = [
+    {
+      label: "수정하기",
+    },
+    {
+      label: "삭제하기",
+    },
+  ];
+
+const Header: React.FC<HeaderProps> = ({ 
+  variant, 
+  onPost,
+  isLoggedIn = false, // 기본값 설정
+  isAuthor = false,   // 기본값 설정
+}) => {
   const navigate = useNavigate(); 
 
   // 깃로그 쓰기 버튼 클릭 시 이동 처리
@@ -54,7 +71,16 @@ const Header: React.FC<HeaderProps> = ({ variant, onPost }) => {
           {variant === "detail" && (
             <div className="flex items-center gap-4">
               <ChatIcon className="w-6 h-6 text-gray-700" />
-              <MoreVertIcon className="w-6 h-6 text-gray-700" />
+              {isLoggedIn && isAuthor && (
+              <DropdownMenu
+                trigger={<MoreVertIcon className="w-6 h-6 text-gray-700 cursor-pointer" />}
+                items={[
+                  { label: "수정하기", onClick: () => navigate("/edit") },
+                  { label: "삭제하기", onClick: () => console.log("삭제 기능 실행") },
+                ]}
+                position="right"
+              />
+            )}
             </div>
           )}
 

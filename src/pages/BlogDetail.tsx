@@ -13,10 +13,12 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
   const hasPhoto = !!post.photoUrl;
   const [commentText, setCommentText] = useState("");
   const [isLoggedIn] = useState(true); // 임시 로그인 여부
+  const loggedInUserName = "홍길동"; // 임시 로그인 사용자 이름
+  const isAuthor = isLoggedIn && loggedInUserName === post.author;
 
   return (
     <div className="flex flex-col items-center w-full">
-      <Header variant="detail" />
+      <Header variant="detail" isLoggedIn={isLoggedIn} isAuthor={isAuthor} />
       <div
         className={`w-[688px] max-w-[688px] border-b border-gray-300 py-3 flex ${
           hasPhoto ? "flex-row" : "flex-col"
@@ -98,6 +100,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
 
       </div>
+
 
       <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
         <div className="flex flex-col items-start w-[688px] py-4">
