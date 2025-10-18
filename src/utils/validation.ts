@@ -35,11 +35,7 @@ export const VALIDATION_MESSAGES = {
 } as const;
 
 export const validators = {
-  email: () =>
-    zod
-      .string()
-      .min(1, VALIDATION_MESSAGES.email.required)
-      .email(VALIDATION_MESSAGES.email.invalid),
+  email: () => zod.string().min(1, VALIDATION_MESSAGES.email.required).email(VALIDATION_MESSAGES.email.invalid),
 
   password: () =>
     zod
@@ -49,14 +45,9 @@ export const validators = {
       .regex(/[A-Za-z]/, VALIDATION_MESSAGES.password.requireLetter)
       .regex(/[0-9]/, VALIDATION_MESSAGES.password.requireNumber),
 
-  passwordConfirm: () =>
-    zod.string().min(1, VALIDATION_MESSAGES.passwordConfirm.required),
+  passwordConfirm: () => zod.string().min(1, VALIDATION_MESSAGES.passwordConfirm.required),
 
-  name: () =>
-    zod
-      .string()
-      .min(1, VALIDATION_MESSAGES.name.required)
-      .min(2, VALIDATION_MESSAGES.name.minLength),
+  name: () => zod.string().min(1, VALIDATION_MESSAGES.name.required).min(2, VALIDATION_MESSAGES.name.minLength),
 
   birthDate: () =>
     zod
@@ -64,7 +55,7 @@ export const validators = {
       .min(1, VALIDATION_MESSAGES.birthDate.required)
       .regex(/^\d{4}-\d{2}-\d{2}$/, VALIDATION_MESSAGES.birthDate.format)
       .refine(
-        (date) => {
+        date => {
           const inputDate = new Date(date);
           const maxDate = new Date('2025-09-01');
           return inputDate < maxDate;
@@ -79,10 +70,5 @@ export const validators = {
       .min(2, VALIDATION_MESSAGES.nickname.minLength)
       .max(20, VALIDATION_MESSAGES.nickname.maxLength),
 
-  bio: () =>
-    zod
-      .string()
-      .max(100, VALIDATION_MESSAGES.bio.maxLength)
-      .optional()
-      .or(zod.literal('')),
+  bio: () => zod.string().max(100, VALIDATION_MESSAGES.bio.maxLength).optional().or(zod.literal('')),
 } as const;

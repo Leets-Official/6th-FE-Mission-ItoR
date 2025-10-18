@@ -21,10 +21,18 @@ const blogWriteStyles = tv({
 
 const BlogWritePage: FC = () => {
   const {
-    title, setTitle, mode, setMode,
-    basicContent, setBasicContent,
-    markdownContent, setMarkdownContent,
-    modules, mobileModules, editorStyles, getButtonProps,
+    title,
+    setTitle,
+    mode,
+    setMode,
+    basicContent,
+    setBasicContent,
+    markdownContent,
+    setMarkdownContent,
+    modules,
+    mobileModules,
+    editorStyles,
+    getButtonProps,
     quillRef,
   } = useBlogWrite();
 
@@ -38,37 +46,27 @@ const BlogWritePage: FC = () => {
 
       <div className={styles.headerContainer()}>
         <Spacer height="md" />
-        <PostCard
-          className="w-full"
-          title=""
-          renderTitle={<TitleInput title={title} setTitle={setTitle} />}
-        />
+        <PostCard className="w-full" title="" renderTitle={<TitleInput title={title} setTitle={setTitle} />} />
         <Spacer height="md" />
       </div>
 
       <div className={styles.container()}>
         <Spacer height="md" />
-        {!isMobile && (
-          <ModeToggleButtons
-            mode={mode}
-            setMode={setMode}
-            getButtonProps={getButtonProps}
-          />
-        )}
+        {!isMobile && <ModeToggleButtons mode={mode} setMode={setMode} getButtonProps={getButtonProps} />}
 
         <div className={styles.editorContainer()}>
           {isMobile ? (
             <div className={styles.editorWrapper()}>
-              <div className="w-full max-w-content m-mobile-quill">
-              <ReactQuill
-                ref={quillRef}
-                value={basicContent}
-                onChange={setBasicContent}
-                modules={mobileModules}
-                placeholder={BLOG_TEXTS.WRITE.PLACEHOLDERS.CONTENT}
-                className="w-full mobile-quill"
-                theme="snow"
-              />
+              <div className="m-mobile-quill w-full max-w-content">
+                <ReactQuill
+                  ref={quillRef}
+                  value={basicContent}
+                  onChange={setBasicContent}
+                  modules={mobileModules}
+                  placeholder={BLOG_TEXTS.WRITE.PLACEHOLDERS.CONTENT}
+                  className="mobile-quill w-full"
+                  theme="snow"
+                />
               </div>
             </div>
           ) : (
@@ -88,7 +86,7 @@ const BlogWritePage: FC = () => {
                 <div className={styles.editorWrapper()}>
                   <MDEditor
                     value={markdownContent}
-                    onChange={(val) => setMarkdownContent(val || '')}
+                    onChange={val => setMarkdownContent(val || '')}
                     height={parseInt(BLOG_STYLES.EDITOR.HEIGHT)}
                   />
                 </div>
@@ -99,7 +97,6 @@ const BlogWritePage: FC = () => {
       </div>
       <Spacer height="lg" />
     </div>
-
   );
 };
 

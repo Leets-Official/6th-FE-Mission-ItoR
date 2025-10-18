@@ -31,7 +31,9 @@ const EditProfileForm: FC<EditProfileFormProps> = ({ className }) => {
 
   // 필드 활성화/비활성화
   const isFieldDisabled = (fieldName: string) => {
-    if (!isEditMode) return true;
+    if (!isEditMode) {
+      return true;
+    }
     return DISABLED_FIELDS.includes(fieldName);
   };
 

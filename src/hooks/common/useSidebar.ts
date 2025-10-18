@@ -78,7 +78,12 @@ export const useSidebar = () => {
       dispatchClose();
     };
 
-    openModal(SIDEBAR_MODAL_TYPES.LOGOUT, SIDEBAR_TEXTS.MODAL.LOGOUT_MESSAGE, confirmLogout, SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM);
+    openModal(
+      SIDEBAR_MODAL_TYPES.LOGOUT,
+      SIDEBAR_TEXTS.MODAL.LOGOUT_MESSAGE,
+      confirmLogout,
+      SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM
+    );
   };
 
   return {

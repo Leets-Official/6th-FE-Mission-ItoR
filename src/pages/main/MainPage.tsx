@@ -33,7 +33,7 @@ const MainPage = () => {
   // mockPostDetailNoComments에서 첫 번째 TEXT와 IMAGE 추출
   const firstTextNoComments = mockPostDetailNoComments.contents.find(c => c.contentType === 'TEXT')?.content || '';
   const firstImageNoComments = mockPostDetailNoComments.contents.find(c => c.contentType === 'IMAGE')?.content || '';
-  
+
   return (
     <div>
       <Spacer height="md" />
@@ -41,7 +41,8 @@ const MainPage = () => {
       {/* TODO: API 연결 시 삭제예정 - localStorage에 저장된 블로그들 (최신순) */}
       {savedPosts.reverse().map(post => {
         // TEXT 또는 MARKDOWN 타입의 첫 번째 콘텐츠 찾기
-        const firstText = post.contents.find(c => c.contentType === 'TEXT' || c.contentType === 'MARKDOWN')?.content || '';
+        const firstText =
+          post.contents.find(c => c.contentType === 'TEXT' || c.contentType === 'MARKDOWN')?.content || '';
         const firstImage = post.contents.find(c => c.contentType === 'IMAGE')?.content || '';
 
         // 마크다운 문법 제거
@@ -78,13 +79,7 @@ const MainPage = () => {
 
       {/* 랜덤 생성 포스트들 */}
       {mockPosts.map(post => (
-        <BlogPreviewCard
-          key={post.id}
-          id={post.id}
-          title={post.title}
-          content={post.content}
-          imageSrc={post.image}
-        />
+        <BlogPreviewCard key={post.id} id={post.id} title={post.title} content={post.content} imageSrc={post.image} />
       ))}
     </div>
   );

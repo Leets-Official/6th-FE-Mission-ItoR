@@ -26,12 +26,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   hasChecked: false,
   user: null,
 
-  setUser: (user) => set({ user, isLoggedIn: !!user }),
+  setUser: user => set({ user, isLoggedIn: Boolean(user) }),
 
   logout: () => set({ user: null, isLoggedIn: false }),
 
   checkLoginStatus: async () => {
-    if (get().hasChecked) return;
+    if (get().hasChecked) {
+      return;
+    }
 
     set({ isLoading: true });
 

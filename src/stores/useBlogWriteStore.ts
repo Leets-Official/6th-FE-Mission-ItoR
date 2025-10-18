@@ -29,10 +29,10 @@ const initialState = {
 export const useBlogWriteStore = create<BlogWriteStore>((set, get) => ({
   ...initialState,
 
-  setTitle: (title) => set({ title }),
-  setMode: (mode) => set({ mode }),
-  setBasicContent: (content) => set({ basicContent: content }),
-  setMarkdownContent: (content) => set({ markdownContent: content }),
+  setTitle: title => set({ title }),
+  setMode: mode => set({ mode }),
+  setBasicContent: content => set({ basicContent: content }),
+  setMarkdownContent: content => set({ markdownContent: content }),
 
   reset: () => set(initialState),
 

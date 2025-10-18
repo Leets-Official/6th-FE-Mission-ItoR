@@ -54,7 +54,7 @@ export const DetailTypeHeader: FC<DetailTypeHeaderProps> = ({ isOwner = false })
             position="right"
           />
         ) : (
-          <Icon size="lg" className="opacity-100 cursor-not-allowed">
+          <Icon size="lg" className="cursor-not-allowed opacity-100">
             <MoreVertIcon />
           </Icon>
         )}

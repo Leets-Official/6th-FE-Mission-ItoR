@@ -3,7 +3,12 @@ import { PageHeader } from '@/components';
 import { useSidebar, usePageHeaderType, useEditProfile } from '@/hooks';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Outlet, useParams, useLocation } from 'react-router-dom';
-import { mockPostDetail, mockPostDetailNoComments, mockPostDetailWithMyComments, mockPostDetailByHongGilDong } from '@/_mocks_/mockPostDetail';
+import {
+  mockPostDetail,
+  mockPostDetailNoComments,
+  mockPostDetailWithMyComments,
+  mockPostDetailByHongGilDong,
+} from '@/_mocks_/mockPostDetail';
 
 export default function Layout() {
   const { isSidebarOpen, sidebarRef, toggleSidebar } = useSidebar();
@@ -14,12 +19,16 @@ export default function Layout() {
   const location = useLocation();
 
   // 블로그 상세 페이지에서만 isOwner 계산, 삭제예정
-  const isOwner = location.pathname.includes('/blog/') && id ? (
-    id === '1001' ? mockPostDetailByHongGilDong.isOwner :
-    id === '998' ? mockPostDetailNoComments.isOwner :
-    id === '997' ? mockPostDetailWithMyComments.isOwner :
-    mockPostDetail.isOwner
-  ) : undefined;
+  const isOwner =
+    location.pathname.includes('/blog/') && id
+      ? id === '1001'
+        ? mockPostDetailByHongGilDong.isOwner
+        : id === '998'
+          ? mockPostDetailNoComments.isOwner
+          : id === '997'
+            ? mockPostDetailWithMyComments.isOwner
+            : mockPostDetail.isOwner
+      : undefined;
 
   return (
     <div className="w-full">

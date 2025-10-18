@@ -23,11 +23,7 @@ import type { CreatePostPayload, ContentItem } from '@/types/blog';
  * //   ]
  * // }
  */
-export const convertToApiFormat = (
-  title: string,
-  content: string,
-  isMarkdown: boolean = false
-): CreatePostPayload => {
+export const convertToApiFormat = (title: string, content: string, isMarkdown = false): CreatePostPayload => {
   // 마크다운인 경우 MARKDOWN 타입으로 처리
   if (isMarkdown) {
     return {

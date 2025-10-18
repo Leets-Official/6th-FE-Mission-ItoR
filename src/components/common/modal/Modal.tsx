@@ -54,7 +54,7 @@ const Modal: FC<ModalProps> = ({
           aria-modal="true"
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           <div className={modalContentVariants()} style={{ padding: '0 4px' }}>
             {children}

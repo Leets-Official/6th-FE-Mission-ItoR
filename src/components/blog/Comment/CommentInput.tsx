@@ -13,7 +13,9 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
   const profileStyle = profileStyles();
 
   const handleSubmit = () => {
-    if (!hasContent) return;
+    if (!hasContent) {
+      return;
+    }
     if (onSubmit) {
       onSubmit(comment);
       setComment(''); // 입력창 초기화
@@ -33,18 +35,9 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
             </div>
           </div>
         </div>
-        <PostInput
-          value={comment}
-          onChange={setComment}
-          placeholder={BLOG_TEXTS.COMMENTS.INPUT_PLACEHOLDER}
-        />
+        <PostInput value={comment} onChange={setComment} placeholder={BLOG_TEXTS.COMMENTS.INPUT_PLACEHOLDER} />
         <div className={styles.buttonWrapper()}>
-          <Button
-            intent="gray"
-            variant={hasContent ? 'solid' : 'outline'}
-            size="comment"
-            onClick={handleSubmit}
-          >
+          <Button intent="gray" variant={hasContent ? 'solid' : 'outline'} size="comment" onClick={handleSubmit}>
             {BLOG_TEXTS.COMMENTS.SUBMIT_BUTTON}
           </Button>
         </div>
@@ -54,4 +47,3 @@ const CommentInput: FC<CommentInputProps> = ({ nickName, onSubmit }) => {
 };
 
 export default CommentInput;
-

@@ -30,10 +30,17 @@ const blogCommentSection = tv({
   },
 });
 
-const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments: initialComments, isLoggedIn = false, currentUserNickName = 'User' }) => {
+const BlogCommentSection: FC<BlogCommentSectionProps> = ({
+  comments: initialComments,
+  isLoggedIn = false,
+  currentUserNickName = 'User',
+}) => {
   const styles = blogCommentSection();
   const { modalType, confirmButtonText, onModalConfirm, openModal, closeModal } = useModalStore();
-  const { comments, handleCommentSubmit, handleCommentDeleteClick } = useBlogComment(initialComments, currentUserNickName);
+  const { comments, handleCommentSubmit, handleCommentDeleteClick } = useBlogComment(
+    initialComments,
+    currentUserNickName
+  );
 
   return (
     <div className={styles.container()} data-comment-section>
@@ -76,11 +83,7 @@ const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments: initialComm
       ) : (
         <div className={styles.loginPromptWrapper()}>
           <div className={styles.loginPromptInner()}>
-            <button
-              type="button"
-              className={styles.loginPromptTextWrapper()}
-              onClick={() => openModal('login')}
-            >
+            <button type="button" className={styles.loginPromptTextWrapper()} onClick={() => openModal('login')}>
               <p className={styles.loginPromptText()}>{BLOG_TEXTS.COMMENTS.LOGIN_PROMPT}</p>
             </button>
           </div>
@@ -105,4 +108,3 @@ const BlogCommentSection: FC<BlogCommentSectionProps> = ({ comments: initialComm
 };
 
 export default BlogCommentSection;
-

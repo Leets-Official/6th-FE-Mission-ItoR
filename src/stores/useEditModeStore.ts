@@ -8,6 +8,6 @@ interface EditModeState {
 
 export const useEditModeStore = create<EditModeState>(set => ({
   isEditMode: false,
-  setEditMode: (isEditMode) => set({ isEditMode }),
+  setEditMode: isEditMode => set({ isEditMode }),
   toggleEditMode: () => set(state => ({ isEditMode: !state.isEditMode })),
 }));

@@ -11,7 +11,7 @@ interface ModalStore {
   closeModal: () => void;
 }
 
-export const useModalStore = create<ModalStore>((set) => ({
+export const useModalStore = create<ModalStore>(set => ({
   modalType: null,
   modalMessage: undefined,
   confirmButtonText: undefined,

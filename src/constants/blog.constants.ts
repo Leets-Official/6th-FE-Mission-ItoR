@@ -61,4 +61,3 @@ export const BLOG_STYLES = {
     LETTER_SPACING: '-0.07px',
   },
 } as const;
-

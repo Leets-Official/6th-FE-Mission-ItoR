@@ -23,7 +23,12 @@ interface UseEditProfileProps {
   defaultProfileImage?: string;
 }
 
-export const useEditProfile = ({ nickname = '', bio = '', isEditMode = false, defaultProfileImage = '' }: UseEditProfileProps = {}) => {
+export const useEditProfile = ({
+  nickname = '',
+  bio = '',
+  isEditMode = false,
+  defaultProfileImage = '',
+}: UseEditProfileProps = {}) => {
   const { setEditMode } = useEditModeStore();
   const navigate = useNavigate();
   const { showToast } = useToast();

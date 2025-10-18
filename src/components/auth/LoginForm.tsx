@@ -4,8 +4,14 @@ import { useLoginForm } from '@/hooks';
 import { Spacer } from '@/components';
 import * as variants from '@/components/auth/LoginFormVariants';
 import { AUTH_TEXTS } from '@/constants';
-import { InputSection, ErrorMessage, SnsDivider } from '@/components/auth/LoginFormComponents';
-import { EmailLoginButton, KakaoLoginButton, SignupButton } from '@/components/auth/LoginFormComponents';
+import {
+  InputSection,
+  ErrorMessage,
+  SnsDivider,
+  EmailLoginButton,
+  KakaoLoginButton,
+  SignupButton,
+} from '@/components/auth/LoginFormComponents';
 
 interface LoginFormProps {
   className?: string;
@@ -32,8 +38,17 @@ const LoginForm: FC<LoginFormProps> = ({
   onEmailClick,
   onKakaoClick,
 }) => {
-  const { email, password, errorMessage, setEmail, setPassword, handleLogin, handleKeyDown, handleKakaoLogin, handleSignup } =
-    useLoginForm(onClose);
+  const {
+    email,
+    password,
+    errorMessage,
+    setEmail,
+    setPassword,
+    handleLogin,
+    handleKeyDown,
+    handleKakaoLogin,
+    handleSignup,
+  } = useLoginForm(onClose);
 
   return (
     <div className={cn(variants.loginFormVariants(), className)}>

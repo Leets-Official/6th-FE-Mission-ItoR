@@ -5,7 +5,6 @@ import { useToast } from '@/contexts/ToastContext';
 import { PAGEHEADER_TEXTS } from '@/constants';
 import { convertToApiFormat } from '@/utils/blogContentParser';
 
-
 //컴포넌트 비즈니스 로직
 export const useWriteTypeHeader = () => {
   const navigate = useNavigate();
@@ -13,8 +12,7 @@ export const useWriteTypeHeader = () => {
   const { title, getCurrentContent, reset } = useBlogWriteStore();
   const { showToast } = useToast();
 
-
-// 삭제 버튼 클릭 핸들러
+  // 삭제 버튼 클릭 핸들러
   const handleDeleteClick = () => {
     openModal(
       'delete',
@@ -23,12 +21,11 @@ export const useWriteTypeHeader = () => {
         reset();
         navigate(-1);
       },
-      PAGEHEADER_TEXTS.WRITE.MODAL.CONFIRM,
+      PAGEHEADER_TEXTS.WRITE.MODAL.CONFIRM
     );
   };
 
-
-//게시하기 버튼 클릭 핸들러
+  //게시하기 버튼 클릭 핸들러
   const handlePublishClick = () => {
     const content = getCurrentContent();
     const { mode } = useBlogWriteStore.getState();
@@ -57,9 +54,7 @@ export const useWriteTypeHeader = () => {
     const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
 
     // TODO: API 연결 시 삭제예정 - 순차적인 ID 생성 (기존 포스트 중 최대 ID + 1)
-    const maxId = savedPosts.length > 0
-      ? Math.max(...savedPosts.map((p: any) => p.postId))
-      : 0;
+    const maxId = savedPosts.length > 0 ? Math.max(...savedPosts.map((p: any) => p.postId)) : 0;
     const newPostId = maxId + 1;
 
     // TODO: API 연결 시 삭제예정 - 임시 PostDetail 객체 생성

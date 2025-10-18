@@ -43,7 +43,7 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
     fileInputRef.current?.click();
   };
 
-  const onSubmit = (data: SignupFormData) => {
+  const onSubmit = (_data: SignupFormData) => {
     setIsCompleteModalOpen(true);
   };
 

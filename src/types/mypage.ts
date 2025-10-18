@@ -8,9 +8,7 @@ export interface BaseComponentProps {
 // 제네릭 타입
 export type ComponentWithBase<T = {}> = BaseComponentProps & T;
 
-export type ComponentWithChildren<T = {}> = ComponentWithBase<
-  T & { children?: ReactNode }
->;
+export type ComponentWithChildren<T = {}> = ComponentWithBase<T & { children?: ReactNode }>;
 
 // MyPage 관련 타입
 export type MyPageHeaderProps = ComponentWithBase<{
@@ -29,4 +27,3 @@ export type EditProfileFormProps = BaseComponentProps;
 export type MyProfileFormProps = BaseComponentProps;
 
 export type SignupFormProps = BaseComponentProps;
-

@@ -7,7 +7,15 @@ import { CommentItemProps } from '@/components/blog/Comment/CommentTypes';
 import { profileStyles, commentItemStyles } from '@/components/blog/Comment/Comment.styles';
 import { useAuthStore } from '@/stores/useAuthStore';
 
-const CommentItem: FC<CommentItemProps> = ({ commentId, content, nickName, profileUrl, createdAt, isOwner, onDelete }) => {
+const CommentItem: FC<CommentItemProps> = ({
+  commentId,
+  content,
+  nickName,
+  profileUrl: _profileUrl,
+  createdAt,
+  isOwner,
+  onDelete,
+}) => {
   const styles = commentItemStyles();
   const profileStyle = profileStyles();
   const { isLoggedIn } = useAuthStore();

@@ -7,7 +7,8 @@ export const mockPostDetail: PostDetail = {
   contents: [
     {
       contentOrder: 1,
-      content: '이것은 상세 페이지 테스트를 위한 고정된 데이터입니다. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      content:
+        '이것은 상세 페이지 테스트를 위한 고정된 데이터입니다. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       contentType: 'TEXT',
     },
     {
@@ -17,7 +18,8 @@ export const mockPostDetail: PostDetail = {
     },
     {
       contentOrder: 3,
-      content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+      content:
+        'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
       contentType: 'TEXT',
     },
     {
@@ -27,7 +29,8 @@ export const mockPostDetail: PostDetail = {
     },
     {
       contentOrder: 5,
-      content: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 감사합니다!',
+      content:
+        'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 감사합니다!',
       contentType: 'TEXT',
     },
   ],
@@ -100,7 +103,8 @@ export const mockPostDetailWithMyComments: PostDetail = {
   contents: [
     {
       contentOrder: 1,
-      content: 'CommentInput 컴포넌트를 테스트하기 위한 블로그 포스트입니다. 내 댓글과 다른 사람의 댓글이 섞여 있어 더보기 아이콘이 조건부로 표시되는 것을 확인할 수 있습니다.',
+      content:
+        'CommentInput 컴포넌트를 테스트하기 위한 블로그 포스트입니다. 내 댓글과 다른 사람의 댓글이 섞여 있어 더보기 아이콘이 조건부로 표시되는 것을 확인할 수 있습니다.',
       contentType: 'TEXT',
     },
     {
@@ -180,7 +184,8 @@ export const mockPostDetailByHongGilDong: PostDetail = {
     },
     {
       contentOrder: 3,
-      content: '개발을 하면서 가장 중요한 것은 꾸준함이라고 생각합니다. 매일 조금씩이라도 코드를 작성하고, 새로운 것을 배우려는 자세가 중요합니다.',
+      content:
+        '개발을 하면서 가장 중요한 것은 꾸준함이라고 생각합니다. 매일 조금씩이라도 코드를 작성하고, 새로운 것을 배우려는 자세가 중요합니다.',
       contentType: 'TEXT',
     },
     {
@@ -218,4 +223,3 @@ export const mockPostDetailByHongGilDong: PostDetail = {
   introduction: '개발자의 성장을 기록하는 공간',
   createdAt: new Date('2024-10-15').toISOString(),
 };
-

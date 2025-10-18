@@ -25,7 +25,9 @@ const PostBody: FC<PostBodyProps> = ({ content, placeholder = '', className = ''
   // 일반 텍스트 렌더링
   return (
     <div className={`flex w-full max-w-[688px] items-center justify-center gap-2.5 p-3 ${className}`}>
-      <p className={`flex-1 text-sm font-light leading-[160%] tracking-[-0.07px] ${isEmpty ? 'text-gray-56' : 'text-gray-dark'}`}>
+      <p
+        className={`flex-1 text-sm font-light leading-[160%] tracking-[-0.07px] ${isEmpty ? 'text-gray-56' : 'text-gray-dark'}`}
+      >
         {isEmpty ? placeholder : content}
       </p>
     </div>

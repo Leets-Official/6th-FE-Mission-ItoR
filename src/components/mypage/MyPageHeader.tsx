@@ -48,13 +48,7 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({
           <img src={previewImage || profileImage} alt="Profile" className={STYLES.profileImage} />
           {isEditMode && (
             <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
               <button
                 type="button"
                 onClick={handleProfileImageClick}
@@ -78,7 +72,7 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({
             fontSize="medium"
             textColor="title"
             disabled={!isEditMode}
-            error={!!errors.nickname?.message}
+            error={Boolean(errors.nickname?.message)}
             errorMessage={errors.nickname?.message}
           />
           <div className={STYLES.textFieldDivider}>
@@ -91,9 +85,9 @@ const MyPageHeader: FC<MyPageHeaderProps> = ({
             fullWidth
             fontSize="light"
             textColor="gray78"
-            className="mt-3 mb-3"
+            className="mb-3 mt-3"
             disabled={!isEditMode}
-            error={!!errors.bio?.message}
+            error={Boolean(errors.bio?.message)}
             errorMessage={errors.bio?.message}
           />
         </div>

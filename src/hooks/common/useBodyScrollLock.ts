@@ -19,14 +19,14 @@ export const useBodyScrollLock = (isLocked: boolean) => {
     const fixedElements = document.querySelectorAll('.page-header-container');
     const previousFixedRights: string[] = [];
 
-    fixedElements.forEach((el) => {
+    fixedElements.forEach(el => {
       previousFixedRights.push((el as HTMLElement).style.right);
     });
 
     document.body.style.overflow = 'hidden';
     document.body.style.paddingRight = `${scrollbarWidth}px`;
 
-    fixedElements.forEach((el) => {
+    fixedElements.forEach(el => {
       (el as HTMLElement).style.right = `${scrollbarWidth / 2}px`;
     });
 

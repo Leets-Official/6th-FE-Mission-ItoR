@@ -15,7 +15,7 @@ export const stripMarkdownSyntax = (text: string): string => {
     .replace(/#{1,6}\s/g, '') // 제목 (#, ##, ###)
     .replace(/\*\*([^*]+)\*\*/g, '$1') // 볼드
     .replace(/\*([^*]+)\*/g, '$1') // 이탤릭
-    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // 링크
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // 링크
     .replace(/`([^`]+)`/g, '$1') // 인라인 코드
     .replace(/```[\s\S]*?```/g, '') // 코드블록
     .trim();

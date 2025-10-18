@@ -11,13 +11,7 @@ interface InputSectionProps {
   onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export const InputSection = ({
-  email,
-  password,
-  onEmailChange,
-  onPasswordChange,
-  onKeyDown,
-}: InputSectionProps) => (
+export const InputSection = ({ email, password, onEmailChange, onPasswordChange, onKeyDown }: InputSectionProps) => (
   <div className={variants.loginSectionContainerVariants({ align: 'start', gap: 'small' })}>
     <div className={variants.inputContainerVariants()}>
       <input
@@ -47,7 +41,9 @@ interface ErrorMessageProps {
 }
 
 export const ErrorMessage = ({ message }: ErrorMessageProps) => {
-  if (!message) return null;
+  if (!message) {
+    return null;
+  }
 
   return (
     <div className={variants.loginSectionContainerVariants({ align: 'start', gap: 'small' })}>

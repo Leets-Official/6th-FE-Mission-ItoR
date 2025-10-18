@@ -53,7 +53,9 @@ export const useBlogComment = (initialComments: Comment[], currentUserNickName: 
 
   // 댓글 삭제 확인
   const confirmCommentDelete = () => {
-    if (deleteTargetId === null) return;
+    if (deleteTargetId === null) {
+      return;
+    }
 
     // TODO: API 연결 시 삭제예정 - localStorage에서 게시글 찾기
     const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');

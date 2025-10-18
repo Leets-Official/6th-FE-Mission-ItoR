@@ -55,10 +55,7 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
             }}
           >
             <span
-              className={clsx(
-                'flex-1 text-sm font-normal',
-                item.color === 'danger' ? 'text-warning' : 'text-black'
-              )}
+              className={clsx('flex-1 text-sm font-normal', item.color === 'danger' ? 'text-warning' : 'text-black')}
             >
               {item.label}
             </span>

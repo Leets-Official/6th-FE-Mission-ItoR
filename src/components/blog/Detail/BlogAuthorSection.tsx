@@ -34,4 +34,3 @@ const BlogAuthorSection: FC<BlogAuthorSectionProps> = ({ nickName, introduction 
 };
 
 export default BlogAuthorSection;
-

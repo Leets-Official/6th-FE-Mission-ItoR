@@ -1,7 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { BlogPostSection, BlogCommentSection, BlogAuthorSection, Spacer } from '@/components';
-import { mockPostDetail, mockPostDetailNoComments, mockPostDetailWithMyComments, mockPostDetailByHongGilDong } from '@/_mocks_/mockPostDetail';
+import {
+  mockPostDetail,
+  mockPostDetailNoComments,
+  mockPostDetailWithMyComments,
+  mockPostDetailByHongGilDong,
+} from '@/_mocks_/mockPostDetail';
 import { useAuthStore } from '@/stores/useAuthStore';
 import type { PostDetail } from '@/types/blog';
 
@@ -21,10 +26,13 @@ const BlogDetailPage = () => {
     } else {
       // Mock 데이터에서 찾기
       const mockData =
-        id === '1001' ? mockPostDetailByHongGilDong :
-        id === '998' ? mockPostDetailNoComments :
-        id === '997' ? mockPostDetailWithMyComments :
-        mockPostDetail;
+        id === '1001'
+          ? mockPostDetailByHongGilDong
+          : id === '998'
+            ? mockPostDetailNoComments
+            : id === '997'
+              ? mockPostDetailWithMyComments
+              : mockPostDetail;
       setPostData(mockData);
     }
   }, [id]);

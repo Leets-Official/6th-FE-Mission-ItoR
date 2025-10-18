@@ -21,12 +21,8 @@ const BlogPostSection: FC<BlogPostSectionProps> = ({ title, contents }) => {
   const styles = blogPostSection();
 
   const contentRenderers = {
-    TEXT: (content: string, index: number) => (
-      <PostBody key={index} content={content} isMarkdown={false} />
-    ),
-    MARKDOWN: (content: string, index: number) => (
-      <PostBody key={index} content={content} isMarkdown={true} />
-    ),
+    TEXT: (content: string, index: number) => <PostBody key={index} content={content} isMarkdown={false} />,
+    MARKDOWN: (content: string, index: number) => <PostBody key={index} content={content} isMarkdown={true} />,
     IMAGE: (content: string, index: number) => (
       <div key={index} className={styles.imageWrapper()}>
         <img src={content} alt={`content-${index}`} className={styles.image()} />
@@ -59,4 +55,3 @@ const BlogPostSection: FC<BlogPostSectionProps> = ({ title, contents }) => {
 };
 
 export default BlogPostSection;
-

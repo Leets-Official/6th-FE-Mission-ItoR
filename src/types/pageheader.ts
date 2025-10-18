@@ -63,4 +63,3 @@ export interface WriteTypeHeaderReturn {
   onModalConfirm: (() => void) | null;
   closeModal: () => void;
 }
-

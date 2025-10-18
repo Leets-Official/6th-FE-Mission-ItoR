@@ -36,7 +36,7 @@ export const useMediaQuery = (query: string): boolean => {
  * @param breakpoint - 브레이크포인트 픽셀 값 (기본값: 768)
  * @returns 모바일 여부
  */
-export const useIsMobile = (breakpoint: number = 768): boolean => {
+export const useIsMobile = (breakpoint = 768): boolean => {
   return useMediaQuery(`(max-width: ${breakpoint - 1}px)`);
 };
 
@@ -45,6 +45,6 @@ export const useIsMobile = (breakpoint: number = 768): boolean => {
  * @param breakpoint - 브레이크포인트 픽셀 값 (기본값: 768)
  * @returns 데스크톱 여부
  */
-export const useIsDesktop = (breakpoint: number = 768): boolean => {
+export const useIsDesktop = (breakpoint = 768): boolean => {
   return useMediaQuery(`(min-width: ${breakpoint}px)`);
 };

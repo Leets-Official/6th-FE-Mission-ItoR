@@ -32,7 +32,7 @@ export const MainTypeHeader: FC = () => {
     <>
       <div
         onClick={handleClick}
-        className="flex cursor-pointer items-center justify-center gap-1 rounded-[25px] px-3 py-2 text-sm font-normal leading-[160%] tracking-[-0.07px] text-gray hover:bg-gray-10"
+        className="hover:bg-gray-10 flex cursor-pointer items-center justify-center gap-1 rounded-[25px] px-3 py-2 text-sm font-normal leading-[160%] tracking-[-0.07px] text-gray"
       >
         <Icon size="lg">
           <CreateIcon />

@@ -43,33 +43,23 @@ export const TitleInput: FC<TitleInputProps> = ({ title, setTitle }) => {
       type="text"
       placeholder={BLOG_TEXTS.WRITE.PLACEHOLDERS.TITLE}
       value={title}
-      onChange={(e) => setTitle(e.target.value)}
+      onChange={e => setTitle(e.target.value)}
       className={titleInputVariants()}
     />
   );
 };
 
 // ModeToggleButtons 컴포넌트
-export const ModeToggleButtons: FC<ModeToggleButtonsProps> = ({
-  setMode,
-  getButtonProps
-}) => {
+export const ModeToggleButtons: FC<ModeToggleButtonsProps> = ({ setMode, getButtonProps }) => {
   const styles = modeToggleVariants();
 
   return (
     <div className={styles.container()}>
-      <Button
-        onClick={() => setMode('basic')}
-        {...getButtonProps('basic')}
-      >
+      <Button onClick={() => setMode('basic')} {...getButtonProps('basic')}>
         {BLOG_TEXTS.WRITE.MODES.BASIC}
       </Button>
 
-      <Button
-        onClick={() => setMode('markdown')}
-        {...getButtonProps('markdown')}
-        className={styles.markdownButton()}
-      >
+      <Button onClick={() => setMode('markdown')} {...getButtonProps('markdown')} className={styles.markdownButton()}>
         {BLOG_TEXTS.WRITE.MODES.MARKDOWN}
       </Button>
     </div>
