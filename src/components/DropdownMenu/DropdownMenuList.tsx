@@ -25,7 +25,11 @@ const DropdownMenuList: FC<DropdownMenuListProps> = ({
           <li
             key={idx}
             onClick={() => !item.disabled && onItemClick(item)}
-            className={cn(menuItem, item.disabled && "cursor-not-allowed opacity-50")}
+            className={cn(
+              menuItem,
+              item.disabled && "cursor-not-allowed opacity-50",
+              item.label === "삭제하기" && "text-brand-red hover:text-brand-red hover:bg-red-50",
+            )}
           >
             {item.label}
           </li>
