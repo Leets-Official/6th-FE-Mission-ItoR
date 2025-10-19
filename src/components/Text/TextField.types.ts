@@ -1,6 +1,6 @@
 import React from "react";
 
-export type TextFieldVariant = "default" | "input" | "active" | "disabled";
+export type TextFieldVariant = "default" | "input" | "active" | "disabled" | "borderless";
 export type TextFieldSize = "sm" | "md" | "lg";
 
 export interface BaseTextFieldProps {
