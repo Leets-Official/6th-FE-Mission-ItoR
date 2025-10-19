@@ -1,9 +1,34 @@
+import { useState, useRef, useEffect } from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import { MoreVertIcon } from "@/assets/icons";
+import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import * as S from "./CommentSection.styled";
 import { CommentItemProps } from "./CommentItem.types";
 
-const CommentItem: React.FC<CommentItemProps> = ({ author, date, content, profileUrl }) => {
+const CommentItem: React.FC<CommentItemProps> = ({
+  author,
+  date,
+  content,
+  profileUrl,
+  isOwner = false,
+  isLoggedIn = false,
+  onDelete,
+}) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const menuItems = [{ label: "삭제하기", onClick: onDelete }];
+
   return (
     <div className={S.commentItemWrapper}>
       <Avatar src={profileUrl} size="xs" />
@@ -13,9 +38,32 @@ const CommentItem: React.FC<CommentItemProps> = ({ author, date, content, profil
             <p className={S.commentNick}>{author}</p>
             <span className={S.commentDate}>{date}</span>
           </div>
-          <button type="button" className={S.commentMenuButton} aria-label="댓글 메뉴">
-            <MoreVertIcon width={18} height={18} />
-          </button>
+
+          {isLoggedIn && isOwner && (
+            <div className={S.menuWrapper} ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+                className={S.commentMenuButton}
+                aria-label="댓글 메뉴"
+              >
+                <MoreVertIcon width={18} height={18} />
+              </button>
+
+              {isMenuOpen && (
+                <div className={S.dropdownPosition}>
+                  <DropdownMenuList
+                    items={menuItems}
+                    onItemClick={(item) => {
+                      item.onClick?.();
+                      setIsMenuOpen(false);
+                    }}
+                    position="right"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <p className={S.commentText}>{content}</p>

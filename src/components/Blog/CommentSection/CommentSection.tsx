@@ -2,6 +2,7 @@ import { useState } from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
 import TextField from "@/components/Text/TextField";
+import Modal from "@/components/Modal/Modal";
 import * as S from "./CommentSection.styled";
 import { CommentSectionProps } from "./CommentSection.types";
 import CommentItem from "./CommentItem";
@@ -21,31 +22,34 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   postAuthorName,
 }) => {
   const [comment, setComment] = useState("");
+  const currentUserName = "내닉네임";
+
   const [comments, setComments] = useState<Comment[]>([
     {
       id: 1,
       author: "닉네임",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+      content: "이 글 정말 좋네요! 다음 글도 기대할게요 😊",
       date: "Feb 17. 2025.",
       profileUrl: "https://i.pravatar.cc/40?img=3",
     },
     {
       id: 2,
-      author: "닉네임",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+      author: currentUserName,
+      content: "감사합니다! 다음엔 더 좋은 글로 찾아뵐게요 🙏",
       date: "Feb 17. 2025.",
-      profileUrl: "https://i.pravatar.cc/40?img=4",
+      profileUrl: postAuthorProfile,
     },
   ]);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [targetCommentId, setTargetCommentId] = useState<number | null>(null);
 
   const handleSubmit = () => {
     if (!comment.trim()) return;
 
     const newComment: Comment = {
       id: comments.length + 1,
-      author: postAuthorName,
+      author: currentUserName,
       content: comment,
       date: new Date().toLocaleDateString("en-US", {
         month: "short",
@@ -60,6 +64,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     setComment("");
   };
 
+  const handleDeleteComment = (id: number) => {
+    setComments((prev) => prev.filter((c) => c.id !== id));
+    setIsDeleteModalOpen(false);
+  };
+
   const isEmpty = !comment.trim();
   const isDisabled = !isLoggedIn || isEmpty;
 
@@ -70,7 +79,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           댓글 <span className={S.count}>{comments.length}</span>
         </h2>
 
-        {/* ✅ 댓글 리스트 */}
         {comments.length > 0 && (
           <div className={S.commentList}>
             {comments.map((c) => (
@@ -80,12 +88,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 date={c.date}
                 content={c.content}
                 profileUrl={c.profileUrl}
+                isOwner={c.author === currentUserName}
+                isLoggedIn={isLoggedIn}
+                onDelete={() => {
+                  setTargetCommentId(c.id);
+                  setIsDeleteModalOpen(true);
+                }}
               />
             ))}
           </div>
         )}
 
-        {/* ✅ 댓글 입력 영역 */}
         <div className={S.commentInputSection}>
           {!isLoggedIn ? (
             <div className={S.emptyBox}>
@@ -97,7 +110,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             <div className={S.commentWrapper}>
               <div className={S.commentProfile}>
                 <Avatar src={postAuthorProfile} size="xs" />
-                <p className={S.commentNick}>{postAuthorName}</p>
+                <p className={S.commentNick}>{currentUserName}</p>
               </div>
 
               <div className={S.commentBox}>
@@ -127,7 +140,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         </div>
       </section>
 
-      {/* ✅ 하단 작성자 프로필 */}
+      <Modal
+        title="댓글을 삭제할까요?"
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => targetCommentId && handleDeleteComment(targetCommentId)}
+        confirmText="삭제하기"
+        cancelText="취소"
+        confirmColor="bg-brand-red text-white hover:opacity-90"
+      ></Modal>
+
       <div className={S.footerWrapper}>
         <div className={S.footerProfile}>
           <Avatar src={postAuthorProfile} size="md" />

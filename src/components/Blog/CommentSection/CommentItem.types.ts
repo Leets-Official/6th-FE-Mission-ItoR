@@ -3,4 +3,7 @@ export interface CommentItemProps {
   date: string;
   content: string;
   profileUrl: string;
+  isOwner?: boolean;
+  isLoggedIn?: boolean;
+  onDelete?: () => void;
 }
