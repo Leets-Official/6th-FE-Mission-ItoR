@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import CreateIcon from "@/assets/svgs/create.svg?react";
 import ChatIcon from "@/assets/svgs/chat.svg?react";
@@ -13,28 +13,27 @@ type HeaderVariant = "write" | "detail" | "edit";
 
 interface HeaderProps {
   variant: HeaderVariant;
-  onPost?: () => void; // 게시하기 클릭 시
-  isLoggedIn?: boolean; 
+  onPost?: () => void;
+  onDelete?: () => void;
+  isLoggedIn?: boolean;
   isAuthor?: boolean;
-  post?: Post; // Detail에서 전달받는 post
+  post?: Post;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  variant, 
+const Header: React.FC<HeaderProps> = ({
+  variant,
   onPost,
+  onDelete,
   isLoggedIn = false,
   isAuthor = false,
   post,
 }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleWriteClick = () => {
-    const loggedIn = true; // 실제 로그인 체크 로직으로 교체 가능
-    if (loggedIn) {
-      navigate("/write");
-    } else {
-      navigate("/login");
-    }
+    const loggedIn = true;
+    if (loggedIn) navigate("/write");
+    else navigate("/login");
   };
 
   return (
@@ -67,14 +66,8 @@ const Header: React.FC<HeaderProps> = ({
                 <DropdownMenu
                   trigger={<MoreVertIcon className="w-6 h-6 text-gray-700 cursor-pointer" />}
                   items={[
-                    { 
-                      label: "수정하기", 
-                      onClick: () => navigate("/write", { state: post }) // 기존 내용 전달
-                    },
-                    { 
-                      label: "삭제하기", 
-                      onClick: () => console.log("삭제 기능 실행") 
-                    },
+                    { label: "수정하기", onClick: () => navigate("/write", { state: post }) },
+                    { label: "삭제하기", onClick: onDelete ? () => onDelete() : undefined },
                   ]}
                   position="right"
                 />

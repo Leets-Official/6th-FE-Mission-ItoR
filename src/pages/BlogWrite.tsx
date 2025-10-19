@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import AddPhoto from "@/assets/svgs/add_photo_alternate.svg?react";
@@ -8,11 +8,13 @@ import { type Post } from "@/api/Dummy";
 
 const BlogWrite: React.FC = () => {
   const location = useLocation();
-  const post = location.state as Post | undefined; // 수정 대상 post
+  const post = location.state as Post | undefined; // 수정 대상 post (optional)
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [toastVariant, setToastVariant] = useState<"success" | "warning" | null>(null);
+
+  const timerRef = useRef<number | null>(null);
 
   // 기존 post 내용이 있으면 초기값으로 설정
   useEffect(() => {
@@ -22,21 +24,49 @@ const BlogWrite: React.FC = () => {
     }
   }, [post]);
 
-  const handlePost = () => {
-    if (!title || !content) {
-      setToastVariant("warning");
-    } else {
-      setToastVariant("success");
-      // post 존재하면 수정, 없으면 새 글 작성 로직 구현
-      if (post) {
-        console.log("수정된 글:", { id: post.id, title, content });
-      } else {
-        console.log("새 글 작성:", { title, content });
+  // 타이머 정리 (언마운트 시)
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
+    };
+  }, []);
+
+  const handlePost = () => {
+    // validation
+    if (!title.trim() || !content.trim()) {
+      setToastVariant("warning");
+      // 5초 후 숨김
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = window.setTimeout(() => {
+        setToastVariant(null);
+        timerRef.current = null;
+      }, 5000);
+      return;
     }
 
-    setTimeout(() => setToastVariant(null), 5000);
+    // 성공
+    setToastVariant("success");
+
+    // 실제 API: post ? update(post.id, {title,content}) : create(...)
+    if (post) {
+      console.log("수정된 글:", { id: post.id, title, content });
+    } else {
+      console.log("새 글 작성:", { title, content });
+    }
+
+    // 5초 후 숨김
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => {
+      setToastVariant(null);
+      timerRef.current = null;
+    }, 5000);
   };
+
+  // toastVariant 에 따라 메시지 선택
+  const toastMessage =
+    toastVariant === "success" ? "저장되었습니다." : toastVariant === "warning" ? "내용을 입력해주세요!" : "";
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -53,7 +83,7 @@ const BlogWrite: React.FC = () => {
 
       {toastVariant && (
         <div className="flex items-center justify-center mt-4 max-w-[688px]">
-          <Toast variant={toastVariant} />
+          <Toast variant={toastVariant} message={toastMessage} />
         </div>
       )}
 

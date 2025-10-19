@@ -4,41 +4,52 @@ import { type Post } from "@/api/Dummy";
 import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 import Img from "@/assets/svgs/Img.png";
 import Button from "@/components/Button"; 
+import Modal from "@/components/Modal"; 
+import { useNavigate } from "react-router-dom";
 
 interface BlogDetailProps {
   post: Post;
 }
 
 const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
+  const navigate = useNavigate();
+
   const hasPhoto = !!post.photoUrl;
   const [commentText, setCommentText] = useState("");
-  const [isLoggedIn] = useState(true); // 임시 로그인 상태
-  const loggedInUserName = "홍길동"; // 임시 로그인 사용자
+  const [isLoggedIn] = useState(true);
+  const loggedInUserName = "홍길동";
   const isAuthor = isLoggedIn && loggedInUserName === post.author;
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const handleDeleteClick = () => setIsDeleteModalOpen(true);
+  const handleCloseModal = () => setIsDeleteModalOpen(false);
+  const handleConfirmDelete = () => {
+    setIsDeleteModalOpen(false);
+    // API 호출 시 여기서 실제 삭제
+    navigate("/", {state : { showToast : true }}); // "/" 는 블로그 메인 경로
+  };
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* Header에 post 전달 */}
       <Header 
         variant="detail" 
         isLoggedIn={isLoggedIn} 
         isAuthor={isAuthor} 
         post={post}
+        onDelete={handleDeleteClick}
       />
 
-      {/* 게시글 내용 */}
+      {/* 게시글 영역 */}
       <div className={`w-[688px] max-w-[688px] border-b border-gray-300 py-3 flex ${hasPhoto ? "flex-row" : "flex-col"} gap-4`}>
         <div className={`flex flex-col justify-between ${hasPhoto ? "w-[548px]" : "w-full"}`}>
-          <h3 className="font-[Noto Sans KR] font-medium text-[16px] leading-[160%] text-gray-900 line-clamp-2">
-            {post.title}
-          </h3>
+          <h3 className="font-[Noto Sans KR] font-medium text-[16px] leading-[160%] text-gray-900 line-clamp-2">{post.title}</h3>
           <div className="flex flex-row justify-start text-sm text-gray-500 gap-6 mt-2">
             <span>{post.author}</span>
             <span>{post.createdAt}</span>
             <span>댓글 <span className="text-[#00A1FF]">{post.commentsCount}</span>개</span>
           </div>
         </div>
-
         {hasPhoto && (
           <div className="w-[124px] h-[150px] flex items-center justify-center shrink-0">
             <img src={post.photoUrl} alt={post.title} className="w-[92px] h-[92px] object-cover rounded-md" />
@@ -46,11 +57,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
       </div>
 
-      {/* 게시글 본문 */}
-      <div className="w-[688px] p-4 text-gray-800 font-[Noto Sans KR] text-[14px] leading-[160%] mt-4 whitespace-pre-line">
-        {post.content}
-      </div>
-
+      <div className="w-[688px] p-4 text-gray-800 font-[Noto Sans KR] text-[14px] leading-[160%] mt-4 whitespace-pre-line">{post.content}</div>
       <LineEnd />
 
       {/* 댓글 영역 */}
@@ -61,7 +68,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
               <img src={post.profileUrl || Img} alt={`${post.author} 프로필`} className="w-[20px] h-[20px] object-cover rounded-full" />
               <span className="font-[Noto Sans KR] text-[16px] text-gray-900 font-medium">{post.author}</span>
             </div>
-
             <textarea
               placeholder="댓글을 입력하세요."
               value={commentText}
@@ -69,9 +75,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
               className="w-full h-[112px] rounded-md px-4 py-3 text-[14px] font-light font-[Noto Sans KR] leading-[160%] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
             <LineEnd />
-            <div className="flex justify-end">
-              <Button variant="grayBorder">등록</Button>
-            </div>
+            <div className="flex justify-end"><Button variant="grayBorder">등록</Button></div>
           </div>
         ) : (
           <div className="h-[130px] px-4 py-3 flex flex-col">
@@ -83,32 +87,26 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
           </div>
         )}
       </div>
-      {/* 작성자 정보 영역 */}
-<div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
-  <div className="flex flex-col items-start w-[688px] max-w-[688px] h-[354px] bg-[#F5F5F5] border-b border-gray-300 py-4">
-      
-      {/* 프로필 이미지 */}
-      <img
-          src={post.profileUrl || Img} // 더미데이터에서 가져오거나 기본 이미지
-          alt={`${post.author} 프로필`}
-          className="w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10"
-      />
 
-      {/* 닉네임 */}
-      <span
-          className="w-[656px] h-[38px] font-[Noto Sans KR] font-medium text-[24px] leading-[160%] tracking-[0%] text-gray-900 "
-      >
-          {post.author}
-      </span>
+      {/* 작성자 영역 */}
+      <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
+        <div className="flex flex-col items-start w-[688px] max-w-[688px] h-[354px] py-4">
+          <img src={post.profileUrl || Img} alt={`${post.author} 프로필`} className="w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10" />
+          <span className="w-[656px] font-[Noto Sans KR] font-medium text-[24px] leading-[160%] text-gray-900">{post.author}</span>
+          <span className="w-[656px] font-[Noto Sans KR] font-light text-[14px] leading-[160%] text-gray-700 mt-2">{post.profileIntro || "한 줄 소개가 없습니다."}</span>
+        </div>
+      </div>
 
-      {/* 한 줄 소개 */}
-      <span
-          className="w-[656px] h-[22px] font-[Noto Sans KR] font-light text-[14px] leading-[160%] tracking-[-0.5%] text-gray-700 mt-2"
-      >
-          {post.profileIntro || "한 줄 소개가 없습니다."}
-      </span>
-  </div>
-</div>
+      {/* 삭제 모달 */}
+      {isDeleteModalOpen && (
+        <Modal
+          titleLine1="해당 블로그를 삭제하시겠어요?"
+          titleLine2=""
+          description="삭제된 블로그는 다시 확인할 수 없어요."
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 };
