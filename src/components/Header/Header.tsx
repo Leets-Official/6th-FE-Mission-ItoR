@@ -17,7 +17,8 @@ const Header: React.FC<HeaderProps> = ({
   variant = "write",
   onWriteClick,
   onChatClick,
-  onMenuClick,
+  onMenuClick, // ← 햄버거용
+  onMoreClick, // ✅ 새로 추가: 드롭다운용
   onDeleteClick,
   onPublishClick,
   onEditClick,
@@ -27,9 +28,10 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className={baseHeader}>
       <div className={leftGroup}>
+        {/* 햄버거 메뉴 */}
         <button
           onClick={onMenuClick}
-          aria-label="메뉴 열기"
+          aria-label="사이드바 열기"
           className="transition hover:opacity-70"
         >
           <ReorderIcon width={22} height={24} />
@@ -47,7 +49,8 @@ const Header: React.FC<HeaderProps> = ({
           <button onClick={onChatClick} className={chatMenuButton}>
             <ChatIcon />
           </button>
-          <button onClick={onMenuClick} className={chatMenuButton}>
+          {/* ✅ 점 세 개 버튼은 onMoreClick 으로 변경 */}
+          <button onClick={onMoreClick} className={chatMenuButton}>
             <MoreVertIcon />
           </button>
         </div>
