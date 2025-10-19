@@ -12,4 +12,5 @@ export interface HeaderProps {
   onEditClick?: () => void;
   onSaveClick?: () => void;
   onCancelClick?: () => void;
+  showMoreIcon?: boolean;
 }

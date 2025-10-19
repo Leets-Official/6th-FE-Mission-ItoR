@@ -6,19 +6,23 @@ import * as S from "./PostDetail.styled";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
+import Modal from "@/components/Modal/Modal";
 
 export default function PostDetail() {
   const [isLogin, setIsLogin] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
   const commentRef = useRef<HTMLDivElement>(null);
 
+  const currentUserName = "내닉네임";
+
   const post = {
     title: "32 Title one line",
-    nickName: "닉네임",
+    nickName: "내닉네임",
     createdAt: "Feb 17. 2025.",
     profileUrl: "https://i.pravatar.cc/40?img=3",
     content: `
@@ -27,14 +31,21 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
     `,
   };
 
+  const isOwner = isLogin && currentUserName === post.nickName; // ✅ 내 글 여부
+
   const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const menuItems = [
     { label: "수정하기", onClick: () => alert("수정하기 클릭") },
-    { label: "삭제하기", onClick: () => alert("삭제하기 클릭") },
+    { label: "삭제하기", onClick: () => setIsDeleteModalOpen(true) },
   ];
+
+  const handleDeletePost = () => {
+    setIsDeleteModalOpen(false);
+    alert("게시글이 삭제되었습니다.");
+  };
 
   return (
     <div className={S.page}>
@@ -46,9 +57,10 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
             onChatClick={handleScrollToComments}
             onMenuClick={() => setIsSidebarOpen(true)}
             onMoreClick={() => setIsMenuOpen((prev) => !prev)}
+            showMoreIcon={isOwner}
           />
 
-          {isMenuOpen && (
+          {isOwner && isMenuOpen && (
             <div className="absolute top-[55px] right-6 z-50">
               <DropdownMenuList
                 items={menuItems}
@@ -119,6 +131,17 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
       </main>
 
       <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+
+      <Modal
+        title="해당 블로그를 삭제하시겠어요?"
+        description="삭제된 블로그는 다시 확인할 수 없어요."
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeletePost}
+        confirmText="삭제하기"
+        cancelText="취소"
+        confirmColor="bg-brand-red text-white hover:opacity-90"
+      ></Modal>
     </div>
   );
 }
