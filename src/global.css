@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/write.css";
+@import "./styles/auth.css";
 
 @layer base {
   :root {
