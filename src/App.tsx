@@ -4,6 +4,8 @@ import Blogfind from "./pages/Blogfind";
 import BlogDetail from "./pages/BlogDetail";
 import { dummyPosts } from "@/api/Dummy";
 import BlogWrite from "./pages/BlogWrite";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Route path="/" element={<Blogfind />} />
         <Route path="/post/:id" element={<BlogDetailWrapper />} />
         <Route path="/write" element={<BlogWrite/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );

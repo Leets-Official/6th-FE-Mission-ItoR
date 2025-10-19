@@ -6,7 +6,6 @@ import Img from "@/assets/svgs/Img.png";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import MoreVertIcon from "@/assets/svgs/more_vert.svg?react"; // 댓글 옵션 아이콘
-import Toast from "@/components/Toast";
 import Done from "@/assets/svgs/done.svg?react";
 
 interface BlogDetailProps {
