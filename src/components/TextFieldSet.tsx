@@ -9,13 +9,14 @@ interface TextFieldSetProps {
   size?: "sm" | "lg";
   placeholder?: string;
   className?: string;
+  type?: string;
 }
 
 const TextFieldSet: React.FC<TextFieldSetProps> = ({
   label,
   value,
   onChange,
-  variant = "gray",
+  variant = "outlineblack",
   size = "sm",
   placeholder,
   className,

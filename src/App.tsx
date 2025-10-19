@@ -6,6 +6,7 @@ import { dummyPosts } from "@/api/Dummy";
 import BlogWrite from "./pages/BlogWrite";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import SignupEmail from "./pages/SignupEmail";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/write" element={<BlogWrite/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/signup/email" element={<SignupEmail />} />
       </Routes>
     </Router>
   );
