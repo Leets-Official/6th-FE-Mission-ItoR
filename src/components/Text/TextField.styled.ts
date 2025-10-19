@@ -12,6 +12,8 @@ export const variants: Record<TextFieldVariant, string> = {
     "border border-brand-gray text-brand-black placeholder-brand-black bg-brand-white focus:border-brand-blue",
   disabled:
     "border border-transparent text-brand-black placeholder-brand-gray bg-brand-lightGray cursor-not-allowed",
+  borderless:
+    "border-none text-brand-black placeholder-brand-lightGray bg-brand-white focus:border-none focus:ring-0",
 };
 
 export const sizes: Record<TextFieldSize, string> = {
