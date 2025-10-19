@@ -4,6 +4,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/Blog/PostItem/PostItem";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
+import { useNavigate } from "react-router-dom";
 import { usePosts } from "@/hooks/usePosts";
 import { Post } from "@/types/post";
 import * as styles from "./MainPage.styled";
@@ -45,15 +46,12 @@ export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { posts, pageMax, loading } = usePosts(currentPage, 10);
-
   const dataToShow = posts.length > 0 ? posts : dummyPosts;
   const totalPages = posts.length > 0 ? pageMax : Math.ceil(dummyPosts.length / 10);
-
-  if (loading && posts.length === 0) {
-    return <div className="p-6">로딩 중...</div>;
-  }
+  if (loading && posts.length === 0) return <div className="p-6">로딩 중...</div>;
 
   const pagedData = dataToShow.slice((currentPage - 1) * 10, currentPage * 10);
 
@@ -67,7 +65,6 @@ export default function MainPage() {
       {isSidebarOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
-
           <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
             <Sidebar
               variant="guest"
@@ -83,7 +80,12 @@ export default function MainPage() {
       <main className={styles.mainWrapper}>
         <ul className={styles.listWrapper}>
           {pagedData.map((post, index) => (
-            <PostItem key={post.postId} post={post} isLast={index === pagedData.length - 1} />
+            <PostItem
+              key={post.postId}
+              post={post}
+              isLast={index === pagedData.length - 1}
+              onClick={() => navigate(`/blog/${post.postId}`)}
+            />
           ))}
         </ul>
 
