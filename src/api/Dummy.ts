@@ -32,7 +32,7 @@ export const dummyPosts: Post[] = [
     comments: [
       { id: 1, author: "철수", content: "응원합니다!", createdAt: "2025-10-17" },
       { id: 2, author: "영희", content: "좋은 글이에요!", createdAt: "2025-10-17" },
-      { id: 3, author: "민수", content: "많이 배우고 갑니다.", createdAt: "2025-10-17" },
+      { id: 3, author: "홍길동", content: "많이 배우고 갑니다.", createdAt: "2025-10-17" },
     ],
     photoUrl: Img,
     profileUrl: Img,
@@ -58,7 +58,7 @@ export const dummyPosts: Post[] = [
     createdAt: "2025-10-15",
     commentsCount: 2,
     comments: [
-      { id: 1, author: "민수", content: "정말 유익한 글이에요.", createdAt: "2025-10-15" },
+      { id: 1, author: "홍길동", content: "정말 유익한 글이에요.", createdAt: "2025-10-15" },
       { id: 2, author: "철수", content: "많이 배우고 갑니다.", createdAt: "2025-10-15" },
     ],
     photoUrl: Img,

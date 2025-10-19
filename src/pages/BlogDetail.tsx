@@ -5,39 +5,74 @@ import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 import Img from "@/assets/svgs/Img.png";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
-import { useNavigate } from "react-router-dom";
+import MoreVertIcon from "@/assets/svgs/more_vert.svg?react"; // 댓글 옵션 아이콘
+import Toast from "@/components/Toast";
+import Done from "@/assets/svgs/done.svg?react";
 
 interface BlogDetailProps {
   post: Post;
 }
 
 const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
-  const navigate = useNavigate();
-
   const hasPhoto = !!post.photoUrl;
   const [commentText, setCommentText] = useState("");
   const [isLoggedIn] = useState(true);
   const loggedInUserName = "홍길동";
   const isAuthor = isLoggedIn && loggedInUserName === post.author;
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  // Toast 상태
+  const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
 
-  const handleDeleteClick = () => setIsDeleteModalOpen(true);
-  const handleCloseModal = () => setIsDeleteModalOpen(false);
-  const handleConfirmDelete = () => {
-    setIsDeleteModalOpen(false);
-    navigate("/", { state: { showToast: true } });
+  // 블로그 삭제 모달
+  const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
+
+  // 댓글 삭제 모달
+  const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<number | null>(null);
+
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+
+  // 블로그 삭제 함수
+  const handleBlogDeleteClick = () => setIsBlogDeleteModalOpen(true);
+  const handleBlogDeleteClose = () => setIsBlogDeleteModalOpen(false);
+  const handleBlogDeleteConfirm = () => {
+    setIsBlogDeleteModalOpen(false);
+    setToastMessage({ variant: "success", message: "블로그 삭제가 완료되었습니다!" });
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // 댓글 삭제 함수
+  const handleCommentDeleteConfirm = () => {
+    // 실제 댓글 삭제 로직
+    // 예: post.comments = post.comments.filter(c => c.id !== commentToDelete);
+    setIsCommentDeleteModalOpen(false);
+    setCommentToDelete(null);
+    setToastMessage({ variant: "success", message: "삭제가 완료되었습니다!" });
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full relative">
+      {/* Toast */}
+        {toastMessage && (
+        <div className="flex items-center justify-center mt-4 max-w-[688px]">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full border bg-white shadow-lg border-[#15DC5E] text-[#15DC5E] w-full max-w-[300px] justify-center">
+            {/* 아이콘 */}
+            <Done className="text-[#15DC5E]" />
+            {/* 메시지 */}
+            <span className="text-[14px]">{toastMessage.message}</span>
+            </div>
+        </div>
+        )}
+
+
       {/* 상단 헤더 */}
       <Header
         variant="detail"
         isLoggedIn={isLoggedIn}
         isAuthor={isAuthor}
         post={post}
-        onDelete={handleDeleteClick}
+        onDelete={handleBlogDeleteClick}
       />
 
       {/* 게시글 본문 */}
@@ -74,37 +109,63 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         {post.content}
       </div>
 
-      {/* 댓글 헤더: 댓글 수 표시 */}
-        <div className="w-[688px] max-w-[688px] mt-4 mb-2 text-[16px] font-[Noto Sans KR] font-medium text-gray-900">
+      {/* 댓글 헤더 */}
+      <div className="w-[688px] max-w-[688px] mt-4 mb-2 text-[16px] font-[Noto Sans KR] font-medium text-gray-900">
         댓글 <span className="text-[#00A1FF]">{post.comments?.length || 0}</span>
-        </div>
+      </div>
 
-      {/* ✅ 댓글 목록 */}
-      <div className="w-[688px] max-w-[688px] mt-6">
+      {/* 댓글 목록 */}
+      <div className="w-[688px] max-w-[688px] mt-2">
         {post.comments && post.comments.length > 0 ? (
           post.comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="rounded-md px-4 py-3 mb-3 bg-white"
-            >
-              <div className="flex gap-2 mb-1">
-                <img
+            <div key={comment.id} className="rounded-md px-4 py-3 mb-3 bg-white">
+              <div className="flex justify-between gap-2">
+                <div className="flex gap-2">
+                  <img
                     src={Img}
                     alt={`${comment.author} 프로필`}
-                    className="w-[20px] h-[20px] rounded-full object-cover"
-                />
-                <div className="flex flex-col">
+                    className="w-[20px] h-[20px] rounded-full object-cover mt-1"
+                  />
+                  <div className="flex flex-col">
                     <span className="font-[Noto Sans KR] text-[14px] font-medium text-gray-900">
-                    {comment.author}
+                      {comment.author}
                     </span>
                     <span className="text-[12px] text-gray-400 mt-0.5">
-                    {comment.createdAt}
+                      {comment.createdAt}
                     </span>
-                    <p className="text-[14px] text-gray-700 font-[Noto Sans KR] leading-[160%] mt-3">
-                        {comment.content}
+                    <p className="text-[14px] text-gray-700 font-[Noto Sans KR] leading-[160%] mt-2">
+                      {comment.content}
                     </p>
-                </div>             
+                  </div>
                 </div>
+
+                {/* 로그인 유저 댓글이면 MoreVertIcon 표시 */}
+                {isLoggedIn && comment.author === loggedInUserName && (
+                  <div className="relative flex items-start">
+                    <MoreVertIcon
+                      className="w-5 h-5 text-gray-400 cursor-pointer"
+                      onClick={() =>
+                        setOpenDropdown((prev) => (prev === comment.id ? null : comment.id))
+                      }
+                    />
+                    {/* Dropdown 메뉴 */}
+                    {openDropdown === comment.id && (
+                      <div className="absolute right-0 top-6 w-[100px] rounded shadow-md z-10">
+                        <button
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => {
+                            setCommentToDelete(comment.id);
+                            setIsCommentDeleteModalOpen(true);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          삭제하기
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           ))
         ) : (
@@ -114,7 +175,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
       </div>
 
-      {/* ✅ 댓글 입력창 */}
+      {/* 댓글 입력창 */}
       <div className="flex flex-col w-[688px] max-w-[688px] mt-6 mb-12">
         {isLoggedIn ? (
           <div className="w-[656px] border border-gray-300 rounded-md px-4 py-2 mb-4 flex flex-col gap-2">
@@ -167,14 +228,28 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         </div>
       </div>
 
-      {/* 삭제 모달 */}
-      {isDeleteModalOpen && (
+      {/* 블로그 삭제 모달 */}
+      {isBlogDeleteModalOpen && (
         <Modal
           titleLine1="해당 블로그를 삭제하시겠어요?"
           titleLine2=""
           description="삭제된 블로그는 다시 확인할 수 없어요."
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmDelete}
+          onClose={handleBlogDeleteClose}
+          onConfirm={handleBlogDeleteConfirm}
+        />
+      )}
+
+      {/* 댓글 삭제 모달 */}
+      {isCommentDeleteModalOpen && (
+        <Modal
+          titleLine1="댓글을 삭제할까요?"
+          titleLine2=""
+          description="삭제된 댓글은 다시 확인할 수 없어요."
+          onClose={() => {
+            setIsCommentDeleteModalOpen(false);
+            setCommentToDelete(null);
+          }}
+          onConfirm={handleCommentDeleteConfirm}
         />
       )}
     </div>
