@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
+import TextField from "@/components/Text/TextField";
 import * as S from "./CommentSection.styled";
 import { CommentSectionProps } from "./CommentSection.types";
+import { subText } from "./CommentSection.styled";
 
 const CommentSection: React.FC<CommentSectionProps> = ({
   isLoggedIn,
@@ -20,7 +22,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     setCommentCount((prev) => prev + 1);
   };
 
-  const isDisabled = !isLoggedIn || !comment.trim();
+  const isEmpty = !comment.trim();
+  const isDisabled = !isLoggedIn || isEmpty;
 
   return (
     <>
@@ -31,22 +34,25 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
         {!isLoggedIn ? (
           <div className={S.emptyBox}>
-            <p className={S.emptyText}>작성된 댓글이 없습니다.</p>
+            <p className={S.subText}>작성된 댓글이 없습니다.</p>
             <p className={S.subText}>응원의 첫 번째 댓글을 달아주세요.</p>
-            <div className={S.loginPrompt}>로그인을 하고 댓글을 달아보세요!</div>
+            <div className={S.emptyTextarea}>로그인을 하고 댓글을 달아보세요!</div>
           </div>
         ) : (
           <div className={S.commentWrapper}>
-            <Avatar src="https://i.pravatar.cc/40?img=15" size="sm" />
+            <Avatar src={postAuthorProfile} size="sm" />
             <div className={S.commentBox}>
               <p className={S.commentNick}>{postAuthorName}</p>
 
-              {/* ✅ 넓은 textarea */}
-              <textarea
+              <TextField
                 placeholder="댓글을 입력하세요."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className={S.commentInput}
+                variant="default"
+                size="md"
+                fullWidth
+                multiline
+                className={`${S.commentInput} ${isEmpty ? "bg-brand-bgGray" : "bg-white"}`}
               />
 
               <div className="flex justify-end">
@@ -72,8 +78,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         <div className={S.footerProfile}>
           <Avatar src={postAuthorProfile} size="lg" />
           <div className="flex flex-col items-center">
-            <p className={S.footerNick}>%{postAuthorName}</p>
-            <p className={S.footerIntro}>%{`(한 줄 소개)`}</p>
+            <p className={S.footerNick}>{postAuthorName}</p>
+            <p className={S.footerIntro}>(한 줄 소개)</p>
           </div>
         </div>
       </div>

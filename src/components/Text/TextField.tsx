@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "@/utils/cn";
 import { TextFieldProps } from "./TextField.types";
 import { base, variants, sizes } from "./TextField.styled";
@@ -8,11 +9,25 @@ export const TextField: React.FC<TextFieldProps> = ({
   className = "",
   disabled,
   fullWidth,
+  multiline,
   ...props
 }) => {
-  const cls = cn(base, variants[variant], sizes[size], fullWidth && "w-full", className);
+  const cls = cn(
+    base,
+    variants[variant],
+    sizes[size],
+    fullWidth && "w-full",
+    multiline && "min-h-[180px] resize-none p-4",
+    className,
+  );
 
-  return <input className={cls} disabled={disabled} {...props} />;
+  if (multiline) {
+    const textareaProps = props as React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+    return <textarea className={cls} disabled={disabled} {...textareaProps} />;
+  }
+
+  const inputProps = props as React.InputHTMLAttributes<HTMLInputElement>;
+  return <input className={cls} disabled={disabled} {...inputProps} />;
 };
 
 export default TextField;
