@@ -80,11 +80,11 @@ const WritePage: React.FC = () => {
         {/* 제목 */}
         <section className="write-title">
           <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="제목"
-            className="write-title__input"
-          />
+             value={title}
+             onChange={(e) => setTitle(e.target.value)}
+             placeholder="제목"
+             className={`write-title__input ${title ? 'is-filled' : ''}`}
+           />
         </section>
 
         {/* 제목/본문 사이 얇은 구분선 */}

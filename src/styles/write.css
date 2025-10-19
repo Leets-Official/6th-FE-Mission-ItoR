@@ -2,12 +2,12 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--White, #fff);
+  background: var(--White);
 }
 
 .write-header {
   width: 100%;
-  border-bottom: 1px solid var(--gray96, #f5f5f5);
+  border-bottom: 1px solid var(--Gray96);
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(2px);
 }
@@ -19,10 +19,7 @@
   justify-content: space-between;
   align-items: center;
 }
-.write-header__brand {
-  font-size: 18px;
-  font-weight: 600;
-}
+
 .write-header__actions {
   display: flex;
   gap: 24px;
@@ -32,15 +29,16 @@
   border: 0;
   background: none;
   font-size: 14px;
+  line-height: 22.4px;
   cursor: pointer;
 }
-.write-btn--delete { color: #ff4d4f; }
-.write-btn--publish { color: #000; }
-.write-btn--publish:disabled { color: var(--Gray56, #909090); cursor: not-allowed; }
+.write-btn--delete { color: var(--Negative); }
+.write-btn--publish { color: var(--Black); }
+.write-btn--publish:disabled { color: var(--Gray56); cursor: not-allowed; }
 
 .write-toolbar {
   width: 100%;
-  border-bottom: 1px solid var(--gray96, #f5f5f5);
+  border-bottom: 1px solid var(--Gray96);
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.01);
   backdrop-filter: blur(2px);
@@ -48,8 +46,7 @@
   justify-content: center;
   align-items: center;
   padding: 12px 16px 12px 12px;
-  color: var(--Gray56, #909090);
-  font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  color: var(--Gray56);
   font-size: 12px;
   line-height: 160%;
   gap: 32px;
@@ -88,8 +85,17 @@
   font-size: 32px;
   line-height: 1.3;
   font-weight: 600;
+  color: var(--Gray20);
 }
-.write-title__input::placeholder { color: var(--Gray56, #909090); }
+.write-title__input::placeholder { color: var(--Gray56); }
+
+.write-divider {
+  width: 100%;
+  max-width: 688px;
+  height: 1px;
+  background: var(--Gray96);
+  margin: 0 auto 24px;
+}
 
 .write-body {
   max-width: 688px;
@@ -105,9 +111,9 @@
   background: transparent;
   font-size: 14px;
   line-height: 22.4px;
-  color: var(--Gray20, #4d4d4d);
+  color: var(--Gray20);
 }
-.write-body__textarea::placeholder { color: var(--Gray78, #c8c8c8); }
+.write-body__textarea::placeholder { color: var(--Gray-78); }
 
 .write-image {
   max-width: 688px;
