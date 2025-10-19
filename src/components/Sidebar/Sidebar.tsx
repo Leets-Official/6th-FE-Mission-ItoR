@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
 import { SidebarProps } from "./Sidebar.types";
@@ -22,6 +23,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   onLogoutClick,
   onLoginClick,
 }) => {
+  const navigate = useNavigate();
+
+  const handleWriteClick = () => {
+    navigate("/write");
+  };
+
   return (
     <aside className={baseSidebar}>
       {variant === "guest" && (
@@ -56,7 +63,13 @@ const Sidebar: React.FC<SidebarProps> = ({
                 onClick={onMyPageClick}
                 fullWidth
               />
-              <Button label="깃로그 쓰기" variant="primaryOutline" size="sm" fullWidth />
+              <Button
+                label="깃로그 쓰기"
+                variant="primaryOutline"
+                size="sm"
+                fullWidth
+                onClick={handleWriteClick}
+              />
             </div>
           </div>
 

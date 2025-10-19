@@ -1,5 +1,6 @@
 export type DropdownMenuItem = {
-  label: string;
+  label?: string;
+  icon?: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
 };

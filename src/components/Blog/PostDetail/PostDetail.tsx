@@ -83,10 +83,9 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
           <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
             <Sidebar
               variant="user"
-              onLoginClick={() => {
-                setIsLoginOpen(true);
-                setIsSidebarOpen(false);
-              }}
+              onLogoutClick={() => console.log("로그아웃")}
+              onSettingClick={() => console.log("설정")}
+              onMyPageClick={() => console.log("마이페이지 이동")}
             />
           </aside>
         </>
