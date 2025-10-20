@@ -4,7 +4,6 @@ import clsx from "clsx";
 import ReorderIcon from "@icons/reorder.svg?react";
 
 export default function AccountProfilePage() {
-  // 초기 값 (실서비스에선 서버 fetch로 채우세요)
   const initial = {
     nickname: "닉네임",
     intro: "한 줄 소개",
