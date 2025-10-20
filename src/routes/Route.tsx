@@ -7,6 +7,7 @@ import PostDetailPage from '../pages/PostDetailPage';
 import WritePage from '../pages/WritePage';
 import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
+import SignUpFormPage from "../pages/SignUpFormPage";
 
 
 // 라우터 "객체" 생성
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
   { path: '*', element: <Navigate to="/" replace /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/join",  element: <SignUpPage /> },
+  { path: "/join/email", element: <SignUpFormPage /> },
 ]);
 
 export default router; 
