@@ -14,11 +14,13 @@ import PaginationTestPage from '@/pages/test/PaginationTestPage'
 import HomePage from '@/pages/HomePage'
 import SignUpPage from '@/pages/SignUpPage'
 import SignUpEmailPage from '../pages/SignUpEmailPage'
+import SignUpKakaoPage from '@/pages/SignUpKakaoPage'
 
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
   { path: 'signup', element: <SignUpPage /> },
   { path: 'signup/email', element: <SignUpEmailPage /> },
+  { path: 'signup/kakao', element: <SignUpKakaoPage /> },
   { path: '/test/button', element: <ButtonTestPage /> },
   { path: '/test/toast', element: <ToastTestPage /> },
   { path: '/test/menu', element: <MenuTestPage /> },

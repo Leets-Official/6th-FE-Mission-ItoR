@@ -33,11 +33,11 @@ export default function TextFiledSet({
       {/* 인풋 */}
       <TextFiled
         size='small'
-        state='default' // ✅ 타입 충돌 방지: error 제거
+        state='default' // 타입 충돌 방지: error 제거
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`${inputClassName ?? ''} ${hasError ? 'border-[#FF3F3F]' : 'border-[#E6E6E6]'}`} // ✅ 빨간 테두리 조건부 적용
+        className={`${inputClassName ?? ''} ${hasError ? 'border-[#FF3F3F]' : 'border-[#E6E6E6]'}`} // 빨간 테두리 조건부 적용
       />
 
       {/* 안내 문구 */}
