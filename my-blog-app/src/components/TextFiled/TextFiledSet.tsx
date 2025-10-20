@@ -5,6 +5,8 @@ type TextFiledSetProps = {
   placeholder?: string
   helperText?: string
   showHelper?: boolean
+  helperType?: 'default' | 'error'
+  hasError?: boolean // 추가: 에러 상태 여부
   value?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   inputClassName?: string
@@ -15,6 +17,8 @@ export default function TextFiledSet({
   placeholder = 'Text filed',
   helperText,
   showHelper = false,
+  helperType = 'default',
+  hasError = false, // 기본값 false (회색)
   value,
   onChange,
   inputClassName,
@@ -29,16 +33,22 @@ export default function TextFiledSet({
       {/* 인풋 */}
       <TextFiled
         size='small'
-        state='default'
+        state='default' // ✅ 타입 충돌 방지: error 제거
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={inputClassName}
+        className={`${inputClassName ?? ''} ${hasError ? 'border-[#FF3F3F]' : 'border-[#E6E6E6]'}`} // ✅ 빨간 테두리 조건부 적용
       />
 
-      {/* 주의 문구 */}
+      {/* 안내 문구 */}
       {showHelper && helperText && (
-        <span className='text-[12px] font-light leading-[160%] text-gray-400'>{helperText}</span>
+        <span
+          className={`text-[12px] font-light leading-[160%] ${
+            hasError || helperType === 'error' ? 'text-[#FF3F3F]' : 'text-[#909090]'
+          }`}
+        >
+          {helperText}
+        </span>
       )}
     </div>
   )
