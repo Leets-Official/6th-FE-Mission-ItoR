@@ -1,5 +1,3 @@
-// src/routes/Route.tsx
-import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import HomePage from '../pages/HomePage';
@@ -8,9 +6,9 @@ import WritePage from '../pages/WritePage';
 import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
 import SignUpFormPage from "../pages/SignUpFormPage";
+import ProfilePage from "../pages/ProfilePage";
 
 
-// 라우터 "객체" 생성
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
   { path: '/post/:id', element: <PostDetailPage /> },
@@ -19,6 +17,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
   { path: "/join",  element: <SignUpPage /> },
   { path: "/join/email", element: <SignUpFormPage /> },
+  { path: "/profile", element: <ProfilePage /> },
 ]);
 
 export default router; 
