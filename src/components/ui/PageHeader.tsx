@@ -11,14 +11,20 @@ type HeaderVariant = "write" | "comment" | "publish";
 
 interface PageHeaderProps {
   variant?: HeaderVariant;
-  title?: React.ReactNode; // 기본: "GITLOG"
+  title?: React.ReactNode;
   className?: string;
+
+  // behavior
   onClickMenu?: () => void;
   onClickWrite?: () => void;
   onClickComment?: () => void;
   onClickMore?: () => void;
   onClickDelete?: () => void;
   onClickPublish?: () => void;
+
+  // style options (추가)
+  withBorder?: boolean;   // 상단 보더 필요할 때
+  sticky?: boolean;       // 상단 고정 필요할 때
 }
 
 export default function PageHeader({
@@ -31,16 +37,18 @@ export default function PageHeader({
   onClickMore,
   onClickDelete,
   onClickPublish,
+  withBorder = false,
+  sticky = false,
 }: PageHeaderProps) {
   return (
     <header
       className={clsx(
-        // 레이아웃: width 1366, padding: 16 16 16 12
-        // 높이 고정 56px로 세 variant 동일하게
-        "flex w-[1366px] h-[56px] pl-3 pr-4 justify-between items-center",
-        // 스타일
+        // 부모가 폭/패딩을 결정할 수 있도록 최소한만 설정
+        "w-full h-[56px] flex items-center justify-between",
         "bg-[rgba(255,255,255,0.90)] backdrop-blur-[2px]",
-        className,
+        withBorder && "border-b border-[var(--Gray96)]",
+        sticky && "sticky top-0 z-40",
+        className
       )}
     >
       {/* Left: 메뉴 + 타이틀 */}
@@ -49,7 +57,7 @@ export default function PageHeader({
           type="button"
           onClick={onClickMenu}
           aria-label="메뉴 열기"
-          className="btn-reset w-6 h-6 flex items-center justify-center"
+          className="btn-reset w-6 h-6 inline-flex items-center justify-center"
         >
           <ReorderIcon className="w-6 h-6" />
         </button>
@@ -71,7 +79,7 @@ export default function PageHeader({
               type="button"
               onClick={onClickComment}
               aria-label="댓글 보기"
-              className="btn-reset w-6 h-6 flex items-center justify-center"
+              className="btn-reset w-6 h-6 inline-flex items-center justify-center"
             >
               <ChatIcon className="w-6 h-6" />
             </button>
@@ -79,7 +87,7 @@ export default function PageHeader({
               type="button"
               onClick={onClickMore}
               aria-label="더보기"
-              className="btn-reset w-6 h-6 flex items-center justify-center"
+              className="btn-reset w-6 h-6 inline-flex items-center justify-center"
             >
               <MoreVertIcon className="w-6 h-6" />
             </button>
@@ -91,16 +99,14 @@ export default function PageHeader({
             <button
               type="button"
               onClick={onClickDelete}
-              className="btn-reset h-10 w-[76px] px-3 flex justify-center items-center gap-1 shrink-0 rounded-[25px]
-                         btn-text-14 text-[var(--Negative)]"
+              className="btn-reset h-10 w-[76px] px-3 flex justify-center items-center gap-1 shrink-0 rounded-[25px] btn-text-14 text-[var(--Negative)]"
             >
               삭제하기
             </button>
             <button
               type="button"
               onClick={onClickPublish}
-              className="btn-reset h-10 w-[76px] px-3 flex justify-center items-center gap-1 shrink-0 rounded-[25px]
-                         btn-text-14 text-[var(--Gray20)]"
+              className="btn-reset h-10 w-[76px] px-3 flex justify-center items-center gap-1 shrink-0 rounded-[25px] btn-text-14 text-[var(--Gray20)]"
             >
               게시하기
             </button>

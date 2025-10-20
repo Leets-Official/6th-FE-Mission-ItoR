@@ -1,12 +1,11 @@
 // src/pages/HomePage.tsx
 import React, { useState } from "react";
 import clsx from "clsx";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import PageHeader from "@ui/PageHeader";
 import PostList from "../components/home/PostList";
+import Frame from "@ui/Frame";
 import type { Post } from "../types/post";
-
-// 오버레이용 아이콘 & 스타일
 import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
@@ -25,15 +24,16 @@ const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
 
 const styles = {
   container: {
-    main: "mx-auto w-full max-w-[688px] px-4 sm:px-6 md:px-8",
-    header: "w-full px-4 sm:px-6 md:px-8",
+    wrap: "mx-auto w-full max-w-[1366px]",
+    pad: "px-4 sm:px-6 md:px-8",
+    main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8",
   },
 } as const;
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
 
-  // ?login=1 이면 팝업 열림
   const [search, setSearch] = useSearchParams();
   const loginOpen = search.get("login") === "1";
   const openLogin = () => setSearch({ login: "1" }, { replace: true });
@@ -42,22 +42,76 @@ export default function HomePage() {
     setSearch(search, { replace: true });
   };
 
+  const [showFrame, setShowFrame] = useState(false);
+  const toggleFrame = () => setShowFrame((v) => !v);
+
+  // ✅ 로그인 상태: member 변형으로 렌더되어 하단 '설정/로그아웃' 노출
+  const isAuthed = true; // 실제 구현에선 전역 auth 상태로 교체
+  const user = {
+    username: "saeryeom",
+    nickname: "닉네임",
+    bio: "한 줄 소개",
+    avatarUrl: "",
+  };
+
+  const goStart = () => navigate("/join");
+  const goMyGitlog = () => navigate(`/profile/${user.username}`);
+  const goWrite = () => {
+    if (!isAuthed) return openLogin();
+    navigate("/write");
+  };
+  const goSettings = () => navigate("/account/profile");
+  const doLogout = () => navigate("/", { replace: true });
+
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
-      <header className="w-full bg-white/90 backdrop-blur-[2px]">
-        <div className={clsx(styles.container.header)}>
-          {/* 헤더의 '깃로그 쓰기' 클릭 시 팝업 오픈 */}
-          <PageHeader variant="write" className="!w-full" onClickWrite={openLogin} />
+      <style>{`
+        .home-frame-scope .bg-white { background-color: var(--Gray96) !important; }
+      `}</style>
+
+      <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)]">
+        <div className={clsx(styles.container.wrap, styles.container.pad)}>
+          <PageHeader
+            variant="write"
+            onClickMenu={toggleFrame}
+            onClickWrite={openLogin}
+            className="!w-full"
+          />
         </div>
       </header>
 
       <main className="flex-1 w-full">
-        <div className={clsx(styles.container.main)}>
-          <PostList posts={POSTS} page={page} onPageChange={setPage} />
+        <div className={clsx(styles.container.main, "py-8")}>
+          <div
+            className={clsx(
+              "grid gap-8 items-start",
+              showFrame ? "grid-cols-[240px,1fr]" : "grid-cols-[1fr]"
+            )}
+          >
+            {showFrame && (
+              <div className="hidden md:block sticky top-[72px] self-start home-frame-scope">
+                <Frame
+                  variant={isAuthed ? "member" : "guest"}
+                  name={isAuthed ? `%${user.nickname}` : "%{닉네임}"}
+                  intro={isAuthed ? `%${user.bio}` : "%{한 줄 소개}"}
+                  avatarSrc={user.avatarUrl}
+                  initial="G"
+                  onStart={goStart}
+                  onMyGitlog={goMyGitlog}
+                  onWrite={goWrite}
+                  onSettings={goSettings}
+                  onLogout={doLogout}
+                />
+              </div>
+            )}
+
+            <section className="flex flex-col gap-6">
+              <PostList posts={POSTS} page={page} onPageChange={setPage} />
+            </section>
+          </div>
         </div>
       </main>
 
-      {/* 로그인 팝업 (배경 유지 + 블러) */}
       {loginOpen && (
         <div className="auth-dim" onClick={closeLogin} role="presentation">
           <section
