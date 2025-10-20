@@ -7,6 +7,7 @@ import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
 import SignUpFormPage from "../pages/SignUpFormPage";
 import ProfilePage from "../pages/ProfilePage";
+import AccountProfilePage from "../pages/AccountProfilePage";
 
 
 const router = createBrowserRouter([
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
   { path: "/join",  element: <SignUpPage /> },
   { path: "/join/email", element: <SignUpFormPage /> },
   { path: "/profile", element: <ProfilePage /> },
+  { path: "/account/profile", element: <AccountProfilePage /> },
 ]);
 
 export default router; 
