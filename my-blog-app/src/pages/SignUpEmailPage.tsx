@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import PageHeader from '@/components/common/PageHeader'
 import TextCard from '@/components/common/TextCard'
 import Blank from '@/components/common/Blank'
@@ -7,6 +8,8 @@ import TextFiledSet from '@/components/TextFiled/TextFiledSet'
 import { AddPhotoAlternateIcon } from '@/assets/icons/AddPhotoAlternateIcon'
 
 export default function SignUpEmailPage() {
+  const [nickname, setNickname] = useState('')
+  const hasError = nickname.length > 20
   return (
     <div className='min-h-screen flex flex-col items-center bg-white'>
       {/* 상단 영역 재사용 */}
@@ -49,18 +52,51 @@ export default function SignUpEmailPage() {
       {/* 입력 필드 */}
       <Blank size='md' />
       <div className='flex flex-col gap-4 w-full items-center'>
-        <TextFiledSet label='이메일' placeholder='이메일' />
-        <TextFiledSet label='비밀번호' placeholder='......' />
-        <TextFiledSet label='비밀번호 확인' placeholder='......' />
-        <TextFiledSet label='이름' placeholder='이름' />
-        <TextFiledSet label='성별/생년월일' placeholder='YYYY - MM - DD' />
+        <TextFiledSet
+          label='이메일'
+          placeholder='이메일'
+          showHelper={false}
+          helperText='* 반드시 입력해야하는 필수 사항입니다.'
+          helperType='error'
+        />
+        <TextFiledSet
+          label='비밀번호'
+          placeholder='......'
+          showHelper={false}
+          helperText='* 비밀번호가 일치하지 않습니다.'
+          helperType='error'
+        />
+        <TextFiledSet label='비밀번호 확인' placeholder='......' showHelper={false} />
+        <TextFiledSet
+          label='이름'
+          placeholder='이름'
+          showHelper={false}
+          helperText='* 반드시 입력해야하는 필수 사항입니다.'
+          helperType='error'
+        />
+        <TextFiledSet
+          label='생년월일'
+          placeholder='YYYY - MM - DD'
+          showHelper={false}
+          helperText='* 2025년 3월 16일 이전만 입력 가능합니다.'
+          helperType='error'
+        />
         <TextFiledSet
           label='닉네임'
           placeholder='닉네임'
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
           showHelper={true}
-          helperText='* 20글자 이내'
+          helperText={hasError ? '* 닉네임은 최대 20자까지입니다.' : '* 20글자 이내'}
+          hasError={hasError}
         />
-        <TextFiledSet label='한 줄 소개' placeholder='한 줄 소개' />
+        <TextFiledSet
+          label='한 줄 소개'
+          placeholder='한 줄 소개'
+          showHelper={false}
+          helperText='* 한 줄 소개는 최대 30자까지입니다.'
+          helperType='error'
+        />
       </div>
 
       {/* 버튼 */}
