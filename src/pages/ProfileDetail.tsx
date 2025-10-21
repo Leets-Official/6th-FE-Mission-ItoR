@@ -33,7 +33,7 @@ const ProfileDetail: React.FC = () => {
         </p>
 
         <button
-          onClick={() => navigate("/profile/edit")}
+          onClick={() => navigate("/profilefind")}
           className="mr-[640px] flex items-center gap-1 text-[12px] text-[#909090] border border-gray-300 rounded-sm px-3 py-1 mt-3 hover:bg-gray-50 transition"
         >
           <SettingIcon className="text-[#909090]"/> 내 프로필 설정

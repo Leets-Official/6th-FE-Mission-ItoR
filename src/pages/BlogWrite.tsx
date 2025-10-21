@@ -83,7 +83,7 @@ const BlogWrite: React.FC = () => {
 
       {toastVariant && (
         <div className="flex items-center justify-center mt-4 max-w-[688px]">
-          <Toast variant={toastVariant} message={toastMessage} />
+          <Toast variant={toastVariant} message={toastMessage}/>
         </div>
       )}
 

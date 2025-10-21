@@ -10,6 +10,7 @@ interface TextFieldSetProps {
   placeholder?: string;
   className?: string;
   type?: string;
+  disabled?: boolean;
 }
 
 const TextFieldSet: React.FC<TextFieldSetProps> = ({
@@ -20,18 +21,28 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
   size = "sm",
   placeholder,
   className,
+  type = "text",
+  disabled = false,
 }) => {
   return (
-    <div className={`w-full h-[104px] p-[12px_16px] flex flex-col gap-[12px] ${className}`}>
-      <span className="font-[Noto Sans KR] font-light text-[14px] leading-[160%] tracking-[-0.5%] text-gray-800">
-        {label}
-      </span>
+    <div
+      className={`w-full flex flex-col gap-[8px] p-[8px_0px] ${className}`}
+    >
+      {label && (
+        <span className="font-[Noto Sans KR] font-light text-[14px] leading-[160%] tracking-[-0.5%] text-[#909090]">
+          {label}
+        </span>
+      )}
+
       <TextField
+        type={type}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         variant={variant}
         size={size}
         placeholder={placeholder}
+        disabled={disabled}
+        className="text-[#909090] placeholder-[#B0B0B0]"
       />
     </div>
   );

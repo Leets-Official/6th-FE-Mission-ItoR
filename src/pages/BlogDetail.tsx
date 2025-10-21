@@ -43,7 +43,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
   // 댓글 삭제 함수
   const handleCommentDeleteConfirm = () => {
     // 실제 댓글 삭제 로직
-    // 예: post.comments = post.comments.filter(c => c.id !== commentToDelete);
     setIsCommentDeleteModalOpen(false);
     setCommentToDelete(null);
     setToastMessage({ variant: "success", message: "삭제가 완료되었습니다!" });
@@ -52,20 +51,15 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
 
   return (
     <div className="flex flex-col items-center w-full relative">
-      {/* Toast */}
         {toastMessage && (
         <div className="flex items-center justify-center mt-4 max-w-[688px]">
             <div className="flex items-center gap-2 px-4 py-2 rounded-full border bg-white shadow-lg border-[#15DC5E] text-[#15DC5E] w-full max-w-[300px] justify-center">
-            {/* 아이콘 */}
             <Done className="text-[#15DC5E]" />
-            {/* 메시지 */}
             <span className="text-[14px]">{toastMessage.message}</span>
             </div>
         </div>
         )}
 
-
-      {/* 상단 헤더 */}
       <Header
         variant="detail"
         isLoggedIn={isLoggedIn}
@@ -74,7 +68,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         onDelete={handleBlogDeleteClick}
       />
 
-      {/* 게시글 본문 */}
       <div
         className={`w-[688px] max-w-[688px] border-b border-gray-300 py-3 flex ${
           hasPhoto ? "flex-row" : "flex-col"
@@ -103,17 +96,14 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
       </div>
 
-      {/* 본문 내용 */}
       <div className="w-[688px] p-4 text-gray-800 font-[Noto Sans KR] text-[14px] leading-[160%] mt-4 whitespace-pre-line">
         {post.content}
       </div>
 
-      {/* 댓글 헤더 */}
       <div className="w-[688px] max-w-[688px] mt-4 mb-2 text-[16px] font-[Noto Sans KR] font-medium text-gray-900">
         댓글 <span className="text-[#00A1FF]">{post.comments?.length || 0}</span>
       </div>
 
-      {/* 댓글 목록 */}
       <div className="w-[688px] max-w-[688px] mt-2">
         {post.comments && post.comments.length > 0 ? (
           post.comments.map((comment) => (
@@ -138,7 +128,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
                   </div>
                 </div>
 
-                {/* 로그인 유저 댓글이면 MoreVertIcon 표시 */}
                 {isLoggedIn && comment.author === loggedInUserName && (
                   <div className="relative flex items-start">
                     <MoreVertIcon
@@ -147,7 +136,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
                         setOpenDropdown((prev) => (prev === comment.id ? null : comment.id))
                       }
                     />
-                    {/* Dropdown 메뉴 */}
                     {openDropdown === comment.id && (
                       <div className="absolute right-0 top-6 w-[100px] rounded shadow-md z-10">
                         <button
@@ -174,7 +162,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
       </div>
 
-      {/* 댓글 입력창 */}
       <div className="flex flex-col w-[688px] max-w-[688px] mt-6 mb-12">
         {isLoggedIn ? (
           <div className="w-[656px] border border-gray-300 rounded-md px-4 py-2 mb-4 flex flex-col gap-2">
@@ -210,7 +197,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         )}
       </div>
 
-      {/* 작성자 영역 */}
       <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
         <div className="flex flex-col items-start w-[688px] max-w-[688px] h-[354px] py-4">
           <img
@@ -227,7 +213,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         </div>
       </div>
 
-      {/* 블로그 삭제 모달 */}
       {isBlogDeleteModalOpen && (
         <Modal
           titleLine1="해당 블로그를 삭제하시겠어요?"
@@ -238,7 +223,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
         />
       )}
 
-      {/* 댓글 삭제 모달 */}
       {isCommentDeleteModalOpen && (
         <Modal
           titleLine1="댓글을 삭제할까요?"
@@ -253,6 +237,6 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
       )}
     </div>
   );
-};
+}; 
 
 export default BlogDetail;

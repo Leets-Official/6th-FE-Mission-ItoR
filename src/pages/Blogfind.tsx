@@ -36,7 +36,7 @@ const Blogfind: React.FC = () => {
       <Header variant="write" />
 
       {/* 삭제 토스트 */}
-      {showToast && <Toast variant="success" message="삭제가 완료되었습니다!" />}
+      {showToast && <Toast variant="success" message="삭제가 완료되었습니다!"/>}
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {posts.map((post) => (

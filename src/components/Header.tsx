@@ -9,7 +9,7 @@ import GitLog from "@/assets/svgs/Frame7.svg?react";
 import DropdownMenu from "./DropdownMenu";
 import { type Post } from "@/api/Dummy";
 
-type HeaderVariant = "write" | "detail" | "edit";
+type HeaderVariant = "write" | "detail" | "edit" | "profile";
 
 interface HeaderProps {
   variant: HeaderVariant;
@@ -92,6 +92,19 @@ const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
           )}
+
+          {variant === "profile" && (
+            <div className="flex items-center gap-6">
+              <button
+                type="button"
+                className="text-[14px] text-black"
+                onClick={onPost}
+              >
+                수정하기
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
     </header>
