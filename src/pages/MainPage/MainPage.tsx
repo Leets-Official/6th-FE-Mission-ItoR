@@ -58,7 +58,12 @@ export default function MainPage() {
   return (
     <div className="relative">
       <div className="fixed top-0 left-0 z-50 w-full">
-        <Header title="GITLOG" variant="write" onMenuClick={() => setIsSidebarOpen(true)} />
+        <Header
+          title="GITLOG"
+          variant="write"
+          onMenuClick={() => setIsSidebarOpen(true)}
+          onWriteClick={() => navigate("/write")}
+        />
       </div>
       <div className="h-[70px]" />
 
