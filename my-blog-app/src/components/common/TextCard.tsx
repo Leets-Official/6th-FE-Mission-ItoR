@@ -15,7 +15,7 @@ export default function TextCard({ variant = 'body', title, subtitle, children }
   const variants: Record<typeof variant, string> = {
     primary: 'flex flex-col justify-center items-start gap-3 w-full max-w-full',
     secondary: 'flex flex-col justify-center items-start gap-2',
-    body: 'flex items-start gap-[10px] w-full max-w-full',
+    body: 'flex gap-[10px] w-full max-w-full',
   }
 
   return (
