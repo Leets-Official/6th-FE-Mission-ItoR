@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import clsx from 'clsx'
+import { TriangleIcon } from '@/assets/icons/TriangleIcon'
 
 interface DropdownItem {
   label: string
-  onClick: () => void
+  onClick?: () => void
 }
 
 interface DropdownMenuProps {
@@ -12,37 +12,44 @@ interface DropdownMenuProps {
 }
 
 export default function DropdownMenu({ items, variant = 'material' }: DropdownMenuProps) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true) // 외부에서 제어하지 않는 한 항상 보이게(테스트용)
   const isArrow = variant === 'arrow'
 
   return (
-    <div className='relative inline-block text-left'>
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className={clsx(
-          'px-4 py-2 rounded text-white transition-colors duration-150',
-          isArrow ? 'bg-blue-500 hover:bg-blue-600' : 'bg-green-500 hover:bg-green-600',
-        )}
-      >
-        {isArrow ? 'Arrow Dropdown' : 'Material Dropdown'}
-      </button>
-
+    <div className={`relative inline-flex flex-col ${isArrow ? 'items-end' : 'items-start'}`}>
+      {/* ▼ 드롭다운 영역 */}
       {open && (
         <div
-          className={clsx(
-            'absolute mt-2 w-40 rounded-md shadow-lg bg-white z-10',
-            isArrow ? 'border border-blue-200' : 'border border-gray-200',
-          )}
+          className={`mt-2 flex flex-col rounded-md shadow-[0_2px_8px_rgba(0,0,0,0.10)] bg-transparent ${
+            isArrow ? 'inline-flex items-end' : 'items-start'
+          }`}
         >
-          {items.map((item, idx) => (
-            <div
-              key={idx}
-              onClick={item.onClick}
-              className='px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700'
-            >
-              {item.label}
+          {/* 삼각형 (arrow 전용) */}
+          {isArrow && (
+            <div className='w-[29px] h-[8px] inline-flex flex-col items-end shadow-[0_2px_8px_rgba(0,0,0,0.10)] rotate-180'>
+              <TriangleIcon className='w-[29px] h-[8px] fill-white' />
             </div>
-          ))}
+          )}
+
+          {/* ▼ 메뉴 본체 */}
+          <div className='flex flex-col bg-transparent rounded-md'>
+            {items.map((item, idx) => (
+              <div
+                key={idx}
+                onClick={item.onClick}
+                className={`flex w-[160px] px-3 pt-2 pb-3 items-center gap-[10px]
+                  bg-white font-sans text-[14px]
+                  leading-[160%] tracking-[-0.07px] cursor-pointer select-none
+                  ${
+                    item.label === '삭제하기'
+                      ? 'text-[#FF3F3F] hover:bg-gray-50'
+                      : 'text-black hover:bg-gray-50'
+                  }`}
+              >
+                {item.label}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
