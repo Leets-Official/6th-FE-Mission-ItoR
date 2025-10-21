@@ -18,7 +18,14 @@ const PostWritePage: React.FC = () => {
   ]);
 
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
+  const handleConfirmLogout = () => {
+    setIsLogoutModalOpen(false);
+    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
+  };
 
   const handleCancel = () => {
     const confirmCancel = confirm("작성 중인 내용을 취소하시겠습니까?");
@@ -64,12 +71,7 @@ const PostWritePage: React.FC = () => {
         <>
           <div className={S.sidebarOverlay} onClick={() => setIsSidebarOpen(false)} />
           <aside className={S.sidebar}>
-            <Sidebar
-              variant="user"
-              onLogoutClick={() => console.log("로그아웃")}
-              onSettingClick={() => console.log("설정")}
-              onMyPageClick={() => console.log("마이페이지 이동")}
-            />
+            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
           </aside>
         </>
       )}
@@ -127,6 +129,16 @@ const PostWritePage: React.FC = () => {
         cancelText="취소"
         confirmColor="bg-brand-red text-white hover:opacity-90"
         onConfirm={handleConfirmDelete}
+      />
+
+      <Modal
+        open={isLogoutModalOpen}
+        title="로그아웃을 진행할게요."
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+        confirmText="로그아웃"
+        cancelText="취소"
+        confirmColor="bg-brand-blue text-white hover:opacity-90"
       />
     </main>
   );

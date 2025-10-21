@@ -1,19 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/Blog/PostItem/PostItem";
 import SmallButton from "@/components/SmallButton/SmallButton";
-import { useNavigate } from "react-router-dom";
 import * as S from "./MyPage.styled";
 import { Post } from "@/types/post";
 import { SettingsIcon } from "@/assets/icons";
 import Avatar from "@/components/Avatar/Avatar";
+import Toast from "@/components/Toast/Toast";
+import Modal from "@/components/Modal/Modal";
 
 export default function MyPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [toastMessage, setToastMessage] = useState("");
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
+  const handleConfirmLogout = () => {
+    setIsLogoutModalOpen(false);
+    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
+  };
+
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      setToastMessage(location.state.toastMessage);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
+  const handleToastClose = () => setToastMessage("");
 
   const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
     postId: crypto.randomUUID(),
@@ -67,7 +87,7 @@ export default function MyPage() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
           <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar variant="user" />
+            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
           </aside>
         </>
       )}
@@ -76,14 +96,15 @@ export default function MyPage() {
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
             <Avatar src="https://i.pravatar.cc/120?img=5" alt="프로필 이미지" size="lg" />
-            <h2 className={S.nickname}>%{`{닉네임}`}</h2>
-            <p className={S.intro}>%{`{한 줄 소개}`}</p>
+            <h2 className={S.nickname}>닉채민</h2>
+            <p className={S.intro}>You can make anything by writing.</p>
 
             <SmallButton
               label="내 프로필 설정"
               variant="secondaryOutline"
               leftIcon={<SettingsIcon width={16} height={16} />}
               className={S.editProfileButton}
+              onClick={() => navigate("/mypage/setting")}
             />
           </div>
         </div>
@@ -109,6 +130,22 @@ export default function MyPage() {
           />
         </div>
       </main>
+
+      {toastMessage && (
+        <div className="fixed top-20 left-1/2 z-50 -translate-x-1/2">
+          <Toast message={toastMessage} type="success" onClose={handleToastClose} />
+        </div>
+      )}
+
+      <Modal
+        open={isLogoutModalOpen}
+        title="로그아웃을 진행할게요."
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+        confirmText="로그아웃"
+        cancelText="취소"
+        confirmColor="bg-brand-blue text-white hover:opacity-90"
+      />
     </div>
   );
 }

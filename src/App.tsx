@@ -4,6 +4,7 @@ import SignupPage from "@/pages/SignupPage/SignupPage";
 import PostDetailPage from "@/pages/PostDetailPage";
 import PostWritePage from "@/pages/PostWritePage/PostWritePage";
 import MyPage from "@/pages/MyPage/MyPage";
+import MyPageSetting from "@/pages/MyPageSetting/MyPageSetting";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route path="/blog/:postId" element={<PostDetailPage />} />
       <Route path="/write" element={<PostWritePage />} />
       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/mypage/setting" element={<MyPageSetting loginType="kakao" />} />
     </Routes>
   );
 }

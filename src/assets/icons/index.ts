@@ -11,6 +11,7 @@ import NavigateBeforeIcon from "@/assets/icons/navigate_before.svg?react";
 import ReorderIcon from "@/assets/icons/reorder.svg?react";
 import SettingsIcon from "@/assets/icons/settings.svg?react";
 import KakaoIcon from "@/assets/icons/kakao.svg?react";
+import PlusIcon from "@/assets/icons/plus.svg?react";
 
 export {
   CreateIcon,
@@ -26,4 +27,5 @@ export {
   ReorderIcon,
   SettingsIcon,
   KakaoIcon,
+  PlusIcon,
 };

@@ -20,14 +20,14 @@ const Sidebar: React.FC<SidebarProps> = ({
   profileSrc,
   onMyPageClick,
   onSettingClick,
-  onLogoutClick,
+  onLogoutClick, // ✅ 부모가 모달을 관리하도록 위임
   onLoginClick,
 }) => {
   const navigate = useNavigate();
 
-  const handleWriteClick = () => {
-    navigate("/write");
-  };
+  const handleMyPageClick = () => navigate("/mypage");
+  const handleWriteClick = () => navigate("/write");
+  const handleSettingClick = () => navigate("/mypage/setting");
 
   return (
     <aside className={baseSidebar}>
@@ -49,10 +49,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       {variant === "user" && (
         <>
           <div className={container}>
-            <div onClick={onMyPageClick} className={profileSection}>
+            <div onClick={handleMyPageClick} className={profileSection}>
               <Avatar size="lg" src={profileSrc} />
-              <p className={nickname}>{userNickname ?? "%{닉네임}"}</p>
-              <p className={intro}>{userIntro ?? "한줄 소개"}</p>
+              <p className={nickname}>{userNickname ?? "닉네임"}</p>
+              <p className={intro}>{userIntro ?? "한 줄 소개"}</p>
             </div>
 
             <div className={doubleButtonWrapper}>
@@ -60,15 +60,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                 label="나의 깃로그"
                 variant="primaryOutline"
                 size="sm"
-                onClick={onMyPageClick}
+                onClick={handleMyPageClick}
                 fullWidth
               />
               <Button
                 label="깃로그 쓰기"
                 variant="primaryOutline"
                 size="sm"
-                fullWidth
                 onClick={handleWriteClick}
+                fullWidth
               />
             </div>
           </div>
@@ -78,15 +78,15 @@ const Sidebar: React.FC<SidebarProps> = ({
               label="설정"
               variant="secondaryOutline"
               size="sm"
-              onClick={onSettingClick}
+              onClick={handleSettingClick}
               fullWidth
             />
             <Button
               label="로그아웃"
               variant="secondaryOutline"
               size="sm"
-              onClick={onLogoutClick}
               fullWidth
+              onClick={onLogoutClick} // ✅ 부모에서 모달 열기
             />
           </div>
         </>

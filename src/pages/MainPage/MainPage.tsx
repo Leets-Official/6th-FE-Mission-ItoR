@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { usePosts } from "@/hooks/usePosts";
 import { Post } from "@/types/post";
 import * as styles from "./MainPage.styled";
+import Modal from "@/components/Modal/Modal";
 
 const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
   postId: crypto.randomUUID(),
@@ -46,7 +47,14 @@ export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
+  const handleConfirmLogout = () => {
+    setIsLogoutModalOpen(false);
+    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
+  };
 
   const { posts, pageMax, loading } = usePosts(currentPage, 10);
   const dataToShow = posts.length > 0 ? posts : dummyPosts;
@@ -77,6 +85,7 @@ export default function MainPage() {
                 setIsLoginOpen(true);
                 setIsSidebarOpen(false);
               }}
+              onLogoutClick={handleLogoutClick}
             />
           </aside>
         </>
@@ -104,6 +113,16 @@ export default function MainPage() {
       </main>
 
       <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+
+      <Modal
+        open={isLogoutModalOpen}
+        title="로그아웃을 진행할게요."
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+        confirmText="로그아웃"
+        cancelText="취소"
+        confirmColor="bg-brand-blue text-white hover:opacity-90"
+      />
     </div>
   );
 }

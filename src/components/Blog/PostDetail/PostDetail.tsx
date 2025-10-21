@@ -15,6 +15,13 @@ export default function PostDetail() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
+  const handleConfirmLogout = () => {
+    setIsLogoutModalOpen(false);
+    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
+  };
 
   const commentRef = useRef<HTMLDivElement>(null);
 
@@ -81,12 +88,7 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
           <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar
-              variant="user"
-              onLogoutClick={() => console.log("로그아웃")}
-              onSettingClick={() => console.log("설정")}
-              onMyPageClick={() => console.log("마이페이지 이동")}
-            />
+            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
           </aside>
         </>
       )}
@@ -140,7 +142,17 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         confirmText="삭제하기"
         cancelText="취소"
         confirmColor="bg-brand-red text-white hover:opacity-90"
-      ></Modal>
+      />
+
+      <Modal
+        open={isLogoutModalOpen}
+        title="로그아웃을 진행할게요."
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+        confirmText="로그아웃"
+        cancelText="취소"
+        confirmColor="bg-brand-blue text-white hover:opacity-90"
+      />
     </div>
   );
 }
