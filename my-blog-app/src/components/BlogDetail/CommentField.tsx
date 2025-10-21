@@ -1,13 +1,20 @@
 import TextCard from '@/components/common/TextCard'
 import { Button } from '@/components/Button/Button'
-import ProfileImage from '@/components/ProfileImage/ProfileImage'
 import CommentMetaInfo from './CommentMetaInfo'
+
+interface CommentFieldProps {
+  state: 'beforeLogin' | 'active' | 'writing'
+  value?: string
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onSubmit?: () => void
+}
 
 export default function CommentField({
   state = 'beforeLogin',
-}: {
-  state: 'beforeLogin' | 'active' | 'writing'
-}) {
+  value = '',
+  onChange,
+  onSubmit,
+}: CommentFieldProps) {
   if (state === 'beforeLogin') {
     return (
       <div className='flex flex-col justify-center items-center self-stretch max-w-[688px] py-3 px-4 gap-[10px] rounded-[4px] border border-[#E6E6E6] h-[66px]'>
@@ -31,11 +38,13 @@ export default function CommentField({
         <textarea
           placeholder='댓글을 입력하세요.'
           className='w-full h-full bg-transparent resize-none outline-none text-[#333]'
+          value={value}
+          onChange={onChange}
         />
       </TextCard>
 
       <div className='flex justify-end gap-[10px] px-4 py-2'>
-        <Button intent={state === 'writing' ? 'black' : 'secondary'} size='md'>
+        <Button intent={state === 'writing' ? 'black' : 'secondary'} size='md' onClick={onSubmit}>
           등록
         </Button>
       </div>
