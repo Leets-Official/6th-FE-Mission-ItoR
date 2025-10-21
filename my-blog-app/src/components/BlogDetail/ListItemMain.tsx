@@ -15,12 +15,12 @@ import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
 import Toast from '@/components/common/Toast'
 
 export default function ListItemMain() {
-  const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>(
-    'beforeLogin',
-  )
-
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>('active') // 테스트용
+  const [comments, setComments] = useState<string[]>([]) // 댓글 목록
+  const [newComment, setNewComment] = useState('') // 입력값
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
   const [toast, setToast] = useState<{
     show: boolean
     message: string
@@ -37,10 +37,25 @@ export default function ListItemMain() {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const handleDelete = () => {
+  const handleAddComment = () => {
+    if (!newComment.trim()) return
+    setComments((prev) => [...prev, newComment.trim()])
+    setNewComment('')
+  }
+
+  const handleDeleteClick = (index: number) => {
+    setDeleteIndex(index)
+    setConfirmOpen(true)
+    setOpenMenuIndex(null)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (deleteIndex !== null) {
+      setComments((prev) => prev.filter((_, i) => i !== deleteIndex))
+      setToast({ show: true, message: '댓글이 삭제되었습니다', type: 'positive' })
+      setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
+    }
     setConfirmOpen(false)
-    setToast({ show: true, message: '삭제되었습니다', type: 'positive' })
-    setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
   }
 
   return (
@@ -54,12 +69,12 @@ export default function ListItemMain() {
               <ChatIcon />
             </button>
 
-            {/* 드롭다운 메뉴 */}
+            {/* 드롭다운 메뉴 (게시글용) */}
             <div className='relative'>
-              <button onClick={() => setMenuOpen((prev) => !prev)}>
+              <button onClick={() => setOpenMenuIndex(openMenuIndex === -1 ? null : -1)}>
                 <MoreIcon />
               </button>
-              {menuOpen && (
+              {openMenuIndex === -1 && (
                 <div className='absolute right-0 mt-2 z-50'>
                   <DropdownMenu
                     variant='arrow'
@@ -84,8 +99,7 @@ export default function ListItemMain() {
       <Blank size='md' />
       <section className='flex flex-col w-[688px] max-w-[688px] bg-white px-4 py-3 gap-[10px] rounded-[4px]'>
         <TextCard variant='body'>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-          been the industry's standard dummy text ever since the 1500s.
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
         </TextCard>
         <PictureFrame src='/src/assets/images/blogdetail1.png' type='small' />
         <TextCard variant='body'>
@@ -102,15 +116,58 @@ export default function ListItemMain() {
         className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-white'
       >
         <div className='w-[688px] max-w-[688px] flex flex-col px-4 py-3 gap-[10px]'>
-          <CommentCount count={0} />
-          <TextCard variant='body' className='flex justify-center items-center'>
-            <div className='text-center text-[14px] text-[#C8C8C8] font-light leading-[160%]'>
-              작성된 댓글이 없습니다.
-              <br /> 응원의 첫 번째 댓글을 달아주세요.
-            </div>
-          </TextCard>
+          <CommentCount count={comments.length} />
+
+          {/* 댓글 리스트 */}
+          {comments.length === 0 ? (
+            <TextCard variant='body' className='flex justify-center items-center'>
+              <div className='text-center text-[14px] text-[#C8C8C8] font-light leading-[160%]'>
+                작성된 댓글이 없습니다.
+                <br /> 응원의 첫 번째 댓글을 달아주세요.
+              </div>
+            </TextCard>
+          ) : (
+            comments.map((comment, index) => (
+              <div
+                key={index}
+                className='flex justify-between items-start border-b border-gray-100 py-2 relative'
+              >
+                <div className='text-[14px] text-gray-800 leading-[160%]'>{comment}</div>
+
+                {/* MoreIcon + DropdownMenu */}
+                <div className='relative'>
+                  <button onClick={() => setOpenMenuIndex(openMenuIndex === index ? null : index)}>
+                    <MoreIcon className='w-[16px] h-[16px] text-gray-400 cursor-pointer' />
+                  </button>
+
+                  {openMenuIndex === index && (
+                    <div className='absolute right-0 mt-2 z-50'>
+                      <DropdownMenu
+                        variant='arrow'
+                        items={[
+                          {
+                            label: '삭제하기',
+                            onClick: () => handleDeleteClick(index),
+                          },
+                        ]}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+
+          {/* 댓글 입력 영역 */}
           <Blank size='sm' />
-          <CommentField state={commentState} />
+          <div className='flex gap-2'>
+            <CommentField
+              state={commentState}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onSubmit={handleAddComment}
+            />
+          </div>
         </div>
       </section>
 
@@ -131,10 +188,10 @@ export default function ListItemMain() {
       {/* Confirm Modal */}
       <ConfirmModal
         isOpen={confirmOpen}
-        title='해당 블로그를 삭제하시겠어요?'
-        description='삭제된 블로그는 다시 확인할 수 없어요.'
+        title='댓글을 삭제하시겠어요?'
+        description='삭제한 댓글은 복구할 수 없습니다.'
         onCancel={() => setConfirmOpen(false)}
-        onConfirm={handleDelete}
+        onConfirm={handleDeleteConfirm}
       />
 
       {/* Toast */}
