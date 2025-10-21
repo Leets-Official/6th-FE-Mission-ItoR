@@ -7,6 +7,7 @@ import BlogWrite from "./pages/BlogWrite";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import SignupEmail from "./pages/SignupEmail";
+import ProfileDetail from "./pages/ProfileDetail";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signup/email" element={<SignupEmail />} />
+        <Route path="/profiledetail" element={<ProfileDetail />} />
       </Routes>
     </Router>
   );

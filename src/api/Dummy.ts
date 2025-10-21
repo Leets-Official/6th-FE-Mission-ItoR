@@ -27,7 +27,7 @@ export const dummyPosts: Post[] = [
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Mapper가 어떻게 작동하는지 부터 다시 되짚어보며 문제를 해결해봤다.",
     author: "닉네임",
-    createdAt: "2025-10-17",
+    createdAt: "Fed 17. 2025.",
     commentsCount: 3,
     comments: [
       { id: 1, author: "철수", content: "응원합니다!", createdAt: "2025-10-17" },
@@ -44,7 +44,7 @@ export const dummyPosts: Post[] = [
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
     author: "홍길동",
-    createdAt: "2025-10-16",
+    createdAt: "Fed 17. 2025.",
     commentsCount: 0,
     profileUrl: Img,
     profileIntro: "김철수 소개",
@@ -55,7 +55,7 @@ export const dummyPosts: Post[] = [
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Mapper가 어떻게 작동하는지 부터 다시 되짚어보며 문제를 해결해봤다.",
     author: "홍길동",
-    createdAt: "2025-10-15",
+    createdAt: "Fed 17. 2025.",
     commentsCount: 2,
     comments: [
       { id: 1, author: "홍길동", content: "정말 유익한 글이에요.", createdAt: "2025-10-15" },
@@ -68,9 +68,9 @@ export const dummyPosts: Post[] = [
   {
     id: 4,
     title: "16 Title one line",
-    content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+    content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
     author: "박민수",
-    createdAt: "2025-10-14",
+    createdAt: "Fed 17. 2025.",
     commentsCount: 0,
     profileUrl: Img,
     profileIntro: "박민수 소개",
