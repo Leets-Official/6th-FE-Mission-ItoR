@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import PageHeader from '@/components/common/PageHeader'
 import Blank from '@/components/common/Blank'
 import TextCard from '@/components/common/TextCard'
@@ -10,23 +10,71 @@ import BlogTitleSection from './BlogTitleSection'
 import { ChatIcon } from '@/assets/icons/ChatIcon'
 import { MoreIcon } from '@/assets/icons/MoreIcon'
 import CommentCount from './CommentCount'
+import DropdownMenu from '@/components/Dropdown/DropdownMenu'
+import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
+import Toast from '@/components/common/Toast'
 
 export default function ListItemMain() {
   const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>(
     'beforeLogin',
   )
+
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [toast, setToast] = useState<{
+    show: boolean
+    message: string
+    type: 'positive' | 'negative'
+  }>({
+    show: false,
+    message: '',
+    type: 'positive',
+  })
+
+  const commentRef = useRef<HTMLDivElement>(null)
+
+  const handleScrollToComments = () => {
+    commentRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handleDelete = () => {
+    setConfirmOpen(false)
+    setToast({ show: true, message: '삭제되었습니다', type: 'positive' })
+    setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
+  }
+
   return (
-    <div className='flex flex-col w-[1366px] h-[768px] items-center bg-white min-h-screen'>
-      {/* 1. 페이지 헤더 */}
+    <div className='flex flex-col w-[1366px] min-h-screen items-center bg-white'>
+      {/* 1. PageHeader */}
       <PageHeader
         title='GITLOG'
         rightContent={
-          <div className='flex gap-6'>
-            <ChatIcon />
-            <MoreIcon />
+          <div className='flex gap-6 items-center'>
+            <button onClick={handleScrollToComments}>
+              <ChatIcon />
+            </button>
+
+            {/* 드롭다운 메뉴 */}
+            <div className='relative'>
+              <button onClick={() => setMenuOpen((prev) => !prev)}>
+                <MoreIcon />
+              </button>
+              {menuOpen && (
+                <div className='absolute right-0 mt-2 z-50'>
+                  <DropdownMenu
+                    variant='arrow'
+                    items={[
+                      { label: '수정하기', onClick: () => alert('수정 페이지 이동 예정') },
+                      { label: '삭제하기', onClick: () => setConfirmOpen(true) },
+                    ]}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         }
       />
+
       <Blank size='lg' />
 
       {/* 2. Title Section */}
@@ -35,47 +83,32 @@ export default function ListItemMain() {
       {/* 3. 본문 Section */}
       <Blank size='md' />
       <section className='flex flex-col w-[688px] max-w-[688px] bg-white px-4 py-3 gap-[10px] rounded-[4px]'>
-        <TextCard variant='body'>{`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`}</TextCard>
+        <TextCard variant='body'>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+          been the industry's standard dummy text ever since the 1500s.
+        </TextCard>
         <PictureFrame src='/src/assets/images/blogdetail1.png' type='small' />
-        <TextCard variant='body'>{`It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`}</TextCard>
+        <TextCard variant='body'>
+          It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
+          passages.
+        </TextCard>
         <PictureFrame src='/src/assets/images/blogdetail2.png' type='large' />
       </section>
 
-      {/* 테스트용 상태 전환 버튼 */}
-      <div className='flex gap-2 my-4'>
-        <button
-          onClick={() => setCommentState('beforeLogin')}
-          className='border px-3 py-1 rounded text-sm'
-        >
-          beforeLogin
-        </button>
-        <button
-          onClick={() => setCommentState('active')}
-          className='border px-3 py-1 rounded text-sm'
-        >
-          active
-        </button>
-        <button
-          onClick={() => setCommentState('writing')}
-          className='border px-3 py-1 rounded text-sm'
-        >
-          writing
-        </button>
-      </div>
-
       {/* 4. 댓글 Section */}
       <Blank size='md' />
-      <section className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-white'>
+      <section
+        ref={commentRef}
+        className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-white'
+      >
         <div className='w-[688px] max-w-[688px] flex flex-col px-4 py-3 gap-[10px]'>
           <CommentCount count={0} />
-
           <TextCard variant='body' className='flex justify-center items-center'>
             <div className='text-center text-[14px] text-[#C8C8C8] font-light leading-[160%]'>
               작성된 댓글이 없습니다.
               <br /> 응원의 첫 번째 댓글을 달아주세요.
             </div>
           </TextCard>
-
           <Blank size='sm' />
           <CommentField state={commentState} />
         </div>
@@ -94,6 +127,22 @@ export default function ListItemMain() {
           />
         </div>
       </section>
+
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={confirmOpen}
+        title='해당 블로그를 삭제하시겠어요?'
+        description='삭제된 블로그는 다시 확인할 수 없어요.'
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={handleDelete}
+      />
+
+      {/* Toast */}
+      {toast.show && (
+        <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50'>
+          <Toast type={toast.type} message={toast.message} />
+        </div>
+      )}
     </div>
   )
 }
