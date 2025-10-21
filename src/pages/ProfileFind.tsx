@@ -16,10 +16,8 @@ const ProfileFind: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">
-      {/* 상단 헤더 */}
       <Header variant="profile" />
 
-      {/* 상단 프로필 영역 */}
       <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex flex-col items-center justify-center">
         <Profile className="w-[88px] h-[88px] mr-[700px]" />
         <div className="flex flex-col  px-[430px]">
@@ -39,7 +37,6 @@ const ProfileFind: React.FC = () => {
         </div>
       </div>
 
-      {/* 메인 폼 영역 */}
       <div className="flex flex-col mt-[60px] px-[430px]">
         <div className="w-[688px] flex flex-col gap-4">
           <TextFieldSet
