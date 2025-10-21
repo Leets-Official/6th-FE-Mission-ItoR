@@ -10,7 +10,7 @@ type TextCardProps = {
 }
 
 export default function TextCard({ variant = 'body', title, subtitle, children }: TextCardProps) {
-  const baseStyle = 'w-[688px] max-w-[688px] px-4 py-3 bg-[#F5F5F5] font-sans'
+  const baseStyle = 'w-[688px] max-w-[688px] px-4 py-3 bg-transparent font-sans'
 
   const variants: Record<typeof variant, string> = {
     primary: 'flex flex-col justify-center items-start gap-3 w-full max-w-full',
