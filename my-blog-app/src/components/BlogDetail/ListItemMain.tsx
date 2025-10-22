@@ -13,6 +13,7 @@ import CommentCount from './CommentCount'
 import DropdownMenu from '@/components/Dropdown/DropdownMenu'
 import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
 import Toast from '@/components/common/Toast'
+import CommentItem from './CommentItem'
 
 export default function ListItemMain() {
   const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>('active') // 테스트용
@@ -128,33 +129,13 @@ export default function ListItemMain() {
             </TextCard>
           ) : (
             comments.map((comment, index) => (
-              <div
+              <CommentItem
                 key={index}
-                className='flex justify-between items-start border-b border-gray-100 py-2 relative'
-              >
-                <div className='text-[14px] text-gray-800 leading-[160%]'>{comment}</div>
-
-                {/* MoreIcon + DropdownMenu */}
-                <div className='relative'>
-                  <button onClick={() => setOpenMenuIndex(openMenuIndex === index ? null : index)}>
-                    <MoreIcon className='w-[16px] h-[16px] text-gray-400 cursor-pointer' />
-                  </button>
-
-                  {openMenuIndex === index && (
-                    <div className='absolute right-0 mt-2 z-50'>
-                      <DropdownMenu
-                        variant='arrow'
-                        items={[
-                          {
-                            label: '삭제하기',
-                            onClick: () => handleDeleteClick(index),
-                          },
-                        ]}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+                author='닉네임'
+                date='Fed 17. 2025.'
+                content={comment}
+                onDelete={() => handleDeleteClick(index)}
+              />
             ))
           )}
 
@@ -188,8 +169,7 @@ export default function ListItemMain() {
       {/* Confirm Modal */}
       <ConfirmModal
         isOpen={confirmOpen}
-        title='댓글을 삭제하시겠어요?'
-        description='삭제한 댓글은 복구할 수 없습니다.'
+        title='댓글을 삭제할까요?'
         onCancel={() => setConfirmOpen(false)}
         onConfirm={handleDeleteConfirm}
       />
