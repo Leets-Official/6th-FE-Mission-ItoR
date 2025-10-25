@@ -1,57 +1,157 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import clearIcon from '../assets/icons/clear.svg';
-import kakaoIcon from '../assets/icons/kakao.svg';
-// src/pages/LoginPage.tsx
-import '../styles/auth.css';
-
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "../hooks/useForm";
+import clearIcon from "../assets/icons/clear.svg";
+import kakaoIcon from "../assets/icons/kakao.svg";
+import "../styles/auth.css";
 
 export default function LoginPage() {
   const nav = useNavigate();
   const close = () => nav(-1);
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+
+  const { values, errors, handleChange, runValidation } = useForm({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: (v) => {
+      const err: { [key: string]: string } = {};
+      if (!v.email.trim()) {
+        err.email = "이메일을 입력해주세요.";
+      }
+      if (!v.password.trim()) {
+        err.password = "비밀번호를 입력해주세요.";
+      }
+      return err;
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const ok = runValidation();
+    if (!ok) return;
+
+    // 로그인 API 연동 시 values.email / values.password 사용
+  };
+
+  const goSignUp = () => {
+    nav("/join");
+  };
 
   return (
     <div className="auth-overlay" onClick={close}>
-      <section className="auth-card" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="auth-card__close" onClick={close} aria-label="닫기">
+      <section
+        className="auth-card relative"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {/* 닫기 버튼 */}
+        <button
+          type="button"
+          className="auth-card__close absolute right-4 top-4"
+          onClick={close}
+          aria-label="닫기"
+        >
           <img src={clearIcon} alt="" />
         </button>
 
-        <div className="auth-hero">
-          <div className="logo-text">GITLOG</div>
-          <p className="auth-hero__caption">You can make anything by writing</p>
+        {/* 카드 컨텐츠: 좌/우 두 컬럼 */}
+        <div className="flex flex-col gap-8 text-[var(--White)] sm:flex-row sm:gap-12">
+          {/* 왼쪽 영역: 로고 / 카피 */}
+          <div className="flex flex-col flex-1 min-w-[200px] justify-center">
+            <div className="logo-text text-[48px] leading-[1.2] text-[var(--White)]">
+              GITLOG
+            </div>
+            <p className="mt-8 text-[14px] leading-[22.4px] font-light text-[var(--Gray56)]">
+              You can make anything by writing
+            </p>
+          </div>
+
+          {/* 오른쪽 영역: 로그인 폼 */}
+          <form
+            className="flex flex-col flex-1 min-w-[260px] max-w-[320px] text-[var(--White)]"
+            onSubmit={handleSubmit}
+          >
+            {/* 이메일 입력 */}
+            <div className="mb-2 flex flex-col">
+              <input
+                name="email"
+                type="email"
+                placeholder="이메일"
+                value={values.email}
+                onChange={handleChange}
+                className="w-full h-10 rounded-[4px] border border-[var(--Gray90)] bg-[var(--White)]
+                           px-4 text-[14px] leading-[22.4px] font-light text-[var(--Black)]
+                           placeholder-[var(--Gray-78,#C8C8C8)]"
+              />
+              {errors.email && errors.email.length > 0 && (
+                <p className="mt-1 text-[12px] leading-[18px] text-[var(--Negative)]">
+                  {errors.email}
+                </p>
+              )}
+            </div>
+
+            {/* 비밀번호 입력 */}
+            <div className="mb-3 flex flex-col">
+              <input
+                name="password"
+                type="password"
+                placeholder="비밀번호"
+                value={values.password}
+                onChange={handleChange}
+                className="w-full h-10 rounded-[4px] border border-[var(--Gray90)] bg-[var(--White)]
+                           px-4 text-[14px] leading-[22.4px] font-light text-[var(--Black)]
+                           placeholder-[var(--Gray-78,#C8C8C8)]"
+              />
+              {errors.password && errors.password.length > 0 && (
+                <p className="mt-1 text-[12px] leading-[18px] text-[var(--Negative)]">
+                  {errors.password}
+                </p>
+              )}
+            </div>
+
+            {/* 이메일로 로그인 버튼 (파란색) */}
+            <button
+              type="submit"
+              className="mb-4 h-10 w-full rounded-[4px] bg-[#0084E4] text-[14px] font-medium leading-[22.4px] text-[var(--White)]"
+            >
+              이메일로 로그인
+            </button>
+
+            {/* 구분선 + SNS */}
+            <div className="mb-4 flex flex-col items-center text-[12px] leading-[18px] text-[var(--Gray56)]">
+              <div className="flex w-full items-center gap-2">
+                <div className="h-[1px] flex-1 bg-[var(--Gray56)] opacity-30" />
+                <span className="text-[12px] leading-[18px] text-[var(--Gray56)]">
+                  SNS
+                </span>
+                <div className="h-[1px] flex-1 bg-[var(--Gray56)] opacity-30" />
+              </div>
+            </div>
+
+            {/* 카카오 로그인 버튼 (노란색) */}
+            <button
+              type="button"
+              className="mb-4 flex h-10 w-full items-center justify-center gap-2 rounded-[4px]
+                         bg-[#FEE500] text-[14px] font-medium leading-[22.4px] text-[var(--Black)]"
+            >
+              <img src={kakaoIcon} alt="" className="w-[16px] h-[16px]" />
+              카카오로 로그인
+            </button>
+
+            {/* 회원가입 CTA */}
+            <div className="flex w-full flex-col items-center">
+              <button
+                type="button"
+                className="text-[12px] leading-[18px] font-light text-[var(--Gray56)]"
+                onClick={goSignUp}
+              >
+                또는 회원가입
+              </button>
+            </div>
+          </form>
         </div>
-
-        <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
-          <div className="auth-fields">
-            <input className="auth-input" type="email" placeholder="이메일" />
-            <input className="auth-input" type="password" placeholder="비밀번호" />
-          </div>
-
-          <button type="submit" className="auth-btn auth-btn--primary" style={{ marginTop: 8 }}>
-            {mode === 'login' ? '로그인' : '회원가입'}
-          </button>
-
-          <div className="auth-sns-sep">또는</div>
-
-          <button type="button" className="auth-btn auth-btn--kakao">
-            <img src={kakaoIcon} alt="" />
-            카카오로 계속하기
-          </button>
-
-          <div className="auth-switch">
-            {mode === 'login' ? (
-              <button type="button" className="auth-switch__btn" onClick={() => setMode('signup')}>
-                아직 계정이 없나요? 회원가입
-              </button>
-            ) : (
-              <button type="button" className="auth-switch__btn" onClick={() => setMode('login')}>
-                이미 계정이 있나요? 로그인
-              </button>
-            )}
-          </div>
-        </form>
       </section>
     </div>
   );
