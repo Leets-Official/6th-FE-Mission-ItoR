@@ -1,4 +1,3 @@
-// src/pages/PostDetailPage.tsx
 import React, { useMemo, useState } from "react";
 import clsx from "clsx";
 import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
@@ -9,18 +8,54 @@ import TextField from "../components/ui/TextField";
 import ProfilePhoto from "../components/ui/Profile";
 import Dropdown from "@ui/Dropdown";
 import Modal from "@ui/Modal";
+import Button from "../components/ui/Button/Button";
 
 import type { Post } from "../types/post";
-import { postDetailMock, type CommentModel, type DetailBlock } from "../lib/mocks";
+import {
+  postDetailMock,
+  type CommentModel,
+  type DetailBlock,
+} from "../lib/mocks";
 
 const POSTS: Post[] = [
-  { id: 1, title: "32 Title one line", date: "Feb 17, 2025.", author: { name: "닉네임", initial: "G", bio: "한 줄 소개" }, detail: "detail", commentCount: 12 },
-  { id: 2, title: "32 Title one line", date: "Feb 17, 2025.", author: { name: "닉네임", initial: "G", bio: "한 줄 소개" }, detail: "detail", commentCount: 8 },
-  { id: 3, title: "32 Title one line", date: "Feb 17, 2025.", author: { name: "닉네임", initial: "G", bio: "한 줄 소개" }, detail: "detail", commentCount: 0 },
+  {
+    id: 1,
+    title: "32 Title one line",
+    date: "Feb 17, 2025.",
+    author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
+    detail: "detail",
+    commentCount: 12,
+  },
+  {
+    id: 2,
+    title: "32 Title one line",
+    date: "Feb 17, 2025.",
+    author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
+    detail: "detail",
+    commentCount: 8,
+  },
+  {
+    id: 3,
+    title: "32 Title one line",
+    date: "Feb 17, 2025.",
+    author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
+    detail: "detail",
+    commentCount: 0,
+  },
 ];
 
-const Spacer = ({ y = 32, className }: { y?: 20 | 32 | 64; className?: string }) => {
-  const map: Record<20 | 32 | 64, string> = { 20: "h-5", 32: "h-8", 64: "h-16" };
+const Spacer = ({
+  y = 32,
+  className,
+}: {
+  y?: 20 | 32 | 64;
+  className?: string;
+}) => {
+  const map: Record<20 | 32 | 64, string> = {
+    20: "h-5",
+    32: "h-8",
+    64: "h-16",
+  };
   return <div aria-hidden className={clsx("w-full", map[y], className)} />;
 };
 
@@ -30,15 +65,19 @@ const formatDate = (iso: string) => {
   return `${month} ${d.getDate()}, ${d.getFullYear()}.`;
 };
 
-const TitleSection: React.FC<{ title: string; author: Post["author"]; date: string; commentCount: number }> = ({
-  title,
-  author,
-  date,
-  commentCount,
-}) => (
+const TitleSection: React.FC<{
+  title: string;
+  author: Post["author"];
+  date: string;
+  commentCount: number;
+}> = ({ title, author, date, commentCount }) => (
   <section className="flex max-w-[688px] py-3 flex-col items-start self-stretch">
     <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-start gap-3 self-stretch">
-      <TextBox tbStyle="primary" title={title} className="!w-[688px] !max-w-[688px] !p-0 !bg-transparent" />
+      <TextBox
+        tbStyle="primary"
+        title={title}
+        className="!w-[688px] !max-w-[688px] !p-0 !bg-transparent"
+      />
     </div>
 
     <Spacer y={32} />
@@ -46,24 +85,43 @@ const TitleSection: React.FC<{ title: string; author: Post["author"]; date: stri
     <div className="flex w-[688px] px-4 py-3 flex-col items-start gap-10">
       <div className="flex items-center gap-2">
         <div className="flex w-5 h-5 items-center aspect-square">
-          <ProfilePhoto size="sm" initial={author.initial} name={author.name} />
+          <ProfilePhoto
+            size="sm"
+            initial={author.initial}
+            name={author.name}
+          />
         </div>
-        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">{author.name}</span>
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">· {date}</span>
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">· 댓글 {commentCount}개</span>
+        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
+          {author.name}
+        </span>
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+          · {date}
+        </span>
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+          · 댓글 {commentCount}개
+        </span>
       </div>
     </div>
   </section>
 );
 
-const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({ blocks }) => {
-  const sorted = useMemo(() => [...blocks].sort((a, b) => a.order - b.order), [blocks]);
+const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({
+  blocks,
+}) => {
+  const sorted = useMemo(
+    () => [...blocks].sort((a, b) => a.order - b.order),
+    [blocks]
+  );
   return (
     <section className="flex flex-col items-center self-stretch">
       {sorted.map((b) =>
         b.type === "IMAGE" ? (
           <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
-            <img src={b.value} alt="" className="w-full h-auto object-cover rounded-[2px] bg-[var(--Gray96)]" />
+            <img
+              src={b.value}
+              alt=""
+              className="w-full h-auto object-cover rounded-[2px] bg-[var(--Gray96)]"
+            />
           </div>
         ) : (
           <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
@@ -73,7 +131,7 @@ const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({ blocks }) =>
               className="!m-0 !p-0 !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px]"
             />
           </div>
-        ),
+        )
       )}
     </section>
   );
@@ -82,17 +140,39 @@ const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({ blocks }) =>
 const CommentRow: React.FC<{ c: CommentModel }> = ({ c }) => (
   <div className="flex max-w-[688px] px-4 py-3 items-start gap-3 self-stretch">
     <div className="flex w-5 h-5 items-center">
-      <ProfilePhoto size="sm" initial={c.nickName.charAt(0).toUpperCase()} name={c.nickName} />
+      <ProfilePhoto
+        size="sm"
+        initial={c.nickName.charAt(0).toUpperCase()}
+        name={c.nickName}
+      />
     </div>
     <div className="flex-1">
       <div className="flex items-center gap-2">
-        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">{c.nickName}</span>
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">· {formatDate(c.createdAt)}</span>
-        {c.mine && <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">· 내 댓글</span>}
+        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
+          {c.nickName}
+        </span>
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+          · {formatDate(c.createdAt)}
+        </span>
+        {c.mine && (
+          <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+            · 내 댓글
+          </span>
+        )}
       </div>
-      <p className="mt-1 text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray20)]">{c.content}</p>
+      <p className="mt-1 text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray20)]">
+        {c.content}
+      </p>
     </div>
-    {c.mine && <button type="button" aria-label="more" className="px-2 text-[var(--Gray56)]">•••</button>}
+    {c.mine && (
+      <button
+        type="button"
+        aria-label="more"
+        className="px-2 text-[var(--Gray56)]"
+      >
+        •••
+      </button>
+    )}
   </div>
 );
 
@@ -105,7 +185,9 @@ const CommentInput: React.FC<{
   <>
     <div className="flex max-w-[688px] px-4 pt-4 pb-3 items-start gap-10 self-stretch" />
     <div className="flex max-w-[688px] px-4 items-center gap-2">
-      <span className="text-[16px] leading-[25.6px] text-[var(--Black)]">댓글</span>
+      <span className="text-[16px] leading-[25.6px] text-[var(--Black)]">
+        댓글
+      </span>
     </div>
 
     {!isLoggedIn && (
@@ -116,13 +198,14 @@ const CommentInput: React.FC<{
           </p>
         </div>
         <div className="flex max-w-[688px] px-4 py-3">
-          <button
+          <Button
             type="button"
+            variant="neutralOutline"
+            className="px-4 rounded-[4px] h-10"
             onClick={() => (window.location.href = "/me")}
-            className="h-10 px-4 rounded-[4px] border border-[var(--Gray90)] text-[14px] text-[var(--Gray33)]"
           >
             로그인하러 가기
-          </button>
+          </Button>
         </div>
       </>
     )}
@@ -136,8 +219,12 @@ const CommentInput: React.FC<{
             size="lg"
             className="!h-[66px] placeholder:text-gray-78"
             value={value}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange(e.target.value)
+            }
+            onKeyDown={(
+              e: React.KeyboardEvent<HTMLInputElement>
+            ) => {
               if (e.key === "Enter" && value.trim()) onSubmit();
             }}
           />
@@ -173,23 +260,34 @@ const PostDetailPage: React.FC = () => {
     <div className="min-h-dvh w-full flex flex-col bg-[var(--White)]">
       <header className="w-full bg-white/90 backdrop-blur-[2px] relative">
         <div className="max-w-[1366px] w-full px-4 sm:px-6 md:px-8 mx-auto relative">
-          {/* PageHeader는 chat + more 아이콘을 렌더하지만 onClickMore는 사용하지 않는다 */}
           <PageHeader variant="comment" onClickMore={() => {}} />
 
-          {/* 보이지 않는 트리거를 more 아이콘 자리에 정확히 겹쳐서 클릭을 가로채 Dropdown을 연다 */}
           <div className="absolute right-4 top-1/2 -translate-y-1/2 z-50">
             <Dropdown
               position="right"
-              trigger={<span className="block w-6 h-6" aria-label="더보기" />}
+              trigger={
+                <span
+                  className="block w-6 h-6"
+                  aria-label="더보기"
+                />
+              }
               items={[
                 {
                   id: "edit",
-                  label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>,
+                  label: (
+                    <span className="text-[14px] text-[var(--Black)]">
+                      수정하기
+                    </span>
+                  ),
                   onSelect: () => navigate(`/write/${post.id}`),
                 },
                 {
                   id: "delete",
-                  label: <span className="text-[14px] text-[var(--Negative)]">삭제하기</span>,
+                  label: (
+                    <span className="text-[14px] text-[var(--Negative)]">
+                      삭제하기
+                    </span>
+                  ),
                   onSelect: () => setConfirmOpen(true),
                 },
               ]}
@@ -201,7 +299,12 @@ const PostDetailPage: React.FC = () => {
 
       <main className="flex-1 w-full">
         <div className="mx-auto w-full max-w-[688px]">
-          <TitleSection title={post.title} author={author} date={dateText} commentCount={commentCount} />
+          <TitleSection
+            title={post.title}
+            author={author}
+            date={dateText}
+            commentCount={commentCount}
+          />
           <Spacer y={32} />
           <DetailBlocksSection blocks={detail.contents} />
           <Spacer y={32} />
@@ -215,7 +318,9 @@ const PostDetailPage: React.FC = () => {
                 const v = input.trim();
                 if (!v || !isLoggedIn) return;
                 const next: CommentModel = {
-                  id: comments.length ? Math.max(...comments.map((x) => x.id)) + 1 : 1,
+                  id: comments.length
+                    ? Math.max(...comments.map((x) => x.id)) + 1
+                    : 1,
                   content: v,
                   nickName: author.name,
                   profileUrl: detail.author.profileUrl,
@@ -239,7 +344,11 @@ const PostDetailPage: React.FC = () => {
           <Spacer y={64} className="mx-auto max-w-[688px]" />
           <div className="mx-auto w-full max-w-[688px] px-4 py-3 flex flex-col items-start gap-3">
             <div className="flex w-16 h-16 items-center justify-start">
-              <ProfilePhoto size="lg" initial={author.initial} name={author.name} />
+              <ProfilePhoto
+                size="lg"
+                initial={author.initial}
+                name={author.name}
+              />
             </div>
             <div className="flex flex-col items-start gap-1.5 w-full">
               <TextBox
@@ -264,7 +373,9 @@ const PostDetailPage: React.FC = () => {
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => navigate("/", { replace: true })}
         titleLines={["해당 블로그를 삭제하시겠어요?"]}
-        descriptionLines={["삭제된 블로그는 다시 확인할 수 없어요."]}
+        descriptionLines={[
+          "삭제된 블로그는 다시 확인할 수 없어요.",
+        ]}
         confirmText="삭제하기"
         cancelText="취소"
         confirmVariant="negative"

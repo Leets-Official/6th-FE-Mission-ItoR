@@ -39,7 +39,8 @@ export default function ProfilePage() {
     bio: "한 줄 소개",
     avatarUrl: "",
   };
-  const isOwner = isAuthed && (username === "me" || username === user.username);
+  const isOwner =
+    isAuthed && (username === "me" || username === user.username);
   const goWrite = () => navigate("/write");
 
   return (
@@ -47,7 +48,11 @@ export default function ProfilePage() {
       {/* 헤더 */}
       <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)]">
         <div className={clsx(styles.container.wrap, styles.container.pad)}>
-          <PageHeader variant="write" className="!w-full" onClickWrite={goWrite} />
+          <PageHeader
+            variant="write"
+            className="!w-full"
+            onClickWrite={goWrite}
+          />
         </div>
       </header>
 
@@ -56,7 +61,7 @@ export default function ProfilePage() {
         className="flex flex-col items-center self-stretch border-b border-[var(--Gray96,#F5F5F5)] 
                    bg-[var(--Gray96,#F5F5F5)] py-8"
       >
-        {/* 내부 컨테이너 (좌측 정렬 기준) */}
+        {/* 내부 컨테이너 */}
         <div className="w-full max-w-[688px] px-4 flex flex-col items-start gap-4">
           {/* 프로필 아이콘 */}
           <div
@@ -69,20 +74,16 @@ export default function ProfilePage() {
           </div>
 
           {/* 닉네임 */}
-          <div
-            className="text-[24px] font-medium text-[var(--Black,#000)] leading-[160%]"
-          >
+          <div className="text-[24px] font-medium text-[var(--Black,#000)] leading-[160%]">
             %{user.nickname}
           </div>
 
           {/* 한 줄 소개 */}
-          <div
-            className="text-[14px] font-light text-[var(--Gray-20,#333)] leading-[160%] tracking-[-0.07px]"
-          >
+          <div className="text-[14px] font-light text-[var(--Gray-20,#333)] leading-[160%] tracking-[-0.07px]">
             %{user.bio}
           </div>
 
-          {/* 내 프로필 설정 버튼 */}
+          {/* 내 프로필 설정 버튼 (링크는 그대로 둬도 괜찮음) */}
           {isOwner && (
             <Link
               to="/account/profile"
@@ -106,7 +107,11 @@ export default function ProfilePage() {
       <main className="flex-1 w-full bg-white">
         <div className={clsx(styles.container.main, "py-8")}>
           <section className="mx-auto w-full max-w-[688px]">
-            <PostList posts={POSTS} page={page} onPageChange={setPage} />
+            <PostList
+              posts={POSTS}
+              page={page}
+              onPageChange={setPage}
+            />
           </section>
         </div>
       </main>

@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
+import Button from "../components/ui/Button/Button";
 import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
@@ -30,8 +31,6 @@ export default function LoginPage() {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
-
-    // 로그인 API 연동 시 values.email / values.password 사용
   };
 
   const goSignUp = () => {
@@ -46,7 +45,6 @@ export default function LoginPage() {
           e.stopPropagation();
         }}
       >
-        {/* 닫기 버튼 */}
         <button
           type="button"
           className="auth-card__close absolute right-4 top-4"
@@ -56,9 +54,7 @@ export default function LoginPage() {
           <img src={clearIcon} alt="" />
         </button>
 
-        {/* 카드 컨텐츠: 좌/우 두 컬럼 */}
         <div className="flex flex-col gap-8 text-[var(--White)] sm:flex-row sm:gap-12">
-          {/* 왼쪽 영역: 로고 / 카피 */}
           <div className="flex flex-col flex-1 min-w-[200px] justify-center">
             <div className="logo-text text-[48px] leading-[1.2] text-[var(--White)]">
               GITLOG
@@ -68,12 +64,10 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* 오른쪽 영역: 로그인 폼 */}
           <form
             className="flex flex-col flex-1 min-w-[260px] max-w-[320px] text-[var(--White)]"
             onSubmit={handleSubmit}
           >
-            {/* 이메일 입력 */}
             <div className="mb-2 flex flex-col">
               <input
                 name="email"
@@ -92,7 +86,6 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* 비밀번호 입력 */}
             <div className="mb-3 flex flex-col">
               <input
                 name="password"
@@ -111,15 +104,14 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* 이메일로 로그인 버튼 (파란색) */}
-            <button
+            <Button
               type="submit"
-              className="mb-4 h-10 w-full rounded-[4px] bg-[#0084E4] text-[14px] font-medium leading-[22.4px] text-[var(--White)]"
+              variant="primaryBlue"
+              className="mb-4"
             >
               이메일로 로그인
-            </button>
+            </Button>
 
-            {/* 구분선 + SNS */}
             <div className="mb-4 flex flex-col items-center text-[12px] leading-[18px] text-[var(--Gray56)]">
               <div className="flex w-full items-center gap-2">
                 <div className="h-[1px] flex-1 bg-[var(--Gray56)] opacity-30" />
@@ -130,17 +122,21 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* 카카오 로그인 버튼 (노란색) */}
-            <button
+            <Button
               type="button"
-              className="mb-4 flex h-10 w-full items-center justify-center gap-2 rounded-[4px]
-                         bg-[#FEE500] text-[14px] font-medium leading-[22.4px] text-[var(--Black)]"
+              variant="kakao"
+              className="mb-4"
             >
-              <img src={kakaoIcon} alt="" className="w-[16px] h-[16px]" />
-              카카오로 로그인
-            </button>
+              <>
+                <img
+                  src={kakaoIcon}
+                  alt=""
+                  className="w-[16px] h-[16px]"
+                />
+                카카오로 로그인
+              </>
+            </Button>
 
-            {/* 회원가입 CTA */}
             <div className="flex w-full flex-col items-center">
               <button
                 type="button"

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback } from "react";
 import clsx from "clsx";
 import ReorderIcon from "@icons/reorder.svg?react";
+import Button from "../components/ui/Button/Button";
 
 export default function AccountProfilePage() {
   const initial = {
@@ -36,16 +37,13 @@ export default function AccountProfilePage() {
     setForm((prev) => ({ ...prev, preview: url }));
   };
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }, []);
 
   const onCancel = useCallback(() => {
     setForm({
@@ -85,20 +83,22 @@ export default function AccountProfilePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button
+            <Button
               type="button"
+              variant="pillNeutral"
               onClick={onCancel}
-              className="btn-reset h-10 px-3 rounded-[25px] text-[14px] leading-[22.4px] text-[var(--Negative)]"
+              className="text-[var(--Negative)]"
             >
               취소하기
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="pillNeutral"
               onClick={onSave}
-              className="btn-reset h-10 px-3 rounded-[25px] text-[14px] leading-[22.4px] text-[var(--Black)]"
+              className="text-[var(--Black)]"
             >
               저장하기
-            </button>
+            </Button>
           </div>
         </div>
       </header>

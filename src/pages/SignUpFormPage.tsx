@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "../hooks/useForm";
 import LabeledInput from "../components/ui/LabeledInput";
+import Button from "../components/ui/Button/Button";
 import ReorderIcon from "@icons/reorder.svg?react";
 import imageIcon from "../assets/icons/image.svg";
 
@@ -20,7 +21,6 @@ export default function SignUpFormPage() {
     },
     validate: (v) => {
       const err: { [key: string]: string } = {};
-
       if (!v.email.trim()) {
         err.email = "이메일을 입력해주세요.";
       }
@@ -224,24 +224,22 @@ export default function SignUpFormPage() {
           </div>
 
           <div className="pt-2 flex gap-3">
-            <button
+            <Button
               type="button"
+              variant="neutralOutline"
+              className="flex-1"
               onClick={reset}
-              className="h-[38px] flex-1 px-3 rounded-[25px] border border-[var(--Gray90)]
-                         bg-[var(--White)] text-[var(--Gray20)]
-                         text-[14px] leading-[22.4px] font-normal tracking-[-0.07px]"
             >
               취소
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="submit"
-              className="h-[38px] flex-1 px-3 rounded-[25px] border border-[var(--Point)]
-                         bg-[var(--White)] text-[var(--Point)]
-                         text-[14px] leading-[22.4px] font-normal tracking-[-0.07px]"
+              variant="outlinePointWhite"
+              className="flex-1"
             >
               회원가입 완료
-            </button>
+            </Button>
           </div>
         </form>
       </main>

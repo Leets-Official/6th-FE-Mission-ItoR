@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 import React, { useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
@@ -13,7 +12,8 @@ import "../styles/auth.css";
 const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
   id: i + 1,
   title: "16 Title one line",
-  excerpt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+  excerpt:
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   date: "Feb 17, 2025.",
   author: { name: "닉네임", avatarInitial: "N" },
   thumbnailUrl:
@@ -45,8 +45,7 @@ export default function HomePage() {
   const [showFrame, setShowFrame] = useState(false);
   const toggleFrame = () => setShowFrame((v) => !v);
 
-  // ✅ 로그인 상태: member 변형으로 렌더되어 하단 '설정/로그아웃' 노출
-  const isAuthed = true; // 실제 구현에선 전역 auth 상태로 교체
+  const isAuthed = true;
   const user = {
     username: "saeryeom",
     nickname: "닉네임",
@@ -121,27 +120,59 @@ export default function HomePage() {
             aria-modal="true"
             aria-label="로그인"
           >
-            <button type="button" className="auth-close" onClick={closeLogin} aria-label="닫기">
+            <button
+              type="button"
+              className="auth-close"
+              onClick={closeLogin}
+              aria-label="닫기"
+            >
               <img src={clearIcon} alt="" />
             </button>
 
             <div className="auth-hero">
               <div className="logo-text">GITLOG</div>
-              <p className="auth-hero__caption">나의 성장 기록, 지금 시작하세요</p>
+              <p className="auth-hero__caption">
+                나의 성장 기록, 지금 시작하세요
+              </p>
             </div>
 
-            <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+            <form
+              className="auth-form"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="auth-fields">
-                <input className="auth-input" type="email" placeholder="이메일" />
-                <input className="auth-input" type="password" placeholder="비밀번호" />
+                <input
+                  className="auth-input"
+                  type="email"
+                  placeholder="이메일"
+                />
+                <input
+                  className="auth-input"
+                  type="password"
+                  placeholder="비밀번호"
+                />
               </div>
 
-              <button type="submit" className="auth-btn auth-btn--primary">로그인</button>
+              <button
+                type="submit"
+                className="auth-btn auth-btn--primary"
+              >
+                로그인
+              </button>
 
               <div className="auth-sns-sep">또는</div>
 
-              <button type="button" className="auth-btn auth-btn--kakao">
-                <img src={kakaoIcon} alt="" width={18} height={18} style={{ display: "block" }} />
+              <button
+                type="button"
+                className="auth-btn auth-btn--kakao"
+              >
+                <img
+                  src={kakaoIcon}
+                  alt=""
+                  width={18}
+                  height={18}
+                  style={{ display: "block" }}
+                />
                 카카오로 계속하기
               </button>
 
