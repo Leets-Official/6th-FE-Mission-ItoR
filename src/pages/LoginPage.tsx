@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
 import Button from "../components/ui/Button/Button";
+import AuthInput from "../components/ui/AuthInput";
 import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
@@ -10,7 +11,7 @@ export default function LoginPage() {
   const nav = useNavigate();
   const close = () => nav(-1);
 
-  const { values, errors, handleChange, runValidation } = useForm({
+  const { values, handleChange, runValidation } = useForm({
     initialValues: {
       email: "",
       password: "",
@@ -31,6 +32,7 @@ export default function LoginPage() {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
+    // 로그인 요청 자리
   };
 
   const goSignUp = () => {
@@ -55,54 +57,38 @@ export default function LoginPage() {
         </button>
 
         <div className="flex flex-col gap-8 text-[var(--White)] sm:flex-row sm:gap-12">
-          <div className="flex flex-col flex-1 min-w-[200px] justify-center">
+          {/* 왼쪽 브랜드 영역 */}
+          <div className="flex min-w-[200px] flex-1 flex-col justify-center">
             <div className="logo-text text-[48px] leading-[1.2] text-[var(--White)]">
               GITLOG
             </div>
-            <p className="mt-8 text-[14px] leading-[22.4px] font-light text-[var(--Gray56)]">
+            <p className="mt-8 text-[14px] font-light leading-[22.4px] text-[var(--Gray56)]">
               You can make anything by writing
             </p>
           </div>
 
+          {/* 오른쪽 로그인 폼 영역 */}
           <form
-            className="flex flex-col flex-1 min-w-[260px] max-w-[320px] text-[var(--White)]"
+            className="flex min-w-[260px] max-w-[320px] flex-1 flex-col text-[var(--White)]"
             onSubmit={handleSubmit}
           >
-            <div className="mb-2 flex flex-col">
-              <input
-                name="email"
-                type="email"
-                placeholder="이메일"
-                value={values.email}
-                onChange={handleChange}
-                className="w-full h-10 rounded-[4px] border border-[var(--Gray90)] bg-[var(--White)]
-                           px-4 text-[14px] leading-[22.4px] font-light text-[var(--Black)]
-                           placeholder-[var(--Gray-78,#C8C8C8)]"
-              />
-              {errors.email && errors.email.length > 0 && (
-                <p className="mt-1 text-[12px] leading-[18px] text-[var(--Negative)]">
-                  {errors.email}
-                </p>
-              )}
-            </div>
+            <AuthInput
+              name="email"
+              type="email"
+              placeholder="이메일"
+              value={values.email}
+              onChange={handleChange}
+              className="mb-2"
+            />
 
-            <div className="mb-3 flex flex-col">
-              <input
-                name="password"
-                type="password"
-                placeholder="비밀번호"
-                value={values.password}
-                onChange={handleChange}
-                className="w-full h-10 rounded-[4px] border border-[var(--Gray90)] bg-[var(--White)]
-                           px-4 text-[14px] leading-[22.4px] font-light text-[var(--Black)]
-                           placeholder-[var(--Gray-78,#C8C8C8)]"
-              />
-              {errors.password && errors.password.length > 0 && (
-                <p className="mt-1 text-[12px] leading-[18px] text-[var(--Negative)]">
-                  {errors.password}
-                </p>
-              )}
-            </div>
+            <AuthInput
+              name="password"
+              type="password"
+              placeholder="비밀번호"
+              value={values.password}
+              onChange={handleChange}
+              className="mb-3"
+            />
 
             <Button
               type="submit"
@@ -131,7 +117,7 @@ export default function LoginPage() {
                 <img
                   src={kakaoIcon}
                   alt=""
-                  className="w-[16px] h-[16px]"
+                  className="h-[16px] w-[16px]"
                 />
                 카카오로 로그인
               </>
@@ -140,7 +126,7 @@ export default function LoginPage() {
             <div className="flex w-full flex-col items-center">
               <button
                 type="button"
-                className="text-[12px] leading-[18px] font-light text-[var(--Gray56)]"
+                className="text-[12px] font-light leading-[18px] text-[var(--Gray56)]"
                 onClick={goSignUp}
               >
                 또는 회원가입

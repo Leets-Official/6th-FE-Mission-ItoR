@@ -34,43 +34,18 @@ export default function Frame({
   onLogout,
   className,
 }: FrameProps) {
-  // 사이드바 전체 박스 (fixed, 왼쪽)
-  const frameRootClass = clsx(
-    "fixed top-0 left-0 flex h-screen w-[240px] flex-col shrink-0",
-    "border-r border-[var(--Gray90,#E6E6E6)] bg-[var(--gray96,#F5F5F5)]",
-    variant === "guest" ? "items-start gap-[10px]" : "justify-between items-start",
-    className
-  );
-
-  // 상단 영역
-  const topWrapClass =
-    "w-full px-5 pt-6 flex flex-col items-start gap-4 min-w-0";
-
-  // CTA 버튼 row
-  const actionsRowClass = "w-full flex gap-3";
-
-  // 하단
-  const bottomWrapClass =
-    "w-full px-5 pb-5 flex justify-between gap-3";
-
-  // 프로필 
-  const avatarBoxClass = clsx(
-    "w-[64px] h-[64px] rounded-full bg-[var(--Gray7,#111112)]",
-    "flex items-center justify-center",
-    "text-[36px] leading-[28px] font-[400] text-[var(--White)]",
-    "font-[Smooch]" 
-  );
-
-  // 공통 CTA 버튼 유틸
-  const ctaBase =
-    "h-[38px] rounded-[25px] whitespace-nowrap text-[14px] leading-[22.4px]";
-  const ctaFlexNone = clsx(ctaBase, "flex-none");
-  const ctaFlex1 = clsx(ctaBase, "flex-1");
-  const ctaFixed = clsx(ctaBase, "w-[99px]");
+  const isGuest = variant === "guest";
 
   return (
-    <aside className={frameRootClass}>
-      <div className={topWrapClass}>
+    <aside
+      className={clsx(
+        "fixed left-0 top-0 flex h-screen w-[240px] shrink-0 flex-col border-r border-[var(--Gray90,#E6E6E6)] bg-[var(--Gray96,#F5F5F5)]",
+        isGuest ? "items-start gap-[10px]" : "items-start justify-between",
+        className
+      )}
+    >
+      {/* 상단 영역 */}
+      <div className="flex w-full min-w-0 flex-col items-start gap-4 px-5 pt-6">
         {/* 아바타 */}
         <div className="flex items-center justify-center">
           {avatarSrc ? (
@@ -78,13 +53,19 @@ export default function Frame({
               src={avatarSrc}
               alt=""
               className={clsx(
-                "w-[64px] h-[64px] rounded-full object-cover bg-[var(--Gray7,#111112)]",
-                "text-[36px] leading-[28px] font-[400] text-[var(--White)]",
-                "font-[Smooch]"
+                "h-[64px] w-[64px] rounded-full object-cover bg-[var(--Gray7,#111112)]",
+                "text-[36px] leading-[28px] font-[400] text-[var(--White)] font-[Smooch]"
               )}
             />
           ) : (
-            <div className={avatarBoxClass}>{initial}</div>
+            <div
+              className={clsx(
+                "flex h-[64px] w-[64px] items-center justify-center rounded-full bg-[var(--Gray7,#111112)]",
+                "text-[36px] leading-[28px] font-[400] text-[var(--White)] font-[Smooch]"
+              )}
+            >
+              {initial}
+            </div>
           )}
         </div>
 
@@ -95,53 +76,61 @@ export default function Frame({
           description={intro}
           className={clsx(
             "w-full max-w-full",
-            "!bg-transparent !shadow-none !border-none" 
+            "!bg-transparent !shadow-none !border-none"
           )}
         />
 
         {/* CTA 버튼들 */}
-        <div className={actionsRowClass}>
-          {variant === "guest" ? (
-            <Button
-              variant="outlinePointWhite"
-              className={ctaFlexNone}
-              onClick={onStart}
-            >
-              깃로그 시작하기
-            </Button>
-          ) : (
-            <>
-              <Button
-                variant="outlinePointWhite"
-                className={ctaFlex1}
-                onClick={onMyGitlog}
-              >
-                나의 깃로그
-              </Button>
-              <Button
-                variant="outlinePointWhite"
-                className={ctaFlex1}
-                onClick={onWrite}
-              >
-                깃로그 쓰기
-              </Button>
-            </>
-          )}
-        </div>
+<div className="flex w-full gap-3">
+  {isGuest ? (
+    <Button
+      variant="outlinePointWhite"
+      className="h-[38px] flex-none whitespace-nowrap rounded-[25px] text-[14px] leading-[22.4px]"
+      onClick={onStart}
+    >
+      깃로그 시작하기
+    </Button>
+  ) : (
+    <>
+      <Button
+        variant="outlinePointWhite"
+        className={clsx(
+          "h-[38px] flex-1 rounded-[25px] text-[14px] leading-[22.4px]",
+          "whitespace-nowrap min-w-0"
+        )}
+        onClick={onMyGitlog}
+      >
+        나의 깃로그
+      </Button>
+
+      <Button
+        variant="outlinePointWhite"
+        className={clsx(
+          "h-[38px] flex-1 rounded-[25px] text-[14px] leading-[22.4px]",
+          "whitespace-nowrap min-w-0"
+        )}
+        onClick={onWrite}
+      >
+        깃로그 쓰기
+      </Button>
+    </>
+  )}
+</div>
       </div>
 
-      {variant === "member" && (
-        <div className={bottomWrapClass}>
+      {/* 하단 영역 (member 전용) */}
+      {!isGuest && (
+        <div className="flex w-full justify-between gap-3 px-5 pb-5">
           <Button
             variant="outlineGrayWhite"
-            className={ctaFixed}
+            className="h-[38px] w-[99px] rounded-[25px] text-[14px] leading-[22.4px]"
             onClick={onSettings}
           >
             설정
           </Button>
           <Button
             variant="outlineGrayWhite"
-            className={ctaFixed}
+            className="h-[38px] w-[99px] rounded-[25px] text-[14px] leading-[22.4px]"
             onClick={onLogout}
           >
             로그아웃

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "../hooks/useForm";
 import LabeledInput from "../components/ui/LabeledInput";
+import LabeledTextArea from "../components/ui/LabeledTextArea";
 import Button from "../components/ui/Button/Button";
 import ReorderIcon from "@icons/reorder.svg?react";
 import imageIcon from "../assets/icons/image.svg";
@@ -52,19 +53,21 @@ export default function SignUpFormPage() {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
+    // 회원가입 submit 자리
   };
 
   return (
-    <div className="min-h-dvh w-full bg-white flex flex-col">
-      <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)]">
-        <div className="mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8 h-[56px] flex items-center justify-between">
+    <div className="flex min-h-dvh w-full flex-col bg-white">
+      {/* 상단 헤더 */}
+      <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
+        <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
             <button
               type="button"
               aria-label="메뉴 열기"
-              className="w-6 h-6 inline-flex items-center justify-center"
+              className="inline-flex h-6 w-6 items-center justify-center"
             >
-              <ReorderIcon className="w-6 h-6" />
+              <ReorderIcon className="h-6 w-6" />
             </button>
             <div className="logo-text select-none">GITLOG</div>
           </div>
@@ -72,38 +75,41 @@ export default function SignUpFormPage() {
         </div>
       </header>
 
+      {/* 타이틀 영역 */}
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8">
-          <div className="h-8 max-h-8 max-w-[688px] mx-auto" />
-          <div className="mx-auto w-full max-w-[688px] px-4 py-3 flex flex-col justify-center items-start gap-3">
-            <h1 className="text-[24px] leading-[38.4px] font-medium text-[var(--Black)]">
+          <div className="mx-auto h-8 max-h-8 max-w-[688px]" />
+          <div className="mx-auto flex w-full max-w-[688px] flex-col items-start justify-center gap-3 px-4 py-3">
+            <h1 className="text-[24px] font-medium leading-[38.4px] text-[var(--Black)]">
               회원가입
             </h1>
-            <p className="self-stretch text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray20)]">
+            <p className="self-stretch text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray20)]">
               가입을 위해 회원님의 정보를 입력해주세요.
             </p>
           </div>
-          <div className="h-5 max-h-5 max-w-[688px] mx-auto" />
+          <div className="mx-auto h-5 max-h-5 max-w-[688px]" />
         </div>
       </section>
 
-      <main className="flex-1 w-full">
+      {/* 본문 폼 */}
+      <main className="w-full flex-1">
         <form
-          className="mx-auto w-full max-w-[688px] px-4 py-8 flex flex-col gap-6"
+          className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8"
           onSubmit={handleSubmit}
         >
+          {/* 프로필 이미지 업로드 */}
           <div className="flex flex-col items-start gap-3">
-            <span className="text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray56)]">
+            <span className="text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray56)]">
               프로필 사진
             </span>
 
             <div className="flex flex-col items-start gap-3">
-              <div className="w-[90px] h-[90px] rounded-full overflow-hidden bg-[var(--Black)] flex items-center justify-center">
+              <div className="flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full bg-[var(--Black)]">
                 {preview ? (
                   <img
                     src={preview}
                     alt="profile"
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                   />
                 ) : (
                   <span className="logo-text text-[40px] leading-none text-[var(--White)]">
@@ -115,12 +121,12 @@ export default function SignUpFormPage() {
               <button
                 type="button"
                 onClick={pickFile}
-                className="inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--Gray90)] px-2 py-1
-                           text-[12px] leading-[19.2px] font-normal text-[var(--Gray56)]"
+                className="inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--Gray90)] px-2 py-1 text-[12px] font-normal leading-[19.2px] text-[var(--Gray56)]"
               >
-                <img src={imageIcon} alt="" className="w-[14px] h-[14px]" />
+                <img src={imageIcon} alt="" className="h-[14px] w-[14px]" />
                 프로필 사진 추가
               </button>
+
               <input
                 ref={fileRef}
                 type="file"
@@ -131,6 +137,7 @@ export default function SignUpFormPage() {
             </div>
           </div>
 
+          {/* 입력 필드들 */}
           <div className="flex flex-col gap-4">
             <LabeledInput
               label="이메일"
@@ -140,7 +147,7 @@ export default function SignUpFormPage() {
               value={values.email}
               onChange={handleChange}
               error={errors.email}
-              classNameWrapper="flex flex-col gap-3"
+              required
             />
 
             <LabeledInput
@@ -151,7 +158,7 @@ export default function SignUpFormPage() {
               value={values.password}
               onChange={handleChange}
               error={errors.password}
-              classNameWrapper="flex flex-col gap-3"
+              required
             />
 
             <LabeledInput
@@ -162,7 +169,7 @@ export default function SignUpFormPage() {
               value={values.password2}
               onChange={handleChange}
               error={errors.password2}
-              classNameWrapper="flex flex-col gap-3"
+              required
             />
 
             <LabeledInput
@@ -172,7 +179,6 @@ export default function SignUpFormPage() {
               placeholder="이름"
               value={values.realname}
               onChange={handleChange}
-              classNameWrapper="flex flex-col gap-3"
             />
 
             <LabeledInput
@@ -182,7 +188,6 @@ export default function SignUpFormPage() {
               placeholder="YYYY - MM - DD"
               value={values.birth}
               onChange={handleChange}
-              classNameWrapper="flex flex-col gap-3"
             />
 
             <div className="flex flex-col gap-2">
@@ -194,36 +199,26 @@ export default function SignUpFormPage() {
                 value={values.nickname}
                 onChange={handleChange}
                 error={errors.nickname}
-                classNameWrapper="flex flex-col gap-3"
+                required
               />
-              <p className="text-[12px] leading-[19.2px] font-light text-[var(--Gray-78,#C8C8C8)]">
+              <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
                 * 20글자 이내
               </p>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <label className="text-[14px] leading-[22.4px] font-light text-[var(--Gray56)]">
-                한 줄 소개
-              </label>
-              <input
-                name="intro"
-                type="text"
-                placeholder="한 줄 소개"
-                value={values.intro}
-                onChange={handleChange}
-                className="h-10 rounded-[4px] border border-[var(--Gray90)] px-4
-                           text-[14px] leading-[22.4px] font-light text-[var(--Gray20)]
-                           placeholder-[var(--Gray-78,#C8C8C8)]"
-              />
-              {errors.intro && errors.intro.length > 0 && (
-                <p className="text-[12px] leading-[19.2px] text-[var(--Negative)]">
-                  {errors.intro}
-                </p>
-              )}
-            </div>
+            <LabeledTextArea
+              label="한 줄 소개"
+              name="intro"
+              placeholder="한 줄 소개"
+              rows={2}
+              value={values.intro}
+              onChange={handleChange}
+              className=""
+            />
           </div>
 
-          <div className="pt-2 flex gap-3">
+          {/* 액션 버튼 */}
+          <div className="flex gap-3 pt-2">
             <Button
               type="button"
               variant="neutralOutline"
