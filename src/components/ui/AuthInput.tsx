@@ -8,6 +8,7 @@ interface AuthInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 export default function AuthInput({
@@ -17,6 +18,7 @@ export default function AuthInput({
   value,
   onChange,
   className,
+  disabled,
 }: AuthInputProps) {
   return (
     <input
@@ -25,6 +27,7 @@ export default function AuthInput({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      disabled={disabled}
       className={clsx(
         // 사이즈
         "h-10 w-full rounded-[4px] px-4",
