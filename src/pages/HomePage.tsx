@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
+
 import PageHeader from "@ui/PageHeader";
-import PostList from "../components/home/PostList";
 import Frame from "@ui/Frame";
+import PostList from "../components/home/PostList";
 import type { Post } from "../types/post";
+
 import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
@@ -64,11 +66,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
-      <style>{`
-        .home-frame-scope .bg-white { background-color: var(--Gray96) !important; }
-      `}</style>
-
-      <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)]">
+      <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)] relative z-10">
         <div className={clsx(styles.container.wrap, styles.container.pad)}>
           <PageHeader
             variant="write"
@@ -79,35 +77,33 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="flex-1 w-full">
-        <div className={clsx(styles.container.main, "py-8")}>
-          <div
-            className={clsx(
-              "grid gap-8 items-start",
-              showFrame ? "grid-cols-[240px,1fr]" : "grid-cols-[1fr]"
-            )}
-          >
-            {showFrame && (
-              <div className="hidden md:block sticky top-[72px] self-start home-frame-scope">
-                <Frame
-                  variant={isAuthed ? "member" : "guest"}
-                  name={isAuthed ? `%${user.nickname}` : "%{닉네임}"}
-                  intro={isAuthed ? `%${user.bio}` : "%{한 줄 소개}"}
-                  avatarSrc={user.avatarUrl}
-                  initial="G"
-                  onStart={goStart}
-                  onMyGitlog={goMyGitlog}
-                  onWrite={goWrite}
-                  onSettings={goSettings}
-                  onLogout={doLogout}
-                />
-              </div>
-            )}
+      {showFrame && (
+        <div className="hidden md:block z-20">
+          <Frame
+            variant={isAuthed ? "member" : "guest"}
+            name={isAuthed ? `%${user.nickname}` : "%{닉네임}"}
+            intro={isAuthed ? `%${user.bio}` : "%{한 줄 소개}"}
+            avatarSrc={user.avatarUrl}
+            initial="G"
+            onStart={goStart}
+            onMyGitlog={goMyGitlog}
+            onWrite={goWrite}
+            onSettings={goSettings}
+            onLogout={doLogout}
+          />
+        </div>
+      )}
 
-            <section className="flex flex-col gap-6">
-              <PostList posts={POSTS} page={page} onPageChange={setPage} />
-            </section>
-          </div>
+      <main
+        className={clsx(
+          "flex-1 w-full",
+          showFrame ? "md:ml-[240px]" : "ml-0"
+        )}
+      >
+        <div className={clsx(styles.container.main, "py-8")}>
+          <section className="flex flex-col gap-6">
+            <PostList posts={POSTS} page={page} onPageChange={setPage} />
+          </section>
         </div>
       </main>
 
