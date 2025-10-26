@@ -1,16 +1,29 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useForm } from "../hooks/useForm";
+import { useSignUp } from "../hooks/useAuth";
+
 import LabeledInput from "../components/ui/LabeledInput";
 import LabeledTextArea from "../components/ui/LabeledTextArea";
 import Button from "../components/ui/Button/Button";
+
 import ReorderIcon from "@icons/reorder.svg?react";
 import imageIcon from "../assets/icons/image.svg";
 
 export default function SignUpFormPage() {
+  const nav = useNavigate();
+
   const fileRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const { values, errors, handleChange, runValidation, reset } = useForm({
+  const {
+    values,
+    errors,
+    handleChange,
+    runValidation,
+    reset,
+  } = useForm({
     initialValues: {
       email: "",
       password: "",
@@ -27,8 +40,7 @@ export default function SignUpFormPage() {
       }
       if (!v.password.trim()) {
         err.password = "비밀번호를 입력해주세요.";
-      }
-      if (v.password.trim() && v.password.length < 6) {
+      } else if (v.password.length < 6) {
         err.password = "비밀번호는 6자 이상이어야 합니다.";
       }
       if (v.password2.trim() !== v.password.trim()) {
@@ -41,7 +53,15 @@ export default function SignUpFormPage() {
     },
   });
 
+const {
+  mutate: signUp,
+  isPending,
+  isError,
+  isSuccess,
+} = useSignUp();
+
   const pickFile = () => fileRef.current?.click();
+
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -53,8 +73,24 @@ export default function SignUpFormPage() {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
-    // 회원가입 submit 자리
+
+    signUp({
+      email: values.email,
+      nickname: values.nickname,
+      password: values.password,
+      profilePicture: preview || undefined,
+      birthDate: values.birth || undefined,
+      name: values.realname || undefined,
+      introduction: values.intro || undefined,
+    });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      // 회원가입 성공 시 로그인 페이지로 이동
+      nav("/login");
+    }
+  }, [isSuccess, nav]);
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
@@ -122,6 +158,7 @@ export default function SignUpFormPage() {
                 type="button"
                 onClick={pickFile}
                 className="inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--Gray90)] px-2 py-1 text-[12px] font-normal leading-[19.2px] text-[var(--Gray56)]"
+                disabled={isPending}
               >
                 <img src={imageIcon} alt="" className="h-[14px] w-[14px]" />
                 프로필 사진 추가
@@ -133,6 +170,7 @@ export default function SignUpFormPage() {
                 accept="image/*"
                 className="hidden"
                 onChange={onFileChange}
+                disabled={isPending}
               />
             </div>
           </div>
@@ -148,6 +186,7 @@ export default function SignUpFormPage() {
               onChange={handleChange}
               error={errors.email}
               required
+              disabled={isPending}
             />
 
             <LabeledInput
@@ -159,6 +198,7 @@ export default function SignUpFormPage() {
               onChange={handleChange}
               error={errors.password}
               required
+              disabled={isPending}
             />
 
             <LabeledInput
@@ -170,6 +210,7 @@ export default function SignUpFormPage() {
               onChange={handleChange}
               error={errors.password2}
               required
+              disabled={isPending}
             />
 
             <LabeledInput
@@ -179,6 +220,7 @@ export default function SignUpFormPage() {
               placeholder="이름"
               value={values.realname}
               onChange={handleChange}
+              disabled={isPending}
             />
 
             <LabeledInput
@@ -188,6 +230,7 @@ export default function SignUpFormPage() {
               placeholder="YYYY - MM - DD"
               value={values.birth}
               onChange={handleChange}
+              disabled={isPending}
             />
 
             <div className="flex flex-col gap-2">
@@ -200,6 +243,7 @@ export default function SignUpFormPage() {
                 onChange={handleChange}
                 error={errors.nickname}
                 required
+                disabled={isPending}
               />
               <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
                 * 20글자 이내
@@ -213,8 +257,14 @@ export default function SignUpFormPage() {
               rows={2}
               value={values.intro}
               onChange={handleChange}
-              className=""
+              disabled={isPending}
             />
+
+            {isError && (
+              <p className="text-[12px] leading-[19.2px] text-[var(--Negative)]">
+                가입에 실패했습니다. 다시 시도해주세요.
+              </p>
+            )}
           </div>
 
           {/* 액션 버튼 */}
@@ -224,6 +274,7 @@ export default function SignUpFormPage() {
               variant="neutralOutline"
               className="flex-1"
               onClick={reset}
+              disabled={isPending}
             >
               취소
             </Button>
@@ -232,8 +283,9 @@ export default function SignUpFormPage() {
               type="submit"
               variant="outlinePointWhite"
               className="flex-1"
+              disabled={isPending}
             >
-              회원가입 완료
+              {isPending ? "가입 중..." : "회원가입 완료"}
             </Button>
           </div>
         </form>

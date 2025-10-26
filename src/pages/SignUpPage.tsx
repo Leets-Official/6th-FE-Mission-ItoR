@@ -1,4 +1,3 @@
-import React from "react";
 import ReorderIcon from "@icons/reorder.svg?react";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import Spacer from "../components/ui/Spacer";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
 import Button from "../components/ui/Button/Button";
@@ -6,6 +6,7 @@ import AuthInput from "../components/ui/AuthInput";
 import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
+import { useLogin } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -28,16 +29,69 @@ export default function LoginPage() {
     },
   });
 
+  // 로그인 mutation 훅
+  const {
+    mutate: login,
+    data: loginResult,
+    isPending,
+    isError,
+    isSuccess,
+    error,
+  } = useLogin();
+
+  // 제출 시 서버에 로그인 요청
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
-    // 로그인 요청 자리
+
+    login(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: (res) => {
+          // {
+          //   accessToken: "...",
+          //   refreshToken: "...",
+          //   nickname: "john123",
+          //   profilePicture: "https://...",
+          //   introduction: "string",
+          //   httpStatus: "100 CONTINUE",
+          //   responseMessage: "string"
+          // }
+
+          const { accessToken, refreshToken } = res.data;
+
+          if (accessToken) {
+            localStorage.setItem("accessToken", accessToken);
+          }
+          if (refreshToken) {
+            localStorage.setItem("refreshToken", refreshToken);
+          }
+
+          nav("/");
+        },
+        onError: () => {
+
+        },
+      }
+    );
   };
 
   const goSignUp = () => {
     nav("/join");
   };
+
+  useEffect(() => {
+    if (isError) {
+      console.error("로그인 실패:", error);
+    }
+    if (isSuccess) {
+      console.log("로그인 성공:", loginResult);
+    }
+  }, [isError, isSuccess, error, loginResult]);
 
   return (
     <div className="auth-overlay" onClick={close}>
@@ -79,6 +133,7 @@ export default function LoginPage() {
               value={values.email}
               onChange={handleChange}
               className="mb-2"
+              disabled={isPending}
             />
 
             <AuthInput
@@ -88,15 +143,24 @@ export default function LoginPage() {
               value={values.password}
               onChange={handleChange}
               className="mb-3"
+              disabled={isPending}
             />
 
             <Button
               type="submit"
               variant="primaryBlue"
-              className="mb-4"
+              className="mb-2"
+              disabled={isPending}
             >
-              이메일로 로그인
+              {isPending ? "로그인 중..." : "이메일로 로그인"}
             </Button>
+
+            {/* 에러 메시지 표시 */}
+            {isError && (
+              <p className="mb-4 text-[12px] leading-[18px] text-[var(--Negative)]">
+                로그인에 실패했습니다. 다시 시도해주세요.
+              </p>
+            )}
 
             <div className="mb-4 flex flex-col items-center text-[12px] leading-[18px] text-[var(--Gray56)]">
               <div className="flex w-full items-center gap-2">
@@ -112,6 +176,7 @@ export default function LoginPage() {
               type="button"
               variant="kakao"
               className="mb-4"
+              // 카카오 로그인 흐름은 나중에 여기 onClick에서 handleKakaoLogin() 부르면 돼
             >
               <>
                 <img
@@ -128,6 +193,7 @@ export default function LoginPage() {
                 type="button"
                 className="text-[12px] font-light leading-[18px] text-[var(--Gray56)]"
                 onClick={goSignUp}
+                disabled={isPending}
               >
                 또는 회원가입
               </button>
