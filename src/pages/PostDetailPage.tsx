@@ -327,7 +327,9 @@ const PostDetailPage: React.FC = () => {
                   createdAt: new Date().toISOString(),
                   mine: true,
                 };
-                setComments([next, ...comments]);
+
+                setComments((prev) => [next, ...prev]);
+
                 setInput("");
               }}
             />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 
@@ -43,6 +43,17 @@ export default function HomePage() {
     search.delete("login");
     setSearch(search, { replace: true });
   };
+
+  useEffect(() => {
+    if (loginOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [loginOpen]);
 
   const [showFrame, setShowFrame] = useState(false);
   const toggleFrame = () => setShowFrame((v) => !v);
