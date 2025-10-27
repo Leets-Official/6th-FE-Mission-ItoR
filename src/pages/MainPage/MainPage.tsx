@@ -9,6 +9,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { Post } from "@/types/post";
 import * as styles from "./MainPage.styled";
 import Modal from "@/components/Modal/Modal";
+import { useUserStore } from "@/store/useUserStore";
 
 const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
   postId: crypto.randomUUID(),
@@ -50,15 +51,19 @@ export default function MainPage() {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const { user, clearUser } = useUserStore();
+  const isLogin = !!user;
+
   const handleLogoutClick = () => setIsLogoutModalOpen(true);
   const handleConfirmLogout = () => {
+    clearUser();
     setIsLogoutModalOpen(false);
-    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
   };
 
   const { posts, pageMax, loading } = usePosts(currentPage, 10);
   const dataToShow = posts.length > 0 ? posts : dummyPosts;
   const totalPages = posts.length > 0 ? pageMax : Math.ceil(dummyPosts.length / 10);
+
   if (loading && posts.length === 0) return <div className="p-6">로딩 중...</div>;
 
   const pagedData = dataToShow.slice((currentPage - 1) * 10, currentPage * 10);
@@ -70,9 +75,10 @@ export default function MainPage() {
           title="GITLOG"
           variant="write"
           onMenuClick={() => setIsSidebarOpen(true)}
-          onWriteClick={() => navigate("/write")}
+          onWriteClick={() => (isLogin ? navigate("/write") : setIsLoginOpen(true))}
         />
       </div>
+
       <div className="h-[70px]" />
 
       {isSidebarOpen && (
@@ -80,7 +86,7 @@ export default function MainPage() {
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
           <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
             <Sidebar
-              variant="guest"
+              variant={isLogin ? "user" : "guest"}
               onLoginClick={() => {
                 setIsLoginOpen(true);
                 setIsSidebarOpen(false);
