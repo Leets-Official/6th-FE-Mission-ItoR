@@ -1,10 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   signUpRequest,
   loginRequest,
   oauthRegisterRequest,
   reissueToken,
-  getKakaoLoginUrl,
   kakaoRedirectLogin,
   SignUpBody,
   LoginBody,
@@ -36,11 +35,13 @@ export const useReissue = () =>
     mutationFn: (body: ReissueBody) => reissueToken(body),
   });
 
-// 카카오 로그인 redirect URL 요청
-export const useKakaoUrl = () =>
-  useQuery({
-    queryKey: ["kakao-login-url"],
-    queryFn: () => getKakaoLoginUrl(),
+//  카카오 로그인 시작 (카카오 인증 URL 요청)
+// mutationFn이 string을 반환한다고 명시해줌
+export const useKakaoStart = () =>
+  useMutation<void, unknown, void>({
+    mutationFn: async () => {
+      window.location.href = "https://blog.leets.land/auth/kakao";
+    },
   });
 
 // 카카오 redirect (AuthCode 받았을 때 실행)

@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://blog.leets.land", // swagger 도메인 기준
+  baseURL: "https://blog.leets.land", 
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 export default api;

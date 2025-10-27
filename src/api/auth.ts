@@ -79,6 +79,11 @@ export interface KakaoRedirectResponse {
   code: number;
   message: string;
   data: {
+    accessToken: string;
+    refreshToken: string;
+    nickname: string;
+    profilePicture?: string;
+    introduction?: string;
     httpStatus: string;
     responseMessage: string;
   };
@@ -114,15 +119,13 @@ export const reissueToken = async (body: ReissueBody): Promise<ReissueResponse> 
 
 // 카카오 로그인 redirect URL 요청
 export const getKakaoLoginUrl = async (): Promise<string> => {
-  const res = await api.get("/auth/kakao");
-  // swagger에 응답 예시가 없지만, 일반적으로 redirect URL을 반환한다고 했으니 res.data 또는 res.request.responseURL 활용
-  return res.data || res.request?.responseURL;
+  const { data } = await api.get("/auth/kakao");
+  if (typeof data === "string") return data;
+  if (data?.data) return data.data;
+  throw new Error("카카오 로그인 URL을 가져오지 못했습니다.");
 };
 
-// 카카오 로그인 Redirect (AuthCode로 서버 로그인)
-export const kakaoRedirectLogin = async (
-  code: string
-): Promise<KakaoRedirectResponse> => {
-  const res = await api.get(`/auth/kakao/redirect?code=${code}`);
-  return res.data;
+export const kakaoRedirectLogin = async (code: string) => {
+  const { data } = await api.get(`/auth/kakao/redirect`, { params: { code } });
+  return data;
 };
