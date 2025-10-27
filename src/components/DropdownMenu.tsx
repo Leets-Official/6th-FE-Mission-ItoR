@@ -1,10 +1,6 @@
 import React, { type FC, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
-function cn(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export type DropdownMenuItem = {
   label: string;
   onClick?: () => void;
@@ -22,8 +18,8 @@ export type DropdownMenuProps = {
 const DropdownMenu: FC<DropdownMenuProps> = ({
   trigger,
   items,
-  className = "",
-  menuClassName = "",
+  className,
+  menuClassName,
   position = "right",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,12 +41,20 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   };
 
   return (
-    <div ref={dropdownRef} className={cn("relative inline-block", className)}>
-      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">{trigger}</div>
+    <div ref={dropdownRef} className={clsx("relative inline-block", className)}>
+      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
+        {trigger}
+      </div>
 
       {isOpen && (
-        <div className={cn("absolute mt-2 min-w-[160px] rounded-md shadow-lg z-50 bg-white p-2", position === "right" ? "right-0" : "left-0", menuClassName)}>
-          <div className="absolute -top-2 right-4 w-3 h-3 rotate-45 bg-white"></div>
+        <div
+          className={clsx(
+            "absolute mt-2 min-w-[160px] rounded-md shadow-lg z-50 bg-white p-2",
+            position === "right" ? "right-0" : "left-0",
+            menuClassName
+          )}
+        >
+          <div className="absolute -top-2 right-4 w-3 h-3 rotate-45 bg-white" />
           <ul className="flex flex-col">
             {items.map((item, idx) => (
               <li
