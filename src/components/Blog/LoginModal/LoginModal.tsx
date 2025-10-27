@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TextField from "@/components/Text/TextField";
 import { KakaoIcon, ClearIcon } from "@/assets/icons";
 import {
@@ -19,6 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import * as E from "@/utils/validators";
 import { LOGIN_ERROR_MESSAGES } from "@/utils/errorMessages";
+import { useScrollLock } from "@/hooks/useScrollLock";
 
 interface LoginModalProps {
   open: boolean;
@@ -33,12 +34,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  useScrollLock(open);
 
   if (!open) return null;
 
@@ -54,7 +50,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
     setPasswordError("");
 
     try {
-      const result = await onLogin?.(email, password);
+      if (!onLogin) return;
+
+      const result = await onLogin(email, password);
+
       if (result === false) {
         if (email === "unknown@example.com") {
           setEmailError(LOGIN_ERROR_MESSAGES.emailNotRegistered);
@@ -62,7 +61,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
           setPasswordError(LOGIN_ERROR_MESSAGES.wrongPassword);
         }
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       setPasswordError(LOGIN_ERROR_MESSAGES.wrongPassword);
     }
   };
