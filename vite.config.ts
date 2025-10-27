@@ -11,4 +11,14 @@ export default defineConfig({
       "@src": "/src",
     },
   },
+server: {
+  port: 3000,
+  proxy: {
+    "/auth": {
+      target: "https://blog.leets.land",
+      changeOrigin: true,
+      secure: false,
+    },
+  },
+},
 });
