@@ -7,28 +7,24 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function PostDetail() {
-  const [isLogin, setIsLogin] = useState(true);
+  const { user, clearUser } = useUserStore();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-  const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
-  };
+  const [commentCount, setCommentCount] = useState(0);
 
   const commentRef = useRef<HTMLDivElement>(null);
 
-  const currentUserName = "내닉네임";
-
   const post = {
+    id: "post-001",
     title: "32 Title one line",
+    userId: "user-123",
     nickName: "내닉네임",
     createdAt: "Feb 17. 2025.",
     profileUrl: "https://i.pravatar.cc/40?img=3",
@@ -38,7 +34,14 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
     `,
   };
 
-  const isOwner = isLogin && currentUserName === post.nickName; // ✅ 내 글 여부
+  const isLogin = !!user;
+  const isOwner = isLogin && user?.id === post.userId;
+
+  const handleLogoutClick = () => setIsLogoutModalOpen(true);
+  const handleConfirmLogout = () => {
+    clearUser(); // 전역 상태 초기화
+    setIsLogoutModalOpen(false);
+  };
 
   const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,6 +59,7 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 
   return (
     <div className={S.page}>
+      {/* 헤더 */}
       <div className="fixed top-0 left-0 z-50 w-full">
         <div className="relative">
           <Header
@@ -88,7 +92,11 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
           <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
+            <Sidebar
+              variant={isLogin ? "user" : "guest"}
+              onLogoutClick={handleLogoutClick}
+              onLoginClick={() => setIsLoginOpen(true)}
+            />
           </aside>
         </>
       )}
@@ -120,7 +128,7 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         <section className={S.group} ref={commentRef}>
           <CommentSection
             isLoggedIn={isLogin}
-            onLoginClick={() => setIsLogin(true)}
+            onLoginClick={() => setIsLoginOpen(true)}
             onSubmit={(text) => {
               alert(`댓글 등록: ${text}`);
               setCommentCount((prev) => prev + 1);
