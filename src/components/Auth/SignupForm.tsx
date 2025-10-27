@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import * as S from "./Signup.styled";
-import * as E from "@/utils/validators";
 import TextFieldSet from "@/components/Text/TextFieldSet";
 import Button from "@/components/Button/Button";
 import Avatar from "@/components/Avatar/Avatar";
@@ -9,31 +8,24 @@ import { AddPhotoAlternateIcon, KakaoIcon } from "@/assets/icons";
 import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
+import { useSignupForm } from "@/hooks/useSignupForm";
 
 interface SignupFormProps {
   type: "email" | "kakao";
 }
 
 const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    passwordConfirm: "",
-    name: "",
-    birth: "",
-    nickname: "",
-    intro: "",
-  });
+  const {
+    form,
+    errors,
+    isModalOpen,
+    isLoginModalOpen,
+    handleChange,
+    handleSubmit,
+    setIsModalOpen,
+    setIsLoginModalOpen,
+  } = useSignupForm(type);
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const handleChange = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  // 필드 배열
   const fields = [
     { key: "email", title: "이메일", placeholder: "이메일" },
     ...(type === "email"
@@ -53,32 +45,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
     { key: "intro", title: "한 줄 소개", placeholder: "한 줄 소개" },
   ];
 
-  const handleSubmit = () => {
-    const newErrors: Record<string, string> = {};
-
-    newErrors.email = E.validateEmail(form.email);
-    newErrors.name = E.validateName(form.name);
-    newErrors.nickname = E.validateNickname(form.nickname);
-    newErrors.birth = E.validateBirth(form.birth);
-    newErrors.intro = E.validateIntro(form.intro);
-
-    if (type === "email") {
-      newErrors.passwordConfirm = E.validatePasswordConfirm(form.password, form.passwordConfirm);
-    }
-
-    Object.entries(form).forEach(([key, value]) => {
-      if (!value.trim() && !newErrors[key]) {
-        newErrors[key] = "반드시 입력해야하는 필수 사항입니다";
-      }
-    });
-
-    setErrors(newErrors);
-    if (Object.values(newErrors).every((v) => !v)) setIsModalOpen(true);
-  };
-
   return (
     <div className={S.signupFormContainer}>
-      {/* 프로필 사진 */}
       <div className={S.profileSection}>
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
@@ -92,7 +60,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
         </div>
       </div>
 
-      {/* 카카오 로그인 정보 */}
       {type === "kakao" && (
         <div className={S.socialSection}>
           <p className={S.socialLabel}>소셜 로그인</p>
@@ -103,7 +70,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
         </div>
       )}
 
-      {/* 입력 필드 */}
       <div className={S.signupFormFields}>
         {fields.map(({ key, title, placeholder, helperText, type }) => (
           <TextFieldSet
