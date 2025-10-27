@@ -1,8 +1,23 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import ReorderIcon from "@icons/reorder.svg?react";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import Spacer from "../components/ui/Spacer";
 
 export default function SignUpPage() {
+  const nav = useNavigate();
+
+  // 이메일 회원가입 버튼 클릭 -> 이메일 가입 폼 페이지로 이동
+  const goEmailSignUp = () => {
+    nav("/join/email");
+  };
+
+  // 카카오로 회원가입 버튼 클릭 -> 백엔드로 바로 이동 (CORS 안 걸리는 방식)
+  const handleKakaoSignUp = () => {
+    window.location.href = "/auth/kakao";
+  };
+
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
       {/* 헤더 */}
@@ -55,6 +70,7 @@ export default function SignUpPage() {
                 {/* 이메일로 회원가입 */}
                 <button
                   type="button"
+                  onClick={goEmailSignUp}
                   className="h-[45px] px-[14px] rounded-[6px] bg-[var(--Point)] text-[var(--White)]
                              text-[14px] leading-[22.4px] tracking-[-0.07px] flex items-center justify-center"
                 >
@@ -73,6 +89,7 @@ export default function SignUpPage() {
                 {/* 카카오로 회원가입 */}
                 <button
                   type="button"
+                  onClick={handleKakaoSignUp} // ← 진짜 핵심
                   className="h-[45px] px-[14px] rounded-[6px] bg-[var(--KakaoBg)] text-[var(--KakaoText)]
                              text-[14px] leading-[22.4px] tracking-[-0.07px] flex items-center justify-center gap-1.5"
                 >

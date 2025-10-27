@@ -8,6 +8,8 @@ import SignUpPage from "../pages/SignUpPage";
 import SignUpFormPage from "../pages/SignUpFormPage";
 import ProfilePage from "../pages/ProfilePage";
 import AccountProfilePage from "../pages/AccountProfilePage";
+import KakaoRedirectPage from "../pages/KakaoRedirectPage";
+import OAuthSignUpPage from "../pages/OAuthSignUpPage";
 
 
 const router = createBrowserRouter([
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
   { path: "/join/email", element: <SignUpFormPage /> },
   { path: "/profile", element: <ProfilePage /> },
   { path: "/account/profile", element: <AccountProfilePage /> },
-]);
+  { path: "/oauth/kakao/success", element: <KakaoRedirectPage /> },
+  { path: "/join/oauth", element: <OAuthSignUpPage /> },
+  { path: '*', element: <Navigate to="/" replace /> },
+
+  ]);
 
 export default router; 

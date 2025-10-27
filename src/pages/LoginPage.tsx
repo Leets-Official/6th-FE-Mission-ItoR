@@ -4,9 +4,9 @@ import { useForm } from "../hooks/useForm";
 import Button from "../components/ui/Button/Button";
 import AuthInput from "../components/ui/AuthInput";
 import clearIcon from "../assets/icons/clear.svg";
-import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
 import { useLogin } from "../hooks/useAuth";
+import KakaoLoginButton from "../components/KakaoLoginButton";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -29,7 +29,6 @@ export default function LoginPage() {
     },
   });
 
-  // 로그인 mutation 훅
   const {
     mutate: login,
     data: loginResult,
@@ -39,7 +38,6 @@ export default function LoginPage() {
     error,
   } = useLogin();
 
-  // 제출 시 서버에 로그인 요청
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const ok = runValidation();
@@ -52,16 +50,6 @@ export default function LoginPage() {
       },
       {
         onSuccess: (res) => {
-          // {
-          //   accessToken: "...",
-          //   refreshToken: "...",
-          //   nickname: "john123",
-          //   profilePicture: "https://...",
-          //   introduction: "string",
-          //   httpStatus: "100 CONTINUE",
-          //   responseMessage: "string"
-          // }
-
           const { accessToken, refreshToken } = res.data;
 
           if (accessToken) {
@@ -72,9 +60,6 @@ export default function LoginPage() {
           }
 
           nav("/");
-        },
-        onError: () => {
-
         },
       }
     );
@@ -111,7 +96,6 @@ export default function LoginPage() {
         </button>
 
         <div className="flex flex-col gap-8 text-[var(--White)] sm:flex-row sm:gap-12">
-          {/* 왼쪽 브랜드 영역 */}
           <div className="flex min-w-[200px] flex-1 flex-col justify-center">
             <div className="logo-text text-[48px] leading-[1.2] text-[var(--White)]">
               GITLOG
@@ -121,7 +105,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* 오른쪽 로그인 폼 영역 */}
           <form
             className="flex min-w-[260px] max-w-[320px] flex-1 flex-col text-[var(--White)]"
             onSubmit={handleSubmit}
@@ -155,7 +138,6 @@ export default function LoginPage() {
               {isPending ? "로그인 중..." : "이메일로 로그인"}
             </Button>
 
-            {/* 에러 메시지 표시 */}
             {isError && (
               <p className="mb-4 text-[12px] leading-[18px] text-[var(--Negative)]">
                 로그인에 실패했습니다. 다시 시도해주세요.
@@ -172,21 +154,10 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button
-              type="button"
-              variant="kakao"
+            <KakaoLoginButton
               className="mb-4"
-              // 카카오 로그인 흐름은 나중에 여기 onClick에서 handleKakaoLogin() 부르면 돼
-            >
-              <>
-                <img
-                  src={kakaoIcon}
-                  alt=""
-                  className="h-[16px] w-[16px]"
-                />
-                카카오로 로그인
-              </>
-            </Button>
+              disabled={isPending}
+            />
 
             <div className="flex w-full flex-col items-center">
               <button
