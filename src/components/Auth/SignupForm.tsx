@@ -5,11 +5,16 @@ import TextFieldSet from "@/components/Text/TextFieldSet";
 import Button from "@/components/Button/Button";
 import Avatar from "@/components/Avatar/Avatar";
 import SmallButton from "@/components/SmallButton/SmallButton";
-import { AddPhotoAlternateIcon } from "@/assets/icons";
+import { AddPhotoAlternateIcon, KakaoIcon } from "@/assets/icons";
+import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 
-const EmailSignupForm = () => {
+interface SignupFormProps {
+  type: "email" | "kakao";
+}
+
+const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -28,15 +33,38 @@ const EmailSignupForm = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  // 필드 배열
+  const fields = [
+    { key: "email", title: "이메일", placeholder: "이메일" },
+    ...(type === "email"
+      ? [
+          { key: "password", title: "비밀번호", placeholder: "비밀번호", type: "password" },
+          {
+            key: "passwordConfirm",
+            title: "비밀번호 확인",
+            placeholder: "비밀번호 확인",
+            type: "password",
+          },
+        ]
+      : []),
+    { key: "name", title: "이름", placeholder: "이름" },
+    { key: "birth", title: "생년월일", placeholder: "YYYY-MM-DD" },
+    { key: "nickname", title: "닉네임", placeholder: "닉네임", helperText: "20글자 이내" },
+    { key: "intro", title: "한 줄 소개", placeholder: "한 줄 소개" },
+  ];
+
   const handleSubmit = () => {
     const newErrors: Record<string, string> = {};
 
     newErrors.email = E.validateEmail(form.email);
-    newErrors.passwordConfirm = E.validatePasswordConfirm(form.password, form.passwordConfirm);
     newErrors.name = E.validateName(form.name);
     newErrors.nickname = E.validateNickname(form.nickname);
     newErrors.birth = E.validateBirth(form.birth);
     newErrors.intro = E.validateIntro(form.intro);
+
+    if (type === "email") {
+      newErrors.passwordConfirm = E.validatePasswordConfirm(form.password, form.passwordConfirm);
+    }
 
     Object.entries(form).forEach(([key, value]) => {
       if (!value.trim() && !newErrors[key]) {
@@ -45,24 +73,12 @@ const EmailSignupForm = () => {
     });
 
     setErrors(newErrors);
-
-    if (Object.values(newErrors).every((v) => !v)) {
-      setIsModalOpen(true);
-    }
-  };
-
-  const handleModalClose = () => setIsModalOpen(false);
-
-  const handleLoginRedirect = () => {
-    setIsLoginModalOpen(true); // 페이지 이동 대신 로그인 모달 띄우기
-  };
-
-  const handleLoginModalClose = () => {
-    setIsLoginModalOpen(false);
+    if (Object.values(newErrors).every((v) => !v)) setIsModalOpen(true);
   };
 
   return (
     <div className={S.signupFormContainer}>
+      {/* 프로필 사진 */}
       <div className={S.profileSection}>
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
@@ -76,59 +92,31 @@ const EmailSignupForm = () => {
         </div>
       </div>
 
+      {/* 카카오 로그인 정보 */}
+      {type === "kakao" && (
+        <div className={S.socialSection}>
+          <p className={S.socialLabel}>소셜 로그인</p>
+          <div className={S.socialWrapper}>
+            <KakaoIcon className={S.kakaoIcon} />
+            <TextField value="카카오 로그인" disabled fullWidth className={S.kakaoTextField} />
+          </div>
+        </div>
+      )}
+
+      {/* 입력 필드 */}
       <div className={S.signupFormFields}>
-        <TextFieldSet
-          title="이메일"
-          placeholder="이메일"
-          value={form.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-          error={errors.email}
-        />
-        <TextFieldSet
-          title="비밀번호"
-          placeholder="비밀번호"
-          type="password"
-          value={form.password}
-          onChange={(e) => handleChange("password", e.target.value)}
-          error={errors.password}
-        />
-        <TextFieldSet
-          title="비밀번호 확인"
-          placeholder="비밀번호 확인"
-          type="password"
-          value={form.passwordConfirm}
-          onChange={(e) => handleChange("passwordConfirm", e.target.value)}
-          error={errors.passwordConfirm}
-        />
-        <TextFieldSet
-          title="이름"
-          placeholder="이름"
-          value={form.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          error={errors.name}
-        />
-        <TextFieldSet
-          title="생년월일"
-          placeholder="YYYY-MM-DD"
-          value={form.birth}
-          onChange={(e) => handleChange("birth", e.target.value)}
-          error={errors.birth}
-        />
-        <TextFieldSet
-          title="닉네임"
-          placeholder="닉네임"
-          helperText="20글자 이내"
-          value={form.nickname}
-          onChange={(e) => handleChange("nickname", e.target.value)}
-          error={errors.nickname}
-        />
-        <TextFieldSet
-          title="한 줄 소개"
-          placeholder="한 줄 소개"
-          value={form.intro}
-          onChange={(e) => handleChange("intro", e.target.value)}
-          error={errors.intro}
-        />
+        {fields.map(({ key, title, placeholder, helperText, type }) => (
+          <TextFieldSet
+            key={key}
+            title={title}
+            placeholder={placeholder}
+            helperText={helperText}
+            type={type}
+            value={form[key as keyof typeof form]}
+            onChange={(e) => handleChange(key, e.target.value)}
+            error={errors[key]}
+          />
+        ))}
       </div>
 
       <Button label="회원가입 완료" variant="primaryOutline" fullWidth onClick={handleSubmit} />
@@ -136,17 +124,17 @@ const EmailSignupForm = () => {
       <Modal
         open={isModalOpen}
         title="회원가입이 완료되었습니다!"
-        onClose={handleModalClose}
-        onConfirm={handleLoginRedirect}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => setIsLoginModalOpen(true)}
         cancelText="확인"
         confirmText="로그인하기"
         cancelColor="bg-white text-brand-darkGray border border-brand-lightGray hover:bg-brand-lightGray"
         confirmColor="bg-brand-blue text-white hover:bg-brand-blue/90"
       />
 
-      <LoginModal open={isLoginModalOpen} onClose={handleLoginModalClose} />
+      <LoginModal open={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 };
 
-export default EmailSignupForm;
+export default SignupForm;

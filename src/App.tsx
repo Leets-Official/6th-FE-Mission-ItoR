@@ -14,7 +14,7 @@ function App() {
       <Route path="/blog/:postId" element={<PostDetailPage />} />
       <Route path="/write" element={<PostWritePage />} />
       <Route path="/mypage" element={<MyPage />} />
-      <Route path="/mypage/setting" element={<MyPageSetting loginType="kakao" />} />
+      <Route path="/mypage/setting" element={<MyPageSetting loginType="email" />} />
     </Routes>
   );
 }

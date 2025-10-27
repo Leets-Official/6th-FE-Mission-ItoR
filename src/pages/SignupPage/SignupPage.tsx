@@ -9,8 +9,7 @@ import {
 } from "./SignupPage.styled";
 import { useState } from "react";
 import SignupSection from "@/components/Auth/SignupSection";
-import EmailSignupForm from "@/components/Auth/EmailSignupForm";
-import KakaoSignupForm from "@/components/Auth/KakaoSignupForm";
+import SignupForm from "@/components/Auth/SignupForm";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 
 export default function SignupPage() {
@@ -42,21 +41,16 @@ export default function SignupPage() {
 
       <div className={signupHeaderBar}>
         <div className="mx-auto max-w-[900px] md:px-20">
-          {mode === "select" ? (
-            <h2 className={signupHeaderText}>회원가입</h2>
-          ) : (
-            <>
-              <h2 className={signupHeaderText}>회원가입</h2>
-              <p className={subtitle}>가입을 위해 회원님의 정보를 입력해주세요.</p>
-            </>
+          <h2 className={signupHeaderText}>회원가입</h2>
+          {mode !== "select" && (
+            <p className={subtitle}>가입을 위해 회원님의 정보를 입력해주세요.</p>
           )}
         </div>
       </div>
 
       <section className={signupSection}>
         {mode === "select" && <SignupSection onSelect={(t) => setMode(t)} />}
-        {mode === "email" && <EmailSignupForm />}
-        {mode === "kakao" && <KakaoSignupForm />}
+        {mode !== "select" && <SignupForm type={mode} />}
       </section>
 
       <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
