@@ -1,55 +1,79 @@
-import React, { useState } from "react";
-import Button from "./Button";
+import React from "react";
 
 interface ModalProps {
   titleLine1: string;
-  titleLine2: string;
+  titleLine2?: string;
   description?: string;
+  onClose: () => void;
+  onConfirm: () => void;
+  confirmText?: string; // ✅ 버튼 텍스트 변경 가능
+  cancelText?: string;  // ✅ 버튼 텍스트 변경 가능
+  variant?: "delete" | "info"; // ✅ 모달 스타일 구분
 }
 
-const Modal: React.FC<ModalProps> = ({ titleLine1, titleLine2, description }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Modal: React.FC<ModalProps> = ({
+  titleLine1,
+  titleLine2,
+  description,
+  onClose,
+  onConfirm,
+  confirmText = "확인",
+  cancelText = "취소",
+  variant = "info", // 기본값은 일반 정보형
+}) => {
+  // ✅ variant별 버튼 색상 정의
+  const confirmButtonStyle =
+    variant === "delete"
+      ? "bg-red-500 text-white hover:bg-red-600"
+      : "bg-[#3B82F6] text-white hover:bg-[#2563EB]";
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-  const handleDelete = () => {
-    alert("삭제");
-    setIsOpen(false);
-  };
+  const cancelButtonStyle =
+    variant === "delete"
+      ? "bg-gray-100 text-gray-700"
+      : "bg-gray-100 text-gray-700";
 
   return (
-    <>
-      <Button variant="blueBorder" onClick={openModal}>
-        모달 열기
-      </Button>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* 반투명 배경 + 블러 */}
+      <div className="absolute inset-0 backdrop-blur-sm bg-black/10"></div>
 
-      {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white w-[326px] h-[192px] rounded-lg relative flex flex-col justify-between">
-            <div className={`flex flex-col pl-[40px] ${description ? "pt-4" : "pt-12"}`} >
-              <p className="text-[16px] font-semibold text-left">{titleLine1}</p>
-              <p className="text-[16px] font-semibold mt-1 text-left">{titleLine2}</p>
-              {description && (
-                <p className="text-[12px] text-gray-500 mt-2 text-left">
-                  {description}
-                </p>
-              )}
-            </div>
-
-            <div className="flex justify-between absolute bottom-4 left-0 w-full px-[40px] gap-4">
-              <button onClick={closeModal} className="w-[141px] h-[38px] bg-gray-100 text-gray-700 rounded-[2px] font-medium text-[14px]">
-                취소
-              </button>
-              <button onClick={handleDelete} className="w-[141px] h-[38px] bg-red-500 text-white rounded-[2px] font-medium text-[14px]">
-                삭제하기
-              </button>
-            </div>
-          </div>
+      {/* 모달 본체 */}
+      <div className="bg-white w-[326px] h-[192px] rounded-lg shadow-lg flex flex-col justify-between relative z-50">
+        {/* 텍스트 */}
+        <div
+          className={`flex flex-col pl-[40px] pr-[40px] ${
+            description ? "pt-4" : "pt-12"
+          }`}
+        >
+          <p className="text-[16px] font-semibold text-left">{titleLine1}</p>
+          {titleLine2 && (
+            <p className="text-[16px] font-semibold mt-1 text-left">{titleLine2}</p>
+          )}
+          {description && (
+            <p className="text-[12px] text-gray-500 mt-2 text-left">
+              {description}
+            </p>
+          )}
         </div>
-      )}
-    </>
+
+        {/* 버튼 그룹 */}
+        <div className="flex justify-between w-full px-[40px] pb-[20px] gap-4">
+          <button
+            onClick={onClose}
+            className={`w-[120px] h-[38px] rounded-[2px] font-medium text-[14px] ${cancelButtonStyle}`}
+          >
+            {cancelText}
+          </button>
+          <button
+            onClick={onConfirm}
+            className={`w-[120px] h-[38px] rounded-[2px] font-medium text-[14px] ${confirmButtonStyle}`}
+          >
+            {confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default Modal;
-
