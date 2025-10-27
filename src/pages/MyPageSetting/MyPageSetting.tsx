@@ -17,16 +17,10 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-  const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
-  };
-
-  const [isEditMode, setIsEditMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
   const [form, setForm] = useState({
     email: "chaemin@example.com",
     name: "김채민",
@@ -35,8 +29,8 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
     intro: "You can make anything by writing.",
     profile: "https://i.pravatar.cc/120?img=8",
   });
-
   const [tempForm, setTempForm] = useState(form);
+
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const handleChange = (field: string, value: string) =>
@@ -52,19 +46,45 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
 
   const handleSaveClick = () => {
     setForm(tempForm);
+    setIsEditMode(false);
     navigate("/mypage", { state: { toastMessage: "저장되었습니다!" } });
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
-    reader.onload = () => {
-      setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
-    };
+    reader.onload = () => setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
     reader.readAsDataURL(file);
   };
+
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setIsLogoutModalOpen(false);
+    navigate("/", { replace: true });
+  };
+
+  type FormFieldKey = keyof typeof form;
+
+  const formFields = [
+    { title: "이메일", field: "email", placeholder: "이메일", type: "text" },
+    ...(loginType === "email"
+      ? [
+          { title: "비밀번호", field: "password", placeholder: "......", type: "password" },
+          {
+            title: "비밀번호 확인",
+            field: "passwordConfirm",
+            placeholder: "......",
+            type: "password",
+          },
+        ]
+      : []),
+    { title: "이름", field: "name", placeholder: "이름", type: "text" },
+    { title: "생년월일", field: "birth", placeholder: "YYYY-MM-DD", type: "text" },
+  ];
 
   return (
     <div className={S.container}>
@@ -136,43 +156,18 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
             <TextField value="카카오 로그인" disabled fullWidth className={S.kakaoTextField} />
           </div>
         )}
-        <TextFieldSet
-          title="이메일"
-          placeholder="이메일"
-          value={tempForm.email}
-          disabled={!isEditMode}
-          onChange={(e) => handleChange("email", e.target.value)}
-        />
-        {loginType === "email" && (
-          <>
-            <TextFieldSet
-              title="비밀번호"
-              placeholder="......"
-              type="password"
-              disabled={!isEditMode}
-            />
-            <TextFieldSet
-              title="비밀번호 확인"
-              placeholder="......"
-              type="password"
-              disabled={!isEditMode}
-            />
-          </>
-        )}
 
-        <TextFieldSet
-          title="이름"
-          value={tempForm.name}
-          disabled={!isEditMode}
-          onChange={(e) => handleChange("name", e.target.value)}
-        />
-        <TextFieldSet
-          title="생년월일"
-          placeholder="YYYY-MM-DD"
-          value={tempForm.birth}
-          disabled={!isEditMode}
-          onChange={(e) => handleChange("birth", e.target.value)}
-        />
+        {formFields.map(({ title, field, placeholder, type }) => (
+          <TextFieldSet
+            key={field}
+            title={title}
+            placeholder={placeholder}
+            type={type}
+            value={tempForm[field as FormFieldKey] ?? ""}
+            disabled={!isEditMode}
+            onChange={(e) => handleChange(field as FormFieldKey, e.target.value)}
+          />
+        ))}
       </main>
 
       <Modal
