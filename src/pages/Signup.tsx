@@ -13,8 +13,8 @@ const Signup: React.FC = () => {
       <Header variant="write" />
 
       {/* 회원가입 타이틀 영역 */}
-      <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-[#F5F5F5] px-[430px]">
-        <h1 className="text-[32px] font-medium text-gray-900">회원가입</h1>
+      <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-gray-50 px-[430px]">
+        <h1 className="text-2xl font-medium text-gray-800">회원가입</h1>
       </div>
 
       {/* 메인 컨텐츠 */}
@@ -23,7 +23,7 @@ const Signup: React.FC = () => {
           {/* 왼쪽 영역 */}
           <div className="flex flex-col items-start justify-center w-[344px]">
             <Frame7 className="w-[344px] h-[160px] text-black fill-black -ml-[60px]" />
-            <p className="text-[#909090] text-[14px] font-light leading-[160%] mt-2">
+            <p className="text-gray-200 text-sm font-light leading-relaxed mt-2">
               You can make anything by writing
             </p>
           </div>
@@ -32,18 +32,18 @@ const Signup: React.FC = () => {
           <div className="flex flex-col items-center justify-center w-[344px]">
             {/* 이메일 회원가입 */}
             <button
-              className="w-full h-[46px] rounded-md bg-[#3B82F6] text-white font-medium mb-3 hover:bg-[#2563EB] transition-colors"
+              className="w-full h-[46px] rounded-md bg-blue-500 text-white font-medium mb-3 hover:bg-blue-600 transition-colors"
               onClick={() => navigate("/signup/email")}
             >
               이메일로 회원가입
             </button>
 
             {/* 또는 구분 */}
-            <p className="text-[#B0B0B0] text-[12px] mb-3">또는</p>
+            <p className="text-gray-200 text-xs mb-3">또는</p>
 
             {/* 카카오 회원가입 */}
             <button
-              className="w-full h-[46px] rounded-md bg-[#FEE500] text-black font-medium flex items-center justify-center gap-2 hover:bg-[#FDDD00] transition-colors"
+              className="w-full h-[46px] rounded-md bg-yellow-400 text-black font-medium flex items-center justify-center gap-2 hover:bg-yellow-500 transition-colors"
             >
               <KakaoIcon className="w-[18px] h-[18px]" />
               카카오로 회원가입
