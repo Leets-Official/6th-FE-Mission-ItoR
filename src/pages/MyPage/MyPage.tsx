@@ -11,20 +11,17 @@ import { SettingsIcon } from "@/assets/icons";
 import Avatar from "@/components/Avatar/Avatar";
 import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
+import { useLogout } from "@/hooks/useLogout";
 
 export default function MyPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [toastMessage, setToastMessage] = useState("");
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-  const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
-  };
+  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
+    useLogout();
 
   useEffect(() => {
     if (location.state?.toastMessage) {
@@ -140,7 +137,7 @@ export default function MyPage() {
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
-        onClose={() => setIsLogoutModalOpen(false)}
+        onClose={handleCloseLogoutModal}
         onConfirm={handleConfirmLogout}
         confirmText="로그아웃"
         cancelText="취소"

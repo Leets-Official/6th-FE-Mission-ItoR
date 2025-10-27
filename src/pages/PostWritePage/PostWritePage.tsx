@@ -7,6 +7,7 @@ import ImagePreview from "@/components/ImagePreview/ImagePreview";
 import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
 import * as S from "./PostWritePage.styled";
+import { useLogout } from "@/hooks/useLogout";
 
 const PostWritePage: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -18,14 +19,10 @@ const PostWritePage: React.FC = () => {
   ]);
 
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-  const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    // 실제 로그아웃 로직 추가 가능 (예: 토큰 삭제)
-  };
+  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
+    useLogout();
 
   const handleCancel = () => {
     const confirmCancel = confirm("작성 중인 내용을 취소하시겠습니까?");
@@ -45,7 +42,6 @@ const PostWritePage: React.FC = () => {
   };
 
   const handleDeleteClick = () => setIsDeleteModalOpen(true);
-
   const handleConfirmDelete = () => {
     setIsDeleteModalOpen(false);
     setToast({ message: "삭제되었습니다.", type: "success" });
@@ -134,7 +130,7 @@ const PostWritePage: React.FC = () => {
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
-        onClose={() => setIsLogoutModalOpen(false)}
+        onClose={handleCloseLogoutModal}
         onConfirm={handleConfirmLogout}
         confirmText="로그아웃"
         cancelText="취소"

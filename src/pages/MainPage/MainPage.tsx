@@ -10,6 +10,7 @@ import { Post } from "@/types/post";
 import * as styles from "./MainPage.styled";
 import Modal from "@/components/Modal/Modal";
 import { useUserStore } from "@/store/useUserStore";
+import { useLogout } from "@/hooks/useLogout";
 
 const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
   postId: crypto.randomUUID(),
@@ -48,17 +49,13 @@ export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
+    useLogout();
+
   const navigate = useNavigate();
-
-  const { user, clearUser } = useUserStore();
+  const { user } = useUserStore();
   const isLogin = !!user;
-
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-  const handleConfirmLogout = () => {
-    clearUser();
-    setIsLogoutModalOpen(false);
-  };
 
   const { posts, pageMax, loading } = usePosts(currentPage, 10);
   const dataToShow = posts.length > 0 ? posts : dummyPosts;
@@ -123,7 +120,7 @@ export default function MainPage() {
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
-        onClose={() => setIsLogoutModalOpen(false)}
+        onClose={handleCloseLogoutModal}
         onConfirm={handleConfirmLogout}
         confirmText="로그아웃"
         cancelText="취소"

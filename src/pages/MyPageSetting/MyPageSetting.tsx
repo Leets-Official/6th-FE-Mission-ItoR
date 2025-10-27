@@ -8,6 +8,7 @@ import { PlusIcon, KakaoIcon } from "@/assets/icons";
 import * as S from "./MyPageSetting.styled";
 import TextField from "@/components/Text/TextField";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import { useLogout } from "@/hooks/useLogout";
 
 interface MyPageSettingProps {
   loginType: "email" | "kakao";
@@ -16,9 +17,10 @@ interface MyPageSettingProps {
 export default function MyPageSetting({ loginType }: MyPageSettingProps) {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
+    useLogout();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const [form, setForm] = useState({
@@ -30,7 +32,6 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
     profile: "https://i.pravatar.cc/120?img=8",
   });
   const [tempForm, setTempForm] = useState(form);
-
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const handleChange = (field: string, value: string) =>
@@ -56,15 +57,6 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
     const reader = new FileReader();
     reader.onload = () => setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
     reader.readAsDataURL(file);
-  };
-
-  const handleLogoutClick = () => {
-    setIsLogoutModalOpen(true);
-  };
-
-  const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    navigate("/", { replace: true });
   };
 
   type FormFieldKey = keyof typeof form;
@@ -184,7 +176,7 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
-        onClose={() => setIsLogoutModalOpen(false)}
+        onClose={handleCloseLogoutModal}
         onConfirm={handleConfirmLogout}
         confirmText="로그아웃"
         cancelText="취소"

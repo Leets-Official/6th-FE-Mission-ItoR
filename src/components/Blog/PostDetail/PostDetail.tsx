@@ -8,15 +8,17 @@ import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
 import { useUserStore } from "@/store/useUserStore";
+import { useLogout } from "@/hooks/useLogout";
 
 export default function PostDetail() {
-  const { user, clearUser } = useUserStore();
+  const { user } = useUserStore();
+  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
+    useLogout();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
   const commentRef = useRef<HTMLDivElement>(null);
@@ -37,12 +39,6 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
   const isLogin = !!user;
   const isOwner = isLogin && user?.id === post.userId;
 
-  const handleLogoutClick = () => setIsLogoutModalOpen(true);
-  const handleConfirmLogout = () => {
-    clearUser(); // 전역 상태 초기화
-    setIsLogoutModalOpen(false);
-  };
-
   const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -59,7 +55,6 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 
   return (
     <div className={S.page}>
-      {/* 헤더 */}
       <div className="fixed top-0 left-0 z-50 w-full">
         <div className="relative">
           <Header
@@ -155,7 +150,7 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
-        onClose={() => setIsLogoutModalOpen(false)}
+        onClose={handleCloseLogoutModal}
         onConfirm={handleConfirmLogout}
         confirmText="로그아웃"
         cancelText="취소"
