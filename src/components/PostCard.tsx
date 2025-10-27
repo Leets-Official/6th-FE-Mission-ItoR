@@ -1,6 +1,7 @@
 import React from "react";
+import clsx from "clsx"; // 조건부 클래스 병합
 import { type Post } from "@/api/Dummy";
-import LineEnd from '@/assets/svgs/LineEnd.svg?react';
+import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 
 interface PostCardProps {
   post: Post;
@@ -11,14 +12,16 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <div
-      className={`w-[688px] max-w-[688px] py-2 flex ${
-        hasPhoto ? "flex-row" : "flex-col"
-      } gap-4`}
+      className={clsx(
+        "w-full max-w-[688px] py-2 flex gap-4", // 수정: w-full + max-w 로 반응형 대응
+        hasPhoto ? "flex-row" : "flex-col"      // clsx 로 조건부 스타일링
+      )}
     >
       <div
-        className={`flex flex-col justify-between ${
+        className={clsx(
+          "flex flex-col justify-between",
           hasPhoto ? "w-[548px]" : "w-full"
-        }`}
+        )}
       >
         <h3 className="font-[Noto Sans KR] font-medium text-[16px] leading-[160%] tracking-[-0.25%] text-gray-900 line-clamp-2">
           {post.title}
@@ -34,8 +37,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <span>댓글 {post.commentsCount}개</span>
         </div>
       </div>
-      <LineEnd/>
-      
+
+      <LineEnd />
+
       {hasPhoto && (
         <div className="w-[124px] h-[150px] flex items-center justify-center shrink-0">
           <img
