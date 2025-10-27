@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@/components/Text/TextField";
-import { KakaoIcon } from "@/assets/icons";
+import { KakaoIcon, ClearIcon } from "@/assets/icons";
 import {
   backdrop,
   wrapper,
@@ -14,9 +14,8 @@ import {
   kakaoButton,
   footer,
   closeButton,
-  errorText, // ✅ 추가
+  errorText,
 } from "./LoginModal.styled";
-import { XIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import * as E from "@/utils/validators";
 import { LOGIN_ERROR_MESSAGES } from "@/utils/errorMessages";
@@ -77,7 +76,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
     <div className={backdrop}>
       <div className={wrapper}>
         <button className={closeButton} onClick={onClose}>
-          <XIcon size={20} />
+          <ClearIcon className="h-6 w-6" />
         </button>
 
         <div className={leftSection}>
@@ -87,7 +86,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
 
         <div className={rightSection}>
           <div className={inputGroup}>
-            {/* 이메일 */}
             <TextField
               placeholder="이메일"
               value={email}
@@ -95,7 +93,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
             />
             {emailError && <p className={errorText}>*{emailError}</p>}
 
-            {/* 비밀번호 */}
             <TextField
               placeholder="비밀번호"
               type="password"
