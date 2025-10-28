@@ -58,7 +58,7 @@ export default function SignUpPage() {
             <div className='w-[123px] h-[1px] bg-[#F5F5F5]' />
           </div>
 
-          <button className={kakaoButton}>
+          <button onClick={() => navigate('/signup/kakao')} className={kakaoButton}>
             <KakaoIcon />
             카카오로 회원가입
           </button>
