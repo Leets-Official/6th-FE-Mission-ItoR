@@ -3,6 +3,7 @@ import ArrowLeft from '@/assets/icons/ArrowLeft.svg?react'
 interface PaginationPrevProps {
   disabled?: boolean
   onClick?: () => void
+  className?: string
 }
 
 export default function PaginationPrev({ disabled, onClick }: PaginationPrevProps) {
