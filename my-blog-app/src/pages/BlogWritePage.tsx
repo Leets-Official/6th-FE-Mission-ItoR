@@ -11,7 +11,7 @@ export default function BlogWritePage() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState<string | null>(null)
-  const [showToast, setShowToast] = useState(false)
+  const [toastType, setToastType] = useState<'none' | 'positive' | 'negative'>('none')
   const [isMenuOpen, setIsMenuOpen] = useState(false) // 이미지 클릭 시 메뉴 토글 상태
 
   // 이미지 업로드
@@ -33,12 +33,14 @@ export default function BlogWritePage() {
   // 게시 버튼
   const handleSubmit = () => {
     if (!title.trim() || !content.trim()) {
-      setShowToast(true)
-      setTimeout(() => setShowToast(false), 2000)
+      setToastType('negative')
+      setTimeout(() => setToastType('none'), 2000)
       return
     }
     console.log('제목:', title)
     console.log('내용:', content)
+    setToastType('positive')
+    setTimeout(() => setToastType('none'), 2000)
   }
 
   return (
@@ -143,10 +145,12 @@ export default function BlogWritePage() {
       )}
 
       {/* 토스트 */}
-      {showToast && (
+      {toastType !== 'none' && (
         <div className='fixed bottom-8 right-8'>
-          <Toast type='negative' message='내용을 입력해주세요.' />
-          <Toast type='positive' message='저장되었습니다!' />
+          <Toast
+            type={toastType}
+            message={toastType === 'negative' ? '내용을 입력해주세요.' : '저장되었습니다!'}
+          />
         </div>
       )}
     </div>
