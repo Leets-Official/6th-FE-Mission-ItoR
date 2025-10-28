@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import PageHeader from '@/components/common/PageHeader'
 import Blank from '@/components/common/Blank'
 import TextCard from '@/components/common/TextCard'
@@ -13,50 +13,25 @@ import DropdownMenu from '@/components/Dropdown/DropdownMenu'
 import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
 import Toast from '@/components/common/Toast'
 import CommentItem from './CommentItem'
+import { useComment } from '@/hooks/useComment'
 
 export default function ListItemMain() {
-  const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>('active') // 테스트용
-  const [comments, setComments] = useState<string[]>([]) // 댓글 목록
-  const [newComment, setNewComment] = useState('') // 입력값
+  const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>('active')
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
-  const [toast, setToast] = useState<{
-    show: boolean
-    message: string
-    type: 'positive' | 'negative'
-  }>({
-    show: false,
-    message: '',
-    type: 'positive',
-  })
 
-  const commentRef = useRef<HTMLDivElement>(null)
-
-  const handleScrollToComments = () => {
-    commentRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const handleAddComment = () => {
-    if (!newComment.trim()) return
-    setComments((prev) => [...prev, newComment.trim()])
-    setNewComment('')
-  }
-
-  const handleDeleteClick = (index: number) => {
-    setDeleteIndex(index)
-    setConfirmOpen(true)
-    setOpenMenuIndex(null)
-  }
-
-  const handleDeleteConfirm = () => {
-    if (deleteIndex !== null) {
-      setComments((prev) => prev.filter((_, i) => i !== deleteIndex))
-      setToast({ show: true, message: '댓글이 삭제되었습니다', type: 'positive' })
-      setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
-    }
-    setConfirmOpen(false)
-  }
+  const {
+    comments,
+    newComment,
+    confirmOpen,
+    toast,
+    commentRef,
+    setNewComment,
+    setConfirmOpen,
+    handleScrollToComments,
+    handleAddComment,
+    handleDeleteClick,
+    handleDeleteConfirm,
+  } = useComment()
 
   return (
     <div className='flex flex-col w-[1366px] min-h-screen items-center bg-white'>
@@ -131,7 +106,7 @@ export default function ListItemMain() {
               <CommentItem
                 key={index}
                 author='닉네임'
-                date='Fed 17. 2025.'
+                date='Feb 17. 2025.'
                 content={comment}
                 onDelete={() => handleDeleteClick(index)}
               />
