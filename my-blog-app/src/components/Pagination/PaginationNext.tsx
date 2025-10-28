@@ -3,6 +3,7 @@ import ArrowRight from '@/assets/icons/ArrowRight.svg?react'
 interface PaginationNextProps {
   disabled?: boolean
   onClick?: () => void
+  className?: string
 }
 
 export default function PaginationNext({ disabled, onClick }: PaginationNextProps) {
