@@ -4,8 +4,18 @@ import TextFieldSet from "@/components/TextFieldSet";
 import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import Profile from "@/assets/svgs/Profile.svg?react";
 
+/** 폼 상태 타입 */
+type FormState = {
+  email: string;
+  name: string;
+  birth: string;
+  nickname: string;
+  intro: string;
+  profileImg: string;
+};
+
 const SignupKakao: React.FC = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     email: "",
     name: "",
     birth: "",
@@ -14,9 +24,22 @@ const SignupKakao: React.FC = () => {
     profileImg: "",
   });
 
-  const handleChange = (key: keyof typeof form, value: string) => {
+  const handleChange = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
+
+  const fields: ReadonlyArray<{
+    key: keyof FormState;
+    label: string;
+    placeholder: string;
+    helper?: string;
+  }> = [
+    { key: "email", label: "이메일", placeholder: "이메일" },
+    { key: "name", label: "이름", placeholder: "이름" },
+    { key: "birth", label: "생년월일", placeholder: "YYYY.MM.DD" },
+    { key: "nickname", label: "닉네임", placeholder: "닉네임", helper: "* 20자 이내" },
+    { key: "intro", label: "한 줄 소개", placeholder: "한 줄 소개" },
+  ];
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">
@@ -32,17 +55,19 @@ const SignupKakao: React.FC = () => {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="flex flex-col mt-[60px] px-[430px] w-full">
+      <div className="flex flex-col mt-[30px] px-[430px] w-full">
+        <p className="text-[14px] text-gray-400 mb-5">프로필 사진</p>
+
         {/* 프로필 사진 */}
-        <div className="flex flex-col items-start w-[688px] mb-[40px]">
+        <div className="flex flex-col items-start w-[688px] mb-[40px] gap-4">
           {form.profileImg ? (
             <img
               src={form.profileImg}
               alt="프로필"
-              className="w-[88px] h-[88px] rounded-full object-cover mb-2"
+              className="w-[88px] h-[88px] rounded-full object-cover"
             />
           ) : (
-            <Profile className="w-[88px] h-[88px] mb-2" />
+            <Profile className="w-[88px] h-[88px]" />
           )}
 
           <label className="border border-gray-300 text-gray-600 text-[12px] px-3 py-1 rounded-[2px] cursor-pointer hover:bg-gray-50 transition">
@@ -53,12 +78,14 @@ const SignupKakao: React.FC = () => {
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onload = () =>
-                    setForm((prev) => ({ ...prev, profileImg: reader.result as string }));
-                  reader.readAsDataURL(file);
-                }
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                  if (typeof reader.result === "string") {
+                    handleChange("profileImg", reader.result);
+                  }
+                };
+                reader.readAsDataURL(file);
               }}
             />
           </label>
@@ -68,54 +95,35 @@ const SignupKakao: React.FC = () => {
         <div className="flex flex-col w-[688px] gap-2 mb-6">
           <p className="text-[14px] text-gray-800 font-medium">소셜 로그인</p>
           <button
-            onClick={() => (window.location.href = "https://your-backend.com/api/auth/kakao")}
-            className="flex items-center justify-center gap-2 w-full h-[46px] rounded-md bg-gray-100 text-gray-900 font-medium border border-gray-300 hover:bg-gray-200 transition"
+            type="button"
+            onClick={() => {
+              window.location.href = "https://your-backend.com/api/auth/kakao";
+            }}
+            className="flex items-center justify-start gap-2 w-full h-[46px] rounded-md bg-gray-100 text-gray-900 font-medium border border-gray-300 hover:bg-gray-200 transition pl-4"
           >
             <KakaoIcon className="w-[18px] h-[18px]" />
-            카카오 로그인
+            <span className="text-[#909090]">카카오 로그인</span>
           </button>
         </div>
 
         {/* 입력 폼 */}
         <div className="flex flex-col gap-4 w-[688px]">
-          <TextFieldSet
-            label="이메일"
-            value={form.email}
-            onChange={(v) => handleChange("email", v)}
-            placeholder="이메일"
-          />
-          <TextFieldSet
-            label="이름"
-            value={form.name}
-            onChange={(v) => handleChange("name", v)}
-            placeholder="이름"
-          />
-          <TextFieldSet
-            label="생년월일"
-            value={form.birth}
-            onChange={(v) => handleChange("birth", v)}
-            placeholder="YYYY.MM.DD"
-          />
-          <div>
-            <TextFieldSet
-              label="닉네임"
-              value={form.nickname}
-              onChange={(v) => handleChange("nickname", v)}
-              placeholder="닉네임"
-            />
-            <p className="text-[#909090] text-[12px] mt-1">* 20자 이내</p>
-          </div>
-          <TextFieldSet
-            label="한 줄 소개"
-            value={form.intro}
-            onChange={(v) => handleChange("intro", v)}
-            placeholder="한 줄 소개"
-          />
+          {fields.map(({ key, label, placeholder, helper }) => (
+            <div key={key as string}>
+              <TextFieldSet
+                label={label}
+                value={form[key] as string}
+                onChange={(v) => handleChange(key, v)}
+                placeholder={placeholder}
+              />
+              {helper && <p className="text-[#909090] text-[12px] mt-1">{helper}</p>}
+            </div>
+          ))}
         </div>
 
         {/* 완료 버튼 */}
         <button
-          onClick={() => alert("회원가입 완료")}
+          type="button"
           className="w-[688px] h-[46px] mt-[40px] border border-blue-400 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition"
         >
           회원가입 완료
