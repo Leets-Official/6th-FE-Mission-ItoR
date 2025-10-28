@@ -18,9 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   nickname: userNickname,
   intro: userIntro,
   profileSrc,
-  onMyPageClick,
-  onSettingClick,
-  onLogoutClick, // ✅ 부모가 모달을 관리하도록 위임
+  onLogoutClick,
   onLoginClick,
 }) => {
   const navigate = useNavigate();
@@ -86,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               variant="secondaryOutline"
               size="sm"
               fullWidth
-              onClick={onLogoutClick} // ✅ 부모에서 모달 열기
+              onClick={onLogoutClick}
             />
           </div>
         </>
