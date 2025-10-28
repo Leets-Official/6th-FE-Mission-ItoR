@@ -8,23 +8,57 @@ import { AddPhotoAlternateIcon, KakaoIcon } from "@/assets/icons";
 import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
-import { useSignupForm } from "@/hooks/useSignupForm";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface SignupFormProps {
   type: "email" | "kakao";
 }
 
 const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
-  const {
-    form,
-    errors,
-    isModalOpen,
-    isLoginModalOpen,
-    handleChange,
-    handleSubmit,
-    setIsModalOpen,
-    setIsLoginModalOpen,
-  } = useSignupForm(type);
+  const { handleRegister, loading } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = React.useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    name: "",
+    birth: "",
+    nickname: "",
+    intro: "",
+  });
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
+
+  const handleChange = (field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async () => {
+    if (type === "email" && form.password !== form.passwordConfirm) {
+      setErrors({ passwordConfirm: "비밀번호가 일치하지 않습니다." });
+      return;
+    }
+
+    const requestBody = {
+      email: form.email,
+      nickname: form.nickname,
+      password: form.password,
+      profilePicture: "",
+      birthDate: form.birth,
+      name: form.name,
+      introduction: form.intro,
+    };
+
+    try {
+      const success = await handleRegister(requestBody);
+      if (success) setIsModalOpen(true);
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      alert("회원가입에 실패했습니다. 입력 정보를 다시 확인해주세요.");
+    }
+  };
 
   const fields = [
     { key: "email", title: "이메일", placeholder: "이메일" },
@@ -85,13 +119,24 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
         ))}
       </div>
 
-      <Button label="회원가입 완료" variant="primaryOutline" fullWidth onClick={handleSubmit} />
+      <Button
+        label={loading ? "회원가입 중..." : "회원가입 완료"}
+        variant="primaryOutline"
+        fullWidth
+        onClick={handleSubmit}
+      />
 
       <Modal
         open={isModalOpen}
         title="회원가입이 완료되었습니다!"
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={() => setIsLoginModalOpen(true)}
+        onClose={() => {
+          setIsModalOpen(false);
+          navigate("/", { replace: true });
+        }}
+        onConfirm={() => {
+          setIsModalOpen(false);
+          navigate("/", { replace: true, state: { openLogin: true } });
+        }}
         cancelText="확인"
         confirmText="로그인하기"
         cancelColor="bg-white text-brand-darkGray border border-brand-lightGray hover:bg-brand-lightGray"
