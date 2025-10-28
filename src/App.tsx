@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import SignupEmail from "./pages/SignupEmail";
 import ProfileDetail from "./pages/ProfileDetail";
 import ProfileFind from "./pages/ProfileFind";
+import SignupKakao from "./pages/SignupKakao";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup/email" element={<SignupEmail />} />
         <Route path="/profiledetail" element={<ProfileDetail />} />
         <Route path="/profilefind" element={<ProfileFind />} />
+        <Route path="/signup/kakao" element={<SignupKakao />} />
       </Routes>
     </Router>
   );
