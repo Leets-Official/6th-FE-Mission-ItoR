@@ -1,20 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import TextFieldSet from "@/components/TextFieldSet";
 import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import Profile from "@/assets/svgs/Profile.svg?react";
+import { useSearchParams } from "react-router-dom";
+import { useRegisterOAuthMutation } from "@/hooks/auth/useRegisterOAuthMutation";
 
-/** 폼 상태 타입 */
+// 백엔드가 카카오 인증 시작을 해주는 주소 (필요 시 재로그인)
+const KAKAO_AUTH_URL = "https://blog.leets.land/auth/kakao";
+
+// 백엔드 스펙에 맞는 DTO 키: email, nickname, profilePicture, birthDate, name, introduction, kakaoId
 type FormState = {
   email: string;
   name: string;
-  birth: string;
+  birth: string;        // -> birthDate 로 매핑
   nickname: string;
-  intro: string;
-  profileImg: string;
+  intro: string;        // -> introduction 로 매핑
+  profileImg: string;   // -> profilePicture 로 매핑 (URL 또는 dataURL)
+  kakaoId?: string;     // 숫자 문자열일 수 있으니 string으로 받고 전송 시 number 변환
 };
 
 const SignupKakao: React.FC = () => {
+  const [params] = useSearchParams();
   const [form, setForm] = useState<FormState>({
     email: "",
     name: "",
@@ -22,10 +29,56 @@ const SignupKakao: React.FC = () => {
     nickname: "",
     intro: "",
     profileImg: "",
+    kakaoId: undefined,
   });
+
+  // URL 쿼리로 넘어온 값들(있으면 자동 채움)
+  const prefills = useMemo(() => {
+    return {
+      email: params.get("email") ?? "",
+      name: params.get("name") ?? "",
+      nickname: params.get("nickname") ?? "",
+      profilePicture: params.get("profilePicture") ?? "",
+      kakaoId: params.get("kakaoId") ?? undefined,
+    };
+  }, [params]);
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      email: prefills.email || prev.email,
+      name: prefills.name || prev.name,
+      nickname: prefills.nickname || prev.nickname,
+      profileImg: prefills.profilePicture || prev.profileImg,
+      kakaoId: prefills.kakaoId || prev.kakaoId,
+    }));
+  }, [prefills]);
 
   const handleChange = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const { mutate, isPending } = useRegisterOAuthMutation();
+
+  const onSubmit = () => {
+    if (!form.email.trim()) return alert("이메일을 입력해 주세요.");
+    if (!form.nickname.trim()) return alert("닉네임을 입력해 주세요.");
+    if (form.nickname.length > 20) return alert("닉네임은 최대 20자입니다.");
+    if (form.intro.length > 30) return alert("한 줄 소개는 최대 30자입니다.");
+    if (!form.kakaoId) return alert("카카오 인증에 실패했습니다. 다시 시도해 주세요.");
+
+    // 백엔드 요구 키로 매핑
+    const payload = {
+      email: form.email,
+      nickname: form.nickname,
+      profilePicture: form.profileImg,     // URL 또는 dataURL
+      birthDate: form.birth,               // "YYYY.MM.DD" 형식이면 백엔드 포맷에 맞춰 전달
+      name: form.name,
+      introduction: form.intro,
+      kakaoId: Number(form.kakaoId),       // 숫자 변환
+    };
+
+    mutate(payload);
   };
 
   const fields: ReadonlyArray<{
@@ -43,18 +96,13 @@ const SignupKakao: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">
-      {/* 상단 헤더 */}
       <Header variant="write" />
 
-      {/* 타이틀 영역 */}
       <div className="w-full h-[114px] flex flex-col justify-center border-b border-gray-300 bg-gray-50 px-[430px]">
         <h1 className="text-[32px] font-medium text-gray-900">회원가입</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
-          가입을 위해 회원님의 정보를 입력해주세요.
-        </p>
+        <p className="text-[14px] text-gray-600 mt-1">가입을 위해 회원님의 정보를 입력해주세요.</p>
       </div>
 
-      {/* 메인 컨텐츠 */}
       <div className="flex flex-col mt-[30px] px-[430px] w-full">
         <p className="text-[14px] text-gray-400 mb-5">프로필 사진</p>
 
@@ -91,14 +139,11 @@ const SignupKakao: React.FC = () => {
           </label>
         </div>
 
-        {/* 소셜 로그인 */}
         <div className="flex flex-col w-[688px] gap-2 mb-6">
           <p className="text-[14px] text-gray-800 font-medium">소셜 로그인</p>
           <button
             type="button"
-            onClick={() => {
-              window.location.href = "https://your-backend.com/api/auth/kakao";
-            }}
+            onClick={() => window.location.assign(KAKAO_AUTH_URL)}
             className="flex items-center justify-start gap-2 w-full h-[46px] rounded-md bg-gray-100 text-gray-900 font-medium border border-gray-300 hover:bg-gray-200 transition pl-4"
           >
             <KakaoIcon className="w-[18px] h-[18px]" />
@@ -119,14 +164,20 @@ const SignupKakao: React.FC = () => {
               {helper && <p className="text-[#909090] text-[12px] mt-1">{helper}</p>}
             </div>
           ))}
+
+          {form.kakaoId && (
+            <p className="text-[12px] text-gray-400">kakaoId: {form.kakaoId}</p>
+          )}
         </div>
 
         {/* 완료 버튼 */}
         <button
           type="button"
-          className="w-[688px] h-[46px] mt-[40px] border border-blue-400 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition"
+          onClick={onSubmit}
+          disabled={isPending}
+          className="w-[688px] h-[46px] mt-[40px] border border-blue-400 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition disabled:opacity-50"
         >
-          회원가입 완료
+          {isPending ? "가입 중..." : "회원가입 완료"}
         </button>
       </div>
     </div>
