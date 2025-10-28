@@ -1,3 +1,6 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuthStatus } from '@/hooks/useAuthStatus'
 import PageHeader from '@/components/common/PageHeader'
 import TextCard from '@/components/common/TextCard'
 import Blank from '@/components/common/Blank'
@@ -7,9 +10,18 @@ import SignUpProfileSection from '@/components/SignUp/SignUpProfileSection'
 import SignUpFormFields from '@/components/SignUp/SignUpFormFields'
 
 export default function SignUpKakaoPage() {
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAuthStatus()
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      alert('이미 로그인된 사용자입니다.')
+      navigate('/')
+    }
+  }, [isLoggedIn, navigate])
+
   return (
     <div className='min-h-screen flex flex-col items-center bg-white'>
-      {/* 상단 영역 */}
       <PageHeader title='GITLOG' />
       <div className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-[#F5F5F5]'>
         <Blank size='md' />
@@ -22,12 +34,10 @@ export default function SignUpKakaoPage() {
         <Blank size='sm' />
       </div>
 
-      {/* 프로필 사진 영역 */}
       <Blank size='md' />
       <SignUpProfileSection />
-
-      {/* 소셜 로그인 섹션 */}
       <Blank size='md' />
+
       <div className='flex flex-col gap-2 w-full max-w-[688px] px-[16px]'>
         <label className='text-[14px] font-light leading-[160%] text-gray-600'>소셜 로그인</label>
         <div className='flex items-center gap-[10px] px-[16px] py-[12px] rounded-[4px] border border-[#E6E6E6] bg-[#E6E6E6]'>
@@ -38,12 +48,10 @@ export default function SignUpKakaoPage() {
         </div>
       </div>
 
-      {/* 입력 필드 */}
       <Blank size='md' />
       <SignUpFormFields variant='kakao' />
-
-      {/* 버튼 */}
       <Blank size='md' />
+
       <div className='flex justify-center w-full max-w-[688px] px-[16px]'>
         <Button
           intent='primary'
