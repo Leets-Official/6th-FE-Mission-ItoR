@@ -15,3 +15,11 @@ export const useAuthStatus = () => {
 
   return { isLoggedIn }
 }
+
+// 로그아웃 함수
+export const logout = () => {
+  localStorage.removeItem('token')
+  alert('로그아웃되었습니다.')
+  // 새로고침으로 전역 상태 초기화 (ProtectedRoute/모달/사이드바 모두 반영)
+  window.location.href = '/'
+}
