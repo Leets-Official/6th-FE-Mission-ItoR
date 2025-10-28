@@ -1,10 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useModalStore } from '@/stores/useModalStore';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { MYPAGE_ROUTES, SIDEBAR_TEXTS, SIDEBAR_ROUTES, SIDEBAR_MODAL_TYPES } from '@/constants';
 
 export const useSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { modalType, openModal, closeModal } = useModalStore();
+  const navigate = useNavigate();
+  const { openModal, closeModal } = useModalStore();
+  const logout = useAuthStore(state => state.logout);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -16,12 +21,6 @@ export const useSidebar = () => {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
-  };
-
-  const openLoginModal = () => {
-    openModal('login');
-    setIsSidebarOpen(false);
-    window.dispatchEvent(new CustomEvent('sidebar:close'));
   };
 
   useEffect(() => {
@@ -49,14 +48,54 @@ export const useSidebar = () => {
     };
   }, []);
 
+  const dispatchClose = () => window.dispatchEvent(new CustomEvent('sidebar:close'));
+
+  // 네비게이션
+  const handleStartGitlog = () => {
+    openModal(SIDEBAR_MODAL_TYPES.LOGIN);
+  };
+
+  const handleMyGitlog = () => {
+    navigate(MYPAGE_ROUTES.MY_PROFILE);
+    dispatchClose();
+  };
+
+  const handleWriteGitlog = () => {
+    navigate(SIDEBAR_ROUTES.BLOG_WRITE);
+    dispatchClose();
+  };
+
+  const handleSettings = () => {
+    // TODO: 설정 페이지 라우팅
+    dispatchClose();
+  };
+
+  const handleLogout = () => {
+    const confirmLogout = () => {
+      logout();
+      closeModal();
+      navigate(SIDEBAR_ROUTES.HOME);
+      dispatchClose();
+    };
+
+    openModal(
+      SIDEBAR_MODAL_TYPES.LOGOUT,
+      SIDEBAR_TEXTS.MODAL.LOGOUT_MESSAGE,
+      confirmLogout,
+      SIDEBAR_TEXTS.MODAL.LOGOUT_CONFIRM
+    );
+  };
+
   return {
     isSidebarOpen,
     sidebarRef,
     toggleSidebar,
     openSidebar,
     closeSidebar,
-    isLoginModalOpen: modalType === 'login',
-    openLoginModal,
-    closeLoginModal: closeModal,
+    handleStartGitlog,
+    handleMyGitlog,
+    handleWriteGitlog,
+    handleSettings,
+    handleLogout,
   };
 };

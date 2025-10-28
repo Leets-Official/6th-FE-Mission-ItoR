@@ -5,8 +5,6 @@ import {
   KakaoRedirectResponse,
   LoginRequest,
   LoginResponse,
-  RegisterOAuthRequest,
-  RegisterOAuthResponse,
   RegisterRequest,
   RegisterResponse,
 } from './authTypes';
@@ -64,12 +62,6 @@ export const login = async (loginData: LoginRequest): Promise<LoginResponse> => 
 // 회원가입 API
 export const register = async (registerData: RegisterRequest): Promise<RegisterResponse> => {
   const response = await axiosInstance.post<RegisterResponse>('/auth/register', registerData);
-  return response.data;
-};
-
-// OAuth2 회원가입 API
-export const registerOAuth = async (registerData: RegisterOAuthRequest): Promise<RegisterOAuthResponse> => {
-  const response = await axiosInstance.post<RegisterOAuthResponse>('/auth/register-oauth', registerData);
   return response.data;
 };
 

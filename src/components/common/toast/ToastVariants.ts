@@ -1,6 +1,7 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { tv, type VariantProps } from 'tailwind-variants';
 
-export const toastVariants = cva('toast-container backdrop-blur-sm bg-white/90', {
+export const toastVariants = tv({
+  base: 'toast-container backdrop-blur-sm bg-white/90',
   variants: {
     type: {
       positive: 'border-positive text-positive',
@@ -12,7 +13,8 @@ export const toastVariants = cva('toast-container backdrop-blur-sm bg-white/90',
   },
 });
 
-export const toastIconVariants = cva('btn-icon', {
+export const toastIconVariants = tv({
+  base: 'btn-icon',
   variants: {
     type: {
       positive: 'text-positive',
@@ -24,7 +26,8 @@ export const toastIconVariants = cva('btn-icon', {
   },
 });
 
-export const toastTextVariants = cva('btn-text', {
+export const toastTextVariants = tv({
+  base: 'btn-text whitespace-nowrap',
   variants: {
     type: {
       positive: 'text-positive',

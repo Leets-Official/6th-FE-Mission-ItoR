@@ -1,14 +1,13 @@
-import { FC } from 'react';
 import profileImage from '@/assets/profile.png';
 import { cn } from '@/utils/cn';
-import { MiddleDotIcon } from '@/assets/icons/common';
+import { MiddleDotIcon } from '@/assets/icons';
 import { postDetailsStyles } from '@/components/blog/Post/PostDetails.styles';
 
 interface PostDetailsProps {
   className?: string;
 }
 
-const PostDetails: FC<PostDetailsProps> = ({ className }) => {
+const PostDetails = ({ className }: PostDetailsProps) => {
   return (
     <div className={cn(postDetailsStyles.container, className)}>
       <div className={postDetailsStyles.profileContainer}>

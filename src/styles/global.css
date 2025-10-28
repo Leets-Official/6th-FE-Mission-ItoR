@@ -8,6 +8,7 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 #root {
@@ -21,7 +22,7 @@ body {
 
 @media (max-width: 767px) {
   .global-layout {
-    @apply w-mobile min-h-mobile flex max-w-content py-2 px-0 items-start gap-4 self-stretch;
+    @apply w-full min-h-mobile flex py-2 px-0 items-center gap-4;
   }
 }
 
@@ -32,11 +33,13 @@ body {
 
 /* 페이지헤더 컨테이너 */
 .page-header-container {
-  @apply fixed top-0 left-0 right-0 z-50 flex w-full max-w-[1440px] mx-auto p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
+  @apply fixed top-0 z-50 flex h-[72px] w-full max-w-[1440px] p-page-header justify-between items-center bg-white/100 backdrop-blur-sm;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .page-header-legacy-container {
-  @apply flex w-[1366px] max-w-[1366px] p-3 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
+  @apply flex w-full max-w-content h-page-header-legacy px-4 justify-center items-center gap-8 bg-white/90 backdrop-blur-sm shadow-page-header;
 }
 
 
@@ -47,7 +50,7 @@ body {
 }
 
 /* 모바일 반응형 - 768px 이하에서 가로 배치 유지 */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .blog-preview-row {
     @apply flex max-w-content py-2 px-0 items-start gap-4 self-stretch border-b border-gray-96 bg-white;
   }
@@ -80,5 +83,20 @@ body {
   /* 로그인 페이지 레이아웃 */
   .login-page-row {
     @apply flex items-center justify-between self-stretch;
+  }
+
+  /* 로그인 모달 모바일 반응형 - 768px 이하 */
+  @media (max-width: 767px) {
+    .login-modal-overlay {
+      @apply px-4;
+    }
+
+    .login-modal-container {
+      @apply relative flex w-full max-w-mobile max-h-login-modal-mobile py-20 px-4 justify-center items-center content-center flex-wrap rounded-login-modal bg-dark overflow-y-auto;
+    }
+
+    .login-page-row {
+      @apply flex flex-col items-center justify-center gap-6 self-stretch;
+    }
   }
 }

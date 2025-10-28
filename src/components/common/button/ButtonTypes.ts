@@ -8,7 +8,7 @@ export interface ButtonProps {
   showIcon?: boolean;
   icon?: React.ReactNode;
   intent?: 'primary' | 'secondary' | 'gray' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'comment';
   variant?: 'solid' | 'outline' | 'ghost';
   fullWidth?: boolean;
 }

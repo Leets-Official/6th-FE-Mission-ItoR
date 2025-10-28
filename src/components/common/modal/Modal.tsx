@@ -6,7 +6,9 @@ import {
   modalConfirmButtonVariants,
 } from '@/components/common/Modal/ModalVariants';
 import { cn } from '@/utils/cn';
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { useBodyScrollLock } from '@/hooks';
+import { Portal } from '@/components';
 
 interface ModalProps {
   children: ReactNode;
@@ -17,9 +19,11 @@ interface ModalProps {
   cancelButtonText?: string;
   confirmButtonText?: string;
   confirmButtonVariant?: 'primary' | 'danger' | 'secondary';
+  ariaLabelledBy?: string;
+  ariaDescribedBy?: string;
 }
 
-const Modal: FC<ModalProps> = ({
+const Modal = ({
   children,
   className = '',
   isOpen,
@@ -28,29 +32,50 @@ const Modal: FC<ModalProps> = ({
   cancelButtonText = '취소',
   confirmButtonText = '삭제하기',
   confirmButtonVariant = 'danger',
-}) => {
+  ariaLabelledBy,
+  ariaDescribedBy,
+}: ModalProps) => {
+  useBodyScrollLock(isOpen);
+
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className={cn(modalContainerVariants(), className)}>
-        <div className={modalContentVariants()} style={{ padding: '0 4px' }}>
-          {children}
-        </div>
-        <div className={modalButtonsVariants()}>
-          <button onClick={onClose} className={modalCancelButtonVariants()}>
-            {cancelButtonText}
-          </button>
-          {onDelete && (
-            <button onClick={onDelete} className={modalConfirmButtonVariants({ variant: confirmButtonVariant })}>
-              {confirmButtonText}
+    <Portal>
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        onClick={onClose}
+        role="presentation"
+      >
+        <div
+          className={cn(modalContainerVariants(), className)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={ariaLabelledBy}
+          aria-describedby={ariaDescribedBy}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className={modalContentVariants()} style={{ padding: '0 4px' }}>
+            {children}
+          </div>
+          <div className={modalButtonsVariants()}>
+            <button onClick={onClose} className={modalCancelButtonVariants()} aria-label={cancelButtonText}>
+              {cancelButtonText}
             </button>
-          )}
+            {onDelete && (
+              <button
+                onClick={onDelete}
+                className={modalConfirmButtonVariants({ variant: confirmButtonVariant })}
+                aria-label={confirmButtonText}
+              >
+                {confirmButtonText}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </Portal>
   );
 };
 

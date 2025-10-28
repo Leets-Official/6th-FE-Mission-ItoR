@@ -2,6 +2,7 @@ import router from '@/routes/Route';
 import Playground from '@/playground/Playground';
 import { RouterProvider } from 'react-router-dom';
 import { useMemo } from 'react';
+import { ToastProvider } from '@/contexts/ToastContext';
 
 function App() {
   const isPlayground = useMemo(() => {
@@ -21,9 +22,11 @@ function App() {
   }
 
   return (
-    <div className="global-layout">
-      <RouterProvider router={router} />
-    </div>
+    <ToastProvider>
+      <div className="global-layout">
+        <RouterProvider router={router} />
+      </div>
+    </ToastProvider>
   );
 }
 

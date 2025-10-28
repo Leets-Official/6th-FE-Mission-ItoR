@@ -1,6 +1,7 @@
-import { cva } from 'class-variance-authority';
+import { tv } from 'tailwind-variants';
 
-export const iconVariants = cva(['flex justify-center items-center aspect-square'], {
+export const iconVariants = tv({
+  base: 'flex justify-center items-center aspect-square',
   variants: {
     size: {
       sm: 'w-3.5 h-3.5',
@@ -30,7 +31,8 @@ export const iconVariants = cva(['flex justify-center items-center aspect-square
   ],
 });
 
-export const iconInnerVariants = cva(['fill-current'], {
+export const iconInnerVariants = tv({
+  base: 'fill-current',
   variants: {
     size: {
       sm: 'w-3.5 h-3.5',

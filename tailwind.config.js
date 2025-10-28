@@ -137,6 +137,9 @@ export default {
         'login-textbox-container': '46px', // 로그인 텍스트박스 컨테이너 높이
         'login-input': '46px', // 로그인 인풋 높이
         'login-button': '45px', // 로그인 버튼 높이
+        'page-header-legacy': '50px', // 레거시 페이지 헤더 높이
+        'spacer-mobile-top': '18px', // 마이페이지 상단 스페이서 높이 (모바일)
+        'spacer-lg': '36px', // 블로그 포스트 스페이서 높이 (모바일)
       },
       minHeight: {
         'mobile': '844px', // 모바일 디바이스 최소 높이
@@ -154,13 +157,16 @@ export default {
 
       // 최대 높이 토큰
       maxHeight: {
-        'login-modal': '469px', // 로그인 모달 최대 높이
+        'login-modal': '469px', // 로그인 모달 최대 높이 (데스크톱)
+        'login-modal-mobile': '675px', // 로그인 모달 최대 높이 (모바일)
       },
 
       // 최대 너비 토큰
       maxWidth: {
         content: '688px', // 컨텐츠 최대 너비
+        mobile: '390px', // 모바일 최대 너비
         'login-page': '782px', // 로그인 페이지 최대 너비
+        'login-page-mobile': '813px', // 로그인 페이지 최대 너비 (모바일 브레이크포인트)
         'logo-container': '344px', // 로고 컨테이너 최대 너비
         'login-textbox-container': '344px', // 텍스트박스 컨테이너 최대 너비
         modal: '326px',
@@ -216,6 +222,11 @@ export default {
       // 백드롭 필터 토큰
       backdropBlur: {
         'modal': '2px',
+      },
+
+      // 스크린 브레이크포인트
+      screens: {
+        'mobile-max': '813px', // 모바일 최대 너비
       },
     },
   },
