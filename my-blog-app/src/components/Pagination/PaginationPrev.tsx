@@ -1,27 +1,20 @@
-import React from 'react'
+import ArrowLeft from '@/assets/icons/ArrowLeft.svg?react'
 
-type PaginationPrevProps = {
+interface PaginationPrevProps {
   disabled?: boolean
   onClick?: () => void
 }
 
-export default function PaginationPrev({ disabled = false, onClick }: PaginationPrevProps) {
-  const iconColor = disabled ? '#D9D9D9' : 'rgba(0,0,0,0.85)'
-
+export default function PaginationPrev({ disabled, onClick }: PaginationPrevProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex justify-center items-center p-[10px] rounded-[2px]
-        border border-gray-200 bg-white 
-        ${disabled ? 'cursor-not-allowed opacity-70' : 'hover:border-primary'}`}
+      className={`flex justify-center items-center 
+                  w-[30px] h-[30px] rounded-[2px] border border-[#D9D9D9] bg-white
+                  ${disabled ? 'opacity-40 cursor-not-allowed' : 'hover:opacity-70'}`}
     >
-      <svg xmlns='http://www.w3.org/2000/svg' width='7' height='12' viewBox='0 0 7 12' fill='none'>
-        <path
-          d='M6.83938 2.06621V1.03094C6.83938 0.941211 6.73625 0.891658 6.66661 0.946568L0.629107 5.66219C0.57781 5.70209 0.536302 5.75317 0.50775 5.81154C0.479198 5.86992 0.464355 5.93404 0.464355 5.99902C0.464355 6.06401 0.479198 6.12813 0.50775 6.18651C0.536302 6.24488 0.57781 6.29596 0.629107 6.33585L6.66661 11.0515C6.73759 11.1064 6.83938 11.0568 6.83938 10.9671V9.93184C6.83938 9.86621 6.80857 9.80327 6.75768 9.76309L1.93625 5.99969L6.75768 2.23496C6.80857 2.19478 6.83938 2.13184 6.83938 2.06621Z'
-          fill={iconColor}
-        />
-      </svg>
+      <ArrowLeft className='w-[7px] h-[12px] text-black' />
     </button>
   )
 }
