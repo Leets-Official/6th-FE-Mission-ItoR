@@ -3,10 +3,20 @@ import GitlogLogo from '@/components/common/GitlogLogo'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
 import { ClearIcon } from '@/assets/icons/ClearIcon'
 import TextFiledSet from '@/components/TextFiled/TextFiledSet'
+import { useLoginMutation } from '@/hooks/useAuth'
 
 export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { mutate: login } = useLoginMutation()
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      alert('이메일과 비밀번호를 모두 입력해주세요.')
+      return
+    }
+    login({ email, password })
+  }
 
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-black/60 z-50'>
@@ -44,7 +54,10 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           />
 
           {/* 이메일 로그인 버튼 */}
-          <button className='flex justify-center items-center h-[45px] px-[14px] rounded-[6px] bg-[#00A1FF] hover:bg-[#0092E8] text-white text-[14px] font-normal leading-[160%] tracking-[-0.07px] transition'>
+          <button
+            onClick={handleLogin}
+            className='flex justify-center items-center h-[45px] px-[14px] rounded-[6px] bg-[#00A1FF] hover:bg-[#0092E8] text-white text-[14px] font-normal leading-[160%] tracking-[-0.07px] transition'
+          >
             이메일로 로그인
           </button>
 
