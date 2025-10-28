@@ -24,4 +24,14 @@ export default defineConfig({
       this: "window",
     },
   },
+  server: {
+    port: 5173,
+    proxy: {
+      "/auth": {
+        target: "https://blog.leets.land", // 백엔드 주소
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
 });

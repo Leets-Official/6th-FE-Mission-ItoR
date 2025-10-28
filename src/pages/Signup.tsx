@@ -3,28 +3,45 @@ import Header from "@/components/Header";
 import Frame7 from "@/assets/svgs/Frame7.svg?react";
 import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import { useNavigate } from "react-router-dom";
-
-// 실제 카카오 로그인 리다이렉트 주소
-const KAKAO_AUTH_URL = "https://blog.leets.land/auth/kakao";
+import api from "@/api/axiosInstance"; // ✅ axios 인스턴스 사용
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
 
-  // 이메일 회원가입 클릭 핸들러
+  // ✅ 이메일 회원가입 클릭 핸들러
   const handleEmailSignup = () => {
     navigate("/signup/email");
   };
 
-  // 카카오 회원가입 클릭 핸들러
-  const handleKakaoSignup = () => {
-    // 카카오 OAuth 인증 시작
-    window.location.href = KAKAO_AUTH_URL;
+  // ✅ 카카오 회원가입 클릭 핸들러 (백엔드에서 URL 받아 리다이렉트)
+  const handleKakaoSignup = async () => {
+    try {
+      // Swagger에 정의된 /auth/kakao 호출
+      const res = await api.get("/auth/kakao");
+
+      // Swagger 응답이 data.data 또는 data일 수 있으므로 안전하게 처리
+      const redirectUrl =
+        res.data?.data || res.data?.url || res.data;
+
+      if (!redirectUrl) {
+        alert("카카오 로그인 URL을 받아오지 못했습니다.");
+        return;
+      }
+
+      console.log("카카오 리다이렉트 URL:", redirectUrl);
+
+      // ✅ 카카오 로그인 페이지로 이동
+      window.location.href = redirectUrl;
+    } catch (error) {
+      console.error("카카오 로그인 요청 중 오류:", error);
+      alert("카카오 로그인 요청에 실패했습니다.");
+    }
   };
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">
       {/* 상단 헤더 */}
-      <Header variant="profile" />
+      <Header variant="none" />
 
       {/* 회원가입 타이틀 영역 */}
       <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-gray-50 px-[430px]">

@@ -9,7 +9,8 @@ import GitLog from "@/assets/svgs/Frame7.svg?react";
 import DropdownMenu from "./DropdownMenu";
 import { type Post } from "@/api/Dummy";
 
-type HeaderVariant = "write" | "detail" | "edit" | "profile";
+// ✅ none 추가
+type HeaderVariant = "write" | "detail" | "edit" | "profile" | "none";
 
 interface HeaderProps {
   variant: HeaderVariant;
@@ -39,15 +40,20 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="relative w-[1366px] h-[72px] bg-white/90 backdrop-blur-sm">
       <div className="absolute inset-0 flex items-center justify-between pl-[12px] pr-[16px]">
+        {/* 좌측 로고 및 메뉴 */}
         <div className="flex items-center gap-4">
           <button type="button" aria-label="menu" className="w-6 h-6">
             <ReorderIcon className="w-6 h-6 text-gray-700" />
           </button>
-          <div className="font-normal" style={{ fontFamily: "Smooch, sans-serif", fontSize: "20px" }}>
+          <div
+            className="font-normal"
+            style={{ fontFamily: "Smooch, sans-serif", fontSize: "20px" }}
+          >
             <GitLog />
           </div>
         </div>
 
+        {/* 우측 영역 */}
         <div className="flex items-center gap-4">
           {variant === "write" && (
             <Button
@@ -77,10 +83,7 @@ const Header: React.FC<HeaderProps> = ({
 
           {variant === "edit" && (
             <div className="flex items-center gap-6">
-              <button
-                type="button"
-                className="text-[14px] text-[#FF3F3F]"
-              >
+              <button type="button" className="text-[14px] text-[#FF3F3F]">
                 삭제하기
               </button>
               <button
@@ -105,6 +108,8 @@ const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
+          {/* ✅ none일 경우 — 우측에 아무것도 렌더링하지 않음 */}
+          {variant === "none" && null}
         </div>
       </div>
     </header>

@@ -1,15 +1,31 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://blog.leets.land/api", // ItoR 백엔드 API 주소
-  withCredentials: true, // refresh token을 쿠키로 주고받기
+  baseURL: "/", // 프록시를 사용할 거라 절대주소 필요 없음
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
 });
 
-// 요청 인터셉터: Access Token 자동 첨부
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    const { config, response } = error || {};
+    console.groupCollapsed(
+      `[API ERROR] ${config?.method?.toUpperCase()} ${config?.url}`
+    );
+    console.log("Request:", config?.data);
+    console.log("Response:", response?.status, response?.data);
+    console.groupEnd();
+
+    alert(
+      response?.data?.message
+        ? `회원가입 실패: ${response.data.message}`
+        : "회원가입 중 오류가 발생했습니다."
+    );
+    return Promise.reject(error);
+  }
+);
 
 export default api;
