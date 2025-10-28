@@ -13,20 +13,23 @@ import { useNavigate } from "react-router-dom";
 
 interface SignupFormProps {
   type: "email" | "kakao";
+  kakaoUserData?: any;
 }
 
-const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
-  const { handleRegister, loading } = useAuth();
+const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUserData }) => {
+  const { handleRegister, handleRegisterOAuth, loading } = useAuth();
   const navigate = useNavigate();
+
   const [form, setForm] = React.useState({
-    email: "",
+    email: kakaoUserData?.email || "",
     password: "",
     passwordConfirm: "",
-    name: "",
+    name: kakaoUserData?.name || "",
     birth: "",
     nickname: "",
     intro: "",
   });
+
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
@@ -36,27 +39,50 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
   };
 
   const handleSubmit = async () => {
-    if (type === "email" && form.password !== form.passwordConfirm) {
-      setErrors({ passwordConfirm: "비밀번호가 일치하지 않습니다." });
-      return;
-    }
+    setErrors({});
 
-    const requestBody = {
-      email: form.email,
-      nickname: form.nickname,
-      password: form.password,
-      profilePicture: "",
-      birthDate: form.birth,
-      name: form.name,
-      introduction: form.intro,
-    };
+    if (type === "email") {
+      if (form.password !== form.passwordConfirm) {
+        setErrors({ passwordConfirm: "비밀번호가 일치하지 않습니다." });
+        return;
+      }
 
-    try {
-      const success = await handleRegister(requestBody);
-      if (success) setIsModalOpen(true);
-    } catch (error) {
-      console.error("회원가입 실패:", error);
-      alert("회원가입에 실패했습니다. 입력 정보를 다시 확인해주세요.");
+      const requestBody = {
+        email: form.email,
+        nickname: form.nickname,
+        password: form.password,
+        profilePicture: "",
+        birthDate: form.birth,
+        name: form.name,
+        introduction: form.intro,
+      };
+
+      try {
+        const success = await handleRegister(requestBody);
+        if (success) setIsModalOpen(true);
+      } catch (error) {
+        console.error("회원가입 실패:", error);
+        alert("회원가입에 실패했습니다.");
+      }
+    } else {
+      // 카카오 회원가입
+      const requestBody = {
+        email: form.email,
+        nickname: form.nickname,
+        profilePicture: kakaoUserData?.profilePicture || "",
+        birthDate: form.birth,
+        name: form.name,
+        introduction: form.intro,
+        kakaoId: kakaoUserData?.kakaoId || 0,
+      };
+
+      try {
+        const success = await handleRegisterOAuth(requestBody);
+        if (success) setIsModalOpen(true);
+      } catch (error) {
+        console.error("카카오 회원가입 실패:", error);
+        alert("회원가입에 실패했습니다.");
+      }
     }
   };
 
@@ -84,7 +110,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
       <div className={S.profileSection}>
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
-          <Avatar size="xl" src="" alt="Profile" />
+          <Avatar size="xl" src={kakaoUserData?.profilePicture || ""} alt="Profile" />
           <SmallButton
             label="프로필 사진 추가"
             variant="secondaryOutline"
@@ -124,6 +150,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
         variant="primaryOutline"
         fullWidth
         onClick={handleSubmit}
+        disabled={loading}
       />
 
       <Modal

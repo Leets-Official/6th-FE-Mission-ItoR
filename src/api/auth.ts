@@ -1,52 +1,49 @@
-import api from "./index";
+export const kakaoLoginRedirect = async (code: string): Promise<KakaoLoginResult> => {
+  try {
+    const res = await api.get(`/auth/kakao/redirect?code=${code}`);
+    const { accessToken, refreshToken, user } = res.data.data;
 
-export const login = async (email: string, password: string) => {
-  const res = await api.post("/auth/login", { email, password });
-  const { accessToken, refreshToken, user } = res.data.data;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+    return { user, isNewUser: false };
+  } catch (error) {
+    const axiosError = error as {
+      response?: {
+        status?: number;
+        data?: {
+          code?: number;
+          message?: string;
+          data?: KakaoUserData;
+        };
+      };
+    };
 
-  return user;
-};
+    console.log("카카오 에러 상태:", axiosError.response?.status);
+    console.log("카카오 에러 응답:", axiosError.response?.data);
 
-export const register = async (data: {
-  email: string;
-  nickname: string;
-  password: string;
-  profilePicture: string;
-  birthDate: string;
-  name: string;
-  introduction?: string;
-}) => {
-  const res = await api.post("/auth/register", data);
-  return res.data;
-};
+    // 404: 신규 회원
+    if (axiosError.response?.status === 404) {
+      return {
+        user: null,
+        isNewUser: true,
+        kakaoUser: axiosError.response.data?.data,
+      };
+    }
 
-export const reissueToken = async () => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  if (!refreshToken) throw new Error("No refresh token found");
+    // 500: 서버 에러이지만 카카오 데이터가 있는 경우 회원가입 진행
+    if (axiosError.response?.status === 500) {
+      const kakaoData = axiosError.response.data?.data;
+      if (kakaoData) {
+        console.log("500 에러이지만 카카오 데이터 존재, 회원가입 진행:", kakaoData);
+        return {
+          user: null,
+          isNewUser: true,
+          kakaoUser: kakaoData,
+        };
+      }
+    }
 
-  const res = await api.post("/auth/reissue", { refreshToken });
-  const { accessToken, refreshToken: newRefresh } = res.data.data;
-
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", newRefresh);
-
-  return res.data;
-};
-
-export const getKakaoLoginUrl = async (): Promise<string> => {
-  const res = await api.get("/auth/kakao");
-  return res.data.data;
-};
-
-export const kakaoLoginRedirect = async (code: string) => {
-  const res = await api.get(`/auth/kakao/redirect?code=${code}`);
-  const { accessToken, refreshToken, user } = res.data.data;
-
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
-
-  return user;
+    throw error;
+  }
 };

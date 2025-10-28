@@ -1,5 +1,10 @@
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import SignupSection from "@/components/Auth/SignupSection";
+import SignupForm from "@/components/Auth/SignupForm";
+import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import {
   signupPage,
   signupHeaderBar,
@@ -7,15 +12,21 @@ import {
   signupSection,
   subtitle,
 } from "./SignupPage.styled";
-import { useState } from "react";
-import SignupSection from "@/components/Auth/SignupSection";
-import SignupForm from "@/components/Auth/SignupForm";
-import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 
 export default function SignupPage() {
+  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [mode, setMode] = useState<"select" | "email" | "kakao">("select");
+  const [kakaoUserData, setKakaoUserData] = useState(null);
+
+  useEffect(() => {
+    // 카카오 로그인에서 넘어온 경우
+    if (location.state?.type === "kakao" && location.state?.kakaoUser) {
+      setMode("kakao");
+      setKakaoUserData(location.state.kakaoUser);
+    }
+  }, [location]);
 
   return (
     <main className={signupPage}>
@@ -50,7 +61,7 @@ export default function SignupPage() {
 
       <section className={signupSection}>
         {mode === "select" && <SignupSection onSelect={(t) => setMode(t)} />}
-        {mode !== "select" && <SignupForm type={mode} />}
+        {mode !== "select" && <SignupForm type={mode} kakaoUserData={kakaoUserData} />}
       </section>
 
       <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
