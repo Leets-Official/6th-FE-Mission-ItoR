@@ -1,14 +1,20 @@
 import { useState } from 'react'
 import SignUpFormFields from '@/components/SignUpFormFields'
 import { Button } from '@/components/Button/Button'
+import { useSignUpMutation } from '@/hooks/useAuth'
 
 export default function SignUpEmailPage() {
+  const { mutate: signUp } = useSignUpMutation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
 
   const handleSubmit = () => {
-    console.log('회원가입 요청', { email, password, nickname })
+    if (!email || !password || !nickname) {
+      alert('모든 정보를 입력해주세요.')
+      return
+    }
+    signUp({ email, password, nickname })
   }
 
   return (
