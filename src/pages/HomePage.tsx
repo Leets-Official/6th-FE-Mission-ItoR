@@ -1,17 +1,15 @@
-// src/pages/HomePage.tsx
-import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import PageHeader from "@ui/PageHeader";
-import Pagenation from "@ui/Pagenation";
+import React, { useState, useEffect } from "react";
+import clsx from "clsx";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 
-type Post = {
-  id: number | string;
-  title: string;
-  excerpt: string;
-  date: string;
-  author: { name: string; avatarInitial?: string; avatarSrc?: string };
-  thumbnailUrl?: string;
-};
+import PageHeader from "@ui/PageHeader";
+import Frame from "@ui/Frame";
+import PostList from "../components/home/PostList";
+import type { Post } from "../types/post";
+
+import clearIcon from "../assets/icons/clear.svg";
+import kakaoIcon from "../assets/icons/kakao.svg";
+import "../styles/auth.css";
 
 const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
   id: i + 1,
@@ -26,99 +24,174 @@ const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
       : undefined,
 }));
 
-function TinyAvatar({ initial = "N" }: { initial?: string }) {
-  return (
-    <div className="w-5 h-5 rounded-full bg-[var(--Gray7)] flex items-center justify-center text-white text-[10px] leading-[10px]">
-      {initial}
-    </div>
-  );
-}
+const styles = {
+  container: {
+    wrap: "mx-auto w-full max-w-[1366px]",
+    pad: "px-4 sm:px-6 md:px-8",
+    main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8",
+  },
+} as const;
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const pageSize = 5;
-  const totalPages = Math.max(1, Math.ceil(POSTS.length / pageSize));
-  const current = Math.min(page, totalPages);
-  const sliced = useMemo(
-    () => POSTS.slice((current - 1) * pageSize, current * pageSize),
-    [current],
-  );
 
-  // 본문 컨테이너(항상 688px 한도)
-  const mainContainer = "mx-auto w-full max-w-[688px] px-4 sm:px-6 md:px-8";
-  // 헤더는 항상 브라우저 가로폭을 따라감
-  const headerContainer = "w-full px-4 sm:px-6 md:px-8";
+  const [search, setSearch] = useSearchParams();
+  const loginOpen = search.get("login") === "1";
+  const openLogin = () => setSearch({ login: "1" }, { replace: true });
+  const closeLogin = () => {
+    search.delete("login");
+    setSearch(search, { replace: true });
+  };
+
+  useEffect(() => {
+    if (loginOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [loginOpen]);
+
+  const [showFrame, setShowFrame] = useState(false);
+  const toggleFrame = () => setShowFrame((v) => !v);
+
+  const isAuthed = true;
+  const user = {
+    username: "saeryeom",
+    nickname: "닉네임",
+    bio: "한 줄 소개",
+    avatarUrl: "",
+  };
+
+  const goStart = () => navigate("/join");
+  const goMyGitlog = () => navigate(`/profile/${user.username}`);
+  const goWrite = () => {
+    if (!isAuthed) return openLogin();
+    navigate("/write");
+  };
+  const goSettings = () => navigate("/account/profile");
+  const doLogout = () => navigate("/", { replace: true });
 
   return (
-    <div className="min-h-dvh w-full bg-[var(--White)] flex flex-col">
-      {/* ===== 헤더 ===== */}
-      <header className="w-full bg-white/90 backdrop-blur-[2px]">
-        <div className={headerContainer}>
-          <PageHeader variant="write" className="!w-full" />
+    <div className="min-h-dvh w-full bg-white flex flex-col">
+      <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)] relative z-10">
+        <div className={clsx(styles.container.wrap, styles.container.pad)}>
+          <PageHeader
+            variant="write"
+            onClickMenu={toggleFrame}
+            onClickWrite={openLogin}
+            className="!w-full"
+          />
         </div>
       </header>
 
-      {/* ===== 본문 ===== */}
-      <main className="flex-1 w-full">
-        <div className={mainContainer}>
-          <ul className="divide-y divide-[var(--Gray90)]">
-            {sliced.map((p) => (
-              <li key={String(p.id)} className="py-5 md:py-6">
-                {/* 클릭 시 상세로 이동 */}
-                <Link
-                  to={`/post/${p.id}`}
-                  className="grid grid-cols-[1fr_auto] gap-4 group"
-                >
-                  {/* 텍스트 */}
-                  <div className="min-w-0">
-                    <div className="flex items-start gap-4 py-2">
-                      <h3 className="text-[16px] md:text-[18px] leading-[1.6] font-medium tracking-[-0.04px] text-[var(--Black)] group-hover:underline">
-                        {p.title}
-                      </h3>
-                    </div>
-                    <p className="h-12 overflow-hidden text-ellipsis whitespace-nowrap text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[#555]">
-                      {p.excerpt}
-                    </p>
-                    <div className="mt-3 flex items-center gap-2">
-                      <TinyAvatar initial={p.author.avatarInitial} />
-                      <span className="text-[12px] leading-[19.2px] text-[var(--Gray20)]">
-                        {p.author.name}
-                      </span>
-                      <span className="text-[12px] leading-[19.2px] text-[var(--Gray56)]">
-                        · {p.date}
-                      </span>
-                      <span className="text-[12px] leading-[19.2px] text-[var(--Gray56)]">
-                        · 댓글0
-                      </span>
-                    </div>
-                  </div>
+      {showFrame && (
+        <div className="hidden md:block z-20">
+          <Frame
+            variant={isAuthed ? "member" : "guest"}
+            name={isAuthed ? `%${user.nickname}` : "%{닉네임}"}
+            intro={isAuthed ? `%${user.bio}` : "%{한 줄 소개}"}
+            avatarSrc={user.avatarUrl}
+            initial="G"
+            onStart={goStart}
+            onMyGitlog={goMyGitlog}
+            onWrite={goWrite}
+            onSettings={goSettings}
+            onLogout={doLogout}
+          />
+        </div>
+      )}
 
-                  {/* 썸네일 */}
-                  {p.thumbnailUrl && (
-                    <img
-                      src={p.thumbnailUrl}
-                      alt=""
-                      className="w-[124px] h-[116px] rounded-[2px] object-cover flex-shrink-0"
-                      loading="lazy"
-                    />
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* 페이지네이션 */}
-          {totalPages > 1 && (
-            <div className="mt-6 mb-10 flex justify-center">
-              <Pagenation
-                page={current}
-                totalPages={totalPages}
-                onChange={setPage}
-              />
-            </div>
-          )}
+      <main
+        className={clsx(
+          "flex-1 w-full",
+          showFrame ? "md:ml-[240px]" : "ml-0"
+        )}
+      >
+        <div className={clsx(styles.container.main, "py-8")}>
+          <section className="flex flex-col gap-6">
+            <PostList posts={POSTS} page={page} onPageChange={setPage} />
+          </section>
         </div>
       </main>
+
+      {loginOpen && (
+        <div className="auth-dim" onClick={closeLogin} role="presentation">
+          <section
+            className="auth-card"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="로그인"
+          >
+            <button
+              type="button"
+              className="auth-close"
+              onClick={closeLogin}
+              aria-label="닫기"
+            >
+              <img src={clearIcon} alt="" />
+            </button>
+
+            <div className="auth-hero">
+              <div className="logo-text">GITLOG</div>
+              <p className="auth-hero__caption">
+                나의 성장 기록, 지금 시작하세요
+              </p>
+            </div>
+
+            <form
+              className="auth-form"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <div className="auth-fields">
+                <input
+                  className="auth-input"
+                  type="email"
+                  placeholder="이메일"
+                />
+                <input
+                  className="auth-input"
+                  type="password"
+                  placeholder="비밀번호"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="auth-btn auth-btn--primary"
+              >
+                로그인
+              </button>
+
+              <div className="auth-sns-sep">또는</div>
+
+              <button
+                type="button"
+                className="auth-btn auth-btn--kakao"
+              >
+                <img
+                  src={kakaoIcon}
+                  alt=""
+                  width={18}
+                  height={18}
+                  style={{ display: "block" }}
+                />
+                카카오로 계속하기
+              </button>
+
+              <div className="auth-switch">
+                <Link to="/join" className="auth-switch__btn">
+                  아직 회원이 아니신가요? 회원가입
+                </Link>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

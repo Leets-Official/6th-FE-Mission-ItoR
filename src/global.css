@@ -1,6 +1,7 @@
 @import "tailwindcss";
+@import "./styles/write.css";
+@import "./styles/auth.css";
 
-/* ===== Color tokens ===== */
 @layer base {
   :root {
     --Point: #00a1ff;
@@ -20,6 +21,9 @@
     --Neutral-1: #ffffff;
     --Neutral-5: #d9d9d9;
     --Primary-6: #1890ff;
+
+    --KakaoBg: #FEE500;
+    --KakaoText: rgba(0, 0, 0, 0.85);
   }
 
   html,
@@ -28,19 +32,8 @@
     height: 100%;
   }
 
-  /* ===== Base font (14 / 160% / -0.07px) ===== */
   body {
-    font-family:
-      "Noto Sans KR",
-      system-ui,
-      -apple-system,
-      Segoe UI,
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      "Apple SD Gothic Neo",
-      "Malgun Gothic",
-      sans-serif;
+    font-family: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -51,29 +44,33 @@
   }
 }
 
-/* ===== Components / Utilities ===== */
+@theme {
+  --font-sans: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  --color-black: var(--Black);
+  --color-white: var(--White);
+
+  --color-gray-7: var(--Gray7);
+  --color-gray-20: var(--Gray20);
+  --color-gray-33: var(--Gray-33);
+  --color-gray-56: var(--Gray56);
+  --color-gray-78: var(--Gray-78);
+  --color-gray-90: var(--Gray90);
+  --color-gray-96: var(--Gray96);
+
+  --color-neutral-1: var(--Neutral-1);
+  --color-neutral-5: var(--Neutral-5);
+
+  --color-primary-6: var(--Primary-6);
+  --color-negative: var(--Negative);
+  --color-positive: var(--Positive);
+
+  --color-point: var(--Point);
+}
+
 @layer components {
-  /* 버튼 리셋 */
-  .btn-reset {
-    @apply outline-none select-none bg-transparent border-0 p-0 appearance-none;
-  }
-
-  /* 14px 버튼 텍스트 */
-  .btn-text-14 {
-    @apply text-[14px] leading-[22.4px] font-normal tracking-[-0.07px];
-    font-family: "Noto Sans KR", sans-serif;
-  }
-
-  /* 12px 작은 버튼 텍스트 */
-  .btn-text-12 {
-    @apply text-[12px] leading-[19.2px] font-normal;
-    font-family: "Noto Sans KR", sans-serif;
-  }
-
-  /* 로고 텍스트 */
-  .logo-text {
-    @apply text-[20px] leading-[28px] font-normal;
-    font-family: "Smooch", cursive;
-    color: var(--Black);
-  }
+  .btn-reset { @apply outline-none select-none bg-transparent border-0 p-0 appearance-none; }
+  .btn-text-14 { @apply text-[14px] leading-[22.4px] font-normal tracking-[-0.07px]; }
+  .btn-text-12 { @apply text-[12px] leading-[19.2px] font-normal; }
+  .logo-text { @apply text-[20px] leading-[28px] font-normal; font-family: "Smooch", cursive; color: var(--Black); }
 }

@@ -1,20 +1,21 @@
-// src/pages/PostDetailPage.tsx
-import React from "react";
-import { useParams, Navigate } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import clsx from "clsx";
+import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
 
 import PageHeader from "../components/ui/PageHeader";
 import TextBox from "../components/ui/TextBox";
-import TextFiled from "../components/ui/TextFiled";
+import TextField from "../components/ui/TextField";
 import ProfilePhoto from "../components/ui/Profile";
+import Dropdown from "@ui/Dropdown";
+import Modal from "@ui/Modal";
+import Button from "../components/ui/Button/Button";
 
-type Post = {
-  id: number | string;
-  title: string;
-  date: string;
-  author: { name: string; initial?: string; bio?: string };
-  detail?: string;
-  commentCount?: number;
-};
+import type { Post } from "../types/post";
+import {
+  postDetailMock,
+  type CommentModel,
+  type DetailBlock,
+} from "../lib/mocks";
 
 const POSTS: Post[] = [
   {
@@ -22,8 +23,7 @@ const POSTS: Post[] = [
     title: "32 Title one line",
     date: "Feb 17, 2025.",
     author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
-    detail:
-      "detail",
+    detail: "detail",
     commentCount: 12,
   },
   {
@@ -44,221 +44,346 @@ const POSTS: Post[] = [
   },
 ];
 
-export default function PostDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const post = POSTS.find((p) => String(p.id) === id);
-  if (!post) return <Navigate to="/" replace />;
+const Spacer = ({
+  y = 32,
+  className,
+}: {
+  y?: 20 | 32 | 64;
+  className?: string;
+}) => {
+  const map: Record<20 | 32 | 64, string> = {
+    20: "h-5",
+    32: "h-8",
+    64: "h-16",
+  };
+  return <div aria-hidden className={clsx("w-full", map[y], className)} />;
+};
 
-  const commentCount = post.commentCount ?? 0;
+const formatDate = (iso: string) => {
+  const d = new Date(iso);
+  const month = d.toLocaleString("en-US", { month: "short" });
+  return `${month} ${d.getDate()}, ${d.getFullYear()}.`;
+};
+
+const TitleSection: React.FC<{
+  title: string;
+  author: Post["author"];
+  date: string;
+  commentCount: number;
+}> = ({ title, author, date, commentCount }) => (
+  <section className="flex max-w-[688px] py-3 flex-col items-start self-stretch">
+    <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-start gap-3 self-stretch">
+      <TextBox
+        tbStyle="primary"
+        title={title}
+        className="!w-[688px] !max-w-[688px] !p-0 !bg-transparent"
+      />
+    </div>
+
+    <Spacer y={32} />
+
+    <div className="flex w-[688px] px-4 py-3 flex-col items-start gap-10">
+      <div className="flex items-center gap-2">
+        <div className="flex w-5 h-5 items-center aspect-square">
+          <ProfilePhoto
+            size="sm"
+            initial={author.initial}
+            name={author.name}
+          />
+        </div>
+        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
+          {author.name}
+        </span>
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+          · {date}
+        </span>
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+          · 댓글 {commentCount}개
+        </span>
+      </div>
+    </div>
+  </section>
+);
+
+const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({
+  blocks,
+}) => {
+  const sorted = useMemo(
+    () => [...blocks].sort((a, b) => a.order - b.order),
+    [blocks]
+  );
+  return (
+    <section className="flex flex-col items-center self-stretch">
+      {sorted.map((b) =>
+        b.type === "IMAGE" ? (
+          <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
+            <img
+              src={b.value}
+              alt=""
+              className="w-full h-auto object-cover rounded-[2px] bg-[var(--Gray96)]"
+            />
+          </div>
+        ) : (
+          <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
+            <TextBox
+              tbStyle="single"
+              text={b.value}
+              className="!m-0 !p-0 !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px]"
+            />
+          </div>
+        )
+      )}
+    </section>
+  );
+};
+
+const CommentRow: React.FC<{ c: CommentModel }> = ({ c }) => (
+  <div className="flex max-w-[688px] px-4 py-3 items-start gap-3 self-stretch">
+    <div className="flex w-5 h-5 items-center">
+      <ProfilePhoto
+        size="sm"
+        initial={c.nickName.charAt(0).toUpperCase()}
+        name={c.nickName}
+      />
+    </div>
+    <div className="flex-1">
+      <div className="flex items-center gap-2">
+        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
+          {c.nickName}
+        </span>
+        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+          · {formatDate(c.createdAt)}
+        </span>
+        {c.mine && (
+          <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
+            · 내 댓글
+          </span>
+        )}
+      </div>
+      <p className="mt-1 text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray20)]">
+        {c.content}
+      </p>
+    </div>
+    {c.mine && (
+      <button
+        type="button"
+        aria-label="more"
+        className="px-2 text-[var(--Gray56)]"
+      >
+        •••
+      </button>
+    )}
+  </div>
+);
+
+const CommentInput: React.FC<{
+  isLoggedIn: boolean;
+  value: string;
+  onChange: (v: string) => void;
+  onSubmit: () => void;
+}> = ({ isLoggedIn, value, onChange, onSubmit }) => (
+  <>
+    <div className="flex max-w-[688px] px-4 pt-4 pb-3 items-start gap-10 self-stretch" />
+    <div className="flex max-w-[688px] px-4 items-center gap-2">
+      <span className="text-[16px] leading-[25.6px] text-[var(--Black)]">
+        댓글
+      </span>
+    </div>
+
+    {!isLoggedIn && (
+      <>
+        <div className="flex max-w-[688px] px-4 py-3 justify-center items-center self-stretch">
+          <p className="text-center text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray-78,#C8C8C8)]">
+            댓글을 입력하려면 로그인하세요.
+          </p>
+        </div>
+        <div className="flex max-w-[688px] px-4 py-3">
+          <Button
+            type="button"
+            variant="neutralOutline"
+            className="px-4 rounded-[4px] h-10"
+            onClick={() => (window.location.href = "/me")}
+          >
+            로그인하러 가기
+          </Button>
+        </div>
+      </>
+    )}
+
+    {isLoggedIn && (
+      <div className="flex max-w-[688px] px-4 py-3 flex-col gap-[10px] self-stretch">
+        <div className="flex h-[66px] items-center">
+          <TextField
+            placeholder="댓글을 입력하세요..."
+            fullWidth
+            size="lg"
+            className="!h-[66px] placeholder:text-gray-78"
+            value={value}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange(e.target.value)
+            }
+            onKeyDown={(
+              e: React.KeyboardEvent<HTMLInputElement>
+            ) => {
+              if (e.key === "Enter" && value.trim()) onSubmit();
+            }}
+          />
+        </div>
+      </div>
+    )}
+  </>
+);
+
+const PostDetailPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [search] = useSearchParams();
+  const isLoggedIn = search.get("login") === "1";
+  const navigate = useNavigate();
+
+  const detail = useMemo(() => postDetailMock, []);
+  const [comments, setComments] = useState<CommentModel[]>(detail.comments);
+  const [input, setInput] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const author: Post["author"] = {
+    name: detail.author.nickName,
+    initial: detail.author.nickName.charAt(0).toUpperCase(),
+    bio: detail.author.introduction ?? "",
+  };
+  const dateText = formatDate(detail.createdAt);
+  const commentCount = comments.length;
+
+  const post = POSTS.find((p) => String(p.id) === id) ?? null;
+  if (!post) return <Navigate to="/" replace />;
 
   return (
     <div className="min-h-dvh w-full flex flex-col bg-[var(--White)]">
-      {/* ===== 헤더: 1366 한계선 유지 + 축소 시 콘텐츠와 함께 줄어듦 ===== */}
-      <header className="w-full bg-white/90 backdrop-blur-[2px]">
-        <div className="max-w-[1366px] w-full px-4 sm:px-6 md:px-8 mx-auto">
-          <PageHeader variant="comment" />
+      <header className="w-full bg-white/90 backdrop-blur-[2px] relative">
+        <div className="max-w-[1366px] w-full px-4 sm:px-6 md:px-8 mx-auto relative">
+          <PageHeader variant="comment" onClickMore={() => {}} />
+
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-50">
+            <Dropdown
+              position="right"
+              trigger={
+                <span
+                  className="block w-6 h-6"
+                  aria-label="더보기"
+                />
+              }
+              items={[
+                {
+                  id: "edit",
+                  label: (
+                    <span className="text-[14px] text-[var(--Black)]">
+                      수정하기
+                    </span>
+                  ),
+                  onSelect: () => navigate(`/write/${post.id}`),
+                },
+                {
+                  id: "delete",
+                  label: (
+                    <span className="text-[14px] text-[var(--Negative)]">
+                      삭제하기
+                    </span>
+                  ),
+                  onSelect: () => setConfirmOpen(true),
+                },
+              ]}
+              caretOffset="md"
+            />
+          </div>
         </div>
       </header>
 
       <main className="flex-1 w-full">
         <div className="mx-auto w-full max-w-[688px]">
-          {/* ───────────────── 타이틀 박스 전체 (12 0) ───────────────── */}
-          <section className="flex max-w-[688px] py-3 flex-col items-start self-stretch">
-            {/* ── 내부 타이틀 영역 (12 16 / column / gap 12) ── */}
-            <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-start gap-3 self-stretch">
-              <TextBox
-                tbStyle="primary"
-                title={post.title}
-                className="
-                  !w-[688px] !max-w-[688px]
-                  !p-0
-                  !bg-transparent
-                  [font-family:'Noto Sans KR']
-                "
-              />
-            </div>
+          <TitleSection
+            title={post.title}
+            author={author}
+            date={dateText}
+            commentCount={commentCount}
+          />
+          <Spacer y={32} />
+          <DetailBlocksSection blocks={detail.contents} />
+          <Spacer y={32} />
 
-            {/* ── 타이틀 하단 블랭크 32px ── */}
-            <div className="flex w-[688px] h-8 max-w-[688px] max-h-8 p-[10px] items-start gap-[10px] self-stretch aspect-[43/2]" />
-
-            {/* ── 닉네임/날짜/댓글수 영역 (12 16 / column / gap 40) ── */}
-            <div className="flex w-[688px] px-4 py-3 flex-col items-start gap-10">
-              {/* 프로필 라인 */}
-              <div className="flex items-center gap-2">
-                {/* 20 x 20 avatar */}
-                <div className="flex w-5 h-5 items-center aspect-square">
-                  <ProfilePhoto
-                    size="sm"
-                    initial={post.author.initial}
-                    name={post.author.name}
-                  />
-                </div>
-
-                {/* 닉네임: 12 regular, Gray20 */}
-                <span
-                  className="
-                    text-[12px] leading-[19.2px] font-normal
-                    text-[var(--Gray20)] [font-family:'Noto Sans KR']
-                  "
-                >
-                  {post.author.name}
-                </span>
-
-                {/* 날짜: 12 light, Gray56 */}
-                <span
-                  className="
-                    text-[12px] leading-[19.2px] font-light
-                    text-[var(--Gray56)] [font-family:'Noto Sans KR']
-                  "
-                >
-                  · {post.date}
-                </span>
-
-                {/* 댓글 수: 12 light, Gray56 */}
-                <span
-                  className="
-                    text-[12px] leading-[19.2px] font-light
-                    text-[var(--Gray56)] [font-family:'Noto Sans KR']
-                  "
-                >
-                  · 댓글 {commentCount}개
-                </span>
-              </div>
-            </div>
-          </section>
-
-          {/* ── 본문 상단 블랭크(32px) ── */}
-          <div className="flex h-8 max-w-[688px] max-h-8 p-[10px] items-start gap-[10px] self-stretch aspect-[43/2]" />
-
-          {/* ───────────────── 본문(detail) ───────────────── */}
-          <section className="flex flex-col items-center self-stretch">
-            <div className="w-full max-w-[688px] px-4">
-              <TextBox
-                tbStyle="single"
-                text={post.detail ?? "detail"}
-                className="
-                  !m-0 !p-0
-                  [font-family:'Noto Sans KR'] !text-[14px] !leading-[22.4px] !font-light
-                  !text-[var(--Gray20)] tracking-[-0.07px]
-                "
-              />
-            </div>
-          </section>
-
-          {/* ── 본문 하단 블랭크(32px) ── */}
-          <div className="flex h-8 max-w-[688px] max-h-8 p-[10px] items-start gap-[10px] self-stretch aspect-[43/2]" />
-
-          {/* ───────────────── 댓글 영역 ───────────────── */}
           <section className="flex flex-col items-start gap-10 flex-[1_0_0]">
-            {/* 섹션 헤더 (16 16 12 16) + 라벨/카운트 */}
-            <div className="flex max-w-[688px] px-4 pt-4 pb-3 items-start gap-10 self-stretch">
-              {/* 좌우 패딩만 차지하는 자리 요소 */}
-              <div className="flex w-[688px] h-5 max-w-[688px] max-h-5 p-[10px] items-start gap-[10px] aspect-[172/5]" />
+            <CommentInput
+              isLoggedIn={isLoggedIn}
+              value={input}
+              onChange={setInput}
+              onSubmit={() => {
+                const v = input.trim();
+                if (!v || !isLoggedIn) return;
+                const next: CommentModel = {
+                  id: comments.length
+                    ? Math.max(...comments.map((x) => x.id)) + 1
+                    : 1,
+                  content: v,
+                  nickName: author.name,
+                  profileUrl: detail.author.profileUrl,
+                  createdAt: new Date().toISOString(),
+                  mine: true,
+                };
+
+                setComments((prev) => [next, ...prev]);
+
+                setInput("");
+              }}
+            />
+            <div className="w-full">
+              {comments.map((c) => (
+                <CommentRow key={c.id} c={c} />
+              ))}
             </div>
-
-            {/* 댓글 타이틀: 16 medium + 포인트 컬러 숫자 */}
-            <div className="flex max-w-[688px] px-4 items-center gap-2">
-              <span
-                className="
-                  text-[16px] leading-[25.6px] font-normal
-                  [font-family:'Noto Sans KR'] tracking-[-0.04px]
-                  text-[var(--Black)]
-                "
-              >
-                댓글
-              </span>
-              <span
-                className="
-                  text-[16px] leading-[25.6px] font-medium
-                  [font-family:'Noto Sans KR'] tracking-[-0.04px]
-                  text-[var(--Point)]
-                "
-              >
-                {commentCount}
-              </span>
-            </div>
-
-            {/* 안내 텍스트(센터) */}
-            <div className="flex max-w-[688px] px-4 py-3 justify-center items-center gap-[10px] self-stretch">
-              <p
-                className="
-                  text-center
-                  text-[14px] leading-[22.4px] font-light
-                  [font-family:'Noto Sans KR'] tracking-[-0.07px]
-                  text-[var(--Gray-78,#C8C8C8)]
-                "
-              >
-                댓글을 입력해 보세요.
-              </p>
-            </div>
-
-            {/* 상단 작은 블랭크(20px 높이) */}
-            <div className="flex w-[688px] h-5 max-w-[688px] max-h-5 p-[10px] items-start gap-[10px] self-stretch aspect-[172/5]" />
-
-            {/* 입력 래퍼: 12 16 / column / center / h=66 */}
-            <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-center gap-[10px] self-stretch">
-              <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-center gap-[10px] self-stretch h-[66px]">
-                <TextFiled
-                  placeholder="댓글을 입력하세요..."
-                  fullWidth
-                  size="lg"
-                  className="!h-[66px] placeholder:text-[var(--Gray-78,#C8C8C8)]"
-                />
-              </div>
-            </div>
-
-            {/* 추가 블랭크(64px) */}
-            <div className="flex h-16 max-w-[688px] max-h-16 p-[10px] items-start gap-[10px] self-stretch aspect-[43/4]" />
+            <Spacer y={64} />
           </section>
         </div>
 
-        {/* ===== 작성자 정보 섹션 ===== */}
-<section className="mt-6 w-full bg-[var(--Gray96)] border-t border-[var(--Gray96)]">
-  {/* 상단 블랭크 */}
-  <div className="flex h-16 max-w-[688px] max-h-16 p-[10px] items-start gap-[10px] mx-auto aspect-[43/4]" />
-
-  <div className="mx-auto w-full max-w-[688px] px-4 py-3 flex flex-col items-start gap-3">
-    {/* 프로필 64 */}
-    <div className="flex w-16 h-16 items-center justify-start">
-      <ProfilePhoto size="lg" initial={post.author.initial} name={post.author.name} />
-    </div>
-
-    {/* 텍스트 블록: 좌측 정렬 고정 */}
-    <div className="flex flex-col items-start gap-1.5 w-full">
-      {/* 닉네임 (24 / 500) */}
-      <TextBox
-        tbStyle="single"
-        text={post.author.name}
-        className="
-          !m-0 !p-0 !bg-transparent
-          [font-family:'Noto Sans KR'] !text-[24px] !leading-[38.4px] !font-medium
-          !text-[var(--Black)] !text-left
-          w-full
-        "
-      />
-      {/* 한 줄 소개 (14 / Light) */}
-      <TextBox
-        tbStyle="single"
-        text={post.author.bio ?? ''}
-        className="
-          !m-0 !p-0 !bg-transparent
-          [font-family:'Noto Sans KR'] !text-[14px] !leading-[22.4px] !font-light
-          !text-[var(--Gray20)] tracking-[-0.07px]
-          !text-left w-full
-        "
-      />
-    </div>
-  </div>
-
-  {/* 하단 블랭크 */}
-  <div className="flex h-16 max-w-[688px] max-h-16 p-[10px] items-start gap-[10px] mx-auto aspect-[43/4]" />
-</section>
-
-
-        <section className="w-full bg-[var(--White)]">
-          <div className="max-w-[1366px] w-full mx-auto px-4 sm:px-6 md:px-8 py-8" />
+        <section className="mt-6 w-full bg-[var(--Gray96)] border-t border-[var(--Gray96)]">
+          <Spacer y={64} className="mx-auto max-w-[688px]" />
+          <div className="mx-auto w-full max-w-[688px] px-4 py-3 flex flex-col items-start gap-3">
+            <div className="flex w-16 h-16 items-center justify-start">
+              <ProfilePhoto
+                size="lg"
+                initial={author.initial}
+                name={author.name}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1.5 w-full">
+              <TextBox
+                tbStyle="single"
+                text={author.name}
+                className="!m-0 !p-0 !bg-transparent !text-[24px] !leading-[38.4px] !font-medium !text-[var(--Black)] !text-left w-full"
+              />
+              <TextBox
+                tbStyle="single"
+                text={author.bio ?? ""}
+                className="!m-0 !p-0 !bg-transparent !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px] !text-left w-full"
+              />
+            </div>
+          </div>
+          <Spacer y={64} className="mx-auto max-w-[688px]" />
         </section>
       </main>
+
+      <Modal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={() => navigate("/", { replace: true })}
+        titleLines={["해당 블로그를 삭제하시겠어요?"]}
+        descriptionLines={[
+          "삭제된 블로그는 다시 확인할 수 없어요.",
+        ]}
+        confirmText="삭제하기"
+        cancelText="취소"
+        confirmVariant="negative"
+      />
     </div>
   );
-}
+};
+
+export default PostDetailPage;

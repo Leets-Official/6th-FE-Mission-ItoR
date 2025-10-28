@@ -1,0 +1,209 @@
+/* Overlay */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 16px;
+  background: rgba(182, 182, 182, 0.30);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+}
+
+/* Card */
+.auth-card {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 782px;
+  max-width: 782px;
+  padding: 80px 0;
+  border-radius: 9px;
+  background: var(--Gray7);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* Close */
+.auth-card__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  inline-size: 24px;
+  block-size: 24px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--Gray56);
+}
+.auth-card__close img { width: 16px; height: 16px; display: block; }
+
+/* Left hero */
+.auth-hero {
+  display: flex;
+  width: 308px;
+  height: 160px;
+  padding: 47px 12px 37px 13px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 77 / 40;
+  color: var(--Gray56);
+  text-align: center;
+}
+.auth-hero .logo-text {
+  font-size: 64px;
+  line-height: 1;
+  color: var(--White);
+}
+.auth-hero__caption {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 160%;
+  letter-spacing: -0.07px;
+  color: var(--Gray56);
+}
+
+/* Right form */
+.auth-form {
+  display: flex;
+  min-width: 240px;
+  max-width: 344px;
+  padding: 4px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  color: var(--Gray20);
+}
+
+.auth-fields {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-input {
+  display: flex;
+  height: 46px;
+  padding: 12px 16px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 4px;
+  border: 1px solid var(--Gray90);
+  background: var(--White);
+  color: var(--Gray20);
+  outline: none;
+}
+.auth-input:focus { border-color: var(--Point); }
+
+.auth-btn {
+  display: flex;
+  height: 45px;
+  padding: 0 14px;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 6px;
+  border: 0;
+  font-size: 14px;
+  line-height: 160%;
+  letter-spacing: -0.07px;
+  cursor: pointer;
+}
+.auth-btn--primary {
+  background: var(--Point);
+  color: var(--White);
+}
+.auth-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* SNS separator */
+.auth-sns-sep {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  color: var(--Gray56);
+  font-size: 12px;
+  line-height: 160%;
+  margin: 6px 0;
+}
+.auth-sns-sep::before,
+.auth-sns-sep::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #333;
+}
+
+/* Kakao */
+.auth-btn--kakao {
+  background: #FEE500;
+  color: rgba(0, 0, 0, 0.85);
+  gap: 6px;
+}
+.auth-btn--kakao img { width: 18px; height: 18px; }
+
+/* Switch */
+.auth-switch {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+.auth-switch__btn {
+  display: inline-flex;
+  padding: 2px 8px 4px;
+  gap: 4px;
+  border-radius: 2px;
+  color: var(--Gray56);
+  font-size: 12px;
+  line-height: 160%;
+  background: none;
+  border: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ===== Overlay (배경 유지 + 팝업) ===== */
+.auth-dim {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(182, 182, 182, 0.30);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+}
+
+/* 닫기(X) 버튼 */
+.auth-close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.auth-close img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* 로그인 버튼 여백 */
+.auth-btn--primary {
+  margin-top: 8px; /* 기존 inline 스타일 대체 */
+}
