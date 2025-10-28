@@ -1,8 +1,5 @@
-// src/components/KakaoLoginButton.tsx
-import React from "react";
 import Button from "@ui/Button/Button";
 import kakaoIcon from "@icons/kakao.svg";
-import { useKakaoStart } from "@src/hooks/useAuth";
 
 type KakaoLoginButtonProps = {
   disabled?: boolean;
@@ -13,18 +10,17 @@ export default function KakaoLoginButton({
   disabled,
   className,
 }: KakaoLoginButtonProps) {
-  const { mutate: startKakaoLogin } = useKakaoStart();
+  const handleKakaoLogin = () => {
+    if (disabled) return;
+    window.location.href = "https://blog.leets.land/auth/kakao";
+  };
 
   return (
     <Button
       type="button"
       variant="kakao"
       className={className}
-      onClick={() => {
-        if (!disabled) {
-          startKakaoLogin();
-        }
-      }}
+      onClick={handleKakaoLogin}
       disabled={disabled}
     >
       <>
