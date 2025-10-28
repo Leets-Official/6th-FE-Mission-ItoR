@@ -5,6 +5,15 @@ type TextFiledSetProps = {
   placeholder?: string
   helperText?: string
   showHelper?: boolean
+  helperType?: 'default' | 'error'
+  hasError?: boolean // 에러 상태 여부
+  value?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  inputClassName?: string
+  // 추가된 부분 (SignUpFormFields.tsx에서 사용 가능)
+  required?: boolean
+  maxLength?: number
+  autoComplete?: string
 }
 
 export default function TextFiledSet({
@@ -12,6 +21,14 @@ export default function TextFiledSet({
   placeholder = 'Text filed',
   helperText,
   showHelper = false,
+  helperType = 'default',
+  hasError = false,
+  value,
+  onChange,
+  inputClassName,
+  required = false,
+  maxLength,
+  autoComplete,
 }: TextFiledSetProps) {
   return (
     <div className={`flex flex-col w-[688px] ${showHelper ? 'gap-1' : 'gap-3'}`}>
@@ -21,11 +38,27 @@ export default function TextFiledSet({
       </label>
 
       {/* 인풋 */}
-      <TextFiled size='small' state='default' placeholder={placeholder} />
+      <TextFiled
+        size='small'
+        state='default'
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+        maxLength={maxLength}
+        autoComplete={autoComplete}
+        className={`${inputClassName ?? ''} ${hasError ? 'border-[#FF3F3F]' : 'border-[#E6E6E6]'}`}
+      />
 
-      {/* 주의 문구 */}
+      {/* 안내 문구 */}
       {showHelper && helperText && (
-        <span className='text-[12px] font-light leading-[160%] text-gray-400'>{helperText}</span>
+        <span
+          className={`text-[12px] font-light leading-[160%] ${
+            hasError || helperType === 'error' ? 'text-[#FF3F3F]' : 'text-[#909090]'
+          }`}
+        >
+          {helperText}
+        </span>
       )}
     </div>
   )

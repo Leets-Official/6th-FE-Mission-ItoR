@@ -8,9 +8,23 @@ import HeaderTestPage from '../pages/test/HeaderTestPage'
 import DropdownTestPage from '../pages/test/DropdownTestPage'
 import TextFiledTestPage from '../pages/test/TextFiledTestPage'
 import TextFiledSetTestPage from '../pages/test/TextFiledSetTestPage'
+import ProfileImageTestPage from '@/pages/test/ProfileImageTestPage'
+import SidebarTestPage from '@/pages/test/SidebarTestPage'
+import PaginationTestPage from '@/pages/test/PaginationTestPage'
+import HomePage from '@/pages/HomePage'
+import SignUpPage from '@/pages/SignUpPage'
+import SignUpEmailPage from '../pages/SignUpEmailPage'
+import SignUpKakaoPage from '@/pages/SignUpKakaoPage'
+import BlogDetailPage from '@/pages/BlogDetailPage'
+import BlogWritePage from '@/pages/BlogWritePage'
 
 const router = createBrowserRouter([
-  { path: '/', element: <div>홈 화면</div> },
+  { path: '/', element: <HomePage /> },
+  { path: 'signup', element: <SignUpPage /> },
+  { path: 'signup/email', element: <SignUpEmailPage /> },
+  { path: 'signup/kakao', element: <SignUpKakaoPage /> },
+  { path: '/post/:id', element: <BlogDetailPage /> },
+  { path: '/blogwrite', element: <BlogWritePage /> },
   { path: '/test/button', element: <ButtonTestPage /> },
   { path: '/test/toast', element: <ToastTestPage /> },
   { path: '/test/menu', element: <MenuTestPage /> },
@@ -20,6 +34,9 @@ const router = createBrowserRouter([
   { path: '/test/dropdown', element: <DropdownTestPage /> },
   { path: '/test/textfiled', element: <TextFiledTestPage /> },
   { path: '/test/textfiledset', element: <TextFiledSetTestPage /> },
+  { path: '/test/profileimage', element: <ProfileImageTestPage /> },
+  { path: '/test/sidebar', element: <SidebarTestPage /> },
+  { path: '/test/pagination', element: <PaginationTestPage /> },
 ])
 
 export default router

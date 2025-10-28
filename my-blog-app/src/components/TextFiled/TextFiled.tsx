@@ -2,11 +2,15 @@ import React from 'react'
 import clsx from 'clsx'
 
 type TextFiledProps = {
-  size?: 'large' | 'small' // font-32, font-14
+  size?: 'large' | 'small'
   state?: 'default' | 'input' | 'click' | 'disabled'
   placeholder?: string
   value?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  className?: string
+  required?: boolean
+  maxLength?: number
+  autoComplete?: string
 }
 
 export default function TextFiled({
@@ -15,6 +19,10 @@ export default function TextFiled({
   placeholder = 'Text field',
   value,
   onChange,
+  className = '',
+  required = false,
+  maxLength,
+  autoComplete,
 }: TextFiledProps) {
   const baseStyle =
     'flex items-center gap-[10px] w-[656px] px-4 py-3 rounded border font-sans bg-transparent'
@@ -39,7 +47,10 @@ export default function TextFiled({
       onChange={onChange}
       placeholder={placeholder}
       disabled={state === 'disabled'}
-      className={clsx(baseStyle, sizeStyle[size], stateStyle[state])}
+      required={required}
+      maxLength={maxLength}
+      autoComplete={autoComplete}
+      className={clsx(baseStyle, sizeStyle[size], stateStyle[state], className)}
     />
   )
 }
