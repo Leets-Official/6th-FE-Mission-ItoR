@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/Blog/PostItem/PostItem";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
-import { useNavigate } from "react-router-dom";
-import { usePosts } from "@/hooks/usePosts";
-import { Post } from "@/types/post";
-import * as styles from "./MainPage.styled";
 import Modal from "@/components/Modal/Modal";
+import { usePosts } from "@/hooks/usePosts";
 import { useUserStore } from "@/store/useUserStore";
 import { useLogout } from "@/hooks/useLogout";
+import { Post } from "@/types/post";
+import * as styles from "./MainPage.styled";
 
 const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
   postId: crypto.randomUUID(),
@@ -49,17 +49,25 @@ export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupPromptOpen, setIsSignupPromptOpen] = useState(false);
 
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
-  const navigate = useNavigate();
   const { user } = useUserStore();
   const isLogin = !!user;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { posts, pageMax, loading } = usePosts(currentPage, 10);
   const dataToShow = posts.length > 0 ? posts : dummyPosts;
   const totalPages = posts.length > 0 ? pageMax : Math.ceil(dummyPosts.length / 10);
+
+  useEffect(() => {
+    if (location.state?.openLogin) {
+      setIsLoginOpen(true);
+    }
+  }, [location.state]);
 
   if (loading && posts.length === 0) return <div className="p-6">로딩 중...</div>;
 
@@ -75,7 +83,6 @@ export default function MainPage() {
           onWriteClick={() => (isLogin ? navigate("/write") : setIsLoginOpen(true))}
         />
       </div>
-
       <div className="h-[70px]" />
 
       {isSidebarOpen && (
@@ -115,7 +122,28 @@ export default function MainPage() {
         </div>
       </main>
 
-      <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      <LoginModal
+        open={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onSignupPrompt={() => setIsSignupPromptOpen(true)}
+      />
+
+      <Modal
+        open={isSignupPromptOpen}
+        title="가입되지 않은 계정입니다."
+        description="회원가입을 진행하시겠습니까?"
+        onClose={() => {
+          setIsSignupPromptOpen(false);
+          navigate("/");
+        }}
+        onConfirm={() => {
+          setIsSignupPromptOpen(false);
+          navigate("/signup");
+        }}
+        cancelText="아니요"
+        confirmText="네"
+        confirmColor="bg-brand-blue text-white hover:bg-brand-blue/90"
+      />
 
       <Modal
         open={isLogoutModalOpen}
