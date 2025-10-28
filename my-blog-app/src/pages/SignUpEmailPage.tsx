@@ -1,10 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuthStatus } from '@/hooks/useAuthStatus'
 import SignUpFormFields from '@/components/SignUpFormFields'
 import { Button } from '@/components/Button/Button'
 import { useSignUpMutation } from '@/hooks/useAuth'
 
 export default function SignUpEmailPage() {
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAuthStatus()
   const { mutate: signUp } = useSignUpMutation()
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      alert('이미 로그인된 사용자입니다.')
+      navigate('/')
+    }
+  }, [isLoggedIn, navigate])
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
