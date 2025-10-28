@@ -6,10 +6,14 @@ type TextFiledSetProps = {
   helperText?: string
   showHelper?: boolean
   helperType?: 'default' | 'error'
-  hasError?: boolean // 추가: 에러 상태 여부
+  hasError?: boolean // 에러 상태 여부
   value?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   inputClassName?: string
+  // 추가된 부분 (SignUpFormFields.tsx에서 사용 가능)
+  required?: boolean
+  maxLength?: number
+  autoComplete?: string
 }
 
 export default function TextFiledSet({
@@ -18,10 +22,13 @@ export default function TextFiledSet({
   helperText,
   showHelper = false,
   helperType = 'default',
-  hasError = false, // 기본값 false (회색)
+  hasError = false,
   value,
   onChange,
   inputClassName,
+  required = false,
+  maxLength,
+  autoComplete,
 }: TextFiledSetProps) {
   return (
     <div className={`flex flex-col w-[688px] ${showHelper ? 'gap-1' : 'gap-3'}`}>
@@ -33,11 +40,14 @@ export default function TextFiledSet({
       {/* 인풋 */}
       <TextFiled
         size='small'
-        state='default' // 타입 충돌 방지: error 제거
+        state='default'
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`${inputClassName ?? ''} ${hasError ? 'border-[#FF3F3F]' : 'border-[#E6E6E6]'}`} // 빨간 테두리 조건부 적용
+        required={required}
+        maxLength={maxLength}
+        autoComplete={autoComplete}
+        className={`${inputClassName ?? ''} ${hasError ? 'border-[#FF3F3F]' : 'border-[#E6E6E6]'}`}
       />
 
       {/* 안내 문구 */}
