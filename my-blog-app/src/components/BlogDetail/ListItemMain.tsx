@@ -5,33 +5,49 @@ import TextCard from '@/components/common/TextCard'
 import PictureFrame from './PictureFrame'
 import CommentField from './CommentField'
 import ProfileImage from '@/components/ProfileImage/ProfileImage'
-import PostMetaInfo from './PostMetaInfo'
 import BlogTitleSection from './BlogTitleSection'
 import { ChatIcon, MoreIcon } from '@/assets/icons'
 import CommentCount from './CommentCount'
 import DropdownMenu from '@/components/Dropdown/DropdownMenu'
-import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
-import Toast from '@/components/common/Toast'
 import CommentItem from './CommentItem'
 import { useComment } from '@/hooks/useComment'
+import { useToast } from '@/context/ToastContext'
+import { useModal } from '@/context/ModalContext'
 
 export default function ListItemMain() {
-  const [commentState, setCommentState] = useState<'beforeLogin' | 'active' | 'writing'>('active')
+  const [commentState] = useState<'beforeLogin' | 'active' | 'writing'>('active')
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
 
   const {
     comments,
     newComment,
-    confirmOpen,
-    toast,
     commentRef,
     setNewComment,
-    setConfirmOpen,
     handleScrollToComments,
     handleAddComment,
     handleDeleteClick,
-    handleDeleteConfirm,
   } = useComment()
+
+  const { showToast } = useToast()
+  const { openModal } = useModal()
+
+  // 댓글 추가 시 토스트 표시
+  const handleAddCommentWithToast = () => {
+    if (!newComment.trim()) {
+      showToast('내용을 입력해주세요.', 'negative')
+      return
+    }
+    handleAddComment()
+    showToast('댓글이 등록되었습니다.', 'positive')
+  }
+
+  // 댓글 삭제 시 모달 → 토스트 표시
+  const handleDeleteClickWithModal = (index: number) => {
+    openModal('댓글을 삭제할까요?', () => {
+      handleDeleteClick(index)
+      showToast('댓글이 삭제되었습니다.', 'positive')
+    })
+  }
 
   return (
     <div className='flex flex-col w-[1366px] min-h-screen items-center bg-white'>
@@ -55,7 +71,13 @@ export default function ListItemMain() {
                     variant='arrow'
                     items={[
                       { label: '수정하기', onClick: () => alert('수정 페이지 이동 예정') },
-                      { label: '삭제하기', onClick: () => setConfirmOpen(true) },
+                      {
+                        label: '삭제하기',
+                        onClick: () =>
+                          openModal('게시글을 삭제할까요?', () =>
+                            showToast('게시글이 삭제되었습니다.', 'positive'),
+                          ),
+                      },
                     ]}
                   />
                 </div>
@@ -108,7 +130,7 @@ export default function ListItemMain() {
                 author='닉네임'
                 date='Feb 17. 2025.'
                 content={comment}
-                onDelete={() => handleDeleteClick(index)}
+                onDelete={() => handleDeleteClickWithModal(index)}
               />
             ))
           )}
@@ -120,7 +142,7 @@ export default function ListItemMain() {
               state={commentState}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              onSubmit={handleAddComment}
+              onSubmit={handleAddCommentWithToast}
             />
           </div>
         </div>
@@ -139,21 +161,6 @@ export default function ListItemMain() {
           />
         </div>
       </section>
-
-      {/* Confirm Modal */}
-      <ConfirmModal
-        isOpen={confirmOpen}
-        title='댓글을 삭제할까요?'
-        onCancel={() => setConfirmOpen(false)}
-        onConfirm={handleDeleteConfirm}
-      />
-
-      {/* Toast */}
-      {toast.show && (
-        <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50'>
-          <Toast type={toast.type} message={toast.message} />
-        </div>
-      )}
     </div>
   )
 }
