@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        smooch: ['"smooch"', 'cursive'],
+        smooch: ['"Smooch"', 'cursive'],
         sans: ['"Noto Sans KR"', 'sans-serif'],
       },
       colors: {
@@ -22,13 +22,15 @@ export default {
       },
       width: {
         'check-icon': '17.6px',
+        content: '688px', // 공통 콘텐츠 폭
+      },
+      maxWidth: {
+        content: '688px', // 최대 폭 토큰
       },
       height: {
         'check-icon': '13.4px',
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/line-clamp'),
-  ],
+  plugins: [require('@tailwindcss/line-clamp')],
 }
