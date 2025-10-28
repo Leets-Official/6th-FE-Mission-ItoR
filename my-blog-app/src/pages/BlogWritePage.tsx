@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import PageHeader from '@/components/common/PageHeader'
 import TextCard from '@/components/common/TextCard'
 import { AddPhotoAlternateIcon } from '@/assets/icons/AddPhotoAlternateIcon'
@@ -6,42 +5,22 @@ import Toast from '@/components/common/Toast'
 import { Button } from '@/components/Button/Button'
 import Blank from '@/components/common/Blank'
 import { TrashIcon } from '@/assets/icons/TrashIcon'
+import { useBlogWrite } from '@/hooks/useBlogWrite'
 
 export default function BlogWritePage() {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [image, setImage] = useState<string | null>(null)
-  const [toastType, setToastType] = useState<'none' | 'positive' | 'negative'>('none')
-  const [isMenuOpen, setIsMenuOpen] = useState(false) // 이미지 클릭 시 메뉴 토글 상태
-
-  // 이미지 업로드
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = () => setImage(reader.result as string)
-      reader.readAsDataURL(file)
-    }
-  }
-
-  // 이미지 삭제
-  const handleDeleteImage = () => {
-    setImage(null)
-    setIsMenuOpen(false)
-  }
-
-  // 게시 버튼
-  const handleSubmit = () => {
-    if (!title.trim() || !content.trim()) {
-      setToastType('negative')
-      setTimeout(() => setToastType('none'), 2000)
-      return
-    }
-    console.log('제목:', title)
-    console.log('내용:', content)
-    setToastType('positive')
-    setTimeout(() => setToastType('none'), 2000)
-  }
+  const {
+    title,
+    setTitle,
+    content,
+    setContent,
+    image,
+    toastType,
+    isMenuOpen,
+    setIsMenuOpen,
+    handleImageUpload,
+    handleDeleteImage,
+    handleSubmit,
+  } = useBlogWrite()
 
   return (
     <div className='flex flex-col items-center min-h-screen bg-white'>
@@ -115,14 +94,11 @@ export default function BlogWritePage() {
           bg-white rounded-md shadow-sm p-3 cursor-pointer`}
           onClick={() => setIsMenuOpen((prev) => !prev)}
         >
-          {/* 이미지 미리보기 */}
           <img
             src={image}
             alt='첨부된 이미지'
             className='w-full rounded-md object-contain max-h-[400px]'
           />
-
-          {/* 클릭 시 표시되는 메뉴 */}
           {isMenuOpen && (
             <div
               className='absolute flex justify-center items-center gap-2
@@ -131,7 +107,7 @@ export default function BlogWritePage() {
             >
               <button
                 onClick={(e) => {
-                  e.stopPropagation() // 클릭이 상위 onClick으로 전달되지 않게
+                  e.stopPropagation()
                   handleDeleteImage()
                 }}
                 className='flex items-center gap-2 text-[14px] text-gray-700 hover:text-negative'
