@@ -4,7 +4,7 @@ import PostMetaInfo from './PostMetaInfo'
 
 export default function BlogTitleSection() {
   return (
-    <section className='flex flex-col w-[688px] max-w-[688px] bg-white px-4 py-[16px]'>
+    <section className='flex flex-col w-full max-w-[688px] bg-white px-4 py-[16px]'>
       {/* 제목/부제목 */}
       <TextCard variant='primary' title='32 Title one line' />
 
