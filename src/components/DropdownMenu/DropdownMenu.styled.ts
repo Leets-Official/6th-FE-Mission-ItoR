@@ -1,5 +1,5 @@
 export const baseMenu =
-  "absolute mt-2 min-w-[160px] rounded-md shadow-lg z-50 bg-white p-2 relative";
+  "absolute mt-2 min-w-[30px] rounded-md shadow-lg z-50 bg-white p-2 relative";
 
 export const bubbleArrow = "absolute -top-2 right-4 w-3 h-3 rotate-45 bg-white";
 

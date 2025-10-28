@@ -8,13 +8,13 @@ export const variants: Record<Variant, string> = {
   secondaryOutline: "border border-brand-gray text-brand-gray bg-white",
   tertiary: "border border-transparent text-brand-gray bg-white",
   neutral: "border border-brand-gray text-brand-gray bg-brand-lightGray",
-  disabled: "border border-transparent text-brand-gray bg-brand-lightGray",
+  disabled: "border border-brand-gray text-brand-gray bg-transparent",
   inverse: "border border-transparent text-white bg-brand-black",
   inverseMuted: "border border-transparent text-brand-gray bg-brand-black",
 };
 
 export const sizes = {
-  xs: "px-1 py-0.5 text-xs",
+  xs: "px-1.5 py-0.5 text-xs",
   sm: "px-3 py-2 text-sm",
   md: "px-6 py-3 text-base",
   lg: "px-8 py-4 text-lg",

@@ -18,16 +18,25 @@ const Header: React.FC<HeaderProps> = ({
   onWriteClick,
   onChatClick,
   onMenuClick,
+  onMoreClick,
   onDeleteClick,
   onPublishClick,
   onEditClick,
   onSaveClick,
   onCancelClick,
+  showMoreIcon = true,
 }) => {
   return (
     <header className={baseHeader}>
       <div className={leftGroup}>
-        <ReorderIcon />
+        <button
+          onClick={onMenuClick}
+          aria-label="사이드바 열기"
+          className="transition hover:opacity-70"
+        >
+          <ReorderIcon width={22} height={24} />
+        </button>
+
         <span className={titleStyle}>{title}</span>
       </div>
 
@@ -40,9 +49,12 @@ const Header: React.FC<HeaderProps> = ({
           <button onClick={onChatClick} className={chatMenuButton}>
             <ChatIcon />
           </button>
-          <button onClick={onMenuClick} className={chatMenuButton}>
-            <MoreVertIcon />
-          </button>
+
+          {showMoreIcon && (
+            <button onClick={onMoreClick} className={chatMenuButton}>
+              <MoreVertIcon />
+            </button>
+          )}
         </div>
       )}
 

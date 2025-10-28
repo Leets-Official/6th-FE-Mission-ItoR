@@ -8,4 +8,5 @@ export interface SidebarProps {
   onMyPageClick?: () => void;
   onSettingClick?: () => void;
   onLogoutClick?: () => void;
+  onLoginClick?: () => void;
 }

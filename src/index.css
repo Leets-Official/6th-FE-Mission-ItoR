@@ -9,12 +9,14 @@
   --color-brand-lightGray: #E6E6E6;
   --color-brand-midGray: #555555;
   --color-brand-darkGray: #333333;
+  --color-brand-textGray: #C8C8C8;
   --color-brand-borderGray: #F5F5F5;
   --color-brand-bgGray: #f0f0f0;
   --color-brand-black: #000000;
   --color-brand-red: #FF3F3F;
   --color-brand-green: #15DC5E;
-  --color-brand-white: #FFFFFFE5;
+  --color-brand-white: #FFFFFF;
+  --color-brand-yellow: #FFE600;
 
   /* ==== Border Radius ==== */
   --radius-sm: 0.125rem;
@@ -26,13 +28,13 @@
   --font-smooch: "Smooch", cursive;
 
   /* ==== Font Size ==== */
-  --text-xxs: 0.6rem;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.65rem;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 88px;
 
   /* ==== Avatar Sizes ==== */
   --spacing-avatar-xs: 24px;
@@ -48,4 +50,30 @@ body {
 
 .font-smooch {
   font-family: var(--font-smooch), cursive;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-slideOut {
+  animation: slideOut 0.3s ease-out forwards;
 }
