@@ -5,31 +5,22 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import SignupSection from "@/components/Auth/SignupSection";
 import SignupForm from "@/components/Auth/SignupForm";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
-import {
-  signupPage,
-  signupHeaderBar,
-  signupHeaderText,
-  signupSection,
-  subtitle,
-} from "./SignupPage.styled";
 
 export default function SignupPage() {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [mode, setMode] = useState<"select" | "email" | "kakao">("select");
-  const [kakaoUserData, setKakaoUserData] = useState(null);
+  const [signupType, setSignupType] = useState<"select" | "email" | "kakao">("select");
+  const kakaoUser = location.state?.kakaoUser;
 
   useEffect(() => {
-    // 카카오 로그인에서 넘어온 경우
-    if (location.state?.type === "kakao" && location.state?.kakaoUser) {
-      setMode("kakao");
-      setKakaoUserData(location.state.kakaoUser);
+    if (kakaoUser) {
+      setSignupType("kakao");
     }
-  }, [location]);
+  }, [kakaoUser]);
 
   return (
-    <main className={signupPage}>
+    <main>
       <div className="fixed top-0 left-0 z-50 w-full">
         <Header title="GITLOG" variant="plain" onMenuClick={() => setIsSidebarOpen(true)} />
       </div>
@@ -50,18 +41,19 @@ export default function SignupPage() {
         </>
       )}
 
-      <div className={signupHeaderBar}>
-        <div className="mx-auto max-w-[900px] md:px-20">
-          <h2 className={signupHeaderText}>회원가입</h2>
-          {mode !== "select" && (
-            <p className={subtitle}>가입을 위해 회원님의 정보를 입력해주세요.</p>
+      <div className="bg-gray-50 py-8">
+        <div className="mx-auto max-w-[900px] px-4 md:px-20">
+          <h2 className="text-2xl font-bold">회원가입</h2>
+          {signupType !== "select" && (
+            <p className="mt-2 text-gray-600">가입을 위해 회원님의 정보를 입력해주세요.</p>
           )}
         </div>
       </div>
 
-      <section className={signupSection}>
-        {mode === "select" && <SignupSection onSelect={(t) => setMode(t)} />}
-        {mode !== "select" && <SignupForm type={mode} kakaoUserData={kakaoUserData} />}
+      <section className="mx-auto max-w-[900px] px-4 py-12 md:px-20">
+        {signupType === "select" && <SignupSection onSelect={setSignupType} />}
+        {signupType === "email" && <SignupForm type="email" />}
+        {signupType === "kakao" && kakaoUser && <SignupForm type="kakao" kakaoUser={kakaoUser} />}
       </section>
 
       <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />

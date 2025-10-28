@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login, register, registerOAuth } from "@/api/auth";
+import { login, register, registerKakao } from "@/api/auth";
 import { useUserStore } from "@/store/useUserStore";
 
 export interface RegisterRequest {
@@ -56,7 +56,7 @@ export function useAuth() {
   const handleRegisterOAuth = async (data: RegisterOAuthRequest) => {
     try {
       setLoading(true);
-      await registerOAuth(data);
+      await registerKakao(data);
       return true;
     } catch (e) {
       console.error("카카오 회원가입 실패:", e);

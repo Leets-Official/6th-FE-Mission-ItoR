@@ -1,49 +1,79 @@
-export const kakaoLoginRedirect = async (code: string): Promise<KakaoLoginResult> => {
-  try {
-    const res = await api.get(`/auth/kakao/redirect?code=${code}`);
-    const { accessToken, refreshToken, user } = res.data.data;
+import api from "./index";
 
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  profileUrl?: string;
+}
 
-    return { user, isNewUser: false };
-  } catch (error) {
-    const axiosError = error as {
-      response?: {
-        status?: number;
-        data?: {
-          code?: number;
-          message?: string;
-          data?: KakaoUserData;
-        };
-      };
-    };
+interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
 
-    console.log("카카오 에러 상태:", axiosError.response?.status);
-    console.log("카카오 에러 응답:", axiosError.response?.data);
+// 일반 로그인
+export const login = async (email: string, password: string): Promise<User> => {
+  const { data } = await api.post<{ data: LoginResponse }>("/auth/login", { email, password });
+  localStorage.setItem("accessToken", data.data.accessToken);
+  localStorage.setItem("refreshToken", data.data.refreshToken);
+  return data.data.user;
+};
 
-    // 404: 신규 회원
-    if (axiosError.response?.status === 404) {
-      return {
-        user: null,
-        isNewUser: true,
-        kakaoUser: axiosError.response.data?.data,
-      };
-    }
+// 일반 회원가입
+export const register = async (userData: {
+  email: string;
+  nickname: string;
+  password: string;
+  profilePicture: string;
+  birthDate: string;
+  name: string;
+  introduction?: string;
+}) => {
+  const { data } = await api.post("/auth/register", userData);
+  return data;
+};
 
-    // 500: 서버 에러이지만 카카오 데이터가 있는 경우 회원가입 진행
-    if (axiosError.response?.status === 500) {
-      const kakaoData = axiosError.response.data?.data;
-      if (kakaoData) {
-        console.log("500 에러이지만 카카오 데이터 존재, 회원가입 진행:", kakaoData);
-        return {
-          user: null,
-          isNewUser: true,
-          kakaoUser: kakaoData,
-        };
-      }
-    }
+// 카카오 로그인 URL 가져오기
+export const getKakaoLoginUrl = async (): Promise<string> => {
+  const { data } = await api.get<{ data: string }>("/auth/kakao");
+  return data.data;
+};
 
-    throw error;
-  }
+// 카카오 콜백 처리
+export const handleKakaoCallback = async (code: string) => {
+  const { data } = await api.get<{ data: LoginResponse }>(`/auth/kakao/redirect?code=${code}`);
+  localStorage.setItem("accessToken", data.data.accessToken);
+  localStorage.setItem("refreshToken", data.data.refreshToken);
+  return data.data.user;
+};
+
+// 카카오 회원가입
+export const registerKakao = async (userData: {
+  email: string;
+  nickname: string;
+  profilePicture: string;
+  birthDate: string;
+  name: string;
+  introduction?: string;
+  kakaoId: number;
+}) => {
+  const { data } = await api.post("/auth/register-oauth", userData);
+  return data;
+};
+
+// 토큰 재발급
+export const reissueToken = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  if (!refreshToken) throw new Error("No refresh token");
+
+  const { data } = await api.post<{ data: { accessToken: string; refreshToken: string } }>(
+    "/auth/reissue",
+    { refreshToken },
+  );
+
+  localStorage.setItem("accessToken", data.data.accessToken);
+  localStorage.setItem("refreshToken", data.data.refreshToken);
+  return data;
 };
