@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStatus } from '@/hooks/useAuthStatus'
 import PageHeader from '@/components/common/PageHeader'
@@ -8,10 +8,17 @@ import { Button } from '@/components/Button/Button'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
 import SignUpProfileSection from '@/components/SignUp/SignUpProfileSection'
 import SignUpFormFields from '@/components/SignUp/SignUpFormFields'
+import TextFiledSet from '@/components/TextFiled/TextFiledSet'
 
 export default function SignUpKakaoPage() {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthStatus()
+
+  // 이메일 상태와 핸들러 추가
+  const [email, setEmail] = useState('')
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
+  }
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -38,6 +45,7 @@ export default function SignUpKakaoPage() {
       <SignUpProfileSection />
       <Blank size='md' />
 
+      {/* 소셜 로그인 영역 */}
       <div className='flex flex-col gap-2 w-full max-w-[688px] px-[16px]'>
         <label className='text-[14px] font-light leading-[160%] text-gray-600'>소셜 로그인</label>
         <div className='flex items-center gap-[10px] px-[16px] py-[12px] rounded-[4px] border border-[#E6E6E6] bg-[#E6E6E6]'>
@@ -49,6 +57,17 @@ export default function SignUpKakaoPage() {
       </div>
 
       <Blank size='md' />
+      {/* 이메일 필드 - 이제 오류 없음 */}
+      <TextFiledSet
+        label='이메일'
+        placeholder='이메일'
+        value={email}
+        onChange={onEmailChange}
+        showHelper={false}
+        helperText='* 반드시 입력해야 하는 필수 항목입니다.'
+        helperType='error'
+      />
+
       <SignUpFormFields variant='kakao' />
       <Blank size='md' />
 

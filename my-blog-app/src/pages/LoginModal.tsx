@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import GitlogLogo from '@/components/common/GitlogLogo'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
 import { ClearIcon } from '@/assets/icons/ClearIcon'
@@ -9,6 +10,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { mutate: login } = useLoginMutation()
+  const navigate = useNavigate()
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -16,6 +18,22 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
       return
     }
     login({ email, password })
+  }
+
+  // 이동 핸들러
+  const goToEmailSignUp = () => {
+    onClose()
+    navigate('/signup/email')
+  }
+
+  const goToKakaoSignUp = () => {
+    onClose()
+    navigate('/signup/kakao')
+  }
+
+  const goToSignUpMain = () => {
+    onClose()
+    navigate('/signup')
   }
 
   return (
@@ -56,7 +74,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           {/* 이메일 로그인 버튼 */}
           <button
             onClick={handleLogin}
-            className='flex justify-center items-center h-[45px] px-[14px] rounded-[6px] bg-[#00A1FF] hover:bg-[#0092E8] text-white text-[14px] font-normal leading-[160%] tracking-[-0.07px] transition'
+            className='flex justify-center items-center h-[45px] px-[14px] rounded-[6px] bg-[#00A1FF] hover:bg-[#0092E8] text-white text-[14px] font-normal leading-[160%] tracking-[-0.07px] transition w-full'
           >
             이메일로 로그인
           </button>
@@ -69,13 +87,19 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* 카카오 로그인 버튼 */}
-          <button className='flex justify-center items-center gap-[10px] h-[45px] px-[14px] rounded-[6px] bg-[#FEE500] hover:bg-[#FCD400] text-[15px] font-semibold text-[rgba(0,0,0,0.85)] leading-[150%] transition'>
+          <button
+            onClick={goToKakaoSignUp}
+            className='flex justify-center items-center gap-[10px] h-[45px] px-[14px] rounded-[6px] bg-[#FEE500] hover:bg-[#FCD400] text-[15px] font-semibold text-[rgba(0,0,0,0.85)] leading-[150%] transition w-full'
+          >
             <KakaoIcon />
             카카오로 로그인
           </button>
 
           {/* 회원가입 버튼 */}
-          <button className='flex justify-center items-center gap-[4px] px-[8px] pt-[2px] pb-[4px] rounded-[2px] text-[12px] font-normal text-[#909090] leading-[160%] hover:underline'>
+          <button
+            onClick={goToSignUpMain}
+            className='flex justify-center items-center gap-[4px] px-[8px] pt-[2px] pb-[4px] rounded-[2px] text-[12px] font-normal text-[#909090] leading-[160%] hover:underline w-full justify-center'
+          >
             또는 회원가입
           </button>
         </div>

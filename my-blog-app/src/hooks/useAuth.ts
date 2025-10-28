@@ -1,47 +1,55 @@
 import { useMutation } from '@tanstack/react-query'
-import { postLogin, postSignUp } from '@/api/authAPI'
-import { AxiosError } from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { loginAPI, registerAPI } from '@/api/authAPI'
+import type { AxiosResponse } from 'axios'
 
-/* -----------------------------
-   로그인 훅
-   - /auth/login API 호출
-   - 성공 시 토큰 저장 및 알림 표시
--------------------------------- */
+// 서버 응답 타입 정의
+interface AuthResponse {
+  code: number
+  message: string
+  data: {
+    token?: string
+    email?: string
+    nickname?: string
+  }
+}
+
 export const useLoginMutation = () => {
-  return useMutation({
-    mutationFn: postLogin,
-    onSuccess: (data) => {
-      console.log('✅ 로그인 성공:', data)
-      localStorage.setItem('token', data.token)
+  return useMutation<AxiosResponse<AuthResponse>, Error, { email: string; password: string }>({
+    mutationFn: loginAPI,
+    onSuccess: (res) => {
       alert('로그인 성공!')
+      localStorage.setItem('token', res.data.data.token ?? '')
+      window.location.reload()
     },
-    onError: (error: AxiosError) => {
-      console.error('❌ 로그인 실패:', error.response?.data || error.message)
-      alert('이메일 또는 비밀번호를 확인해주세요.')
+    onError: (err) => {
+      console.error('로그인 실패:', err)
+      alert('로그인 실패. 이메일/비밀번호를 확인해주세요.')
     },
   })
 }
 
-/* -----------------------------
-   회원가입 훅
-   - /auth/signup API 호출
-   - 성공 시 로그인 페이지(또는 홈)으로 자동 이동
--------------------------------- */
-export const useSignUpMutation = () => {
-  const navigate = useNavigate()
-
-  return useMutation({
-    mutationFn: postSignUp,
+export const useRegisterMutation = () => {
+  return useMutation<
+    AxiosResponse<AuthResponse>,
+    Error,
+    {
+      email: string
+      password: string
+      nickname: string
+      name?: string
+      profilePicture?: string
+      birthDate?: string
+      introduction?: string
+    }
+  >({
+    mutationFn: registerAPI,
     onSuccess: () => {
-      alert('회원가입이 완료되었습니다!')
-      // 회원가입 완료 후 홈 또는 로그인 화면으로 이동
-      // 현재 구조상 LoginModal이 HomePage에서 열리므로 홈('/') 이동을 권장
-      navigate('/')
+      alert('회원가입 성공!')
+      window.location.href = '/login'
     },
-    onError: (error: AxiosError) => {
-      console.error('❌ 회원가입 실패:', error.response?.data || error.message)
-      alert('회원가입에 실패했습니다.')
+    onError: (err) => {
+      console.error('회원가입 실패:', err)
+      alert('회원가입 실패. 입력 정보를 확인해주세요.')
     },
   })
 }
