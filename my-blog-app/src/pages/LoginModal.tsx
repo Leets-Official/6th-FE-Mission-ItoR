@@ -6,6 +6,8 @@ import { ClearIcon } from '@/assets/icons/ClearIcon'
 import TextFiledSet from '@/components/TextFiled/TextFiledSet'
 import { useLoginMutation } from '@/hooks/useAuth'
 
+const BACKEND_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -14,7 +16,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
 
   const handleLogin = () => {
     if (!email || !password) {
-      alert('이메일과 비밀번호를 모두 입력해주세요.')
+      console.error('이메일과 비밀번호를 모두 입력해주세요.')
       return
     }
     login({ email, password })
@@ -28,7 +30,16 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
 
   const goToKakaoSignUp = () => {
     onClose()
-    navigate('/signup/kakao')
+    // navigate 대신 window.location.href 사용
+    if (BACKEND_BASE_URL) {
+      // 2단계 로직: 백엔드의 카카오 로그인 시작 API로 유저를 리다이렉트합니다.
+      window.location.href = `${BACKEND_BASE_URL}/auth/kakao`
+    } else {
+      // 환경 변수 설정 오류 처리
+      console.error('FATAL: VITE_API_BASE_URL 환경 변수가 설정되지 않았습니다.')
+      // ⚠️ 경고: alert() 대신 사용자 정의 모달 UI를 사용해야 합니다.
+      alert('로그인 시스템 설정 오류입니다. 관리자에게 문의해주세요.')
+    }
   }
 
   const goToSignUpMain = () => {
