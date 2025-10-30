@@ -7,6 +7,8 @@ import TextCard from '@/components/common/TextCard'
 import Blank from '@/components/common/Blank'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
 
+const BACKEND_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 export default function SignUpPage() {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthStatus()
@@ -18,6 +20,12 @@ export default function SignUpPage() {
       navigate('/')
     }
   }, [isLoggedIn, navigate])
+
+  // 카카오 로그인 시작 핸들러 함수
+  const handleKakaoLogin = () => {
+    // 2단계 로직: 백엔드의 카카오 로그인 시작 API로 유저를 리다이렉트합니다.
+    window.location.href = `${BACKEND_BASE_URL}/auth/kakao`
+  }
 
   const baseButton =
     'flex justify-center items-center h-[45px] rounded-[6px] text-[14px] leading-[160%] transition w-full'
@@ -58,7 +66,7 @@ export default function SignUpPage() {
             <div className='w-[123px] h-[1px] bg-[#F5F5F5]' />
           </div>
 
-          <button onClick={() => navigate('/signup/kakao')} className={kakaoButton}>
+          <button onClick={handleKakaoLogin} className={kakaoButton}>
             <KakaoIcon />
             카카오로 회원가입
           </button>
