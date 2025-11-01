@@ -11,9 +11,12 @@ export default function KakaoLoginButton({
   className,
 }: KakaoLoginButtonProps) {
   const handleKakaoLogin = () => {
-    if (disabled) return;
-    window.location.href = "https://blog.leets.land/auth/kakao";
-  };
+  if (disabled) return;
+  import("@src/api/client").then(({ default: api }) => {
+    const baseURL = api.defaults.baseURL || "";
+    window.location.href = `${baseURL}/auth/kakao`;
+  });
+};
 
   return (
     <Button

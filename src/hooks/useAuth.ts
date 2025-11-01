@@ -40,7 +40,9 @@ export const useReissue = () =>
 export const useKakaoStart = () =>
   useMutation<void, unknown, void>({
     mutationFn: async () => {
-      window.location.href = "https://blog.leets.land/auth/kakao";
+      const api = (await import("@src/api/client")).default;
+      const baseURL = api.defaults.baseURL || "";
+      window.location.href = `${baseURL}/auth/kakao`;
     },
   });
 
