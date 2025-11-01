@@ -1,15 +1,16 @@
+// src/pages/SignUpFormPage.tsx
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useForm } from "../hooks/useForm";
-import { useSignUp } from "../hooks/useAuth";
+import { useForm } from "@src/hooks/useForm";
+import { useSignUp } from "@src/hooks/useAuth";
 
-import LabeledInput from "../components/ui/LabeledInput";
-import LabeledTextArea from "../components/ui/LabeledTextArea";
-import Button from "../components/ui/Button/Button";
+import LabeledInput from "@src/components/ui/LabeledInput";
+import LabeledTextArea from "@src/components/ui/LabeledTextArea";
+import Button from "@ui/Button/Button";
 
 import ReorderIcon from "@icons/reorder.svg?react";
-import imageIcon from "../assets/icons/image.svg";
+import imageIcon from "@icons/image.svg";
 
 export default function SignUpFormPage() {
   const nav = useNavigate();
@@ -17,13 +18,7 @@ export default function SignUpFormPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const {
-    values,
-    errors,
-    handleChange,
-    runValidation,
-    reset,
-  } = useForm({
+  const { values, errors, handleChange, runValidation, reset } = useForm({
     initialValues: {
       email: "",
       password: "",
@@ -34,31 +29,17 @@ export default function SignUpFormPage() {
       intro: "",
     },
     validate: (v) => {
-      const err: { [key: string]: string } = {};
-      if (!v.email.trim()) {
-        err.email = "이메일을 입력해주세요.";
-      }
-      if (!v.password.trim()) {
-        err.password = "비밀번호를 입력해주세요.";
-      } else if (v.password.length < 6) {
-        err.password = "비밀번호는 6자 이상이어야 합니다.";
-      }
-      if (v.password2.trim() !== v.password.trim()) {
-        err.password2 = "비밀번호가 일치하지 않습니다.";
-      }
-      if (!v.nickname.trim()) {
-        err.nickname = "닉네임을 입력해주세요.";
-      }
+      const err: Record<string, string> = {};
+      if (!v.email.trim()) err.email = "이메일을 입력해주세요.";
+      if (!v.password.trim()) err.password = "비밀번호를 입력해주세요.";
+      else if (v.password.length < 6) err.password = "비밀번호는 6자 이상이어야 합니다.";
+      if (v.password2.trim() !== v.password.trim()) err.password2 = "비밀번호가 일치하지 않습니다.";
+      if (!v.nickname.trim()) err.nickname = "닉네임을 입력해주세요.";
       return err;
     },
   });
 
-const {
-  mutate: signUp,
-  isPending,
-  isError,
-  isSuccess,
-} = useSignUp();
+  const { mutate: signUp, isPending, isError, isSuccess } = useSignUp();
 
   const pickFile = () => fileRef.current?.click();
 
@@ -91,6 +72,33 @@ const {
       nav("/login");
     }
   }, [isSuccess, nav]);
+
+  /** ===== 입력 필드 메타데이터 (map 렌더링) ===== */
+  type FieldName =
+    | "email"
+    | "password"
+    | "password2"
+    | "realname"
+    | "birth"
+    | "nickname";
+
+  const inputFields: Array<{
+    label: string;
+    name: FieldName;
+    type: React.InputHTMLAttributes<HTMLInputElement>["type"];
+    placeholder: string;
+    required?: boolean;
+    helper?: string; // 닉네임 보조 문구 등
+  }> = [
+    { label: "이메일", name: "email", type: "email", placeholder: "이메일", required: true },
+    { label: "비밀번호", name: "password", type: "password", placeholder: "••••••", required: true },
+    { label: "비밀번호 확인", name: "password2", type: "password", placeholder: "••••••", required: true },
+    { label: "이름", name: "realname", type: "text", placeholder: "이름" },
+    { label: "생년월일", name: "birth", type: "text", placeholder: "YYYY - MM - DD" },
+    { label: "닉네임", name: "nickname", type: "text", placeholder: "닉네임", required: true, helper: "* 20글자 이내" },
+  ];
+
+  const getError = (name: FieldName) => errors[name];
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
@@ -175,80 +183,28 @@ const {
             </div>
           </div>
 
-          {/* 입력 필드들 */}
+          {/* 입력 필드들 (map 렌더링) */}
           <div className="flex flex-col gap-4">
-            <LabeledInput
-              label="이메일"
-              name="email"
-              type="email"
-              placeholder="이메일"
-              value={values.email}
-              onChange={handleChange}
-              error={errors.email}
-              required
-              disabled={isPending}
-            />
-
-            <LabeledInput
-              label="비밀번호"
-              name="password"
-              type="password"
-              placeholder="••••••"
-              value={values.password}
-              onChange={handleChange}
-              error={errors.password}
-              required
-              disabled={isPending}
-            />
-
-            <LabeledInput
-              label="비밀번호 확인"
-              name="password2"
-              type="password"
-              placeholder="••••••"
-              value={values.password2}
-              onChange={handleChange}
-              error={errors.password2}
-              required
-              disabled={isPending}
-            />
-
-            <LabeledInput
-              label="이름"
-              name="realname"
-              type="text"
-              placeholder="이름"
-              value={values.realname}
-              onChange={handleChange}
-              disabled={isPending}
-            />
-
-            <LabeledInput
-              label="생년월일"
-              name="birth"
-              type="text"
-              placeholder="YYYY - MM - DD"
-              value={values.birth}
-              onChange={handleChange}
-              disabled={isPending}
-            />
-
-            <div className="flex flex-col gap-2">
-              <LabeledInput
-                label="닉네임"
-                name="nickname"
-                type="text"
-                placeholder="닉네임"
-                value={values.nickname}
-                onChange={handleChange}
-                error={errors.nickname}
-                required
-                disabled={isPending}
-              />
-              <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
-                * 20글자 이내
-              </p>
-            </div>
+            {inputFields.map((f) => (
+              <div key={f.name} className="flex flex-col gap-2">
+                <LabeledInput
+                  label={f.label}
+                  name={f.name}
+                  type={f.type}
+                  placeholder={f.placeholder}
+                  value={values[f.name]}
+                  onChange={handleChange}
+                  error={getError(f.name)}
+                  required={f.required}
+                  disabled={isPending}
+                />
+                {f.helper && (
+                  <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
+                    {f.helper}
+                  </p>
+                )}
+              </div>
+            ))}
 
             <LabeledTextArea
               label="한 줄 소개"
