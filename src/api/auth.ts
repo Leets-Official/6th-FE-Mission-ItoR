@@ -1,8 +1,16 @@
 import api from "./client";
 
-/* Request Body 타입 정의 */
+const AUTH_PATH = "/auth";
 
-// 일반 회원가입
+/* 공통 유저 정보 타입 */
+export interface CommonUserInfo {
+  email: string;
+  nickname: string;
+  profilePicture?: string;
+  introduction?: string;
+}
+
+/* Request Body */
 export interface SignUpBody {
   email: string;
   nickname: string;
@@ -13,119 +21,78 @@ export interface SignUpBody {
   introduction?: string;
 }
 
-// OAuth 회원가입
 export interface OAuthSignUpBody {
   email: string;
   nickname: string;
+  password: string;
+  provider: "kakao";
   profilePicture?: string;
   birthDate?: string;
   name?: string;
   introduction?: string;
-  kakaoId: number;
 }
 
-// 이메일 로그인
 export interface LoginBody {
   email: string;
   password: string;
 }
 
-// 토큰 재발급
 export interface ReissueBody {
   refreshToken: string;
 }
 
-/* Response 타입 정의 */
-
-// 회원가입 / OAuth 회원가입 공통 응답
-export interface RegisterResponse {
-  code: number;
-  message: string;
-  data: {
-    email: string;
-    nickname: string;
-    profilePicture?: string;
-    introduction?: string;
-  };
-}
-
-// 로그인 응답
+/* Response */
 export interface LoginResponse {
   code: number;
   message: string;
-  data: {
+  data: CommonUserInfo & {
     accessToken: string;
     refreshToken: string;
-    nickname: string;
-    profilePicture?: string;
-    introduction?: string;
-    httpStatus: string;
-    responseMessage: string;
+    httpStatus?: string;
+    responseMessage?: string;
   };
 }
 
-// 토큰 재발급 응답
-export interface ReissueResponse {
+export interface RegisterResponse {
   code: number;
   message: string;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  data: CommonUserInfo & { userId?: number };
 }
 
-// 카카오 redirect 응답
-export interface KakaoRedirectResponse {
-  code: number;
-  message: string;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    nickname: string;
-    profilePicture?: string;
-    introduction?: string;
-    httpStatus: string;
-    responseMessage: string;
-  };
-}
-
-/* API 함수 정의  */
-
-// 회원가입
+/* API 함수들 — 제네릭으로 응답 타입을 지정해서 ts-ignore 없이 안전하게 */
 export const signUpRequest = async (body: SignUpBody): Promise<RegisterResponse> => {
-  const res = await api.post("/auth/register", body);
+  const res = await api.post<RegisterResponse>(`${AUTH_PATH}/register`, body);
   return res.data;
 };
 
-// 로그인
+export const oauthRegisterRequest = async (body: OAuthSignUpBody): Promise<RegisterResponse> => {
+  const res = await api.post<RegisterResponse>(`${AUTH_PATH}/oauth/register`, body);
+  return res.data;
+};
+
 export const loginRequest = async (body: LoginBody): Promise<LoginResponse> => {
-  const res = await api.post("/auth/login", body);
+  const res = await api.post<LoginResponse>(`${AUTH_PATH}/login`, body);
   return res.data;
 };
 
-// OAuth 회원가입 (카카오 등)
-export const oauthRegisterRequest = async (
-  body: OAuthSignUpBody
-): Promise<RegisterResponse> => {
-  const res = await api.post("/auth/register-oauth", body);
+export const reissueToken = async (body: ReissueBody): Promise<LoginResponse> => {
+  const res = await api.post<LoginResponse>(`${AUTH_PATH}/reissue`, body);
   return res.data;
 };
 
-// 토큰 재발급
-export const reissueToken = async (body: ReissueBody): Promise<ReissueResponse> => {
-  const res = await api.post("/auth/reissue", body);
-  return res.data;
-};
+/* 카카오 로그인 URL: 문자열 또는 { data: string } 형태를 모두 허용 */
+type KakaoUrlResponse = string | { data: string };
 
-// 카카오 로그인 redirect URL 요청
 export const getKakaoLoginUrl = async (): Promise<string> => {
-  const { data } = await api.get("/auth/kakao");
-  if (typeof data === "string") return data;
-  if (data?.data) return data.data;
+  const res = await api.get<KakaoUrlResponse>(`${AUTH_PATH}/kakao`);
+  const payload = res.data;
+  if (typeof payload === "string") return payload;
+  if (payload?.data) return payload.data;
   throw new Error("카카오 로그인 URL을 가져오지 못했습니다.");
 };
 
-export const kakaoRedirectLogin = async (code: string) => {
-  const { data } = await api.get(`/auth/kakao/redirect`, { params: { code } });
-  return data;
+/* 카카오 redirect 응답의 스키마가 LoginResponse라면 이렇게 지정 */
+export const kakaoRedirectLogin = async (code: string): Promise<LoginResponse> => {
+  const res = await api.get<LoginResponse>(`${AUTH_PATH}/kakao/redirect`, { params: { code } });
+  return res.data;
 };
