@@ -1,4 +1,3 @@
-// src/pages/KakaoRedirectPage.tsx
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useKakaoRedirectLogin } from "@src/hooks/useAuth";
@@ -11,26 +10,33 @@ export default function KakaoRedirectPage() {
   const { mutate, isPending, isError } = useKakaoRedirectLogin();
 
   useEffect(() => {
-    // code 없으면 로그인 페이지로 돌려보내기
     if (!code) {
       navigate("/login", { replace: true });
       return;
     }
 
-    // 백엔드로 code 전달해서 로그인 처리 시도
     mutate(code, {
-      onSuccess: () => {
-        // 로그인 성공했다고 가정하고 홈으로 이동
-        navigate("/", { replace: true });
+      onSuccess: (payload) => {
+        const { accessToken, refreshToken, ...rest } = payload;
+
+        if (accessToken) {
+          // 가입자: 토큰 저장 후 홈으로 이동
+          localStorage.setItem("accessToken", accessToken);
+          if (typeof refreshToken === "string") {
+            localStorage.setItem("refreshToken", refreshToken);
+          }
+          navigate("/", { replace: true });
+        } else {
+          // 미가입자: OAuth 회원가입 페이지로 (백엔드가 내려준 추가정보 state로 전달)
+          navigate("/join/oauth", { state: rest, replace: true });
+        }
       },
       onError: () => {
-        // 실패하면 로그인 페이지로 이동
         navigate("/login", { replace: true });
       },
     });
   }, [code, mutate, navigate]);
 
-  // 상태 화면 (tailwind만 사용)
   return (
     <div className="flex min-h-dvh flex-col items-center justify-start bg-black pt-20 text-center text-sm text-white">
       {isPending && "카카오 로그인 처리 중입니다..."}
