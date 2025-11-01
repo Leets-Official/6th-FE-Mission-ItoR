@@ -1,3 +1,4 @@
+// vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
@@ -11,14 +12,8 @@ export default defineConfig({
       "@src": "/src",
     },
   },
-server: {
-  port: 3000,
-  proxy: {
-    "/auth": {
-      target: "https://blog.leets.land",
-      changeOrigin: true,
-      secure: false,
-    },
+  server: {
+    port: 5173,
+    // proxy 제거: API는 env 기반 절대경로로 직접 호출
   },
-},
 });
