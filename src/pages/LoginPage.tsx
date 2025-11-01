@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+// src/pages/LoginPage.tsx
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "../hooks/useForm";
-import Button from "../components/ui/Button/Button";
-import AuthInput from "../components/ui/AuthInput";
-import clearIcon from "../assets/icons/clear.svg";
-import "../styles/auth.css";
-import { useLogin } from "../hooks/useAuth";
-import KakaoLoginButton from "../components/KakaoLoginButton";
+
+import { useForm } from "@src/hooks/useForm";
+import Button from "@ui/Button/Button";
+import AuthInput from "@src/components/ui/AuthInput";
+import clearIcon from "@icons/clear.svg";
+import "@src/styles/auth.css";
+import { useLogin } from "@src/hooks/useAuth";
+import KakaoLoginButton from "@src/components/KakaoLoginButton";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -29,14 +31,8 @@ export default function LoginPage() {
     },
   });
 
-  const {
-    mutate: login,
-    data: loginResult,
-    isPending,
-    isError,
-    isSuccess,
-    error,
-  } = useLogin();
+  // 실제로 사용하는 값만 구조분해 (unused 경고 방지)
+  const { mutate: login, isPending, isError, error } = useLogin();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +48,8 @@ export default function LoginPage() {
         onSuccess: (res) => {
           const { accessToken, refreshToken } = res.data;
 
-          if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
-          }
-          if (refreshToken) {
-            localStorage.setItem("refreshToken", refreshToken);
-          }
+          if (accessToken) localStorage.setItem("accessToken", accessToken);
+          if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 
           nav("/");
         },
@@ -68,15 +60,6 @@ export default function LoginPage() {
   const goSignUp = () => {
     nav("/join");
   };
-
-  useEffect(() => {
-    if (isError) {
-      console.error("로그인 실패:", error);
-    }
-    if (isSuccess) {
-      console.log("로그인 성공:", loginResult);
-    }
-  }, [isError, isSuccess, error, loginResult]);
 
   return (
     <div className="auth-overlay" onClick={close}>
@@ -140,7 +123,10 @@ export default function LoginPage() {
 
             {isError && (
               <p className="mb-4 text-[12px] leading-[18px] text-[var(--Negative)]">
-                로그인에 실패했습니다. 다시 시도해주세요.
+                로그인에 실패했습니다
+                {error instanceof Error && error.message
+                  ? `: ${error.message}`
+                  : " . 다시 시도해주세요."}
               </p>
             )}
 
@@ -154,10 +140,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <KakaoLoginButton
-              className="mb-4"
-              disabled={isPending}
-            />
+            <KakaoLoginButton className="mb-4" disabled={isPending} />
 
             <div className="flex w-full flex-col items-center">
               <button
