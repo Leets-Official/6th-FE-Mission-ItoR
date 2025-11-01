@@ -15,7 +15,9 @@
       "@icons/*": ["src/assets/icons/*"],
       "@ui/*": ["src/components/ui/*"],
       "@src/*": ["src/*"]
-    }
+    },
+
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }
