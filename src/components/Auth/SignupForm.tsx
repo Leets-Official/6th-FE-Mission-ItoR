@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { register, registerKakao } from "@/api/auth";
+import React, { useState } from "react";
+import * as S from "./Signup.styled";
 import TextFieldSet from "@/components/Text/TextFieldSet";
 import Button from "@/components/Button/Button";
+import Avatar from "@/components/Avatar/Avatar";
+import SmallButton from "@/components/SmallButton/SmallButton";
+import { AddPhotoAlternateIcon, KakaoIcon } from "@/assets/icons";
+import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
+import LoginModal from "@/components/Blog/LoginModal/LoginModal";
+import { register, registerKakao } from "@/api/auth";
 
 interface SignupFormProps {
   type: "email" | "kakao";
@@ -15,11 +20,7 @@ interface SignupFormProps {
   };
 }
 
-export default function SignupForm({ type, kakaoUser }: SignupFormProps) {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
     password: "",
@@ -28,107 +29,129 @@ export default function SignupForm({ type, kakaoUser }: SignupFormProps) {
     birthDate: "",
     nickname: "",
     introduction: "",
+    profilePicture: kakaoUser?.profilePicture || "",
+    kakaoId: kakaoUser?.kakaoId?.toString() || "",
   });
 
-  const handleChange = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (key: string, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = async () => {
-    if (type === "email" && form.password !== form.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
+    const newErrors: Record<string, string> = {};
+
+    if (!form.email.trim()) newErrors.email = "이메일을 입력해주세요.";
+    if (!form.name.trim()) newErrors.name = "이름을 입력해주세요.";
+    if (!form.birthDate.trim()) newErrors.birthDate = "생년월일을 입력해주세요.";
+    if (!form.nickname.trim()) newErrors.nickname = "닉네임을 입력해주세요.";
+
+    if (type === "email") {
+      if (!form.password) newErrors.password = "비밀번호를 입력해주세요.";
+      if (form.password !== form.passwordConfirm)
+        newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
     }
 
-    setLoading(true);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    // ✅ 공통 데이터 추출
+    const commonData = {
+      email: form.email,
+      nickname: form.nickname,
+      birthDate: form.birthDate,
+      name: form.name,
+      introduction: form.introduction,
+      profilePicture: form.profilePicture,
+    };
+
     try {
+      setLoading(true);
       if (type === "email") {
         await register({
-          email: form.email,
-          nickname: form.nickname,
+          ...commonData,
           password: form.password,
-          profilePicture: "",
-          birthDate: form.birthDate,
-          name: form.name,
-          introduction: form.introduction,
         });
       } else {
         await registerKakao({
-          email: form.email,
-          nickname: form.nickname,
-          profilePicture: kakaoUser?.profilePicture || "",
-          birthDate: form.birthDate,
-          name: form.name,
-          introduction: form.introduction,
-          kakaoId: kakaoUser!.kakaoId,
+          ...commonData,
+          kakaoId: Number(form.kakaoId),
         });
       }
-      setShowSuccessModal(true);
-    } catch (error) {
-      alert("회원가입에 실패했습니다.");
+      setIsModalOpen(true);
+    } catch (err) {
+      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <TextFieldSet
-        title="이메일"
-        placeholder="이메일"
-        value={form.email}
-        onChange={(e) => handleChange("email", e.target.value)}
-      />
+  const fields = [
+    { key: "email", title: "이메일", placeholder: "이메일" },
+    ...(type === "email"
+      ? [
+          { key: "password", title: "비밀번호", placeholder: "비밀번호", type: "password" },
+          {
+            key: "passwordConfirm",
+            title: "비밀번호 확인",
+            placeholder: "비밀번호 확인",
+            type: "password",
+          },
+        ]
+      : []),
+    { key: "name", title: "이름", placeholder: "이름" },
+    { key: "birthDate", title: "생년월일", placeholder: "YYYY-MM-DD" },
+    { key: "nickname", title: "닉네임", placeholder: "닉네임", helperText: "20글자 이내" },
+    { key: "introduction", title: "한 줄 소개", placeholder: "한 줄 소개" },
+  ];
 
-      {type === "email" && (
-        <>
-          <TextFieldSet
-            title="비밀번호"
-            type="password"
-            placeholder="비밀번호"
-            value={form.password}
-            onChange={(e) => handleChange("password", e.target.value)}
+  return (
+    <div className={S.signupFormContainer}>
+      <div className={S.profileSection}>
+        <label className={S.profileLabel}>프로필 사진</label>
+        <div className={S.profileInner}>
+          <Avatar size="xl" src={form.profilePicture} alt="Profile" />
+          <SmallButton
+            label="프로필 사진 추가"
+            variant="secondaryOutline"
+            leftIcon={<AddPhotoAlternateIcon className={S.profileAddIcon} />}
+            className="border-brand-lightGray text-xs"
           />
-          <TextFieldSet
-            title="비밀번호 확인"
-            type="password"
-            placeholder="비밀번호 확인"
-            value={form.passwordConfirm}
-            onChange={(e) => handleChange("passwordConfirm", e.target.value)}
-          />
-        </>
+        </div>
+      </div>
+
+      {type === "kakao" && (
+        <div className={S.socialSection}>
+          <p className={S.socialLabel}>소셜 로그인</p>
+          <div className={S.socialWrapper}>
+            <KakaoIcon className={S.kakaoIcon} />
+            <TextField value="카카오 로그인" disabled fullWidth className={S.kakaoTextField} />
+          </div>
+        </div>
       )}
 
-      <TextFieldSet
-        title="이름"
-        placeholder="이름"
-        value={form.name}
-        onChange={(e) => handleChange("name", e.target.value)}
-      />
-
-      <TextFieldSet
-        title="생년월일"
-        placeholder="YYYY-MM-DD"
-        value={form.birthDate}
-        onChange={(e) => handleChange("birthDate", e.target.value)}
-      />
-
-      <TextFieldSet
-        title="닉네임"
-        placeholder="닉네임"
-        value={form.nickname}
-        onChange={(e) => handleChange("nickname", e.target.value)}
-      />
-
-      <TextFieldSet
-        title="한 줄 소개"
-        placeholder="한 줄 소개"
-        value={form.introduction}
-        onChange={(e) => handleChange("introduction", e.target.value)}
-      />
+      <div className={S.signupFormFields}>
+        {fields.map(({ key, title, placeholder, helperText, type }) => (
+          <TextFieldSet
+            key={key}
+            title={title}
+            placeholder={placeholder}
+            helperText={helperText}
+            type={type}
+            value={form[key as keyof typeof form]}
+            onChange={(e) => handleChange(key, e.target.value)}
+            error={errors[key]}
+          />
+        ))}
+      </div>
 
       <Button
-        label={loading ? "처리 중..." : "회원가입 완료"}
+        label={loading ? "회원가입 중..." : "회원가입 완료"}
         variant="primaryOutline"
         fullWidth
         onClick={handleSubmit}
@@ -136,13 +159,19 @@ export default function SignupForm({ type, kakaoUser }: SignupFormProps) {
       />
 
       <Modal
-        open={showSuccessModal}
+        open={isModalOpen}
         title="회원가입이 완료되었습니다!"
-        onClose={() => navigate("/", { replace: true })}
-        onConfirm={() => navigate("/", { replace: true, state: { openLogin: true } })}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => setIsLoginModalOpen(true)}
         cancelText="확인"
         confirmText="로그인하기"
+        cancelColor="bg-white text-brand-darkGray border border-brand-lightGray hover:bg-brand-lightGray"
+        confirmColor="bg-brand-blue text-white hover:bg-brand-blue/90"
       />
+
+      <LoginModal open={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
-}
+};
+
+export default SignupForm;
