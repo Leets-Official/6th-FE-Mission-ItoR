@@ -38,11 +38,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
   if (!open) return null;
 
   const handleLoginClick = async () => {
+    // 기존 에러 초기화
     setEmailError("");
     setPasswordError("");
 
-    if (!email.trim() || !password.trim()) {
-      setEmailError("이메일과 비밀번호를 입력해주세요.");
+    // ✅ 각 입력 필드별 검증 분리
+    if (!email.trim()) {
+      setEmailError("이메일을 입력해주세요.");
+      return;
+    }
+    if (!password.trim()) {
+      setPasswordError("비밀번호를 입력해주세요.");
       return;
     }
 
@@ -102,6 +108,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+
+            {/* 개별 에러 메시지 표시 */}
             {emailError && <p className={errorText}>*{emailError}</p>}
             {passwordError && <p className={errorText}>*{passwordError}</p>}
           </div>
