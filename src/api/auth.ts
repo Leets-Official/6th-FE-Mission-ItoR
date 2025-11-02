@@ -1,4 +1,5 @@
 import api from "./index";
+import type { AxiosError } from "axios";
 
 interface User {
   id: string;
@@ -13,15 +14,25 @@ interface LoginResponse {
   user: User;
 }
 
-// 일반 로그인
+interface ApiErrorResponse {
+  message?: string;
+  code?: number;
+  data?: unknown;
+}
+
 export const login = async (email: string, password: string): Promise<User> => {
-  const { data } = await api.post<{ data: LoginResponse }>("/auth/login", { email, password });
-  localStorage.setItem("accessToken", data.data.accessToken);
-  localStorage.setItem("refreshToken", data.data.refreshToken);
-  return data.data.user;
+  try {
+    const { data } = await api.post<{ data: LoginResponse }>("/auth/login", { email, password });
+    localStorage.setItem("accessToken", data.data.accessToken);
+    localStorage.setItem("refreshToken", data.data.refreshToken);
+    return data.data.user;
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorResponse>;
+    console.error("로그인 요청 실패:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message ?? "로그인 요청 중 오류가 발생했습니다.");
+  }
 };
 
-// 일반 회원가입
 export const register = async (userData: {
   email: string;
   nickname: string;
@@ -31,25 +42,42 @@ export const register = async (userData: {
   name: string;
   introduction?: string;
 }) => {
-  const { data } = await api.post("/auth/register", userData);
-  return data;
+  try {
+    const { data } = await api.post("/auth/register", userData);
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorResponse>;
+    console.error("회원가입 요청 실패:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message ?? "회원가입 요청 중 오류가 발생했습니다.");
+  }
 };
 
-// 카카오 로그인 URL 가져오기
 export const getKakaoLoginUrl = async (): Promise<string> => {
-  const { data } = await api.get<{ data: string }>("/auth/kakao");
-  return data.data;
+  try {
+    const { data } = await api.get<{ data: string }>("/auth/kakao");
+    return data.data;
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorResponse>;
+    console.error("카카오 로그인 URL 요청 실패:", error.response?.data || error.message);
+    throw new Error(
+      error.response?.data?.message ?? "카카오 로그인 URL 요청 중 오류가 발생했습니다.",
+    );
+  }
 };
 
-// 카카오 콜백 처리
-export const handleKakaoCallback = async (code: string) => {
-  const { data } = await api.get<{ data: LoginResponse }>(`/auth/kakao/redirect?code=${code}`);
-  localStorage.setItem("accessToken", data.data.accessToken);
-  localStorage.setItem("refreshToken", data.data.refreshToken);
-  return data.data.user;
+export const handleKakaoCallback = async (code: string): Promise<User> => {
+  try {
+    const { data } = await api.get<{ data: LoginResponse }>(`/auth/kakao/redirect?code=${code}`);
+    localStorage.setItem("accessToken", data.data.accessToken);
+    localStorage.setItem("refreshToken", data.data.refreshToken);
+    return data.data.user;
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorResponse>;
+    console.error("카카오 콜백 처리 실패:", error.response?.data || error.message);
+    throw error;
+  }
 };
 
-// 카카오 회원가입
 export const registerKakao = async (userData: {
   email: string;
   nickname: string;
@@ -59,21 +87,34 @@ export const registerKakao = async (userData: {
   introduction?: string;
   kakaoId: number;
 }) => {
-  const { data } = await api.post("/auth/register-oauth", userData);
-  return data;
+  try {
+    const { data } = await api.post("/auth/register-oauth", userData);
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorResponse>;
+    console.error("카카오 회원가입 요청 실패:", error.response?.data || error.message);
+    throw new Error(
+      error.response?.data?.message ?? "카카오 회원가입 요청 중 오류가 발생했습니다.",
+    );
+  }
 };
 
-// 토큰 재발급
 export const reissueToken = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
   if (!refreshToken) throw new Error("No refresh token");
 
-  const { data } = await api.post<{ data: { accessToken: string; refreshToken: string } }>(
-    "/auth/reissue",
-    { refreshToken },
-  );
+  try {
+    const { data } = await api.post<{ data: { accessToken: string; refreshToken: string } }>(
+      "/auth/reissue",
+      { refreshToken },
+    );
 
-  localStorage.setItem("accessToken", data.data.accessToken);
-  localStorage.setItem("refreshToken", data.data.refreshToken);
-  return data;
+    localStorage.setItem("accessToken", data.data.accessToken);
+    localStorage.setItem("refreshToken", data.data.refreshToken);
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorResponse>;
+    console.error("토큰 재발급 실패:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message ?? "토큰 재발급 중 오류가 발생했습니다.");
+  }
 };
