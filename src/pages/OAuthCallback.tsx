@@ -2,29 +2,28 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleKakaoCallback } from "@/api/auth";
 import { useUserStore } from "@/store/useUserStore";
+import { AxiosError } from "axios";
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
 
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get("code");
+    const runAuthFlow = async () => {
+      const code = new URLSearchParams(window.location.search).get("code");
 
-    if (!code) {
-      alert("인증 코드가 없습니다.");
-      navigate("/", { replace: true });
-      return;
-    }
+      if (!code) {
+        alert("인증 코드가 없습니다.");
+        navigate("/", { replace: true });
+        return;
+      }
 
-    handleKakaoCallback(code)
-      .then((user) => {
-        // 로그인 성공
+      try {
+        const user = await handleKakaoCallback(code);
         setUser(user);
         navigate("/", { replace: true });
-      })
-      .catch((error) => {
-        // 404 = 신규 유저
-        if (error.response?.status === 404) {
+      } catch (error) {
+        if (error instanceof AxiosError && error.response?.status === 401) {
           const kakaoUser = error.response.data?.data;
           navigate("/signup", {
             replace: true,
@@ -34,7 +33,10 @@ export default function OAuthCallback() {
           alert("로그인 중 오류가 발생했습니다.");
           navigate("/", { replace: true });
         }
-      });
+      }
+    };
+
+    runAuthFlow();
   }, [navigate, setUser]);
 
   return (
