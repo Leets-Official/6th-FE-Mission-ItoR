@@ -57,7 +57,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
     } catch (error: unknown) {
       const err = error as { response?: { status?: number }; message?: string };
 
-      if (err.response?.status === 404 || err.message?.includes("가입되지 않은")) {
+      if (err.response?.status === 401 || err.message?.includes("가입되지 않은")) {
         onClose();
         onSignupPrompt?.();
       } else {
@@ -67,12 +67,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
   };
 
   const handleKakaoLogin = () => {
-    try {
-      const kakaoAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/kakao`;
-      window.location.href = kakaoAuthUrl;
-    } catch (error) {
-      console.error("카카오 로그인 요청 실패:", error);
-    }
+    const kakaoAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/kakao`;
+    window.location.replace(kakaoAuthUrl);
   };
 
   const handleSignupClick = () => {
