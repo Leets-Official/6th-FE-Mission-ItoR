@@ -1,82 +1,66 @@
-import { axiosInstance } from '../apiInstance';
-import {
-  KakaoRedirectCallbackResponse,
-  KakaoRedirectRequest,
-  KakaoRedirectResponse,
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-} from './authTypes';
-
-// 토큰 저장을 위한 임시 함수들 (axios.ts에서 가져와야 함)
-// const _getAccessToken = (): string | null => {
-//   if (typeof window === 'undefined') {
-//     return null;
-//   }
-//   return sessionStorage.getItem('accessToken');
-// };
-
-const setAccessToken = (token: string | null): void => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-  if (!token) {
-    sessionStorage.removeItem('accessToken');
-  } else {
-    sessionStorage.setItem('accessToken', token);
-  }
-};
-
-// const _getRefreshToken = (): string | null => {
-//   if (typeof window === 'undefined') {
-//     return null;
-//   }
-//   return sessionStorage.getItem('refreshToken');
-// };
-
-const setRefreshToken = (token: string | null): void => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-  if (!token) {
-    sessionStorage.removeItem('refreshToken');
-  } else {
-    sessionStorage.setItem('refreshToken', token);
-  }
-};
+import { axiosInstance, setAccessToken, setRefreshToken } from '../apiInstance';
+import type { ApiResponse } from '../apiTypes';
+import type * as AuthTypes from './authTypes';
 
 // 로그인 API
-export const login = async (loginData: LoginRequest): Promise<LoginResponse> => {
-  const response = await axiosInstance.post<LoginResponse>('/auth/login', loginData);
+export const login = async (loginData: AuthTypes.LoginRequest): Promise<ApiResponse<AuthTypes.LoginData>> => {
+  const response = await axiosInstance.post<ApiResponse<AuthTypes.LoginData>>('/auth/login', loginData);
 
   const { accessToken, refreshToken } = response.data.data;
+  setAccessToken(accessToken);
+  setRefreshToken(refreshToken);
+  return response.data;
+};
 
-  // 로그인 성공 시 토큰들 저장
+// 회원가입 API
+export const register = async (
+  registerData: AuthTypes.RegisterRequest
+): Promise<ApiResponse<AuthTypes.RegisterData>> => {
+  const response = await axiosInstance.post<ApiResponse<AuthTypes.RegisterData>>('/auth/register', registerData);
+  return response.data;
+};
+
+// OAuth2 회원가입 API
+export const registerOAuth = async (
+  registerData: AuthTypes.RegisterOAuthRequest
+): Promise<ApiResponse<AuthTypes.RegisterOAuthData>> => {
+  const response = await axiosInstance.post<ApiResponse<AuthTypes.RegisterOAuthData>>(
+    '/auth/register-oauth',
+    registerData
+  );
+  const { accessToken, refreshToken } = response.data.data;
   setAccessToken(accessToken);
   setRefreshToken(refreshToken);
 
   return response.data;
 };
 
-// 회원가입 API
-export const register = async (registerData: RegisterRequest): Promise<RegisterResponse> => {
-  const response = await axiosInstance.post<RegisterResponse>('/auth/register', registerData);
-  return response.data;
-};
-
 // OAuth2 로그인 리다이렉트 URL 조회
-export const getKakaoRedirectUrl = async (): Promise<KakaoRedirectResponse> => {
-  const response = await axiosInstance.get<KakaoRedirectResponse>('/auth/kakao');
+export const getKakaoRedirectUrl = async (): Promise<ApiResponse<AuthTypes.KakaoRedirectData>> => {
+  const response = await axiosInstance.get<ApiResponse<AuthTypes.KakaoRedirectData>>('/auth/kakao');
   return response.data;
 };
 
 // OAuth2 로그인 콜백 처리
 export const handleKakaoRedirect = async (
-  callbackData: KakaoRedirectRequest
-): Promise<KakaoRedirectCallbackResponse> => {
-  const response = await axiosInstance.get<KakaoRedirectCallbackResponse>('/auth/kakao/redirect', {
+  callbackData: AuthTypes.KakaoRedirectRequest
+): Promise<ApiResponse<AuthTypes.KakaoCallbackData>> => {
+  const response = await axiosInstance.get<ApiResponse<AuthTypes.KakaoCallbackData>>('/auth/kakao/redirect', {
     params: callbackData,
   });
+  return response.data;
+};
+
+// 토큰 재발급 API
+export const reissueToken = async (
+  reissueData: AuthTypes.ReissueRequest
+): Promise<ApiResponse<AuthTypes.ReissueData>> => {
+  const response = await axiosInstance.post<ApiResponse<AuthTypes.ReissueData>>('/auth/reissue', reissueData);
+
+  const { accessToken, refreshToken } = response.data.data;
+
+  setAccessToken(accessToken);
+  setRefreshToken(refreshToken);
+
   return response.data;
 };

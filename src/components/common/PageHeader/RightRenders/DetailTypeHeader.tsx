@@ -9,7 +9,7 @@ interface DetailTypeHeaderProps {
 }
 
 export const DetailTypeHeader = ({ isOwner = false }: DetailTypeHeaderProps) => {
-  const { isLoggedIn } = useAuthStore();
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const {
     handleChatClick,
     handleEdit,

@@ -17,7 +17,7 @@ const CommentItem = ({
 }: CommentItemProps) => {
   const styles = commentItemStyles();
   const profileStyle = profileStyles();
-  const { isLoggedIn } = useAuthStore();
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const dropdownItems = [
     {

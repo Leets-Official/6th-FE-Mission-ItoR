@@ -1,29 +1,89 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleKakaoRedirect } from '@/api/auth/authApi';
+import { useQueryClient } from '@tanstack/react-query';
+import { useKakaoCallbackMutation } from '@/api/auth/authQuery';
+import { setAccessToken, setRefreshToken } from '@/api/apiInstance';
+import { KAKAO_RESPONSE_CODE, KAKAO_REDIRECT_PATH } from '@/constants';
+import type { ApiResponse } from '@/api/apiTypes';
+import type { KakaoCallbackData } from '@/api/auth/authTypes';
+
+// code 추출
+const getAuthCode = () => new URLSearchParams(window.location.search).get('code');
+
+const saveNewUserSession = (kakaoId?: number) => {
+  sessionStorage.setItem('isKakaoSignup', 'true');
+  if (kakaoId) {
+    sessionStorage.setItem('kakaoId', kakaoId.toString());
+  }
+};
 
 export const useKakaoCallback = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const hasCalledRef = useRef(false);
+
+  // 기존 회원
+  const handleExistingUser = useCallback(
+    async (data: KakaoCallbackData) => {
+      setAccessToken(data.accessToken || null);
+      setRefreshToken(data.refreshToken || null);
+      await queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      navigate(KAKAO_REDIRECT_PATH.HOME, { replace: true });
+    },
+    [queryClient, navigate]
+  );
+
+  // 신규 회원
+  const handleNewUser = useCallback(
+    (data: KakaoCallbackData) => {
+      saveNewUserSession(data.kakaoId);
+      navigate(KAKAO_REDIRECT_PATH.SIGNUP, { replace: true });
+    },
+    [navigate]
+  );
+
+  // 응답 처리
+  const handleResponse = useCallback(
+    async (response: ApiResponse<KakaoCallbackData>) => {
+      switch (response.code) {
+        case KAKAO_RESPONSE_CODE.SUCCESS:
+          await handleExistingUser(response.data);
+          break;
+        case KAKAO_RESPONSE_CODE.SIGNUP_REQUIRED:
+          handleNewUser(response.data);
+          break;
+        default:
+          navigate(KAKAO_REDIRECT_PATH.HOME, { replace: true });
+      }
+    },
+    [handleExistingUser, handleNewUser, navigate]
+  );
+
+  const { mutate, isPending, isError, error } = useKakaoCallbackMutation({
+    onSuccess: handleResponse,
+    onError: () => {
+      navigate(KAKAO_REDIRECT_PATH.HOME, { replace: true });
+    },
+  });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-
-    if (!code) {
+    if (hasCalledRef.current) {
       return;
     }
 
-    window.history.replaceState({}, '', '/mypage/signup');
+    const code = getAuthCode();
+    if (!code) {
+      navigate(KAKAO_REDIRECT_PATH.HOME);
+      return;
+    }
 
-    handleKakaoRedirect({ code })
-      .then(() => {
-        sessionStorage.setItem('isKakaoSignup', 'true');
+    hasCalledRef.current = true;
+    mutate({ code });
+  }, [mutate, navigate]);
 
-        navigate('/mypage/signup');
-      })
-      .catch(error => {
-        console.error('카카오 로그인 실패:', error);
-        navigate('/mypage');
-      });
-  }, [navigate]);
+  return {
+    isLoading: isPending,
+    isError,
+    error,
+  };
 };

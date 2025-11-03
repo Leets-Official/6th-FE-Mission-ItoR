@@ -1,61 +1,24 @@
 import { create } from 'zustand';
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  birthDate: string;
-  nickName: string;
-  bio: string;
-  profileImage: string;
-}
+import { setAccessToken, setRefreshToken } from '@/api/apiInstance';
 
 interface AuthState {
+  // UI 상태
   isLoggedIn: boolean;
-  isLoading: boolean;
-  hasChecked: boolean;
-  user: User | null;
-  setUser: (user: User | null) => void;
+  setIsLoggedIn: (value: boolean) => void;
   logout: () => void;
-  checkLoginStatus: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>(set => ({
   isLoggedIn: false,
-  isLoading: true,
-  hasChecked: false,
-  user: null,
 
-  setUser: user => set({ user, isLoggedIn: Boolean(user) }),
+  setIsLoggedIn: value => set({ isLoggedIn: value }),
 
-  logout: () => set({ user: null, isLoggedIn: false }),
+  logout: () => {
+    setAccessToken(null);
+    setRefreshToken(null);
+    sessionStorage.removeItem('isKakaoSignup');
+    sessionStorage.removeItem('kakaoId');
 
-  checkLoginStatus: async () => {
-    if (get().hasChecked) {
-      return;
-    }
-
-    set({ isLoading: true });
-
-    try {
-      const token = localStorage.getItem('accessToken');
-      const user = get().user;
-
-      if (token && user) {
-        set({ isLoggedIn: true, hasChecked: true, isLoading: false });
-      } else {
-        set({
-          isLoggedIn: false,
-          isLoading: false,
-          hasChecked: true,
-        });
-      }
-    } catch {
-      set({
-        isLoggedIn: false,
-        isLoading: false,
-        hasChecked: true,
-      });
-    }
+    set({ isLoggedIn: false }); // 로그아웃 시 컴포넌트 내에서 query캐시 삭제
   },
 }));

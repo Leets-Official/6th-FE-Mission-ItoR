@@ -1,62 +1,11 @@
-// 공통 API 응답 구조
-export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  data: T;
-}
+// 공통
 
-// 로그인 요청/응답
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginData {
+export interface TokenPair {
   accessToken: string;
   refreshToken: string;
-  nickname: string;
-  profilePicture: string;
-  introduction: string;
-  httpStatus: string;
-  responseMessage: string;
 }
 
-export type LoginResponse = ApiResponse<LoginData>;
-
-// 회원가입 요청/응답
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  nickname: string;
-  // 추가 필드들...
-}
-
-export type RegisterResponse = ApiResponse<LoginData>;
-
-// OAuth2 회원가입 요청/응답
-export interface RegisterOAuthRequest {
-  provider: 'kakao' | 'google' | 'naver';
-  authCode: string;
-  nickname?: string;
-}
-
-export type RegisterOAuthResponse = ApiResponse<LoginData>;
-
-// 카카오 리다이렉트 URL 응답
-export interface KakaoRedirectData {
-  redirectUrl: string;
-}
-
-export type KakaoRedirectResponse = ApiResponse<KakaoRedirectData>;
-
-// 카카오 콜백 요청/응답
-export interface KakaoRedirectRequest {
-  code: string;
-  state?: string;
-}
-
-export interface KakaoCallbackData {
-  id: number;
+export interface BaseUserInfo {
   email: string;
   nickname: string;
   profilePicture: string;
@@ -65,4 +14,58 @@ export interface KakaoCallbackData {
   introduction: string;
 }
 
-export type KakaoRedirectCallbackResponse = ApiResponse<KakaoCallbackData>;
+// 재사용 타입
+type BasicProfile = Pick<BaseUserInfo, 'nickname' | 'profilePicture' | 'introduction'>;
+
+// 로그인
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginData extends TokenPair, BasicProfile {
+  httpStatus: string;
+  responseMessage: string;
+}
+
+// 회원가입
+
+export type RegisterRequest = BaseUserInfo & {
+  password: string;
+};
+
+export type RegisterData = Pick<BaseUserInfo, 'email' | 'nickname' | 'profilePicture' | 'introduction'>;
+
+// OAuth 회원가입
+
+export type RegisterOAuthRequest = BaseUserInfo & {
+  kakaoId: number;
+};
+
+export type RegisterOAuthData = TokenPair &
+  BaseUserInfo & {
+    kakaoId: number;
+  };
+
+export interface KakaoRedirectData {
+  redirectUrl: string;
+}
+
+export interface KakaoRedirectRequest {
+  code: string;
+  state?: string;
+}
+
+export type KakaoCallbackData = Partial<TokenPair> &
+  Partial<BaseUserInfo> & {
+    httpStatus: string;
+    responseMessage: string;
+    kakaoId?: number;
+  };
+
+export interface ReissueRequest {
+  refreshToken: string;
+}
+
+export type ReissueData = TokenPair;

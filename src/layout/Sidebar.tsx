@@ -1,6 +1,6 @@
 import { Profile1Icon } from '@/assets/icons';
 import { Button, Spacer, Modal } from '@/components';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuth } from '@/api/user/userQuery';
 import { useModalStore } from '@/stores/useModalStore';
 import { cn } from '@/utils/cn';
 import { SIDEBAR_TEXTS, MYPAGE_TEXTS } from '@/constants';
@@ -14,7 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ className = '', isLoggedIn = false }: SidebarProps) => {
-  const user = useAuthStore(state => state.user);
+  const { user } = useAuth();
   const { modalType, modalMessage, confirmButtonText, onModalConfirm, closeModal } = useModalStore();
   const { handleStartGitlog, handleMyGitlog, handleWriteGitlog, handleSettings, handleLogout } = useSidebar();
 
@@ -24,16 +24,20 @@ const Sidebar = ({ className = '', isLoggedIn = false }: SidebarProps) => {
         <div className={sidebarStyles.mainContent}>
           <div className={sidebarStyles.profileSection}>
             <div className={sidebarStyles.profileIconWrapper}>
-              {isLoggedIn && user?.profileImage ? (
-                <img src={user.profileImage} alt={`${user.nickName}의 프로필`} className={sidebarStyles.profileImage} />
+              {isLoggedIn && user?.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt={`${user.nickname}의 프로필`}
+                  className={sidebarStyles.profileImage}
+                />
               ) : (
                 <Profile1Icon />
               )}
             </div>
             {isLoggedIn ? (
               <div className={sidebarStyles.userInfoContainer}>
-                <h2 className={sidebarStyles.userName}>{user?.nickName || MYPAGE_TEXTS.PROFILE.DEFAULT_USER_NAME}</h2>
-                <p className={sidebarStyles.userBio}>{user?.bio || MYPAGE_TEXTS.PROFILE.DEFAULT_BIO}</p>
+                <h2 className={sidebarStyles.userName}>{user?.nickname || MYPAGE_TEXTS.PROFILE.DEFAULT_USER_NAME}</h2>
+                <p className={sidebarStyles.userBio}>{user?.introduction || MYPAGE_TEXTS.PROFILE.DEFAULT_BIO}</p>
               </div>
             ) : (
               <div className={sidebarStyles.quoteContainer}>
