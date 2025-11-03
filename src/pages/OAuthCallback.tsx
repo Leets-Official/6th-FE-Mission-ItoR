@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleKakaoCallback } from "@/api/auth";
 import { useUserStore } from "@/store/useUserStore";
-import { AxiosError } from "axios";
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
+  const hasRun = useRef(false);
 
   useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
     const runAuthFlow = async () => {
       const code = new URLSearchParams(window.location.search).get("code");
 
@@ -19,20 +22,24 @@ export default function OAuthCallback() {
       }
 
       try {
-        const user = await handleKakaoCallback(code);
-        setUser(user);
-        navigate("/", { replace: true });
-      } catch (error) {
-        if (error instanceof AxiosError && error.response?.status === 401) {
-          const kakaoUser = error.response.data?.data;
+        const response = await handleKakaoCallback(code);
+
+        // 응답 본문의 code가 401인지 확인
+        if (response?.code === 401) {
+          const kakaoUser = response.data;
           navigate("/signup", {
             replace: true,
             state: { kakaoUser },
           });
-        } else {
-          alert("로그인 중 오류가 발생했습니다.");
-          navigate("/", { replace: true });
+          return;
         }
+
+        setUser(response);
+        navigate("/", { replace: true });
+      } catch (error) {
+        console.error("카카오 로그인 오류:", error);
+        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+        navigate("/", { replace: true });
       }
     };
 

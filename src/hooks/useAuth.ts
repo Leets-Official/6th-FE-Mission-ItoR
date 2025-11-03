@@ -29,8 +29,18 @@ export function useAuth() {
   const handleLogin = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const user = await login(email, password);
-      setUser(user);
+      const response = await login(email, password);
+
+      // ✅ API 응답에서 유저 정보 추출 후 스토어에 저장
+      if (response) {
+        setUser({
+          id: response.id,
+          name: response.name,
+          email: response.email,
+          profileUrl: response.profileUrl,
+        });
+      }
+
       return true;
     } catch (e) {
       console.error("로그인 실패:", e);

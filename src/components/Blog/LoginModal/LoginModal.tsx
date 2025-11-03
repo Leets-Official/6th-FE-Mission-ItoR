@@ -38,11 +38,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
   if (!open) return null;
 
   const handleLoginClick = async () => {
-    // 기존 에러 초기화
     setEmailError("");
     setPasswordError("");
 
-    // ✅ 각 입력 필드별 검증 분리
     if (!email.trim()) {
       setEmailError("이메일을 입력해주세요.");
       return;
@@ -61,9 +59,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
         setPasswordError("이메일 또는 비밀번호가 올바르지 않습니다.");
       }
     } catch (error: unknown) {
-      const err = error as { response?: { status?: number }; message?: string };
+      const err = error as { response?: { code?: number }; message?: string };
 
-      if (err.response?.status === 401 || err.message?.includes("가입되지 않은")) {
+      if (err.response?.code === 401 || err.message?.includes("가입되지 않은")) {
         onClose();
         onSignupPrompt?.();
       } else {
@@ -73,8 +71,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
   };
 
   const handleKakaoLogin = () => {
+    // 서버가 리다이렉트를 수행하므로 직접 이동
     const kakaoAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/kakao`;
-    window.location.replace(kakaoAuthUrl);
+    window.location.href = kakaoAuthUrl;
   };
 
   const handleSignupClick = () => {
@@ -109,7 +108,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* 개별 에러 메시지 표시 */}
             {emailError && <p className={errorText}>*{emailError}</p>}
             {passwordError && <p className={errorText}>*{passwordError}</p>}
           </div>

@@ -14,6 +14,18 @@ interface LoginResponse {
   user: User;
 }
 
+interface KakaoSignupResponse {
+  code: 401;
+  message: string;
+  data: {
+    nickname: string;
+    picture: string;
+    kakaoId: number;
+    httpStatus: string;
+    responseMessage: string;
+  };
+}
+
 interface ApiErrorResponse {
   message?: string;
   code?: number;
@@ -54,7 +66,9 @@ export const register = async (userData: {
 
 export const getKakaoLoginUrl = async (): Promise<string> => {
   try {
-    const { data } = await api.get<{ data: string }>("/auth/kakao");
+    const { data } = await api.get<{ data: string }>("/auth/kakao", {
+      withCredentials: false,
+    });
     return data.data;
   } catch (err) {
     const error = err as AxiosError<ApiErrorResponse>;
@@ -65,17 +79,18 @@ export const getKakaoLoginUrl = async (): Promise<string> => {
   }
 };
 
-export const handleKakaoCallback = async (code: string): Promise<User> => {
-  try {
-    const { data } = await api.get<{ data: LoginResponse }>(`/auth/kakao/redirect?code=${code}`);
-    localStorage.setItem("accessToken", data.data.accessToken);
-    localStorage.setItem("refreshToken", data.data.refreshToken);
-    return data.data.user;
-  } catch (err) {
-    const error = err as AxiosError<ApiErrorResponse>;
-    console.error("카카오 콜백 처리 실패:", error.response?.data || error.message);
-    throw error;
+export const handleKakaoCallback = async (code: string): Promise<User | KakaoSignupResponse> => {
+  const { data } = await api.get(`/auth/kakao/redirect?code=${code}`);
+
+  // 회원가입이 필요한 경우 (code: 401)
+  if (data.code === 401) {
+    return data as KakaoSignupResponse;
   }
+
+  // 로그인 성공
+  localStorage.setItem("accessToken", data.data.accessToken);
+  localStorage.setItem("refreshToken", data.data.refreshToken);
+  return data.data.user;
 };
 
 export const registerKakao = async (userData: {
