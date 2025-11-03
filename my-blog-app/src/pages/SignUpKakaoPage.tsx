@@ -14,8 +14,10 @@ export default function SignUpKakaoPage() {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthStatus()
 
-  // 이메일 상태와 핸들러 추가
+  // 이메일 및 프로필 이미지 상태 관리
   const [email, setEmail] = useState('')
+  const [profile, setProfile] = useState<string | null>(null)
+
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
   }
@@ -27,9 +29,20 @@ export default function SignUpKakaoPage() {
     }
   }, [isLoggedIn, navigate])
 
+  useEffect(() => {
+    // 카카오 리다이렉트 후 URL에서 프로필 이미지 등 임시 데이터 가져오는 부분
+    const storedProfile = localStorage.getItem('kakao_profile_image')
+    if (storedProfile) {
+      setProfile(storedProfile)
+    }
+  }, [])
+
   return (
     <div className='min-h-screen flex flex-col items-center bg-white'>
+      {/* 헤더 */}
       <PageHeader title='GITLOG' />
+
+      {/* 상단 텍스트 영역 */}
       <div className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-[#F5F5F5]'>
         <Blank size='md' />
         <TextCard
@@ -42,7 +55,10 @@ export default function SignUpKakaoPage() {
       </div>
 
       <Blank size='md' />
-      <SignUpProfileSection />
+
+      {/* 프로필 이미지 섹션 */}
+      <SignUpProfileSection profileImage={profile || '/guest.jpg'} />
+
       <Blank size='md' />
 
       {/* 소셜 로그인 영역 */}
@@ -57,7 +73,8 @@ export default function SignUpKakaoPage() {
       </div>
 
       <Blank size='md' />
-      {/* 이메일 필드 - 이제 오류 없음 */}
+
+      {/* 이메일 입력 필드 */}
       <TextFiledSet
         label='이메일'
         placeholder='이메일'
@@ -68,9 +85,12 @@ export default function SignUpKakaoPage() {
         helperType='error'
       />
 
+      {/* 나머지 회원가입 폼 필드 */}
       <SignUpFormFields variant='kakao' />
+
       <Blank size='md' />
 
+      {/* 회원가입 완료 버튼 */}
       <div className='flex justify-center w-full max-w-[688px] px-[16px]'>
         <Button
           intent='primary'
