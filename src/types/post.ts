@@ -13,13 +13,17 @@ export interface Comment {
   isOwner: boolean;
 }
 
-export interface Post {
+export interface ApiPost {
   postId: string;
   title: string;
-  contents: PostContent[];
-  isOwner: boolean;
-  comments: Comment[];
   nickName: string;
   profileUrl: string;
   createdAt: string;
+  commentCount: number;
+}
+
+export interface Post extends ApiPost {
+  contents?: PostContent[]; // optional
+  comments?: Comment[]; // optional
+  isOwner?: boolean;
 }

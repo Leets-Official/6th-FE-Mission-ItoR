@@ -6,18 +6,23 @@ import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/Blog/PostItem/PostItem";
 import SmallButton from "@/components/SmallButton/SmallButton";
 import * as S from "./MyPage.styled";
-import { Post } from "@/types/post";
+import { ApiPost } from "@/types/post";
 import { SettingsIcon } from "@/assets/icons";
 import Avatar from "@/components/Avatar/Avatar";
 import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
 import { useLogout } from "@/hooks/useLogout";
 import { useUserStore } from "@/store/useUserStore";
+import { fetchPosts } from "@/api/postApi";
 
 export default function MyPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [posts, setPosts] = useState<ApiPost[]>([]);
+  const [pageMax, setPageMax] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useUserStore();
@@ -25,6 +30,7 @@ export default function MyPage() {
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
+  // ✅ 토스트 메시지 (회원가입 등 이후)
   useEffect(() => {
     if (location.state?.toastMessage) {
       setToastMessage(location.state.toastMessage);
@@ -34,41 +40,27 @@ export default function MyPage() {
 
   const handleToastClose = () => setToastMessage("");
 
-  const dummyPosts: Post[] = Array.from({ length: 14 }, (_, idx) => ({
-    postId: crypto.randomUUID(),
-    title: `게시글 제목 ${idx + 1}`,
-    contents: [
-      {
-        contentOrder: 1,
-        content: `이것은 ${idx + 1}번째 더미 게시물 내용입니다.`,
-        contentType: "TEXT" as const,
-      },
-      ...(idx % 2 === 0
-        ? [
-            {
-              contentOrder: 2,
-              content: "https://picsum.photos/400/200?random=" + idx,
-              contentType: "IMAGE" as const,
-            },
-          ]
-        : []),
-    ],
-    isOwner: true,
-    comments: [
-      {
-        commentId: idx + 1,
-        content: `댓글 ${idx + 1}`,
-        nickName: user?.nickname ?? "닉네임",
-        isOwner: false,
-      },
-    ],
-    nickName: user?.nickname ?? "닉네임",
-    profileUrl: user?.profileUrl ?? "https://i.pravatar.cc/80?img=" + (idx + 3),
-    createdAt: new Date().toISOString(),
-  }));
+  // ✅ 내 게시글 불러오기
+  useEffect(() => {
+    const loadMyPosts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchPosts(currentPage, 5); // 페이지당 5개
+        if (res.code === 200 && res.data?.posts) {
+          setPosts(res.data.posts);
+          setPageMax(res.data.pageMax);
+        } else {
+          console.error("내 게시글 불러오기 실패:", res.message);
+        }
+      } catch (err) {
+        console.error("내 게시글 조회 에러:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const totalPages = Math.ceil(dummyPosts.length / 5);
-  const pagedData = dummyPosts.slice((currentPage - 1) * 5, currentPage * 5);
+    loadMyPosts();
+  }, [currentPage]);
 
   return (
     <div className="relative">
@@ -82,6 +74,7 @@ export default function MyPage() {
       </div>
       <div className="h-[60px]" />
 
+      {/* 사이드바 */}
       {isSidebarOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
@@ -91,6 +84,7 @@ export default function MyPage() {
         </>
       )}
 
+      {/* 프로필 영역 */}
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
@@ -109,33 +103,43 @@ export default function MyPage() {
         </div>
       </section>
 
+      {/* 메인 영역 */}
       <main className={S.mainWrapper}>
-        <ul className={S.listWrapper}>
-          {pagedData.map((post, index) => (
-            <PostItem
-              key={post.postId}
-              post={post}
-              isLast={index === pagedData.length - 1}
-              onClick={() => navigate(`/blog/${post.postId}`)}
-            />
-          ))}
-        </ul>
+        {loading ? (
+          <div className="py-8 text-center text-gray-500">로딩 중...</div>
+        ) : posts.length === 0 ? (
+          <div className="py-8 text-center text-gray-500">작성한 게시글이 없습니다.</div>
+        ) : (
+          <>
+            <ul className={S.listWrapper}>
+              {posts.map((post) => (
+                <PostItem
+                  key={post.postId}
+                  post={post}
+                  onClick={() => navigate(`/blog/${post.postId}`)}
+                />
+              ))}
+            </ul>
 
-        <div className={S.paginationWrapper}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+            <div className={S.paginationWrapper}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={pageMax}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          </>
+        )}
       </main>
 
+      {/* 토스트 메시지 */}
       {toastMessage && (
         <div className="fixed top-20 left-1/2 z-50 -translate-x-1/2">
           <Toast message={toastMessage} type="success" onClose={handleToastClose} />
         </div>
       )}
 
+      {/* 로그아웃 모달 */}
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."

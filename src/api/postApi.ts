@@ -27,7 +27,14 @@ interface PostData {
 
 export type PostResponse = ApiResponse<PostData>;
 
-export const fetchPosts = async (page: number, size: number = 10) => {
-  const res = await api.get<PostResponse>("/posts/all", { params: { page, size } });
-  return res.data;
+export const fetchPosts = async (page: number, size: number) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const endpoint = accessToken ? "/posts/all/token" : "/posts/all";
+
+  const response = await api.get(endpoint, {
+    params: { page, size },
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+  });
+
+  return response.data;
 };
