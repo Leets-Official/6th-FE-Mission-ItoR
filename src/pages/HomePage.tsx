@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 
@@ -11,18 +11,7 @@ import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
 
-const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
-  id: i + 1,
-  title: "16 Title one line",
-  excerpt:
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-  date: "Feb 17, 2025.",
-  author: { name: "닉네임", avatarInitial: "N" },
-  thumbnailUrl:
-    i % 2 === 0
-      ? "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop"
-      : undefined,
-}));
+import { usePosts } from "@src/hooks/usePosts";
 
 const styles = {
   container: {
@@ -31,6 +20,16 @@ const styles = {
     main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8",
   },
 } as const;
+
+type ApiPostSummary = {
+  id: number;
+  title: string;
+  createdAt?: string;
+  author?: { nickname?: string };
+  thumbnailUrl?: string;
+  commentCount?: number;
+  excerpt?: string;
+};
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -75,6 +74,35 @@ export default function HomePage() {
   const goSettings = () => navigate("/account/profile");
   const doLogout = () => navigate("/", { replace: true });
 
+  const { data, isLoading, isError } = usePosts(page, 10);
+
+  const apiPosts: ApiPostSummary[] = Array.isArray(data?.data)
+    ? (data?.data as ApiPostSummary[])
+    : [];
+
+  const posts: Post[] = apiPosts.map((p) => {
+    const nick = p.author?.nickname ?? "익명";
+    const initial = nick.charAt(0).toUpperCase();
+    const dateText = p.createdAt
+      ? new Date(p.createdAt).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }) + "."
+      : "";
+    return {
+      id: p.id,
+      title: p.title,
+      excerpt: p.excerpt ?? "",
+      date: dateText,
+      author: { name: nick, avatarInitial: initial },
+      thumbnailUrl: p.thumbnailUrl,
+      commentCount: p.commentCount ?? 0,
+    };
+  });
+
+  const totalPages = typeof data?.totalPages === "number" ? data.totalPages : 1;
+
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
       <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)] relative z-10">
@@ -113,7 +141,45 @@ export default function HomePage() {
       >
         <div className={clsx(styles.container.main, "py-8")}>
           <section className="flex flex-col gap-6">
-            <PostList posts={POSTS} page={page} onPageChange={setPage} />
+            {isLoading && (
+              <div className="text-center text-[14px] text-[var(--Gray56)] py-8">
+                로딩 중입니다...
+              </div>
+            )}
+            {isError && (
+              <div className="text-center text-[14px] text-[var(--Negative)] py-8">
+                목록을 불러오지 못했어요.
+              </div>
+            )}
+            {!isLoading && !isError && (
+              <>
+                {/* PostList가 내부에서 slice를 할 수 있으니 page=1로 고정 전달 */}
+                <PostList posts={posts} page={1} onPageChange={() => {}} />
+
+                {/* 서버 페이지네이션 컨트롤 */}
+                <div className="flex items-center justify-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page <= 1}
+                  >
+                    이전
+                  </button>
+                  <span className="text-[12px] text-[var(--Gray20)]">
+                    {page} / {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page >= totalPages}
+                  >
+                    다음
+                  </button>
+                </div>
+              </>
+            )}
           </section>
         </div>
       </main>
