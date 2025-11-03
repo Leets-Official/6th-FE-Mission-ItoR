@@ -14,3 +14,9 @@ export const registerAPI = (data: {
   birthDate?: string
   introduction?: string
 }) => axiosInstance.post('/auth/register', data)
+
+// 추가: 카카오 로그인 콜백 API
+export const handleKakaoCallback = async (code: string) => {
+  const response = await axiosInstance.get(`/auth/kakao/redirect?code=${code}`)
+  return response.data.data // 백엔드 응답 구조에 따라 .data.data 또는 .data.user
+}
