@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
 import { SidebarProps } from "./Sidebar.types";
+import { useUserStore } from "@/store/useUserStore";
 import {
   baseSidebar,
   profileSection,
@@ -13,15 +14,9 @@ import {
   footerButtons,
 } from "./Sidebar.styled";
 
-const Sidebar: React.FC<SidebarProps> = ({
-  variant,
-  nickname: userNickname,
-  intro: userIntro,
-  profileSrc,
-  onLogoutClick,
-  onLoginClick,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ variant, onLogoutClick, onLoginClick }) => {
   const navigate = useNavigate();
+  const { user } = useUserStore();
 
   const handleMyPageClick = () => navigate("/mypage");
   const handleWriteClick = () => navigate("/write");
@@ -31,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside className={baseSidebar}>
       {variant === "guest" && (
         <div className={profileSection}>
-          <Avatar size="lg" src={profileSrc} />
+          <Avatar size="lg" src={user?.profileUrl} />
           <p className={intro}>You can make anything by writing</p>
           <div className={singleButtonWrapper}>
             <Button
@@ -48,9 +43,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         <>
           <div className={container}>
             <div onClick={handleMyPageClick} className={profileSection}>
-              <Avatar size="lg" src={profileSrc} />
-              <p className={nickname}>{userNickname ?? "닉네임"}</p>
-              <p className={intro}>{userIntro ?? "한 줄 소개"}</p>
+              <Avatar size="lg" src={user?.profileUrl} />
+              <p className={nickname}>{user?.nickname ?? "닉네임"}</p>
+              <p className={intro}>{user?.introduction ?? "You can make anything by writing"}</p>
             </div>
 
             <div className={doubleButtonWrapper}>

@@ -12,6 +12,7 @@ import Avatar from "@/components/Avatar/Avatar";
 import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
 import { useLogout } from "@/hooks/useLogout";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function MyPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,6 +20,7 @@ export default function MyPage() {
   const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useUserStore();
 
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
@@ -56,12 +58,12 @@ export default function MyPage() {
       {
         commentId: idx + 1,
         content: `댓글 ${idx + 1}`,
-        nickName: "닉채민",
+        nickName: user?.nickname ?? "닉네임",
         isOwner: false,
       },
     ],
-    nickName: "닉채민",
-    profileUrl: "https://i.pravatar.cc/80?img=" + (idx + 3),
+    nickName: user?.nickname ?? "닉네임",
+    profileUrl: user?.profileUrl ?? "https://i.pravatar.cc/80?img=" + (idx + 3),
     createdAt: new Date().toISOString(),
   }));
 
@@ -92,9 +94,9 @@ export default function MyPage() {
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
-            <Avatar src="https://i.pravatar.cc/120?img=5" alt="프로필 이미지" size="lg" />
-            <h2 className={S.nickname}>닉채민</h2>
-            <p className={S.intro}>You can make anything by writing.</p>
+            <Avatar src={user?.profileUrl} alt="프로필 이미지" size="lg" />
+            <h2 className={S.nickname}>{user?.nickname ?? "닉네임"}</h2>
+            <p className={S.intro}>{user?.introduction ?? "You can make anything by writing."}</p>
 
             <SmallButton
               label="내 프로필 설정"
