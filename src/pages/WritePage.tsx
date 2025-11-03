@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import imageIcon from "../assets/icons/image.svg";
+import { useCreatePost, useUpdatePost } from "@src/hooks/usePosts";
+import { buildBlocks } from "@src/utils/blocks";
 
 export default function WritePage() {
+  const { id } = useParams<{ id: string }>();
+  const editingId = id ? Number(id) : undefined;
+
+  const nav = useNavigate();
+
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -36,14 +44,34 @@ export default function WritePage() {
     if (fileRef.current) fileRef.current.value = "";
   };
 
+  const createMut = useCreatePost();
+  const updateMut = useUpdatePost(editingId ?? 0);
+
   const publish = () => {
     if (!canPublish) return;
-    alert("UI-only: 게시하기는 아직 서버 연동 전입니다.");
+    const payload = {
+      title: title.trim(),
+      blocks: buildBlocks(body, imageUrl ?? undefined),
+    };
+    if (editingId) {
+      updateMut.mutate(payload, {
+        onSuccess: () => nav(`/post/${editingId}`),
+      });
+    } else {
+      createMut.mutate(payload, {
+        onSuccess: (res) => {
+          const newId =
+            res && typeof res === "object" && "id" in res
+              ? (res as { id: number }).id
+              : undefined;
+          nav(newId ? `/post/${newId}` : "/");
+        },
+      });
+    }
   };
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
-      {/* 상단 헤더 */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="logo-text text-[24px] leading-[1.2] text-[var(--Black)]">
@@ -60,9 +88,9 @@ export default function WritePage() {
             <button
               type="button"
               onClick={publish}
-              disabled={!canPublish}
+              disabled={!canPublish || createMut.isPending || updateMut.isPending}
               className={`rounded-[25px] border px-4 py-[6px] text-[14px] font-light leading-[22.4px] ${
-                canPublish
+                canPublish && !createMut.isPending && !updateMut.isPending
                   ? "border-[var(--Point,#00A1FF)] text-[var(--Point,#00A1FF)]"
                   : "border-[var(--Gray90)] text-[var(--Gray56)] opacity-40 cursor-not-allowed"
               }`}
@@ -73,7 +101,6 @@ export default function WritePage() {
         </div>
       </header>
 
-      {/* 사진 추가 바 */}
       <div className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto flex w-full max-w-[1366px] items-center px-4 py-2 sm:px-6 md:px-8">
           <button
@@ -98,10 +125,8 @@ export default function WritePage() {
         </div>
       </div>
 
-      {/* 본문 */}
       <main className="flex-1">
         <div className="mx-auto w-full max-w-[688px] px-4 py-6">
-          {/* 제목 */}
           <section className="mb-4">
             <input
               value={title}
@@ -113,14 +138,12 @@ export default function WritePage() {
             />
           </section>
 
-          {/* 구분선 */}
           <div
             className="mb-4 h-[1px] w-full bg-[var(--Gray90)]"
             role="separator"
             aria-hidden="true"
           />
 
-          {/* 본문 textarea */}
           <section className="mb-6">
             <textarea
               ref={bodyRef}
@@ -131,7 +154,6 @@ export default function WritePage() {
             />
           </section>
 
-          {/* 업로드된 이미지 미리보기 */}
           {imageUrl && (
             <section className="mb-6">
               <img
