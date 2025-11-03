@@ -17,17 +17,17 @@ import {
   errorText,
 } from "./LoginModal.styled";
 import { useNavigate } from "react-router-dom";
-import * as E from "@/utils/validators";
-import { LOGIN_ERROR_MESSAGES } from "@/utils/errorMessages";
 import { useScrollLock } from "@/hooks/useScrollLock";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LoginModalProps {
   open: boolean;
   onClose: () => void;
-  onLogin?: (email: string, password: string) => Promise<boolean> | void;
+  onSignupPrompt?: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }) => {
+  const { handleLogin, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -35,36 +35,45 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
   const navigate = useNavigate();
 
   useScrollLock(open);
-
   if (!open) return null;
 
-  const handleLogin = async () => {
-    const emailValidation = E.validateLoginEmail(email);
-    if (emailValidation) {
-      setEmailError(emailValidation);
-      setPasswordError("");
-      return;
-    }
-
+  const handleLoginClick = async () => {
     setEmailError("");
     setPasswordError("");
 
-    try {
-      if (!onLogin) return;
-
-      const result = await onLogin(email, password);
-
-      if (result === false) {
-        if (email === "unknown@example.com") {
-          setEmailError(LOGIN_ERROR_MESSAGES.emailNotRegistered);
-        } else {
-          setPasswordError(LOGIN_ERROR_MESSAGES.wrongPassword);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      setPasswordError(LOGIN_ERROR_MESSAGES.wrongPassword);
+    if (!email.trim()) {
+      setEmailError("이메일을 입력해주세요.");
+      return;
     }
+    if (!password.trim()) {
+      setPasswordError("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const ok = await handleLogin(email, password);
+      if (ok) {
+        onClose();
+        navigate("/");
+      } else {
+        setPasswordError("이메일 또는 비밀번호가 올바르지 않습니다.");
+      }
+    } catch (error: unknown) {
+      const err = error as { response?: { code?: number }; message?: string };
+
+      if (err.response?.code === 401 || err.message?.includes("가입되지 않은")) {
+        onClose();
+        onSignupPrompt?.();
+      } else {
+        setPasswordError("로그인 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleKakaoLogin = () => {
+    // 서버가 리다이렉트를 수행하므로 직접 이동
+    const kakaoAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/kakao`;
+    window.location.href = kakaoAuthUrl;
   };
 
   const handleSignupClick = () => {
@@ -91,7 +100,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {emailError && <p className={errorText}>*{emailError}</p>}
 
             <TextField
               placeholder="비밀번호"
@@ -99,18 +107,20 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError && <p className={errorText}>{passwordError}</p>}
+
+            {emailError && <p className={errorText}>*{emailError}</p>}
+            {passwordError && <p className={errorText}>*{passwordError}</p>}
           </div>
 
-          <button className={loginButton} onClick={handleLogin}>
-            이메일로 로그인
+          <button className={loginButton} onClick={handleLoginClick} disabled={loading}>
+            {loading ? "로그인 중..." : "이메일로 로그인"}
           </button>
 
           <div className={snsDivider}>
             <span>SNS</span>
           </div>
 
-          <button className={kakaoButton}>
+          <button className={kakaoButton} onClick={handleKakaoLogin}>
             <KakaoIcon className="h-5 w-5" />
             카카오로 로그인
           </button>

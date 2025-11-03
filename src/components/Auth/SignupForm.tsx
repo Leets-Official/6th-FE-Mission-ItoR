@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import * as S from "./Signup.styled";
 import TextFieldSet from "@/components/Text/TextFieldSet";
 import Button from "@/components/Button/Button";
@@ -8,23 +8,115 @@ import { AddPhotoAlternateIcon, KakaoIcon } from "@/assets/icons";
 import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
-import { useSignupForm } from "@/hooks/useSignupForm";
+import { register, registerKakao } from "@/api/auth";
 
 interface SignupFormProps {
   type: "email" | "kakao";
+  kakaoUser?: {
+    email: string;
+    name: string;
+    profilePicture: string;
+    kakaoId: number;
+  };
 }
 
-const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
-  const {
-    form,
-    errors,
-    isModalOpen,
-    isLoginModalOpen,
-    handleChange,
-    handleSubmit,
-    setIsModalOpen,
-    setIsLoginModalOpen,
-  } = useSignupForm(type);
+const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
+  const [form, setForm] = useState({
+    email: kakaoUser?.email || "",
+    password: "",
+    passwordConfirm: "",
+    name: kakaoUser?.name || "",
+    birthDate: "",
+    nickname: "",
+    introduction: "",
+    profilePicture: kakaoUser?.profilePicture || "",
+    kakaoId: kakaoUser?.kakaoId?.toString() || "",
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (key: string, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSubmit = async () => {
+    const newErrors: Record<string, string> = {};
+
+    // ✅ 기본 정규식
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const birthRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    // ✅ 이메일 검사
+    if (!form.email.trim()) {
+      newErrors.email = "이메일을 입력해주세요.";
+    } else if (!emailRegex.test(form.email)) {
+      newErrors.email = "올바른 이메일 형식이 아닙니다.";
+    }
+
+    // ✅ 이름
+    if (!form.name.trim()) newErrors.name = "이름을 입력해주세요.";
+
+    // ✅ 생년월일 검사
+    if (!form.birthDate.trim()) {
+      newErrors.birthDate = "생년월일을 입력해주세요.";
+    } else if (!birthRegex.test(form.birthDate)) {
+      newErrors.birthDate = "YYYY-MM-DD 형식으로 입력해주세요.";
+    }
+
+    // ✅ 닉네임 검사
+    if (!form.nickname.trim()) {
+      newErrors.nickname = "닉네임을 입력해주세요.";
+    } else if (form.nickname.length > 20) {
+      newErrors.nickname = "닉네임은 20자 이내로 입력해주세요.";
+    }
+
+    // ✅ 이메일 회원가입일 경우
+    if (type === "email") {
+      if (!form.password) newErrors.password = "비밀번호를 입력해주세요.";
+      else if (form.password.length < 8)
+        newErrors.password = "비밀번호는 최소 8자 이상이어야 합니다.";
+
+      if (form.password !== form.passwordConfirm)
+        newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
+    }
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    // ✅ 공통 데이터 추출
+    const commonData = {
+      email: form.email,
+      nickname: form.nickname,
+      birthDate: form.birthDate,
+      name: form.name,
+      introduction: form.introduction,
+      profilePicture: form.profilePicture,
+    };
+
+    try {
+      setLoading(true);
+      if (type === "email") {
+        await register({
+          ...commonData,
+          password: form.password,
+        });
+      } else {
+        await registerKakao({
+          ...commonData,
+          kakaoId: Number(form.kakaoId),
+        });
+      }
+      setIsModalOpen(true);
+    } catch (err) {
+      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fields = [
     { key: "email", title: "이메일", placeholder: "이메일" },
@@ -40,9 +132,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
         ]
       : []),
     { key: "name", title: "이름", placeholder: "이름" },
-    { key: "birth", title: "생년월일", placeholder: "YYYY-MM-DD" },
+    { key: "birthDate", title: "생년월일", placeholder: "YYYY-MM-DD" },
     { key: "nickname", title: "닉네임", placeholder: "닉네임", helperText: "20글자 이내" },
-    { key: "intro", title: "한 줄 소개", placeholder: "한 줄 소개" },
+    { key: "introduction", title: "한 줄 소개", placeholder: "한 줄 소개" },
   ];
 
   return (
@@ -50,7 +142,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
       <div className={S.profileSection}>
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
-          <Avatar size="xl" src="" alt="Profile" />
+          <Avatar size="xl" src={form.profilePicture} alt="Profile" />
           <SmallButton
             label="프로필 사진 추가"
             variant="secondaryOutline"
@@ -85,7 +177,13 @@ const SignupForm: React.FC<SignupFormProps> = ({ type }) => {
         ))}
       </div>
 
-      <Button label="회원가입 완료" variant="primaryOutline" fullWidth onClick={handleSubmit} />
+      <Button
+        label={loading ? "회원가입 중..." : "회원가입 완료"}
+        variant="primaryOutline"
+        fullWidth
+        onClick={handleSubmit}
+        disabled={loading}
+      />
 
       <Modal
         open={isModalOpen}
