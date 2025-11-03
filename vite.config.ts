@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5173,
+    port: 3000,
     // proxy 제거: API는 env 기반 절대경로로 직접 호출
   },
 });
