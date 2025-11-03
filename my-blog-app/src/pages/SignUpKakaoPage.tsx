@@ -9,6 +9,7 @@ import { KakaoIcon } from '@/assets/icons/KakaoIcon'
 import SignUpProfileSection from '@/components/SignUp/SignUpProfileSection'
 import SignUpFormFields from '@/components/SignUp/SignUpFormFields'
 import TextFiledSet from '@/components/TextFiled/TextFiledSet'
+import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
 
 export default function SignUpKakaoPage() {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ export default function SignUpKakaoPage() {
   // 이메일 및 프로필 이미지 상태 관리
   const [email, setEmail] = useState('')
   const [profile, setProfile] = useState<string | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 추가
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
@@ -30,16 +32,36 @@ export default function SignUpKakaoPage() {
   }, [isLoggedIn, navigate])
 
   useEffect(() => {
-    // 카카오 리다이렉트 후 URL에서 프로필 이미지 등 임시 데이터 가져오는 부분
     const storedProfile = localStorage.getItem('kakao_profile_image')
     if (storedProfile) {
       setProfile(storedProfile)
     }
   }, [])
 
+  // 회원가입 완료 처리
+  const handleRegister = () => {
+    if (!email.trim()) {
+      alert('이메일을 입력해주세요.')
+      return
+    }
+
+    // 실제 API 호출은 생략, 대신 모달로 완료 피드백 제공
+    setIsModalOpen(true)
+  }
+
+  // 모달 닫기
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+  }
+
+  // 로그인 페이지 이동
+  const handleGoLogin = () => {
+    setIsModalOpen(false)
+    navigate('/')
+  }
+
   return (
     <div className='min-h-screen flex flex-col items-center bg-white'>
-      {/* 헤더 */}
       <PageHeader title='GITLOG' />
 
       {/* 상단 텍스트 영역 */}
@@ -95,12 +117,24 @@ export default function SignUpKakaoPage() {
         <Button
           intent='primary'
           className='w-full h-[38px] rounded-[25px] border border-[#00A1FF] bg-white text-[#00A1FF] hover:bg-[#00A1FF] hover:text-white transition text-[14px] leading-[160%]'
+          onClick={handleRegister}
         >
           회원가입 완료
         </Button>
       </div>
 
       <Blank size='lg' />
+
+      {/* 회원가입 완료 모달 */}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        title='회원가입이 완료되었습니다!'
+        onCancel={handleModalClose}
+        onConfirm={handleGoLogin}
+        cancelText='확인'
+        confirmText='로그인하기'
+        variant='primary'
+      />
     </div>
   )
 }
