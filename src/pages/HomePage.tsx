@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-
 import PageHeader from "@ui/PageHeader";
 import Frame from "@ui/Frame";
 import PostList from "../components/home/PostList";
 import type { Post } from "../types/post";
-
 import clearIcon from "../assets/icons/clear.svg";
 import kakaoIcon from "../assets/icons/kakao.svg";
 import "../styles/auth.css";
-
 import { usePosts } from "@src/hooks/usePosts";
 
 const styles = {
@@ -31,10 +28,25 @@ type ApiPostSummary = {
   excerpt?: string;
 };
 
+const pickArray = <T,>(d: unknown, key: string): T[] => {
+  if (typeof d === "object" && d !== null) {
+    const v = (d as Record<string, unknown>)[key];
+    if (Array.isArray(v)) return v as T[];
+  }
+  return [];
+};
+
+const pickNumber = (d: unknown, key: string): number | undefined => {
+  if (typeof d === "object" && d !== null) {
+    const v = (d as Record<string, unknown>)[key];
+    if (typeof v === "number") return v;
+  }
+  return undefined;
+};
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-
   const [search, setSearch] = useSearchParams();
   const loginOpen = search.get("login") === "1";
   const openLogin = () => setSearch({ login: "1" }, { replace: true });
@@ -44,11 +56,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    if (loginOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = loginOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -76,9 +84,10 @@ export default function HomePage() {
 
   const { data, isLoading, isError } = usePosts(page, 10);
 
-  const apiPosts: ApiPostSummary[] = Array.isArray(data?.data)
-    ? (data?.data as ApiPostSummary[])
-    : [];
+  const apiPostsFromContent = pickArray<ApiPostSummary>(data, "content");
+  const apiPostsFromItems = pickArray<ApiPostSummary>(data, "items");
+  const apiPosts: ApiPostSummary[] =
+    apiPostsFromContent.length ? apiPostsFromContent : apiPostsFromItems;
 
   const posts: Post[] = apiPosts.map((p) => {
     const nick = p.author?.nickname ?? "익명";
@@ -101,7 +110,7 @@ export default function HomePage() {
     };
   });
 
-  const totalPages = typeof data?.totalPages === "number" ? data.totalPages : 1;
+  const totalPages = pickNumber(data, "totalPages") ?? 1;
 
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
@@ -134,10 +143,7 @@ export default function HomePage() {
       )}
 
       <main
-        className={clsx(
-          "flex-1 w-full",
-          showFrame ? "md:ml-[240px]" : "ml-0"
-        )}
+        className={clsx("flex-1 w-full", showFrame ? "md:ml-[240px]" : "ml-0")}
       >
         <div className={clsx(styles.container.main, "py-8")}>
           <section className="flex flex-col gap-6">
@@ -153,10 +159,7 @@ export default function HomePage() {
             )}
             {!isLoading && !isError && (
               <>
-                {/* PostList가 내부에서 slice를 할 수 있으니 page=1로 고정 전달 */}
-                <PostList posts={posts} page={1} onPageChange={() => {}} />
-
-                {/* 서버 페이지네이션 컨트롤 */}
+                <PostList posts={posts} />
                 <div className="flex items-center justify-center gap-2 pt-2">
                   <button
                     type="button"
@@ -204,48 +207,23 @@ export default function HomePage() {
 
             <div className="auth-hero">
               <div className="logo-text">GITLOG</div>
-              <p className="auth-hero__caption">
-                나의 성장 기록, 지금 시작하세요
-              </p>
+              <p className="auth-hero__caption">나의 성장 기록, 지금 시작하세요</p>
             </div>
 
-            <form
-              className="auth-form"
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
               <div className="auth-fields">
-                <input
-                  className="auth-input"
-                  type="email"
-                  placeholder="이메일"
-                />
-                <input
-                  className="auth-input"
-                  type="password"
-                  placeholder="비밀번호"
-                />
+                <input className="auth-input" type="email" placeholder="이메일" />
+                <input className="auth-input" type="password" placeholder="비밀번호" />
               </div>
 
-              <button
-                type="submit"
-                className="auth-btn auth-btn--primary"
-              >
+              <button type="submit" className="auth-btn auth-btn--primary">
                 로그인
               </button>
 
               <div className="auth-sns-sep">또는</div>
 
-              <button
-                type="button"
-                className="auth-btn auth-btn--kakao"
-              >
-                <img
-                  src={kakaoIcon}
-                  alt=""
-                  width={18}
-                  height={18}
-                  style={{ display: "block" }}
-                />
+              <button type="button" className="auth-btn auth-btn--kakao">
+                <img src={kakaoIcon} alt="" width={18} height={18} style={{ display: "block" }} />
                 카카오로 계속하기
               </button>
 
