@@ -167,13 +167,14 @@ export default function PostDetail() {
         <section className={S.group} ref={commentRef}>
           <CommentSection
             isLoggedIn={isLogin}
-            onLoginClick={() => setIsLoginOpen(true)}
-            onSubmit={(text) => {
-              setToast({ message: `댓글 등록: ${text}`, type: "success" });
-              setCommentCount((prev) => prev + 1);
-            }}
+            postId={postId!}
             postAuthorProfile={post.profileUrl}
             postAuthorName={post.nickName}
+            onLoginClick={() => setIsLoginOpen(true)}
+            onSubmit={(comment) => {
+              setToast({ message: `댓글 등록: ${comment}`, type: "success" });
+              setCommentCount((prev) => prev + 1);
+            }}
           />
         </section>
       </main>

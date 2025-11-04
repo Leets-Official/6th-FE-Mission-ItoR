@@ -6,4 +6,5 @@ export interface CommentItemProps {
   isOwner?: boolean;
   isLoggedIn?: boolean;
   onDelete?: () => void;
+  onEdit?: (newContent: string) => void;
 }
