@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { loginAPI } from '@/api/authAPI'
 import { useAuthStore } from '@/stores/useAuthStore'
-import type { AxiosResponse } from 'axios'
 
 interface AuthResponse {
   code: number
@@ -16,10 +15,11 @@ interface AuthResponse {
 export const useLoginMutation = () => {
   const login = useAuthStore((state) => state.login)
 
-  return useMutation<AxiosResponse<AuthResponse>, Error, { email: string; password: string }>({
-    mutationFn: loginAPI,
-    onSuccess: (res) => {
-      const token = res.data.data.token
+  // AxiosResponse → AuthResponse로 통일
+  return useMutation<AuthResponse, Error, { email: string; password: string }>({
+    mutationFn: loginAPI, // Promise<AuthResponse> 반환
+    onSuccess: (data) => {
+      const token = data.data.token
       if (token) {
         login(token)
         alert('로그인 성공!')
