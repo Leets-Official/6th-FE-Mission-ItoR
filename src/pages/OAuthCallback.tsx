@@ -25,23 +25,19 @@ export default function OAuthCallback() {
         const response = await handleKakaoCallback(code);
 
         if (!response) {
-          console.error("응답이 없습니다.");
           alert("로그인 처리 중 오류가 발생했습니다.");
           navigate("/", { replace: true });
           return;
         }
 
-        // ✅ KakaoSignupResponse일 경우 (회원가입 필요)
+        // ✅ 회원가입 필요
         if ("code" in response && response.code === 401) {
           const kakaoUser = response.data;
-          navigate("/signup", {
-            replace: true,
-            state: { kakaoUser },
-          });
+          navigate("/signup", { replace: true, state: { kakaoUser } });
           return;
         }
 
-        // ✅ User일 경우 (로그인 성공)
+        // ✅ 로그인 성공
         setUser(response as User);
         navigate("/", { replace: true });
       } catch (error) {

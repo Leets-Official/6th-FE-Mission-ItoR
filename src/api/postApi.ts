@@ -38,3 +38,15 @@ export const fetchPosts = async (page: number, size: number) => {
 
   return response.data;
 };
+
+export const fetchPostDetail = async (postId: string) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const endpoint = accessToken ? "/posts/token" : "/posts";
+
+  const response = await api.get(endpoint, {
+    params: { postId },
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+  });
+
+  return response.data;
+};

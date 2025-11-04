@@ -20,6 +20,10 @@ interface SignupFormProps {
   };
 }
 
+/**
+ * ✅ 회원가입 폼
+ * - 이메일 / 카카오 모두 처리
+ */
 const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
@@ -44,41 +48,22 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
 
   const handleSubmit = async () => {
     const newErrors: Record<string, string> = {};
-
-    // ✅ 기본 정규식
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const birthRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-    // ✅ 이메일 검사
-    if (!form.email.trim()) {
-      newErrors.email = "이메일을 입력해주세요.";
-    } else if (!emailRegex.test(form.email)) {
-      newErrors.email = "올바른 이메일 형식이 아닙니다.";
-    }
-
-    // ✅ 이름
+    if (!form.email.trim()) newErrors.email = "이메일을 입력해주세요.";
+    else if (!emailRegex.test(form.email)) newErrors.email = "올바른 이메일 형식이 아닙니다.";
     if (!form.name.trim()) newErrors.name = "이름을 입력해주세요.";
-
-    // ✅ 생년월일 검사
-    if (!form.birthDate.trim()) {
-      newErrors.birthDate = "생년월일을 입력해주세요.";
-    } else if (!birthRegex.test(form.birthDate)) {
+    if (!form.birthDate.trim()) newErrors.birthDate = "생년월일을 입력해주세요.";
+    else if (!birthRegex.test(form.birthDate))
       newErrors.birthDate = "YYYY-MM-DD 형식으로 입력해주세요.";
-    }
+    if (!form.nickname.trim()) newErrors.nickname = "닉네임을 입력해주세요.";
+    else if (form.nickname.length > 20) newErrors.nickname = "닉네임은 20자 이내로 입력해주세요.";
 
-    // ✅ 닉네임 검사
-    if (!form.nickname.trim()) {
-      newErrors.nickname = "닉네임을 입력해주세요.";
-    } else if (form.nickname.length > 20) {
-      newErrors.nickname = "닉네임은 20자 이내로 입력해주세요.";
-    }
-
-    // ✅ 이메일 회원가입일 경우
     if (type === "email") {
       if (!form.password) newErrors.password = "비밀번호를 입력해주세요.";
       else if (form.password.length < 8)
         newErrors.password = "비밀번호는 최소 8자 이상이어야 합니다.";
-
       if (form.password !== form.passwordConfirm)
         newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
     }
@@ -86,7 +71,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // ✅ 공통 데이터 추출
     const commonData = {
       email: form.email,
       nickname: form.nickname,
@@ -99,15 +83,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
     try {
       setLoading(true);
       if (type === "email") {
-        await register({
-          ...commonData,
-          password: form.password,
-        });
+        await register({ ...commonData, password: form.password });
       } else {
-        await registerKakao({
-          ...commonData,
-          kakaoId: Number(form.kakaoId),
-        });
+        await registerKakao({ ...commonData, kakaoId: Number(form.kakaoId) });
       }
       setIsModalOpen(true);
     } catch (err) {

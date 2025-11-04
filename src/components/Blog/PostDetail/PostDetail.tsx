@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Avatar from "@/components/Avatar/Avatar";
 import CommentSection from "@/components/Blog/CommentSection/CommentSection";
@@ -9,6 +10,8 @@ import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
 import { useUserStore } from "@/store/useUserStore";
 import { useLogout } from "@/hooks/useLogout";
+import { fetchPostDetail } from "@/api/postApi";
+import { Post } from "@/types/post";
 
 export default function PostDetail() {
   const { user } = useUserStore();
@@ -20,24 +23,40 @@ export default function PostDetail() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const commentRef = useRef<HTMLDivElement>(null);
-
-  const post = {
-    id: "post-001",
-    title: "32 Title one line",
-    userId: "user-123",
-    nickName: "내닉네임",
-    createdAt: "Feb 17. 2025.",
-    profileUrl: "https://i.pravatar.cc/40?img=3",
-    content: `
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-    `,
-  };
+  const { postId } = useParams<{ postId: string }>();
 
   const isLogin = !!user;
-  const isOwner = isLogin && user?.id === post.userId;
+  const isOwner = post?.isOwner ?? false;
+
+  /** ✅ 게시글 상세 조회 API 연결 */
+  useEffect(() => {
+    const loadPost = async () => {
+      if (!postId) return;
+      setLoading(true);
+      try {
+        const res = await fetchPostDetail(postId);
+
+        if ((res.code === 200 || res.code === 0) && res.data) {
+          setPost(res.data);
+          setCommentCount(res.data.comments?.length ?? 0);
+        } else {
+          console.error("게시글 불러오기 실패:", res.message);
+        }
+      } catch (err) {
+        console.error("게시글 상세 조회 에러:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPost();
+  }, [postId]);
+
+  if (loading) return <div className="p-6 text-center">게시글 불러오는 중...</div>;
+  if (!post) return <div className="p-6 text-center">게시글을 찾을 수 없습니다.</div>;
 
   const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,7 +123,7 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
             <Avatar src={post.profileUrl} size="xs" />
             <span className={S.nick}>{post.nickName}</span>
             <span className={S.date}>
-              {post.createdAt} 댓글 {commentCount}
+              {new Date(post.createdAt).toLocaleDateString()} 댓글 {commentCount}
             </span>
           </div>
         </section>
@@ -112,10 +131,20 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         <div className={S.divider} />
 
         <section className={S.group}>
-          <article
-            className={S.content}
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
-          />
+          {post.contents?.map((c) =>
+            c.contentType === "TEXT" ? (
+              <p key={c.contentOrder} className={S.content}>
+                {c.content}
+              </p>
+            ) : (
+              <img
+                key={c.contentOrder}
+                src={c.content}
+                alt="게시글 이미지"
+                className="mt-4 rounded-xl"
+              />
+            ),
+          )}
         </section>
 
         <div className={S.divider} />
@@ -158,10 +187,4 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
       />
     </div>
   );
-}
-
-function renderMarkdown(text: string) {
-  return text
-    .replace(/```(.*?)```/gs, '<pre class="code-block"><code>$1</code></pre>')
-    .replace(/\n/g, "<br>");
 }

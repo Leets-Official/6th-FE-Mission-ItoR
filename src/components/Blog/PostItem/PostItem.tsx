@@ -1,5 +1,5 @@
 import Avatar from "@/components/Avatar/Avatar";
-import { Post } from "@/types/post";
+import { ApiPost } from "@/types/post";
 import { formatPostDate } from "@/utils/dateUtils";
 import {
   listItem,
@@ -12,7 +12,7 @@ import {
 } from "./PostItem.styled";
 
 interface PostItemProps {
-  post: Post;
+  post: ApiPost;
   isLast?: boolean;
   onClick?: () => void;
 }
