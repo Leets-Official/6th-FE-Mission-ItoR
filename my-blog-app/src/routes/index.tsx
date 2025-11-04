@@ -17,12 +17,15 @@ import SignUpEmailPage from '../pages/SignUpEmailPage'
 import SignUpKakaoPage from '@/pages/SignUpKakaoPage'
 import BlogDetailPage from '@/pages/BlogDetailPage'
 import BlogWritePage from '@/pages/BlogWritePage'
+import AuthKakaoCallback from '@/pages/AuthKakaoCallback'
 
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
   { path: 'signup', element: <SignUpPage /> },
   { path: 'signup/email', element: <SignUpEmailPage /> },
   { path: 'signup/kakao', element: <SignUpKakaoPage /> },
+  { path: '/oauth/kakao/callback', element: <AuthKakaoCallback /> },
+  { path: '/oauth/kakao/success', element: <AuthKakaoCallback /> },
   { path: '/post/:id', element: <BlogDetailPage /> },
   { path: '/blogwrite', element: <BlogWritePage /> },
   { path: '/test/button', element: <ButtonTestPage /> },

@@ -1,14 +1,32 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuthStatus } from '@/hooks/useAuthStatus'
 import PageHeader from '@/components/common/PageHeader'
 import GitlogLogo from '@/components/common/GitlogLogo'
 import TextCard from '@/components/common/TextCard'
 import Blank from '@/components/common/Blank'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
-import { useNavigate } from 'react-router-dom'
+
+const BACKEND_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export default function SignUpPage() {
   const navigate = useNavigate()
+  const { isLoggedIn } = useAuthStatus()
 
-  // 공통 스타일 상수 정의
+  // 로그인 시 접근 제한
+  useEffect(() => {
+    if (isLoggedIn) {
+      alert('이미 로그인된 사용자입니다.')
+      navigate('/')
+    }
+  }, [isLoggedIn, navigate])
+
+  // 카카오 로그인 시작 핸들러 함수
+  const handleKakaoLogin = () => {
+    // 2단계 로직: 백엔드의 카카오 로그인 시작 API로 유저를 리다이렉트합니다.
+    window.location.href = `${BACKEND_BASE_URL}/auth/kakao`
+  }
+
   const baseButton =
     'flex justify-center items-center h-[45px] rounded-[6px] text-[14px] leading-[160%] transition w-full'
   const emailButton = `${baseButton} px-[14px] bg-[#00A1FF] hover:bg-[#0092E8] text-white font-normal tracking-[-0.07px]`
@@ -18,7 +36,6 @@ export default function SignUpPage() {
     <div className='min-h-screen flex flex-col items-center bg-[#FFF]'>
       <PageHeader title='GITLOG' />
 
-      {/* 상단 헤더 섹션 */}
       <div className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-[#F5F5F5]'>
         <Blank size='md' />
         <TextCard
@@ -30,9 +47,7 @@ export default function SignUpPage() {
         <Blank size='sm' />
       </div>
 
-      {/* 본문 영역 */}
       <div className='flex flex-row justify-center items-center w-[782px] max-w-[782px] py-[80px] rounded-[9px]'>
-        {/* 왼쪽 로고 */}
         <div className='flex flex-col items-center w-[308px] h-[160px] px-[13px] pt-[47.04px] pb-[36.93px]'>
           <GitlogLogo size='48px' color='black' spacing='2px' />
           <p className='flex justify-center items-center min-w-[240px] max-w-[344px] h-[46px] px-[16px] py-[12px] text-[#909090] text-[14px] font-light leading-[160%] text-center'>
@@ -40,22 +55,18 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        {/* 오른쪽 버튼 영역 */}
         <div className='flex flex-col items-center gap-[2px] min-w-[240px] px-[16px]'>
-          {/* 이메일 회원가입 */}
           <button onClick={() => navigate('/signup/email')} className={emailButton}>
             이메일로 회원가입
           </button>
 
-          {/* 구분선 */}
           <div className='flex justify-center items-center gap-[2px] w-[313px] my-[8px]'>
             <div className='w-[123px] h-[1px] bg-[#F5F5F5]' />
             <span className='text-[12px] text-[#909090] font-normal leading-[160%]'>또는</span>
             <div className='w-[123px] h-[1px] bg-[#F5F5F5]' />
           </div>
 
-          {/* 카카오 회원가입 */}
-          <button className={kakaoButton}>
+          <button onClick={handleKakaoLogin} className={kakaoButton}>
             <KakaoIcon />
             카카오로 회원가입
           </button>
