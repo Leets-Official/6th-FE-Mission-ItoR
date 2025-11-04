@@ -6,7 +6,7 @@ import { buildBlocks } from "@src/utils/blocks";
 
 export default function WritePage() {
   const { id } = useParams<{ id: string }>();
-  const editingId = id ? Number(id) : undefined;
+  const editingId = id;
 
   const nav = useNavigate();
 
@@ -17,9 +17,7 @@ export default function WritePage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
-  const canPublish =
-    title.trim().length > 0 &&
-    (body.trim().length > 0 || !!imageUrl);
+  const canPublish = title.trim().length > 0 && (body.trim().length > 0 || !!imageUrl);
 
   const openFile = () => fileRef.current?.click();
 
@@ -45,7 +43,7 @@ export default function WritePage() {
   };
 
   const createMut = useCreatePost();
-  const updateMut = useUpdatePost(editingId ?? 0);
+  const updateMut = useUpdatePost(editingId ?? "");
 
   const publish = () => {
     if (!canPublish) return;
@@ -62,7 +60,7 @@ export default function WritePage() {
         onSuccess: (res) => {
           const newId =
             res && typeof res === "object" && "id" in res
-              ? (res as { id: number }).id
+              ? (res as { id?: string }).id
               : undefined;
           nav(newId ? `/post/${newId}` : "/");
         },
@@ -74,9 +72,7 @@ export default function WritePage() {
     <div className="flex min-h-dvh w-full flex-col bg-white">
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
-          <div className="logo-text text-[24px] leading-[1.2] text-[var(--Black)]">
-            GITLOG
-          </div>
+          <div className="logo-text text-[24px] leading-[1.2] text-[var(--Black)]">GITLOG</div>
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -108,20 +104,10 @@ export default function WritePage() {
             onClick={openFile}
             className="inline-flex items-center gap-2 rounded-[4px] border border-[var(--Gray90)] bg-white px-3 py-2 text-[14px] font-light leading-[22.4px] text-[var(--Gray20)]"
           >
-            <img
-              src={imageIcon}
-              alt=""
-              className="h-[16px] w-[16px]"
-            />
+            <img src={imageIcon} alt="" className="h-[16px] w-[16px]" />
             <span>사진 추가하기</span>
           </button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={onFileChange}
-          />
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
         </div>
       </div>
 
@@ -132,17 +118,11 @@ export default function WritePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="제목"
-              className={`w-full border-none px-0 text-[24px] font-medium leading-[38.4px] text-[var(--Black)] placeholder-[var(--Gray-78,#C8C8C8)] outline-none ${
-                title ? "text-[var(--Black)]" : ""
-              }`}
+              className={`w-full border-none px-0 text-[24px] font-medium leading-[38.4px] text-[var(--Black)] placeholder-[var(--Gray-78,#C8C8C8)] outline-none ${title ? "text-[var(--Black)]" : ""}`}
             />
           </section>
 
-          <div
-            className="mb-4 h-[1px] w-full bg-[var(--Gray90)]"
-            role="separator"
-            aria-hidden="true"
-          />
+          <div className="mb-4 h-[1px] w-full bg-[var(--Gray90)]" role="separator" aria-hidden="true" />
 
           <section className="mb-6">
             <textarea
@@ -156,11 +136,7 @@ export default function WritePage() {
 
           {imageUrl && (
             <section className="mb-6">
-              <img
-                src={imageUrl}
-                alt="preview"
-                className="max-h-[400px] w-full rounded-[4px] object-cover"
-              />
+              <img src={imageUrl} alt="preview" className="max-h-[400px] w-full rounded-[4px] object-cover" />
             </section>
           )}
 

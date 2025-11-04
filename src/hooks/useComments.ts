@@ -2,12 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createComment, deleteComment, updateComment } from "@src/api/comments";
 import { usePostDetail } from "@src/hooks/usePosts";
 
-/** 댓글 목록 훅 **/
 export function useComments(postId: string) {
-  const num = Number(postId);
-  const validNum = Number.isFinite(num) && num > 0 ? num : 0;
-
-  const { data } = usePostDetail(validNum);
+  const { data } = usePostDetail(postId);
 
   type ServerComment = {
     id?: number;

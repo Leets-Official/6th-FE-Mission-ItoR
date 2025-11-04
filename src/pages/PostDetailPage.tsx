@@ -1,4 +1,3 @@
-// src/pages/PostDetailPage.tsx
 import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
 import Dropdown from "../components/ui/Dropdown";
@@ -6,15 +5,13 @@ import Modal from "../components/ui/Modal";
 import ProfilePhoto from "../components/ui/Profile";
 import TextBox from "../components/ui/TextBox";
 import PageHeader from "../components/ui/PageHeader";
-
-import Spacer from "@ui/Spacer"; 
-import TitleSection, { AuthorView } from "@ui/post/TitleSection";
-import DetailBlocks, { DetailBlock } from "@ui/post/DetailBlocks";
-import CommentInput from "@ui/post/CommentInput";
+import Spacer from "@ui/Spacer";
+import TitleSection, { AuthorView } from "@ui/Post/TitleSection";
+import DetailBlocks, { DetailBlock } from "@ui/Post/DetailBlocks";
+import CommentInput from "@ui/Post/CommentInput";
 import ConfirmDialog from "@ui/ConfirmDialog";
 import CommentList from "@ui/comment/CommentList";
 import type { CommentView } from "@ui/comment/CommentItem";
-
 import { usePostDetail } from "@src/hooks/usePosts";
 import { useComments, useCreateComment, useUpdateComment, useDeleteComment } from "@src/hooks/useComments";
 
@@ -25,7 +22,7 @@ const formatDate = (iso: string) => {
 };
 
 type ApiPostDetail = {
-  id: number;
+  id: string;
   title: string;
   createdAt?: string;
   author?: { nickname?: string; avatarUrl?: string; introduction?: string };
@@ -35,15 +32,12 @@ type ApiPostDetail = {
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const postIdNum = Number(id);
-  const hasValidNumericId = Number.isFinite(postIdNum) && postIdNum > 0;
-
   const [search] = useSearchParams();
   const isLoggedIn = search.get("login") === "1";
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = usePostDetail(hasValidNumericId ? postIdNum : 0);
-  const postIdForComments = (id ?? "").toString();
+  const { data, isLoading, isError } = usePostDetail(id ?? "");
+  const postIdForComments = id ?? "";
   const { data: serverComments = [] } = useComments(postIdForComments);
   const createMut = useCreateComment(postIdForComments);
   const updateMut = useUpdateComment(postIdForComments);
@@ -81,7 +75,7 @@ export default function PostDetailPage() {
     mine: Boolean(c.mine ?? c.isOwner),
   }));
 
-  if (!hasValidNumericId) return <Navigate to="/" replace />;
+  if (!id) return <Navigate to="/" replace />;
   if (isLoading) return <div className="min-h-dvh w-full flex items-center justify-center text-[14px] text-[var(--Gray56)]">로딩 중입니다...</div>;
   if (isError || !d || !author) return <Navigate to="/" replace />;
 
@@ -90,12 +84,12 @@ export default function PostDetailPage() {
     if (!v || !isLoggedIn) return;
     createMut.mutate(v, { onSuccess: () => setInput("") });
   };
-  const askDelete = (id: number) => setDeleteId(id);
+  const askDelete = (cid: number) => setDeleteId(cid);
   const confirmDelete = () => {
     if (!deleteId) return;
     deleteMut.mutate(deleteId, { onSettled: () => setDeleteId(null) });
   };
-  const saveEdit = (id: number, content: string) => updateMut.mutate({ commentId: id, content });
+  const saveEdit = (cid: number, content: string) => updateMut.mutate({ commentId: cid, content });
 
   return (
     <div className="min-h-dvh w-full flex flex-col bg-[var(--White)]">
@@ -108,7 +102,7 @@ export default function PostDetailPage() {
                 position="right"
                 trigger={<span className="block w-6 h-6" aria-label="더보기" />}
                 items={[
-                  { id: "edit", label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>, onSelect: () => navigate(`/write/${postIdNum}`) },
+                  { id: "edit", label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>, onSelect: () => navigate(`/write/${id}`) },
                   { id: "delete", label: <span className="text-[14px] text-[var(--Negative)]">삭제하기</span>, onSelect: () => setPostDeleteOpen(true) },
                 ]}
                 caretOffset="md"
@@ -132,7 +126,6 @@ export default function PostDetailPage() {
           </section>
         </div>
 
-        {/* 작성자 정보 섹션 */}
         <section className="mt-6 w-full bg-[var(--Gray96)] border-t border-[var(--Gray96)]">
           <Spacer y={64} className="mx-auto max-w-[688px]" />
           <div className="mx-auto w-full max-w-[688px] px-4 py-3 flex flex-col items-start gap-3">
@@ -148,7 +141,6 @@ export default function PostDetailPage() {
         </section>
       </main>
 
-      {/* 게시글 삭제 */}
       <Modal
         open={postDeleteOpen}
         onClose={() => setPostDeleteOpen(false)}
@@ -161,7 +153,6 @@ export default function PostDetailPage() {
         confirmVariant="negative"
       />
 
-      {/* 댓글 삭제 확인 */}
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
