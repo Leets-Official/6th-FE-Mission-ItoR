@@ -12,13 +12,13 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// 🔹 인터셉터 미적용 인스턴스 (토큰 재발급 전용)
+// 인터셉터 미적용 인스턴스
 const raw = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
-// ✅ 요청 인터셉터: accessToken 자동 첨부
+// 요청 인터셉터: accessToken 자동 첨부
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (!token) return config;
@@ -42,19 +42,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ 재시도 플래그 타입 정의
+// 재시도 플래그 타입 정의
 type RetryableConfig = AxiosRequestConfig & { _retry?: boolean };
 
 let isRefreshing = false;
 const waitQueue: Array<(token: string) => void> = [];
 
-// ✅ 안전한 문자열 추출 함수 (any 금지)
+// 안전한 문자열 추출 함수
 function pickString(obj: Record<string, unknown>, key: string): string | undefined {
   const value = obj?.[key];
   return typeof value === "string" ? value : undefined;
 }
 
-// ✅ 응답 인터셉터: 에러 메시지 정규화 + 401 토큰 재발급
+// 응답 인터셉터
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
@@ -94,7 +94,7 @@ api.interceptors.response.use(
       try {
         isRefreshing = true;
 
-        // 토큰 재발급 요청 (raw 사용)
+        // 토큰 재발급 요청 
         const { data } = await raw.post("/auth/reissue", { refreshToken });
         const payload = (data?.data ?? data) as Record<string, unknown>;
         const newAccess = pickString(payload, "accessToken") ?? "";
