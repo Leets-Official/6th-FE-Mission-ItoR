@@ -5,15 +5,18 @@ import TextCard from '@/components/common/TextCard'
 import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
 import { logout } from '@/hooks/useAuthStatus'
 import type { SidebarProps } from '@/components/Sidebar/Sidebar.types'
+import { useNavigate } from 'react-router-dom'
 
 export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleLogoutClick = () => setIsLogoutModalOpen(true)
   const handleCancel = () => setIsLogoutModalOpen(false)
   const handleConfirm = () => {
     logout()
     setIsLogoutModalOpen(false)
+    navigate('/')
   }
 
   return (
