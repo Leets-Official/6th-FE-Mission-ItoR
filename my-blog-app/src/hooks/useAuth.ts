@@ -45,7 +45,7 @@ export const useRegisterMutation = () => {
     mutationFn: registerAPI,
     onSuccess: () => {
       alert('회원가입 성공!')
-      window.location.href = '/login'
+      window.location.href = '/'
     },
     onError: (err) => {
       console.error('회원가입 실패:', err)
