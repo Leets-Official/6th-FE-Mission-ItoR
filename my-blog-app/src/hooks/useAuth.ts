@@ -9,9 +9,10 @@ export const useLoginMutation = () => {
   const { showToast } = useToast()
 
   return useMutation<AuthResponse, Error, { email: string; password: string }>({
-    mutationFn: loginAPI, // AuthResponse만 반환됨
+    mutationFn: loginAPI,
     onSuccess: (data) => {
-      localStorage.setItem('token', data.data.token ?? '')
+      localStorage.setItem('accessToken', data.data.accessToken ?? '')
+      localStorage.setItem('refreshToken', data.data.refreshToken ?? '')
       showToast('로그인 성공!', 'positive')
       navigate('/')
     },
