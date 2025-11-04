@@ -1,3 +1,4 @@
+// src/api/posts.ts
 import api from "./client";
 
 export type PostBlockText = { type: "TEXT"; order: number; content: string };
@@ -5,7 +6,7 @@ export type PostBlockImage = { type: "IMAGE"; order: number; url: string };
 export type PostBlock = PostBlockText | PostBlockImage;
 
 export type PostSummary = {
-  id: number;
+  id: string;
   title: string;
   createdAt: string;
   author: { nickname: string };
@@ -21,13 +22,13 @@ export type PageResult<T> = {
 };
 
 export type PostDetail = {
-  id: number;
+  id: string;
   title: string;
   createdAt: string;
   author: { nickname: string; avatarUrl?: string; introduction?: string };
   blocks: PostBlock[];
   comments: Array<{
-    id: number;
+    id: string;
     content: string;
     createdAt: string;
     mine?: boolean;
@@ -37,28 +38,140 @@ export type PostDetail = {
 };
 
 export async function getPosts(page: number, size: number) {
-  const res = await api.get<PageResult<PostSummary>>("/posts", {
-    params: { page, size },
-  });
-  return res.data;
+  const hasToken = !!localStorage.getItem("accessToken");
+  const url = hasToken ? "/posts/all/token" : "/posts/all";
+
+  const { data } = await api.get<{
+    code: number;
+    message: string;
+    data: {
+      posts: Array<{
+        postId: string;
+        title: string;
+        nickname: string;
+        profileUrl?: string;
+        createdAt: string;
+        commentCount: number;
+      }>;
+      pageMax: number;
+    };
+  }>(url, { params: { page, size } });
+
+  const items: PostSummary[] =
+    data?.data?.posts?.map((p) => ({
+      id: p.postId,
+      title: p.title,
+      createdAt: p.createdAt,
+      author: { nickname: p.nickname },
+      thumbnailUrl: undefined,
+      commentCount: p.commentCount ?? 0,
+      excerpt: undefined,
+    })) ?? [];
+
+  return {
+    data: items,
+    page,
+    totalPages: data?.data?.pageMax ?? 0,
+  } as PageResult<PostSummary>;
 }
 
-export async function getPostDetail(id: number) {
-  const res = await api.get<PostDetail>(`/posts/${id}`);
-  return res.data;
+export async function getPostDetail(id: string) {
+  const hasToken = !!localStorage.getItem("accessToken");
+  const url = hasToken ? "/posts/token" : "/posts";
+
+  const { data } = await api.get<{
+    code: number;
+    message: string;
+    data: {
+      postId: string;
+      title: string;
+      contents: Array<{
+        contentOrder: number;
+        content: string;
+        contentType: "TEXT" | "IMAGE" | string;
+      }>;
+      isOwner: boolean;
+      comments: Array<{
+        commentId: string;
+        content: string;
+        nickname: string;
+        profileUrl?: string;
+        createdAt: string;
+        isOwner: boolean;
+      }>;
+      nickname: string;
+      profileUrl?: string;
+      introduction?: string;
+      createdAt: string;
+    };
+  }>(url, { params: { postId: id } });
+
+  const d = data.data;
+
+  const blocks: PostBlock[] = (d.contents ?? [])
+    .sort((a, b) => a.contentOrder - b.contentOrder)
+    .map((c) =>
+      (c.contentType || "").toUpperCase() === "IMAGE"
+        ? ({ type: "IMAGE", order: c.contentOrder, url: c.content } as PostBlockImage)
+        : ({ type: "TEXT", order: c.contentOrder, content: c.content } as PostBlockText)
+    );
+
+  const comments =
+    d.comments?.map((c) => ({
+      id: c.commentId,
+      content: c.content,
+      createdAt: c.createdAt,
+      mine: c.isOwner,
+      author: { nickname: c.nickname, avatarUrl: c.profileUrl },
+    })) ?? [];
+
+  return {
+    id: d.postId,
+    title: d.title,
+    createdAt: d.createdAt,
+    author: { nickname: d.nickname, avatarUrl: d.profileUrl, introduction: d.introduction },
+    blocks,
+    comments,
+    mine: d.isOwner,
+  } as PostDetail;
 }
 
 export async function createPost(payload: { title: string; blocks: PostBlock[] }) {
-  const res = await api.post<{ id: number }>("/posts", payload);
-  return res.data;
+  const body = {
+    title: payload.title,
+    contents: payload.blocks.map((b) =>
+      b.type === "IMAGE"
+        ? { contentOrder: b.order, content: b.url, contentType: "IMAGE" }
+        : { contentOrder: b.order, content: b.content, contentType: "TEXT" }
+    ),
+  };
+  const { data } = await api.post<{ code: number; message: string; data: { postId?: string } }>(
+    "/posts",
+    body
+  );
+  return { id: data?.data?.postId } as { id?: string };
 }
 
-export async function updatePost(id: number, payload: { title: string; blocks: PostBlock[] }) {
-  const res = await api.put(`/posts/${id}`, payload);
-  return res.data;
+export async function updatePost(id: string, payload: { title: string; blocks: PostBlock[] }) {
+  const body = {
+    title: payload.title,
+    contents: payload.blocks.map((b) =>
+      b.type === "IMAGE"
+        ? { contentOrder: b.order, content: b.url, contentType: "IMAGE" }
+        : { contentOrder: b.order, content: b.content, contentType: "TEXT" }
+    ),
+  };
+  const { data } = await api.patch<{ code: number; message: string; data: unknown }>(
+    "/posts",
+    body,
+    { params: { postId: id } }
+  );
+  return data?.data;
 }
 
-export async function deletePost(id: number) {
-  const res = await api.delete(`/posts/${id}`);
-  return res.data;
+export async function deletePost(id: string) {
+  const { data } = await api.delete<{ code: number; message: string; data: unknown }>("/posts", {
+    params: { postId: id },
+  });
+  return data?.data;
 }

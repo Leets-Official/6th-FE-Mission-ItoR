@@ -1,3 +1,4 @@
+// src/hooks/usePosts.ts
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import {
   getPosts,
@@ -20,21 +21,17 @@ export function usePosts(page: number, size = 10) {
   });
 }
 
-/** Post 상세 **/
-export function usePostDetail(id: number) {
+export function usePostDetail(id: string) {
   return useQuery<PostDetail>({
     queryKey: ["post", id],
     queryFn: () => getPostDetail(id),
-    enabled: id > 0,
+    enabled: !!id,
   });
 }
 
-/**
- * Create
- */
 export function useCreatePost() {
   const qc = useQueryClient();
-  return useMutation<{ id: number }, unknown, { title: string; blocks: PostBlock[] }>({
+  return useMutation<{ id?: string }, unknown, { title: string; blocks: PostBlock[] }>({
     mutationFn: (payload) => createPost(payload),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["posts"] });
@@ -42,8 +39,7 @@ export function useCreatePost() {
   });
 }
 
-/** Update **/
-export function useUpdatePost(id: number) {
+export function useUpdatePost(id: string) {
   const qc = useQueryClient();
   return useMutation<unknown, unknown, { title: string; blocks: PostBlock[] }>({
     mutationFn: (payload) => updatePost(id, payload),
@@ -54,8 +50,7 @@ export function useUpdatePost(id: number) {
   });
 }
 
-/** Delete **/
-export function useDeletePost(id: number) {
+export function useDeletePost(id: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: () => deletePost(id),

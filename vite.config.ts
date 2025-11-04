@@ -14,6 +14,13 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // proxy 제거: API는 env 기반 절대경로로 직접 호출
+    proxy: {
+      "/api": {
+        target: "https://blog.leets.land",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
 });
