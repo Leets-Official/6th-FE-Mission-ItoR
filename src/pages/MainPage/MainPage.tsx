@@ -102,7 +102,7 @@ export default function MainPage() {
         description="회원가입을 진행하시겠습니까?"
         onClose={() => {
           setIsSignupPromptOpen(false);
-          navigate("/");
+          navigate("/blog");
         }}
         onConfirm={() => {
           setIsSignupPromptOpen(false);

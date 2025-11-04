@@ -54,7 +54,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
       const ok = await handleLogin(email, password);
       if (ok) {
         onClose();
-        navigate("/");
+        navigate("/blog");
       } else {
         setPasswordError("이메일 또는 비밀번호가 올바르지 않습니다.");
       }
@@ -71,7 +71,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSignupPrompt }
   };
 
   const handleKakaoLogin = () => {
-    // 서버가 리다이렉트를 수행하므로 직접 이동
     const kakaoAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/kakao`;
     window.location.href = kakaoAuthUrl;
   };

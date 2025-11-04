@@ -10,10 +10,11 @@ import OAuthCallback from "@/pages/OAuthCallback";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route path="/blog" element={<MainPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/blog/:postId" element={<PostDetailPage />} />
       <Route path="/write" element={<PostWritePage />} />
+      <Route path="/edit/:postId" element={<PostWritePage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/mypage/setting" element={<MyPageSetting loginType="email" />} />
       <Route path="/oauth/kakao/success" element={<OAuthCallback />} />

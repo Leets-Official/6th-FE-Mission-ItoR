@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Avatar from "@/components/Avatar/Avatar";
 import CommentSection from "@/components/Blog/CommentSection/CommentSection";
@@ -8,13 +8,15 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
+import Toast from "@/components/Toast/Toast";
 import { useUserStore } from "@/store/useUserStore";
 import { useLogout } from "@/hooks/useLogout";
-import { fetchPostDetail } from "@/api/postApi";
+import { fetchPostDetail, deletePost } from "@/api/postApi";
 import { Post } from "@/types/post";
 
 export default function PostDetail() {
   const { user } = useUserStore();
+  const navigate = useNavigate();
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
@@ -26,13 +28,14 @@ export default function PostDetail() {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
   const commentRef = useRef<HTMLDivElement>(null);
   const { postId } = useParams<{ postId: string }>();
 
   const isLogin = !!user;
   const isOwner = post?.isOwner ?? false;
 
-  /** ✅ 게시글 상세 조회 API 연결 */
   useEffect(() => {
     const loadPost = async () => {
       if (!postId) return;
@@ -62,42 +65,54 @@ export default function PostDetail() {
     commentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleDeletePost = async () => {
+    if (!postId) return;
+    try {
+      const res = await deletePost(postId);
+      if (res.code === 200 || res.code === 0) {
+        setIsDeleteModalOpen(false);
+        setToast({ message: "게시글이 삭제되었습니다.", type: "success" });
+
+        setTimeout(() => {
+          navigate("/blog", { replace: true });
+        }, 1000);
+      } else {
+        setToast({ message: res.message || "삭제 실패", type: "error" });
+      }
+    } catch (err) {
+      console.error("게시글 삭제 에러:", err);
+      setToast({ message: "삭제 중 오류가 발생했습니다.", type: "error" });
+    }
+  };
+
   const menuItems = [
-    { label: "수정하기", onClick: () => alert("수정하기 클릭") },
+    { label: "수정하기", onClick: () => navigate(`/edit/${postId}`) },
     { label: "삭제하기", onClick: () => setIsDeleteModalOpen(true) },
   ];
-
-  const handleDeletePost = () => {
-    setIsDeleteModalOpen(false);
-    alert("게시글이 삭제되었습니다.");
-  };
 
   return (
     <div className={S.page}>
       <div className="fixed top-0 left-0 z-50 w-full">
-        <div className="relative">
-          <Header
-            title="GITLOG"
-            variant="chatMenu"
-            onChatClick={handleScrollToComments}
-            onMenuClick={() => setIsSidebarOpen(true)}
-            onMoreClick={() => setIsMenuOpen((prev) => !prev)}
-            showMoreIcon={isOwner}
-          />
-
-          {isOwner && isMenuOpen && (
-            <div className="absolute top-[55px] right-6 z-50">
-              <DropdownMenuList
-                items={menuItems}
-                onItemClick={(item) => {
-                  item.onClick?.();
-                  setIsMenuOpen(false);
-                }}
-                position="right"
-              />
-            </div>
-          )}
-        </div>
+        <Header
+          title="GITLOG"
+          variant="chatMenu"
+          onChatClick={handleScrollToComments}
+          onMenuClick={() => setIsSidebarOpen(true)}
+          onMoreClick={() => setIsMenuOpen((prev) => !prev)}
+          showMoreIcon={isOwner}
+        />
+        {isOwner && isMenuOpen && (
+          <div className="absolute top-[55px] right-6 z-50">
+            <DropdownMenuList
+              items={menuItems}
+              onItemClick={(item) => {
+                item.onClick?.();
+                setIsMenuOpen(false);
+              }}
+              position="right"
+            />
+          </div>
+        )}
       </div>
 
       <div className="h-[70px]" />
@@ -154,7 +169,7 @@ export default function PostDetail() {
             isLoggedIn={isLogin}
             onLoginClick={() => setIsLoginOpen(true)}
             onSubmit={(text) => {
-              alert(`댓글 등록: ${text}`);
+              setToast({ message: `댓글 등록: ${text}`, type: "success" });
               setCommentCount((prev) => prev + 1);
             }}
             postAuthorProfile={post.profileUrl}
@@ -185,6 +200,12 @@ export default function PostDetail() {
         cancelText="취소"
         confirmColor="bg-brand-blue text-white hover:opacity-90"
       />
+
+      {toast && (
+        <div className="fixed top-[90px] left-1/2 z-[9999] -translate-x-1/2 transform">
+          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+        </div>
+      )}
     </div>
   );
 }

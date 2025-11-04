@@ -17,7 +17,7 @@ export default function OAuthCallback() {
 
       if (!code) {
         alert("인증 코드가 없습니다.");
-        navigate("/", { replace: true });
+        navigate("/blog", { replace: true });
         return;
       }
 
@@ -26,24 +26,22 @@ export default function OAuthCallback() {
 
         if (!response) {
           alert("로그인 처리 중 오류가 발생했습니다.");
-          navigate("/", { replace: true });
+          navigate("/blog", { replace: true });
           return;
         }
 
-        // ✅ 회원가입 필요
         if ("code" in response && response.code === 401) {
           const kakaoUser = response.data;
           navigate("/signup", { replace: true, state: { kakaoUser } });
           return;
         }
 
-        // ✅ 로그인 성공
         setUser(response as User);
-        navigate("/", { replace: true });
+        navigate("/blog", { replace: true });
       } catch (error) {
         console.error("카카오 로그인 오류:", error);
         alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-        navigate("/", { replace: true });
+        navigate("/blog", { replace: true });
       }
     };
 
