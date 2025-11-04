@@ -9,11 +9,13 @@ import Blank from '@/components/common/Blank'
 import TextCard from '@/components/common/TextCard'
 import SignUpProfileSection from '@/components/SignUp/SignUpProfileSection'
 import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
+import { useToast } from '@/context/ToastContext'
 
 export default function SignUpEmailPage() {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthStatus()
   const { mutate: register } = useRegisterMutation()
+  const { showToast } = useToast()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,10 +24,10 @@ export default function SignUpEmailPage() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      alert('이미 로그인된 사용자입니다.')
+      showToast('이미 로그인된 사용자입니다.', 'negative')
       navigate('/')
     }
-  }, [isLoggedIn, navigate])
+  }, [isLoggedIn, navigate, showToast])
 
   const handleSubmit = () => {
     if (!email || !password || !nickname) {
