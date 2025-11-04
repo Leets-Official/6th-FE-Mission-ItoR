@@ -1,11 +1,27 @@
 import axiosInstance from './axiosInstance'
 
-// 로그인 API
-export const loginAPI = (data: { email: string; password: string }) =>
-  axiosInstance.post('/auth/login', data)
+/** 공통 응답 타입 */
+export interface AuthResponse {
+  code: number
+  message: string
+  data: {
+    token?: string
+    email?: string
+    nickname?: string
+  }
+}
 
-// 회원가입(register) API
-export const registerAPI = (data: {
+/** 로그인 API */
+export const loginAPI = async (data: {
+  email: string
+  password: string
+}): Promise<AuthResponse> => {
+  const res = await axiosInstance.post<AuthResponse>('/auth/login', data)
+  return res.data // AxiosResponse 제거 → 순수 데이터 반환
+}
+
+/** 회원가입 API */
+export const registerAPI = async (data: {
   email: string
   password: string
   nickname: string
@@ -13,10 +29,13 @@ export const registerAPI = (data: {
   profilePicture?: string
   birthDate?: string
   introduction?: string
-}) => axiosInstance.post('/auth/register', data)
+}): Promise<AuthResponse> => {
+  const res = await axiosInstance.post<AuthResponse>('/auth/register', data)
+  return res.data
+}
 
-// 추가: 카카오 로그인 콜백 API
+/** 카카오 로그인 콜백 API */
 export const handleKakaoCallback = async (code: string) => {
-  const response = await axiosInstance.get(`/auth/kakao/redirect?code=${code}`)
-  return response.data.data // 백엔드 응답 구조에 따라 .data.data 또는 .data.user
+  const res = await axiosInstance.get(`/auth/kakao/redirect?code=${code}`)
+  return res.data.data // 백엔드 구조에 따라 .data.user 또는 .data.data
 }

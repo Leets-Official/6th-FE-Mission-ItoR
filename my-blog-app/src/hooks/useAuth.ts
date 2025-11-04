@@ -1,27 +1,17 @@
 import { useMutation } from '@tanstack/react-query'
-import { loginAPI, registerAPI } from '@/api/authAPI'
-import type { AxiosResponse } from 'axios'
+import { loginAPI, registerAPI, type AuthResponse } from '@/api/authAPI'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '@/context/ToastContext'
 
-interface AuthResponse {
-  code: number
-  message: string
-  data: {
-    token?: string
-    email?: string
-    nickname?: string
-  }
-}
-
+/** 로그인 Mutation 훅 */
 export const useLoginMutation = () => {
   const navigate = useNavigate()
   const { showToast } = useToast()
 
-  return useMutation<AxiosResponse<AuthResponse>, Error, { email: string; password: string }>({
-    mutationFn: loginAPI,
-    onSuccess: (res) => {
-      localStorage.setItem('token', res.data.data.token ?? '')
+  return useMutation<AuthResponse, Error, { email: string; password: string }>({
+    mutationFn: loginAPI, // AuthResponse만 반환됨
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.data.token ?? '')
       showToast('로그인 성공!', 'positive')
       navigate('/')
     },
@@ -32,12 +22,13 @@ export const useLoginMutation = () => {
   })
 }
 
+/** 회원가입 Mutation 훅 */
 export const useRegisterMutation = () => {
   const navigate = useNavigate()
   const { showToast } = useToast()
 
   return useMutation<
-    AxiosResponse<AuthResponse>,
+    AuthResponse,
     Error,
     {
       email: string
