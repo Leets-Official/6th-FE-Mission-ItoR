@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PageHeader from '@/components/common/PageHeader'
 import Pagination from '@/components/Pagination/Pagination'
 import ListItem from '@/components/ListItem/ListItem'
@@ -10,6 +11,7 @@ import { mockPosts } from '@/constants/mockPosts'
 
 export default function HomePage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     setIsLoginOpen(true)
@@ -20,7 +22,12 @@ export default function HomePage() {
       <PageHeader
         title='GITLOG'
         rightContent={
-          <Button intent='flat' className='text-gray-300' icon={<EditIcon color='#909090' />}>
+          <Button
+            intent='flat'
+            className='text-gray-300'
+            icon={<EditIcon color='#909090' />}
+            onClick={() => navigate('/blogwrite')}
+          >
             깃로그 쓰기
           </Button>
         }
