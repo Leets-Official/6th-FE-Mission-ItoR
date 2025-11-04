@@ -11,6 +11,7 @@ interface LabeledTextAreaProps {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   error?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export default function LabeledTextArea({

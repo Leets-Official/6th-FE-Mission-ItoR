@@ -11,6 +11,7 @@ interface LabeledInputProps {
   error?: string;
   required?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export default function LabeledInput({
@@ -23,6 +24,7 @@ export default function LabeledInput({
   error,
   required,
   className,
+  disabled,
 }: LabeledInputProps) {
   return (
     <div className={clsx("flex flex-col gap-3", className)}>
@@ -37,6 +39,7 @@ export default function LabeledInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        disabled={disabled}
         className={clsx(
           "h-10 rounded-[4px] border border-[var(--Gray90)] px-4",
           "text-[14px] font-light leading-[22.4px] text-[var(--Gray20)]",

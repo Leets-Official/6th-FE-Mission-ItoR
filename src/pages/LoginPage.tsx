@@ -1,11 +1,14 @@
+// src/pages/LoginPage.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "../hooks/useForm";
-import Button from "../components/ui/Button/Button";
-import AuthInput from "../components/ui/AuthInput";
-import clearIcon from "../assets/icons/clear.svg";
-import kakaoIcon from "../assets/icons/kakao.svg";
-import "../styles/auth.css";
+
+import { useForm } from "@src/hooks/useForm";
+import Button from "@ui/Button/Button";
+import AuthInput from "@src/components/ui/AuthInput";
+import clearIcon from "@icons/clear.svg";
+import "@src/styles/auth.css";
+import { useLogin } from "@src/hooks/useAuth";
+import KakaoLoginButton from "@src/components/KakaoLoginButton";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -28,11 +31,30 @@ export default function LoginPage() {
     },
   });
 
+  // 실제로 사용하는 값만 구조분해 (unused 경고 방지)
+  const { mutate: login, isPending, isError, error } = useLogin();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
-    // 로그인 요청 자리
+
+    login(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: (res) => {
+          const { accessToken, refreshToken } = res.data;
+
+          if (accessToken) localStorage.setItem("accessToken", accessToken);
+          if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+
+          nav("/");
+        },
+      }
+    );
   };
 
   const goSignUp = () => {
@@ -57,7 +79,6 @@ export default function LoginPage() {
         </button>
 
         <div className="flex flex-col gap-8 text-[var(--White)] sm:flex-row sm:gap-12">
-          {/* 왼쪽 브랜드 영역 */}
           <div className="flex min-w-[200px] flex-1 flex-col justify-center">
             <div className="logo-text text-[48px] leading-[1.2] text-[var(--White)]">
               GITLOG
@@ -67,7 +88,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* 오른쪽 로그인 폼 영역 */}
           <form
             className="flex min-w-[260px] max-w-[320px] flex-1 flex-col text-[var(--White)]"
             onSubmit={handleSubmit}
@@ -79,6 +99,7 @@ export default function LoginPage() {
               value={values.email}
               onChange={handleChange}
               className="mb-2"
+              disabled={isPending}
             />
 
             <AuthInput
@@ -88,15 +109,26 @@ export default function LoginPage() {
               value={values.password}
               onChange={handleChange}
               className="mb-3"
+              disabled={isPending}
             />
 
             <Button
               type="submit"
               variant="primaryBlue"
-              className="mb-4"
+              className="mb-2"
+              disabled={isPending}
             >
-              이메일로 로그인
+              {isPending ? "로그인 중..." : "이메일로 로그인"}
             </Button>
+
+            {isError && (
+              <p className="mb-4 text-[12px] leading-[18px] text-[var(--Negative)]">
+                로그인에 실패했습니다
+                {error instanceof Error && error.message
+                  ? `: ${error.message}`
+                  : " . 다시 시도해주세요."}
+              </p>
+            )}
 
             <div className="mb-4 flex flex-col items-center text-[12px] leading-[18px] text-[var(--Gray56)]">
               <div className="flex w-full items-center gap-2">
@@ -108,26 +140,14 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button
-              type="button"
-              variant="kakao"
-              className="mb-4"
-            >
-              <>
-                <img
-                  src={kakaoIcon}
-                  alt=""
-                  className="h-[16px] w-[16px]"
-                />
-                카카오로 로그인
-              </>
-            </Button>
+            <KakaoLoginButton className="mb-4" disabled={isPending} />
 
             <div className="flex w-full flex-col items-center">
               <button
                 type="button"
                 className="text-[12px] font-light leading-[18px] text-[var(--Gray56)]"
                 onClick={goSignUp}
+                disabled={isPending}
               >
                 또는 회원가입
               </button>

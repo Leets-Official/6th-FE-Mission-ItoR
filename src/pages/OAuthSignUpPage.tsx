@@ -1,3 +1,4 @@
+// src/pages/SignUpFormPage.tsx
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -67,20 +68,27 @@ export default function SignUpFormPage() {
 
   useEffect(() => {
     if (isSuccess) {
+      // 회원가입 성공 시 로그인 페이지로 이동
       nav("/login");
     }
   }, [isSuccess, nav]);
 
-  const initial = (values.nickname?.trim()?.[0] ?? "").toUpperCase();
+  /** ===== 입력 필드 메타데이터 (map 렌더링) ===== */
+  type FieldName =
+    | "email"
+    | "password"
+    | "password2"
+    | "realname"
+    | "birth"
+    | "nickname";
 
-  type FieldName = "email" | "password" | "password2" | "realname" | "birth" | "nickname";
   const inputFields: Array<{
     label: string;
     name: FieldName;
     type: React.InputHTMLAttributes<HTMLInputElement>["type"];
     placeholder: string;
     required?: boolean;
-    helper?: string;
+    helper?: string; // 닉네임 보조 문구 등
   }> = [
     { label: "이메일", name: "email", type: "email", placeholder: "이메일", required: true },
     { label: "비밀번호", name: "password", type: "password", placeholder: "••••••", required: true },
@@ -94,10 +102,15 @@ export default function SignUpFormPage() {
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
+      {/* 상단 헤더 */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
-            <button type="button" aria-label="메뉴 열기" className="inline-flex h-6 w-6 items-center justify-center">
+            <button
+              type="button"
+              aria-label="메뉴 열기"
+              className="inline-flex h-6 w-6 items-center justify-center"
+            >
               <ReorderIcon className="h-6 w-6" />
             </button>
             <div className="logo-text select-none">GITLOG</div>
@@ -106,11 +119,14 @@ export default function SignUpFormPage() {
         </div>
       </header>
 
+      {/* 타이틀 영역 */}
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8">
           <div className="mx-auto h-8 max-h-8 max-w-[688px]" />
-          <div className="mx-auto flex w/full max-w-[688px] flex-col items-start justify-center gap-3 px-4 py-3">
-            <h1 className="text-[24px] font-medium leading-[38.4px] text-[var(--Black)]">회원가입</h1>
+          <div className="mx-auto flex w-full max-w-[688px] flex-col items-start justify-center gap-3 px-4 py-3">
+            <h1 className="text-[24px] font-medium leading-[38.4px] text-[var(--Black)]">
+              회원가입
+            </h1>
             <p className="self-stretch text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray20)]">
               가입을 위해 회원님의 정보를 입력해주세요.
             </p>
@@ -119,8 +135,13 @@ export default function SignUpFormPage() {
         </div>
       </section>
 
+      {/* 본문 폼 */}
       <main className="w-full flex-1">
-        <form className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8" onSubmit={handleSubmit}>
+        <form
+          className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8"
+          onSubmit={handleSubmit}
+        >
+          {/* 프로필 이미지 업로드 */}
           <div className="flex flex-col items-start gap-3">
             <span className="text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray56)]">
               프로필 사진
@@ -129,10 +150,16 @@ export default function SignUpFormPage() {
             <div className="flex flex-col items-start gap-3">
               <div className="flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full bg-[var(--Black)]">
                 {preview ? (
-                  <img src={preview} alt="profile" className="h-full w-full object-cover" />
-                ) : initial ? (
-                  <span className="logo-text text-[40px] leading-none text-[var(--White)]">{initial}</span>
-                ) : null}
+                  <img
+                    src={preview}
+                    alt="profile"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="logo-text text-[40px] leading-none text-[var(--White)]">
+                    G
+                  </span>
+                )}
               </div>
 
               <button
@@ -156,6 +183,7 @@ export default function SignUpFormPage() {
             </div>
           </div>
 
+          {/* 입력 필드들 (map 렌더링) */}
           <div className="flex flex-col gap-4">
             {inputFields.map((f) => (
               <div key={f.name} className="flex flex-col gap-2">
@@ -171,7 +199,9 @@ export default function SignUpFormPage() {
                   disabled={isPending}
                 />
                 {f.helper && (
-                  <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">{f.helper}</p>
+                  <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
+                    {f.helper}
+                  </p>
                 )}
               </div>
             ))}
@@ -187,15 +217,30 @@ export default function SignUpFormPage() {
             />
 
             {isError && (
-              <p className="text-[12px] leading-[19.2px] text-[var(--Negative)]">가입에 실패했습니다. 다시 시도해주세요.</p>
+              <p className="text-[12px] leading-[19.2px] text-[var(--Negative)]">
+                가입에 실패했습니다. 다시 시도해주세요.
+              </p>
             )}
           </div>
 
+          {/* 액션 버튼 */}
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="neutralOutline" className="flex-1" onClick={reset} disabled={isPending}>
+            <Button
+              type="button"
+              variant="neutralOutline"
+              className="flex-1"
+              onClick={reset}
+              disabled={isPending}
+            >
               취소
             </Button>
-            <Button type="submit" variant="outlinePointWhite" className="flex-1" disabled={isPending}>
+
+            <Button
+              type="submit"
+              variant="outlinePointWhite"
+              className="flex-1"
+              disabled={isPending}
+            >
               {isPending ? "가입 중..." : "회원가입 완료"}
             </Button>
           </div>
