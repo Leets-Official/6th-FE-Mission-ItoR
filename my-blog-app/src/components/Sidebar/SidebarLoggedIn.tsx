@@ -20,7 +20,7 @@ export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
   }
 
   return (
-    <aside className='flex flex-col justify-between items-start w-[240px] h-[768px] bg-[#F5F5F5] border-r border-gray-100 p-6'>
+    <aside className='flex flex-col justify-between items-start w-[240px] h-[768px] bg-fake-white border-r border-gray-100 p-6'>
       {/* 상단 프로필 정보 */}
       <div className='flex flex-col gap-4 w-full'>
         <div className='flex flex-col items-start w-full gap-4'>
@@ -47,27 +47,14 @@ export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
         <Button intent='secondary' size='sm' className='w-[99px]'>
           설정
         </Button>
-        <button
+        <Button
+          intent='primary'
+          size='sm'
+          className='w-[99px] bg-primary text-white hover:bg-primary-hover'
           onClick={handleLogoutClick}
-          style={{
-            display: 'flex',
-            padding: '8px 12px',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '8px',
-            flex: '1 0 0',
-            borderRadius: '2px',
-            background: '#00A1FF',
-            color: '#FFF',
-            fontFamily: '"Noto Sans KR"',
-            fontSize: '14px',
-            fontWeight: 400,
-            lineHeight: '160%',
-            letterSpacing: '-0.07px',
-          }}
         >
           로그아웃
-        </button>
+        </Button>
       </div>
 
       {/* 로그아웃 확인 모달 */}
