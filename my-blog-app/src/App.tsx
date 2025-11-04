@@ -2,14 +2,16 @@ import { RouterProvider } from 'react-router-dom'
 import router from './routes'
 import { ToastProvider } from '@/context/ToastContext'
 import { ModalProvider } from '@/context/ModalContext'
-
+import { AuthProvider } from '@/context/AuthContext'
 function App() {
   return (
-    <ToastProvider>
-      <ModalProvider>
-        <RouterProvider router={router} />
-      </ModalProvider>
-    </ToastProvider>
+    <AuthProvider>
+      <ToastProvider>
+        <ModalProvider>
+          <RouterProvider router={router} />
+        </ModalProvider>
+      </ToastProvider>
+    </AuthProvider>
   )
 }
 

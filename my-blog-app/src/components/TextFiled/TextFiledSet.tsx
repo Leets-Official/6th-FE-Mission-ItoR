@@ -3,6 +3,7 @@ import TextFiled from './TextFiled'
 type TextFiledSetProps = {
   label: string
   placeholder?: string
+  type?: string
   helperText?: string
   showHelper?: boolean
   helperType?: 'default' | 'error'
@@ -19,6 +20,7 @@ type TextFiledSetProps = {
 export default function TextFiledSet({
   label,
   placeholder = 'Text filed',
+  type = 'text',
   helperText,
   showHelper = false,
   helperType = 'default',

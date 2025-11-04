@@ -4,9 +4,14 @@ import { AddPhotoAlternateIcon } from '@/assets/icons/AddPhotoAlternateIcon'
 
 interface SignUpProfileSectionProps {
   title?: string
+  /** 프로필 이미지 주소 (선택) */
+  profileImage?: string
 }
 
-export default function SignUpProfileSection({ title = '프로필 사진' }: SignUpProfileSectionProps) {
+export default function SignUpProfileSection({
+  title = '프로필 사진',
+  profileImage = '/guest.jpg',
+}: SignUpProfileSectionProps) {
   return (
     <div className='flex flex-col justify-center items-start self-stretch gap-4 max-w-[688px] px-[16px] py-[12px]'>
       <span className='text-gray-400 text-[14px] font-light leading-[160%] tracking-[-0.07px] w-full'>
@@ -14,7 +19,9 @@ export default function SignUpProfileSection({ title = '프로필 사진' }: Sig
       </span>
 
       <div className='flex flex-col items-start gap-4'>
-        <ProfileImage size='xl' />
+        {/* 전달받은 프로필 이미지 표시 */}
+        <ProfileImage src={profileImage} size='xl' />
+
         <Button
           intent='tag'
           className='flex gap-1 border border-[#E6E6E6] rounded-[2px] px-[8px] py-[3px]'

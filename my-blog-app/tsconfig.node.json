@@ -13,6 +13,11 @@
     "moduleDetection": "force",
     "noEmit": true,
 
+    /* Node 타입 추가 */
+    "types": ["node"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
