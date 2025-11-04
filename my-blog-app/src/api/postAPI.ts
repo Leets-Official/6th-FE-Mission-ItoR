@@ -8,13 +8,16 @@ export const createPostAPI = async (data: {
     contentType: 'TEXT' | 'IMAGE'
   }[]
 }) => {
-  const token = localStorage.getItem('accessToken')
+  // contentType을 대문자 TEXT/IMAGE로 통일
+  const fixedData = {
+    ...data,
+    contents: data.contents.map((item) => ({
+      ...item,
+      contentType: item.contentType.toUpperCase() === 'IMAGE' ? 'IMAGE' : 'TEXT',
+    })),
+  }
 
-  const res = await axiosInstance.post('/posts', data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
+  // 헤더는 axiosInstance에서 자동으로 Authorization 추가됨
+  const res = await axiosInstance.post('/posts', fixedData)
   return res.data
 }
