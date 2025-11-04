@@ -90,7 +90,7 @@ const PostWritePage: React.FC = () => {
     try {
       const res = isEditMode ? await updatePost(postId!, payload) : await createPost(payload);
 
-      if (res.code === 0 || res.code === 200) {
+      if (res.code === 200 || res.code === 201) {
         setToast({
           message: isEditMode ? "게시글이 수정되었습니다!" : "게시글이 등록되었습니다!",
           type: "success",
