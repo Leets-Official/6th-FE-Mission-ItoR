@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // ✅ 추가
+
 import Blogfind from "./pages/Blogfind";
 import BlogDetail from "./pages/BlogDetail";
 import { dummyPosts } from "@/api/Dummy";
@@ -9,21 +11,27 @@ import Signup from "./pages/Signup";
 import SignupEmail from "./pages/SignupEmail";
 import ProfileDetail from "./pages/ProfileDetail";
 import ProfileFind from "./pages/ProfileFind";
+import SignupKakao from "./pages/SignupKakao";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Blogfind />} />
-        <Route path="/post/:id" element={<BlogDetailWrapper />} />
-        <Route path="/write" element={<BlogWrite/>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signup/email" element={<SignupEmail />} />
-        <Route path="/profiledetail" element={<ProfileDetail />} />
-        <Route path="/profilefind" element={<ProfileFind />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Blogfind />} />
+          <Route path="/post/:id" element={<BlogDetailWrapper />} />
+          <Route path="/write" element={<BlogWrite/>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup/email" element={<SignupEmail />} />
+          <Route path="/profiledetail" element={<ProfileDetail />} />
+          <Route path="/profilefind" element={<ProfileFind />} />
+          <Route path="/signup/kakao" element={<SignupKakao />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
