@@ -1,12 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Blogfind from "./Blogfind";
 import Frame7 from "@/assets/svgs/Frame7.svg?react";
-import ClearIcon from "@/assets/svgs/clear.svg?react"; // 닫기 버튼 svg
-import KakaoIcon from "@/assets/svgs/kakao.svg?react"; // 카카오 아이콘이 있다면 사용
-import { useNavigate } from "react-router-dom";
+import ClearIcon from "@/assets/svgs/clear.svg?react";
+import KakaoIcon from "@/assets/svgs/kakao.svg?react";
+import api from "@/api/axiosInstance";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  /** 로그인 요청 */
+  const handleEmailLogin = async () => {
+    if (!form.email.trim() || !form.password.trim()) {
+      alert("이메일과 비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await api.post("/auth/login", {
+        email: form.email.trim(),
+        password: form.password,
+      });
+
+      const data = res.data?.data || res.data;
+
+      // 토큰 저장
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      // 선택적으로 유저 정보도 저장 가능
+      localStorage.setItem("nickname", data.nickname || "");
+      localStorage.setItem("profilePicture", data.profilePicture || "");
+      localStorage.setItem("introduction", data.introduction || "");
+
+      alert("로그인 성공!");
+      navigate("/", { replace: true });
+    } catch (error: any) {
+      console.error("로그인 실패:", error);
+      alert(error.response?.data?.message || "로그인 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /** 카카오 로그인 요청 */
+  const handleKakaoLogin = async () => {
+    try {
+      const res = await api.get("/auth/kakao");
+      const redirectUrl = res.data?.data || res.data?.url || res.data;
+
+      if (!redirectUrl) {
+        alert("카카오 로그인 URL을 받아오지 못했습니다.");
+        return;
+      }
+
+      window.location.href = redirectUrl;
+    } catch (err) {
+      console.error("카카오 로그인 요청 실패:", err);
+      alert("카카오 로그인 요청에 실패했습니다.");
+    }
+  };
 
   return (
     <div className="relative w-full min-h-screen">
@@ -23,7 +83,10 @@ const Login: React.FC = () => {
                      flex flex-row items-center justify-between px-[60px] py-[80px] relative text-white"
         >
           {/* 오른쪽 상단 닫기 버튼 */}
-          <button className="absolute top-[20px] right-[20px] w-[40px] h-[40px] flex items-center justify-center">
+          <button
+            onClick={() => navigate("/")}
+            className="absolute top-[20px] right-[20px] w-[40px] h-[40px] flex items-center justify-center"
+          >
             <ClearIcon className="w-[24px] h-[24px] text-white" />
           </button>
 
@@ -33,7 +96,6 @@ const Login: React.FC = () => {
             <p className="text-[#909090] text-[14px] font-light px-4 leading-[160%]">
               You can make anything by writing
             </p>
-
           </div>
 
           {/* 오른쪽 로그인 폼 */}
@@ -42,6 +104,8 @@ const Login: React.FC = () => {
             <input
               type="email"
               placeholder="이메일"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="w-full h-[46px] rounded-md px-[16px] py-[12px] mb-3 
                          bg-white text-black text-[14px] placeholder-[#B0B0B0] focus:outline-none"
             />
@@ -50,15 +114,19 @@ const Login: React.FC = () => {
             <input
               type="password"
               placeholder="비밀번호"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
               className="w-full h-[46px] rounded-md px-[16px] py-[12px] mb-4 
                          bg-white text-black text-[14px] placeholder-[#B0B0B0] focus:outline-none"
             />
 
-            {/* 이메일로 로그인 */}
+            {/* 이메일 로그인 버튼 */}
             <button
-              className="w-full h-[46px] rounded-md bg-[#3B82F6] text-white font-medium mb-4 hover:bg-[#2563EB] transition-colors"
+              onClick={handleEmailLogin}
+              disabled={isLoading}
+              className="w-full h-[46px] rounded-md bg-[#3B82F6] text-white font-medium mb-4 hover:bg-[#2563EB] transition-colors disabled:opacity-50"
             >
-              이메일로 로그인
+              {isLoading ? "로그인 중..." : "이메일로 로그인"}
             </button>
 
             {/* SNS 구분선 */}
@@ -70,6 +138,7 @@ const Login: React.FC = () => {
 
             {/* 카카오 로그인 */}
             <button
+              onClick={handleKakaoLogin}
               className="w-full h-[46px] rounded-md bg-[#FEE500] text-black font-medium flex items-center justify-center gap-2 mb-4 hover:bg-[#FDDD00] transition-colors"
             >
               <KakaoIcon className="w-[18px] h-[18px]" />
@@ -77,9 +146,10 @@ const Login: React.FC = () => {
             </button>
 
             {/* 회원가입 안내 */}
-            <p 
+            <p
               onClick={() => navigate("/signup")}
-              className="text-[#B0B0B0] text-[12px] cursor-pointer hover:underline">
+              className="text-[#B0B0B0] text-[12px] cursor-pointer hover:underline"
+            >
               또는 회원가입
             </p>
           </div>
