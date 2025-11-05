@@ -18,14 +18,14 @@ export const useCreatePost = () =>
 /** 게시글 수정 */
 export const useUpdatePost = () =>
   useMutation({
-    mutationFn: ({ id, body }: { id: number; body: PostBody }) =>
+    mutationFn: ({ id, body }: { id: string; body: PostBody }) =>
       updatePost(id, body),
   });
 
 /** 게시글 삭제 */
 export const useDeletePost = () =>
   useMutation({
-    mutationFn: (id: number) => deletePost(id),
+    mutationFn: (id: string) => deletePost(id),
   });
 
 /** 게시글 전체 조회 */
@@ -36,7 +36,7 @@ export const useAllPosts = () =>
   });
 
 /** 게시글 단일 조회 */
-export const usePostDetail = (id: number) =>
+export const usePostDetail = (id: string) =>
   useQuery<PostResponse>({
     queryKey: ["post", id],
     queryFn: () => getPostById(id),

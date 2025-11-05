@@ -8,14 +8,14 @@ import { type Post } from "@/api/Dummy";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api/axiosInstance";
 
-// ✅ 게시글 본문 타입
+// 게시글 본문 타입
 interface ContentBlock {
   contentOrder: number;
   content: string;
   contentType: "TEXT";
 }
 
-// ✅ 게시글 생성/수정에 공통으로 쓰일 Payload 타입
+// 게시글 생성/수정에 공통으로 쓰일 Payload 타입
 interface PostPayload {
   title: string;
   contents: ContentBlock[];
@@ -30,25 +30,25 @@ const BlogWrite: React.FC = () => {
   const [toastVariant, setToastVariant] = useState<"success" | "warning" | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  // ✅ 게시글 생성 API
+  // 게시글 생성 API
   const createPost = async (payload: PostPayload) => {
     const { data } = await api.post("/posts", payload);
     return data;
   };
 
-  // ✅ 게시글 수정 API
+  // 게시글 수정 API
   const updatePost = async ({
     id,
     payload,
   }: {
-    id: number;
+    id: string;
     payload: PostPayload;
   }) => {
     const { data } = await api.patch(`/posts/${id}`, payload);
     return data;
   };
 
-  // ✅ React Query Hooks
+  // React Query Hooks
   const { mutate: createMutate } = useMutation({
     mutationFn: createPost,
     onSuccess: () => showToast("success"),
@@ -85,7 +85,7 @@ const BlogWrite: React.FC = () => {
     }, 3000);
   };
 
-  // ✅ 게시하기 버튼
+  // 게시하기 버튼
   const handlePost = () => {
     if (!title.trim() || !content.trim()) {
       showToast("warning");

@@ -23,13 +23,13 @@ export const createPost = async (body: PostBody): Promise<PostResponse> => {
 };
 
 /** 게시글 수정 */
-export const updatePost = async (id: number, body: PostBody): Promise<PostResponse> => {
+export const updatePost = async (id: string, body: PostBody): Promise<PostResponse> => {
   const { data } = await api.patch(`/posts/${id}`, body);
   return data.data;
 };
 
 /** 게시글 삭제 */
-export const deletePost = async (id: number): Promise<void> => {
+export const deletePost = async (id: string): Promise<void> => {
   await api.delete(`/posts/${id}`);
 };
 
@@ -40,7 +40,7 @@ export const getAllPosts = async (): Promise<PostResponse[]> => {
 };
 
 /** 게시글 단일 조회 */
-export const getPostById = async (id: number): Promise<PostResponse> => {
+export const getPostById = async (id: string): Promise<PostResponse> => {
   const { data } = await api.get(`/posts/${id}`);
   return data.data;
 };
