@@ -62,7 +62,7 @@ export const useReissue = () =>
 export const useKakaoStart = () =>
   useMutation<void, unknown, void>({
     mutationFn: async () => {
-      const api = (await import("src/api/client")).default;
+      const api = (await import("@src/api/axiosInstance")).default;
       const baseURL = api.defaults.baseURL || "";
       window.location.href = `${baseURL}/auth/kakao`;
     },
