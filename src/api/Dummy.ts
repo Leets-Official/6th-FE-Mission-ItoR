@@ -8,7 +8,7 @@ export interface Comment {
 }
 
 export interface Post {
-  id: number;
+  id: string;
   title: string;      
   content: string;    
   author: string;     
@@ -22,7 +22,7 @@ export interface Post {
 
 export const dummyPosts: Post[] = [
   {
-    id: 1,
+    id: "1",
     title: "16 Title one line",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Mapper가 어떻게 작동하는지 부터 다시 되짚어보며 문제를 해결해봤다.",
@@ -39,7 +39,7 @@ export const dummyPosts: Post[] = [
     profileIntro: "블로그 운영자 한줄소개 예시",
   },
   {
-    id: 2,
+    id: "2",
     title: "16 Title one line",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
@@ -50,7 +50,7 @@ export const dummyPosts: Post[] = [
     profileIntro: "김철수 소개",
   },
   {
-    id: 3,
+    id: "3",
     title: "16 Title one line",
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Mapper가 어떻게 작동하는지 부터 다시 되짚어보며 문제를 해결해봤다.",
@@ -66,7 +66,7 @@ export const dummyPosts: Post[] = [
     profileIntro: "이영희 블로그 소개",
   },
   {
-    id: 4,
+    id: "4",
     title: "16 Title one line",
     content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
     author: "박민수",
