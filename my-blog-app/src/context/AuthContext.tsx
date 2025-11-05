@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface AuthContextType {
   isLoggedIn: boolean
@@ -12,9 +13,10 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('accesstoken')
     const tempLogin = localStorage.getItem('isLoggedIn')
     if (token || tempLogin === 'true') {
       setIsLoggedIn(true)
@@ -22,11 +24,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const logout = () => {
-    localStorage.removeItem('token')
+    localStorage.removeItem('accesstoken')
     localStorage.removeItem('isLoggedIn')
     setIsLoggedIn(false)
     alert('로그아웃되었습니다.')
-    window.location.href = '/'
+    navigate('/')
   }
 
   return (

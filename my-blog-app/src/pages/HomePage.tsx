@@ -8,13 +8,18 @@ import { Button } from '@/components/Button/Button'
 import { EditIcon } from '@/assets/icons/EditIcon'
 import PictureFrame from '@/components/ListItem/PictureFrame'
 import { mockPosts } from '@/constants/mockPosts'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function HomePage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const navigate = useNavigate()
+  const { isLoggedIn } = useAuthStore()
 
   useEffect(() => {
-    setIsLoginOpen(true)
+    const token = localStorage.getItem('accessToken')
+    if (!token) {
+      setIsLoginOpen(true)
+    }
   }, [])
 
   return (
@@ -26,7 +31,13 @@ export default function HomePage() {
             intent='flat'
             className='text-gray-300'
             icon={<EditIcon color='#909090' />}
-            onClick={() => navigate('/blogwrite')}
+            onClick={() => {
+              if (isLoggedIn) {
+                navigate('/blogwrite')
+              } else {
+                setIsLoginOpen(true)
+              }
+            }}
           >
             깃로그 쓰기
           </Button>
