@@ -1,5 +1,10 @@
 import { useState, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+
+import { login } from '@/api/authAPI';
+
+import type { AxiosError } from 'axios';
 
 import LoginButton from '../Button/LoginButton';
 import LoginInput from '../Input/LoginInput';
@@ -10,8 +15,15 @@ interface loginModalProps {
   onClose: () => void;
 }
 
-const EMAIL = '2ssac@leets.com';
-const PASSWORD = '123456@q'; //! 임시 비밀번호
+type LoginSuccessData = {
+  accessToken: string;
+  refreshToken: string;
+};
+type ApiErrorResponse = {
+  code?: number;
+  message?: string;
+  error?: string;
+};
 
 const LoginModal = ({ onClose }: loginModalProps) => {
   const navigate = useNavigate();
@@ -19,19 +31,41 @@ const LoginModal = ({ onClose }: loginModalProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isErrorVisible, setIsErrorVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const isEmailValid = EMAIL_REGEX.test(email);
-  const isEmailOK = isEmailValid && email === EMAIL; //! 임시 비밀번호 검증
-  const isPasswordOK = password === PASSWORD; //! 임시 비밀번호 검증
+
+  const loginMutation = useMutation<
+    LoginSuccessData,
+    AxiosError<ApiErrorResponse>,
+    { email: string; password: string }
+  >({
+    mutationFn: ({ email, password }) => login(email, password),
+    onSuccess: ({ accessToken, refreshToken }) => {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      navigate('/');
+    },
+    onError: (error) => {
+      const apiMessage =
+        error.response?.data?.message ??
+        error.response?.data?.error ??
+        error.message ??
+        '로그인 실패';
+      setErrorMessage(apiMessage);
+      setIsErrorVisible(true);
+    },
+  });
 
   const handleSubmit = () => {
-    if (!isEmailOK || !isPasswordOK) {
+    if (!isEmailValid) {
       setIsErrorVisible(true);
+      setErrorMessage('*이메일 형식이 적합하지 않습니다.');
       return;
     }
-    setIsErrorVisible(false);
+    loginMutation.mutate({ email, password });
   };
 
   const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -73,9 +107,9 @@ const LoginModal = ({ onClose }: loginModalProps) => {
               *이메일 형식이 적합하지 않습니다.
             </p>
           )}
-          {isErrorVisible && isEmailValid && !isEmailOK && (
+          {isErrorVisible && isEmailValid && errorMessage && (
             <p className="px-1.5 text-xs font-light text-negative">
-              *가입되지 않은 이메일입니다.
+              {errorMessage}
             </p>
           )}
           <LoginInput
@@ -87,11 +121,6 @@ const LoginModal = ({ onClose }: loginModalProps) => {
             onKeyDown={handleEnterKey}
             placeholder="비밀번호"
           />
-          {isErrorVisible && isEmailValid && isEmailOK && !isPasswordOK && (
-            <p className="px-1.5 text-xs font-light text-negative">
-              *비밀번호가 일치하지 않습니다.
-            </p>
-          )}
         </div>
         <div className="flex flex-col px-4">
           <LoginButton
@@ -106,7 +135,7 @@ const LoginModal = ({ onClose }: loginModalProps) => {
             </span>
             <div className="w-[123px] -mr-4 h-0 border border-gray-20"></div>
           </div>
-          <LoginButton type="KAKOLOGIN" text="카카오로 로그인" />
+          <LoginButton type="KAKAOLOGIN" text="카카오로 로그인" />
           <button
             onClick={() => navigate('/signup')}
             className="mt-1 px-2 pt-0.5 pb-1 text-xs font-normal text-gray-56"
