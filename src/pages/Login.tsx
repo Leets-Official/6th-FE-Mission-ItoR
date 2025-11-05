@@ -50,23 +50,12 @@ const Login: React.FC = () => {
     }
   };
 
+  
+
   /** 카카오 로그인 요청 */
-  const handleKakaoLogin = async () => {
-    try {
-      const res = await api.get("/auth/kakao");
-      const redirectUrl = res.data?.data || res.data?.url || res.data;
-
-      if (!redirectUrl) {
-        alert("카카오 로그인 URL을 받아오지 못했습니다.");
-        return;
-      }
-
-      window.location.href = redirectUrl;
-    } catch (err) {
-      console.error("카카오 로그인 요청 실패:", err);
-      alert("카카오 로그인 요청에 실패했습니다.");
-    }
-  };
+  const handleKakaoLogin = () => {
+  window.location.href = "https://blog.leets.land/auth/kakao";
+};
 
   return (
     <div className="relative w-full min-h-screen">

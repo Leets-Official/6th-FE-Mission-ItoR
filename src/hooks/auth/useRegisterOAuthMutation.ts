@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { registerOAuth } from "@/api/auth";
+import { registerOAuth } from "@src/api/auth";
 
 export const useRegisterOAuthMutation = () => {
   return useMutation({
@@ -9,7 +9,7 @@ export const useRegisterOAuthMutation = () => {
       window.location.href = "/login";
     },
     onError: (error: any) => {
-      alert("카카오 회원가입 실패: " + (error.response?.data?.message || "알 수 없는 오류"));
+      alert("회원가입 실패: " + (error.response?.data?.message || "알 수 없는 오류"));
     },
   });
 };

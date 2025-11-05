@@ -1,21 +1,59 @@
-import api from "./axiosInstance";
+// src/api/auth.ts
+import api from "@/api/axiosInstance";
 
-export const login = async (data: { email: string; password: string }) => {
-  const res = await api.post("/auth/login", data);
-  return res.data;
+export interface SignUpBody {
+  email: string;
+  password: string;
+  name: string;
+  birthDate: string;
+  nickname: string;
+  introduction?: string;
+  profilePicture?: string;
+}
+
+export interface LoginBody {
+  email: string;
+  password: string;
+}
+
+export interface OAuthSignUpBody {
+  email: string;
+  name: string;
+  birthDate?: string;
+  nickname: string;
+  introduction?: string;
+  profilePicture?: string;
+  kakaoId: number;
+}
+
+export interface ReissueBody {
+  refreshToken: string;
+}
+
+export const signUpRequest = async (body: SignUpBody) => {
+  const { data } = await api.post("/auth/register", body);
+  return data;
 };
 
-export const register = async (data: Record<string, any>) => {
-  const res = await api.post("/auth/register", data);
-  return res.data;
+export const loginRequest = async (body: LoginBody) => {
+  const { data } = await api.post("/auth/login", body);
+  return data;
 };
 
-export const registerOAuth = async (data: Record<string, any>) => {
-  const res = await api.post("/auth/register-oauth", data);
-  return res.data;
+export const oauthRegisterRequest = async (body: OAuthSignUpBody) => {
+  const { data } = await api.post("/auth/register/oauth", body);
+  return data;
 };
 
-export const reissueToken = async () => {
-  const res = await api.post("/auth/reissue");
-  return res.data;
+export const reissueToken = async (body: ReissueBody) => {
+  const { data } = await api.post("/auth/reissue", body);
+  return data;
 };
+
+export const kakaoRedirectLogin = async (code: string) => {
+  const { data } = await api.get("/auth/kakao/redirect", { params: { code } });
+  return data;
+};
+
+// registerOAuth 별칭으로 export (useRegisterOAuthMutation에서 사용)
+export { oauthRegisterRequest as registerOAuth };
