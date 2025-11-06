@@ -1,4 +1,4 @@
-import Img from "@/assets/svgs/Img.png"; // 게시글/프로필 기본 이미지
+import Img from "@src/assets/svgs/Img.png"; // 게시글/프로필 기본 이미지
 
 export interface Comment {
   id: number;

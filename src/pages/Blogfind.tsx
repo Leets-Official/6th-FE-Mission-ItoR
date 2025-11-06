@@ -34,18 +34,18 @@ const Blogfind: React.FC = () => {
   const location = useLocation();
   const [showToast, setShowToast] = useState(false);
 
-  // ✅ React Query로 데이터 가져오기
+  // React Query로 데이터 가져오기
   const { data: posts, isLoading, isError } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
   });
 
-  // ✅ 게시글 클릭 시 상세 페이지로 이동
+  // 게시글 클릭 시 상세 페이지로 이동
   const handleClickPost = (postId: string) => {
     navigate(`/post/${postId}`);
   };
 
-  // ✅ 삭제 후 토스트 표시용 state 관리
+  // 삭제 후 토스트 표시용 state 관리
   useEffect(() => {
     if (location.state?.showToast) {
       setShowToast(true);
@@ -59,7 +59,7 @@ const Blogfind: React.FC = () => {
     }
   }, [location.state, location.pathname, navigate]);
 
-  // ✅ 로딩 중
+  // 로딩 중
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen text-gray-600">
@@ -68,7 +68,7 @@ const Blogfind: React.FC = () => {
     );
   }
 
-  // ✅ 오류 발생 시
+  // 오류 발생 시
   if (isError) {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500">
@@ -82,12 +82,12 @@ const Blogfind: React.FC = () => {
       {/* 상단 헤더 */}
       <Header variant="write" />
 
-      {/* ✅ 삭제 후 토스트 메시지 */}
+      {/* 삭제 후 토스트 메시지 */}
       {showToast && (
         <Toast variant="success" message="삭제가 완료되었습니다!" />
       )}
 
-      {/* ✅ 게시글 리스트 */}
+      {/* 게시글 리스트 */}
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
