@@ -6,7 +6,7 @@ import {
   getAllPosts,
   getPostById,
   type PostBody,
-  type PostResponse,   
+  type PostResponse,
 } from "@src/api/posts";
 
 /** 게시글 생성 */
@@ -30,7 +30,7 @@ export const useDeletePost = () =>
 
 /** 게시글 전체 조회 */
 export const useAllPosts = () =>
-  useQuery<PostResponse[]>({
+  useQuery({
     queryKey: ["posts"],
     queryFn: getAllPosts,
   });

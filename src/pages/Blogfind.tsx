@@ -94,7 +94,7 @@ const Blogfind: React.FC = () => {
             <div
               key={post.postId}
               className="cursor-pointer w-full flex justify-center"
-              onClick={() => handleClickPost(post.postId)}
+              onClick={() => navigate(`/post/${post.postId}`)}
             >
               <PostCard
                 post={{
