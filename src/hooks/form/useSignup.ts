@@ -4,9 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { signupSchema, SignupFormData } from '@/utils/schemas';
 import { useRegisterMutation, useRegisterOAuthMutation } from '@/api/auth/authQuery';
+import { useS3ImageUpload } from '@/hooks/common/useS3ImageUpload';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
 import { setAccessToken, setRefreshToken } from '@/api/apiInstance';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { AUTH_TEXTS } from '@/constants';
 
 interface UseSignupReturn {
   previewImage: string;
@@ -28,6 +31,7 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
   const storedKakaoId = sessionStorage.getItem('kakaoId');
 
   const [previewImage, setPreviewImage] = useState<string>(defaultImage);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [kakaoId] = useState<number | null>(storedKakaoId ? Number(storedKakaoId) : null);
@@ -38,6 +42,8 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
   const queryClient = useQueryClient();
   const registerMutation = useRegisterMutation();
   const registerOAuthMutation = useRegisterOAuthMutation();
+  const { uploadImage } = useS3ImageUpload();
+  const setIsKakaoUser = useAuthStore(state => state.setIsKakaoUser);
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -46,14 +52,24 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
     mode: 'onChange',
   });
 
-  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      return;
+    }
+
+    // 미리보기용 base64
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // S3 업로드
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) {
+      setUploadedImageUrl(imageUrl);
+      showToast(AUTH_TEXTS.SIGNUP.IMAGE_UPLOADED, 'positive');
     }
   };
 
@@ -71,10 +87,10 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
         {
           email: data.email,
           nickname: data.nickname,
-          profilePicture: previewImage || '',
+          profilePicture: uploadedImageUrl || '',
           birthDate: data.birthDate,
           name: data.name,
-          introduction: data.bio || '',
+          introduction: data.introduction || '',
           kakaoId: kakaoId,
         },
         {
@@ -83,11 +99,12 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
             sessionStorage.removeItem('kakaoId');
             setAccessToken(response.data.accessToken || null);
             setRefreshToken(response.data.refreshToken || null);
+            setIsKakaoUser(true); // 카카오 사용자로 설정
             await queryClient.invalidateQueries({ queryKey: ['userInfo'] });
             navigate('/');
           },
           onError: () => {
-            showToast('회원가입을 할 수 없습니다.', 'warning');
+            showToast(AUTH_TEXTS.SIGNUP.SIGNUP_FAILED, 'warning');
           },
         }
       );
@@ -98,10 +115,10 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
           email: data.email,
           nickname: data.nickname,
           password: data.password,
-          profilePicture: previewImage || '',
+          profilePicture: uploadedImageUrl || '',
           birthDate: data.birthDate,
           name: data.name,
-          introduction: data.bio || '',
+          introduction: data.introduction || '',
         },
         {
           onSuccess: () => {
@@ -109,7 +126,7 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
             setIsCompleteModalOpen(true);
           },
           onError: () => {
-            showToast('회원가입을 할 수 없습니다.', 'warning');
+            showToast(AUTH_TEXTS.SIGNUP.SIGNUP_FAILED, 'warning');
           },
         }
       );

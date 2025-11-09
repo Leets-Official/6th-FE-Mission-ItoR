@@ -32,6 +32,9 @@ export const MYPAGE_TEXTS = {
     BIO_PLACEHOLDER: '한줄 소개',
     NICKNAME_HINT: '*20글자 이내',
     SAVE_SUCCESS: '저장했습니다!',
+    NO_USER_INFO: '유저 정보가 없습니다.',
+    NO_CHANGES: '변경된 내용이 없습니다.',
+    UPDATE_FAILED: '프로필 업데이트에 실패했습니다.',
   },
 } as const;
 
@@ -59,5 +62,5 @@ export const SIGNUP_FORM_FIELDS = [
   { name: 'name', title: '이름', type: undefined, placeholder: '이름', hintText: undefined },
   { name: 'birthDate', title: '생년월일', type: undefined, placeholder: 'YYYY-MM-DD', hintText: undefined },
   { name: 'nickname', title: '닉네임', type: undefined, placeholder: '닉네임', hintText: '20글자 이내' },
-  { name: 'bio', title: '한 줄 소개', type: undefined, placeholder: '한 줄 소개', hintText: undefined },
+  { name: 'introduction', title: '한 줄 소개', type: undefined, placeholder: '한 줄 소개', hintText: undefined },
 ] as const;

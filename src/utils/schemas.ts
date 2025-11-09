@@ -10,11 +10,18 @@ export const signupSchema = zod
     name: validators.name(),
     birthDate: validators.birthDate(),
     nickname: validators.nickname(),
-    bio: validators.bio(),
+    introduction: validators.bio(),
   })
   .refine(data => data.password === data.passwordConfirm, {
     message: VALIDATION_MESSAGES.passwordConfirm.mismatch,
     path: ['passwordConfirm'],
   });
 
+// 프로필 수정 스키마
+export const profileEditSchema = signupSchema.omit({
+  password: true,
+  passwordConfirm: true,
+});
+
 export type SignupFormData = zod.infer<typeof signupSchema>;
+export type ProfileEditFormData = zod.infer<typeof profileEditSchema>;
