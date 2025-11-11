@@ -19,6 +19,7 @@ interface PostItemProps {
 
 const PostItem: React.FC<PostItemProps> = ({ post, onClick }) => {
   const previewText = (post.contents ?? []).find((c) => c.contentType === "TEXT")?.content ?? "";
+  const previewImage = (post.contents ?? []).find((c) => c.contentType === "IMAGE")?.content;
 
   return (
     <li className={`${listItem} cursor-pointer`} onClick={onClick}>
@@ -33,7 +34,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, onClick }) => {
           )}
         </div>
 
-        {post.profileUrl && <img src={post.profileUrl} alt={post.title} className={postImage} />}
+        {previewImage && <img src={previewImage} alt={post.title} className={postImage} />}
       </div>
 
       <div className={postMeta}>
