@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import * as S from "./Signup.styled";
 import TextFieldSet from "@/components/Text/TextFieldSet";
 import Button from "@/components/Button/Button";
@@ -20,11 +20,9 @@ interface SignupFormProps {
   };
 }
 
-/**
- * ✅ 회원가입 폼
- * - 이메일 / 카카오 모두 처리
- */
 const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ 파일 input ref 추가
+
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
     password: "",
@@ -41,6 +39,18 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  /** ✅ 파일 선택 시 실행 */
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm((prev) => ({ ...prev, profilePicture: reader.result as string }));
+    };
+    reader.readAsDataURL(file); // Base64 인코딩 후 Avatar 미리보기용
+  };
 
   const handleChange = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -121,11 +131,22 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
           <Avatar size="xl" src={form.profilePicture} alt="Profile" />
+
           <SmallButton
             label="프로필 사진 추가"
             variant="secondaryOutline"
             leftIcon={<AddPhotoAlternateIcon className={S.profileAddIcon} />}
             className="border-brand-lightGray text-xs"
+            onClick={() => fileInputRef.current?.click()} // ✅ 버튼 클릭 시 파일창 열기
+          />
+
+          {/* ✅ 숨겨진 input 추가 */}
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handlePhotoChange}
           />
         </div>
       </div>
