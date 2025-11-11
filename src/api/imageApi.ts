@@ -4,7 +4,7 @@ export const getPresignedUrl = async (fileName: string): Promise<string> => {
   const res = await api.get("/images/presigned-url", {
     params: { fileName },
   });
-  if (res.data?.code !== 0) {
+  if (res.data?.code !== 200) {
     throw new Error("Presigned URL 요청 실패");
   }
   return res.data.data;
