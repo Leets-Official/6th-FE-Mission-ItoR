@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { getAllPosts } from "@/api/posts";
 import {
   createPost,
   updatePost,
@@ -49,8 +50,8 @@ export const useDeletePost = () =>
 /** 게시글 전체 조회 */
 export const useAllPosts = () =>
   useQuery({
-    queryKey: ["posts"],
-    queryFn: getAllPosts,
+    queryKey: ["posts", page],
+    queryFn: () => getAllPosts(Page),
   });
 
 /** 게시글 단일 조회 */

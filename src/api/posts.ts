@@ -48,9 +48,9 @@ export const deletePost = async (id: string): Promise<void> => {
 };
 
 /** 게시글 전체 조회 */
-export const getAllPosts = async (): Promise<any[]> => {
+export const getAllPosts = async (page: number): Promise<any[]> => {
   const { data } = await api.get("/posts/all", {
-    params: { size: 10, page: 1 },
+    params: { size: 10, page },
   });
   return data.data.posts;
 };
