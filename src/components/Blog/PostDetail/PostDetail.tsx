@@ -171,7 +171,7 @@ export default function PostDetail() {
             postAuthorProfile={post.profileUrl}
             postAuthorName={post.nickName}
             onLoginClick={() => setIsLoginOpen(true)}
-            onSubmit={(comment) => {
+            onSubmit={(comment: string) => {
               setToast({ message: `댓글 등록: ${comment}`, type: "success" });
               setCommentCount((prev) => prev + 1);
             }}
