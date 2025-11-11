@@ -8,15 +8,16 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
-import Toast from "@/components/Toast/Toast";
 import { useUserStore } from "@/store/useUserStore";
 import { useLogout } from "@/hooks/useLogout";
 import { fetchPostDetail, deletePost } from "@/api/postApi";
 import { Post } from "@/types/post";
+import { useToast } from "@/contexts/ToastContext";
 
 export default function PostDetail() {
   const { user } = useUserStore();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
@@ -27,8 +28,6 @@ export default function PostDetail() {
   const [commentCount, setCommentCount] = useState(0);
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const commentRef = useRef<HTMLDivElement>(null);
   const { postId } = useParams<{ postId: string }>();
@@ -48,15 +47,17 @@ export default function PostDetail() {
           setCommentCount(res.data.comments?.length ?? 0);
         } else {
           console.error("게시글 불러오기 실패:", res.message);
+          showToast("게시글을 불러오지 못했습니다.", "error");
         }
       } catch (err) {
         console.error("게시글 상세 조회 에러:", err);
+        showToast("서버 오류가 발생했습니다.", "error");
       } finally {
         setLoading(false);
       }
     };
     loadPost();
-  }, [postId]);
+  }, [postId, showToast]);
 
   if (loading) return <div className="p-6 text-center">게시글 불러오는 중...</div>;
   if (!post) return <div className="p-6 text-center">게시글을 찾을 수 없습니다.</div>;
@@ -71,17 +72,16 @@ export default function PostDetail() {
       const res = await deletePost(postId);
       if (res.code === 200 || res.code === 0) {
         setIsDeleteModalOpen(false);
-        setToast({ message: "게시글이 삭제되었습니다.", type: "success" });
-
+        showToast("게시글이 삭제되었습니다.", "success");
         setTimeout(() => {
           navigate("/blog", { replace: true });
         }, 1000);
       } else {
-        setToast({ message: res.message || "삭제 실패", type: "error" });
+        showToast(res.message || "삭제 실패", "error");
       }
     } catch (err) {
       console.error("게시글 삭제 에러:", err);
-      setToast({ message: "삭제 중 오류가 발생했습니다.", type: "error" });
+      showToast("삭제 중 오류가 발생했습니다.", "error");
     }
   };
 
@@ -172,7 +172,7 @@ export default function PostDetail() {
             postAuthorName={post.nickName}
             onLoginClick={() => setIsLoginOpen(true)}
             onSubmit={(comment: string) => {
-              setToast({ message: `댓글 등록: ${comment}`, type: "success" });
+              showToast(`댓글 등록: ${comment}`, "success");
               setCommentCount((prev) => prev + 1);
             }}
           />
@@ -201,12 +201,6 @@ export default function PostDetail() {
         cancelText="취소"
         confirmColor="bg-brand-blue text-white hover:opacity-90"
       />
-
-      {toast && (
-        <div className="fixed top-[90px] left-1/2 z-[9999] -translate-x-1/2 transform">
-          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-        </div>
-      )}
     </div>
   );
 }

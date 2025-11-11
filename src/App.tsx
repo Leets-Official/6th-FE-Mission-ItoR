@@ -6,19 +6,22 @@ import PostWritePage from "@/pages/PostWritePage/PostWritePage";
 import MyPage from "@/pages/MyPage/MyPage";
 import MyPageSetting from "@/pages/MyPageSetting/MyPageSetting";
 import OAuthCallback from "@/pages/OAuthCallback";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/blog" element={<MainPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/blog/:postId" element={<PostDetailPage />} />
-      <Route path="/write" element={<PostWritePage />} />
-      <Route path="/edit/:postId" element={<PostWritePage />} />
-      <Route path="/mypage" element={<MyPage />} />
-      <Route path="/mypage/setting" element={<MyPageSetting loginType="email" />} />
-      <Route path="/oauth/kakao/success" element={<OAuthCallback />} />
-    </Routes>
+    <ToastProvider>
+      <Routes>
+        <Route path="/blog" element={<MainPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/blog/:postId" element={<PostDetailPage />} />
+        <Route path="/write" element={<PostWritePage />} />
+        <Route path="/edit/:postId" element={<PostWritePage />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/setting" element={<MyPageSetting loginType="email" />} />
+        <Route path="/oauth/kakao/success" element={<OAuthCallback />} />
+      </Routes>
+    </ToastProvider>
   );
 }
 

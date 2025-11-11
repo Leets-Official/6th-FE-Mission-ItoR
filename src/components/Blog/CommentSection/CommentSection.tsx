@@ -2,12 +2,12 @@ import Avatar from "@/components/Avatar/Avatar";
 import Button from "@/components/Button/Button";
 import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
-import Toast from "@/components/Toast/Toast";
 import * as S from "./CommentSection.styled";
 import CommentItem from "./CommentItem";
 import { useUserStore } from "@/store/useUserStore";
 import { useState } from "react";
 import { useComments } from "@/hooks/useComments";
+import { useToast } from "@/contexts/ToastContext";
 
 interface CommentSectionProps {
   isLoggedIn: boolean;
@@ -25,9 +25,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 }) => {
   const { user } = useUserStore();
   const { comments, addComment, editComment, removeComment } = useComments(postId);
+  const { showToast } = useToast();
 
   const [comment, setComment] = useState("");
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [targetCommentId, setTargetCommentId] = useState<number | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -35,13 +35,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     if (!comment.trim()) return;
     await addComment(comment);
     setComment("");
-    setToast({ message: "댓글이 등록되었습니다.", type: "success" });
+    showToast("댓글이 등록되었습니다.", "success");
   };
 
   const handleDelete = async () => {
     if (!targetCommentId) return;
     await removeComment(targetCommentId);
-    setToast({ message: "댓글이 삭제되었습니다.", type: "success" });
+    showToast("댓글이 삭제되었습니다.", "success");
     setIsDeleteModalOpen(false);
   };
 
@@ -108,12 +108,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         cancelText="취소"
         confirmColor="bg-brand-red text-white hover:opacity-90"
       />
-
-      {toast && (
-        <div className="fixed top-[90px] left-1/2 z-[9999] -translate-x-1/2 transform">
-          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-        </div>
-      )}
     </>
   );
 };

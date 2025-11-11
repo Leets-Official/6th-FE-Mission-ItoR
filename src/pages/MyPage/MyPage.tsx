@@ -9,11 +9,11 @@ import * as S from "./MyPage.styled";
 import { ApiPost } from "@/types/post";
 import { SettingsIcon } from "@/assets/icons";
 import Avatar from "@/components/Avatar/Avatar";
-import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
 import { useLogout } from "@/hooks/useLogout";
 import { useUserStore } from "@/store/useUserStore";
 import { fetchPosts } from "@/api/postApi";
+import { useToast } from "@/contexts/ToastContext";
 
 export default function MyPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,26 +21,22 @@ export default function MyPage() {
   const [posts, setPosts] = useState<ApiPost[]>([]);
   const [pageMax, setPageMax] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [toastMessage, setToastMessage] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useUserStore();
+  const { showToast } = useToast();
 
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
-  // ✅ 토스트 메시지 (회원가입 등 이후)
   useEffect(() => {
     if (location.state?.toastMessage) {
-      setToastMessage(location.state.toastMessage);
+      showToast(location.state.toastMessage, "success");
       window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+  }, [location.state, showToast]);
 
-  const handleToastClose = () => setToastMessage("");
-
-  // ✅ 내 게시글 불러오기
   useEffect(() => {
     const loadMyPosts = async () => {
       setLoading(true);
@@ -50,17 +46,18 @@ export default function MyPage() {
           setPosts(res.data.posts);
           setPageMax(res.data.pageMax);
         } else {
-          console.error("내 게시글 불러오기 실패:", res.message);
+          showToast("게시글을 불러오지 못했습니다.", "error");
         }
       } catch (err) {
         console.error("내 게시글 조회 에러:", err);
+        showToast("서버 오류가 발생했습니다.", "error");
       } finally {
         setLoading(false);
       }
     };
 
     loadMyPosts();
-  }, [currentPage]);
+  }, [currentPage, showToast]);
 
   return (
     <div className="relative">
@@ -74,7 +71,6 @@ export default function MyPage() {
       </div>
       <div className="h-[60px]" />
 
-      {/* 사이드바 */}
       {isSidebarOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
@@ -84,7 +80,6 @@ export default function MyPage() {
         </>
       )}
 
-      {/* 프로필 영역 */}
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
@@ -103,7 +98,6 @@ export default function MyPage() {
         </div>
       </section>
 
-      {/* 메인 영역 */}
       <main className={S.mainWrapper}>
         {loading ? (
           <div className="py-8 text-center text-gray-500">로딩 중...</div>
@@ -132,14 +126,6 @@ export default function MyPage() {
         )}
       </main>
 
-      {/* 토스트 메시지 */}
-      {toastMessage && (
-        <div className="fixed top-20 left-1/2 z-50 -translate-x-1/2">
-          <Toast message={toastMessage} type="success" onClose={handleToastClose} />
-        </div>
-      )}
-
-      {/* 로그아웃 모달 */}
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."

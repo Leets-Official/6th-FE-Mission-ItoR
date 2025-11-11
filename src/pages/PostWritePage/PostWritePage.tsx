@@ -5,21 +5,21 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderLegacy from "@/components/Header/HeaderLegacy";
 import TextField from "@/components/Text/TextField";
 import ImagePreview from "@/components/ImagePreview/ImagePreview";
-import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
 import * as S from "./PostWritePage.styled";
 import { useLogout } from "@/hooks/useLogout";
 import { createPost, updatePost, fetchPostDetail, type Post } from "@/api/postApi";
+import { useToast } from "@/contexts/ToastContext";
 
 const PostWritePage: React.FC = () => {
   const { postId } = useParams<{ postId?: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast(); // ✅
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
@@ -29,7 +29,6 @@ const PostWritePage: React.FC = () => {
   useEffect(() => {
     const loadPostForEdit = async () => {
       if (!isEditMode || !postId) return;
-
       try {
         const res = await fetchPostDetail(postId);
         const post: Post | undefined = res?.data;
@@ -49,19 +48,19 @@ const PostWritePage: React.FC = () => {
               .map((c) => c.content);
             setImages(imageUrls);
 
-            setToast({ message: "게시글 데이터를 불러왔습니다.", type: "success" });
+            showToast("게시글 데이터를 불러왔습니다.", "success");
           }
         } else {
-          setToast({ message: "게시글 불러오기 실패", type: "error" });
+          showToast("게시글 불러오기 실패", "error");
         }
       } catch (error) {
         console.error("게시글 불러오기 오류:", error);
-        setToast({ message: "게시글 불러오는 중 오류가 발생했습니다.", type: "error" });
+        showToast("게시글 불러오는 중 오류가 발생했습니다.", "error");
       }
     };
 
     loadPostForEdit();
-  }, [isEditMode, postId]);
+  }, [isEditMode, postId, showToast]);
 
   const handleCancel = () => {
     if (confirm("작성 중인 내용을 취소하시겠습니까?")) {
@@ -71,7 +70,7 @@ const PostWritePage: React.FC = () => {
 
   const handlePublish = async () => {
     if (!title.trim() || !content.trim()) {
-      setToast({ message: "내용을 입력해주세요", type: "error" });
+      showToast("내용을 입력해주세요", "error");
       return;
     }
 
@@ -91,20 +90,16 @@ const PostWritePage: React.FC = () => {
       const res = isEditMode ? await updatePost(postId!, payload) : await createPost(payload);
 
       if (res.code === 200 || res.code === 201) {
-        setToast({
-          message: isEditMode ? "게시글이 수정되었습니다!" : "게시글이 등록되었습니다!",
-          type: "success",
-        });
-
+        showToast(isEditMode ? "게시글이 수정되었습니다!" : "게시글이 등록되었습니다!", "success");
         setTimeout(() => {
           navigate("/blog", { replace: true });
         }, 1000);
       } else {
-        setToast({ message: res.message || "요청 실패", type: "error" });
+        showToast(res.message || "요청 실패", "error");
       }
     } catch (error) {
       console.error("게시글 저장 오류:", error);
-      setToast({ message: "서버 오류가 발생했습니다.", type: "error" });
+      showToast("서버 오류가 발생했습니다.", "error");
     }
   };
 
@@ -170,12 +165,6 @@ const PostWritePage: React.FC = () => {
           </div>
         )}
       </section>
-
-      {toast && (
-        <div className="fixed top-[90px] left-1/2 z-[9999] -translate-x-1/2 transform">
-          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-        </div>
-      )}
 
       <Modal
         open={isDeleteModalOpen}
