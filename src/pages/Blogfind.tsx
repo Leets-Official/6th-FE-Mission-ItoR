@@ -26,7 +26,7 @@ const Blogfind: React.FC = () => {
 
   // 게시글 클릭 시 상세 페이지로 이동
   const handleClickPost = (postId: string) => {
-    navigate(`/post/${postId}`);
+    navigate(`/post/${post.postId}`);
   };
 
   // 삭제 후 토스트 표시용 state 관리

@@ -55,10 +55,24 @@ export const getAllPosts = async (): Promise<any[]> => {
   return data.data.posts;
 };
 
-/** ✅ 게시글 단일 조회 (수정됨) */
+/** 게시글 단일 조회 (수정됨) */
 export const getPostById = async (postId: string): Promise<PostResponse> => {
-  const { data } = await api.get("/posts/token", {
-    params: { postId }, // ✅ query parameter로 전달해야 함
+  const token = localStorage.getItem("accessToken");
+
+  // 토큰이 있으면 /posts/token 사용 (로그인 유저)
+  if (token) {
+    const { data } = await api.get("/posts/token", {
+      params: { postId },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data.data;
+  }
+
+  // 토큰이 없으면 /posts 사용 (비회원 유저)
+  const { data } = await api.get("/posts", {
+    params: { postId },
   });
   return data.data;
 };
