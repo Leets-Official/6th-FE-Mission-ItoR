@@ -42,7 +42,7 @@ const BlogDetail: React.FC = () => {
     setIsBlogDeleteModalOpen(false);
   };
 
-  // ✅ 로딩 및 에러 처리
+  // 로딩 및 에러 처리
   if (isLoading)
     return <div className="flex justify-center items-center min-h-screen">게시글을 불러오는 중입니다...</div>;
   if (isError || !post)
