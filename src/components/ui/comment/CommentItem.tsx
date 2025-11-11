@@ -7,7 +7,7 @@ import ProfilePhoto from "@ui/Profile";
 export type CommentView = {
   id: number;
   content: string;
-  nickName: string;
+  nickname: string;
   profileUrl?: string;
   createdAt: string;
   mine?: boolean;
@@ -49,15 +49,15 @@ export default function CommentItem({ c, onRequestDelete, onSaveEdit }: Props) {
       <div className="flex w-5 h-5 items-center">
         <ProfilePhoto
           size="sm"
-          initial={c.nickName.charAt(0).toUpperCase()}
-          name={c.nickName}
+          initial={c.nickname.charAt(0).toUpperCase()}
+          name={c.nickname}
         />
       </div>
 
       <div className="flex-1">
         <div className="flex items-center gap-2">
           <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
-            {c.nickName}
+            {c.nickname}
           </span>
           <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
             · {formatDate(c.createdAt)}
