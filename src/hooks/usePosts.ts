@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAllPosts } from "@/api/posts";
+import api from "@/api/axiosInstance";
 import {
   createPost,
   updatePost,
   deletePost,
-  getAllPosts,
   getPostById,
   type PostBody,
   type PostResponse,
@@ -48,11 +48,18 @@ export const useDeletePost = () =>
   });
 
 /** 게시글 전체 조회 */
-export const useAllPosts = () =>
-  useQuery({
+export const useAllPosts = (page: number) => {
+  return useQuery({
     queryKey: ["posts", page],
-    queryFn: () => getAllPosts(Page),
+    queryFn: async () => {
+      const { data } = await api.get("/posts/all", {
+        params: { size: 10, page },
+      });
+      return data.data.posts;
+    },
   });
+};
+
 
 /** 게시글 단일 조회 */
 export const usePostDetail = (id: string) =>

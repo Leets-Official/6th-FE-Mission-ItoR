@@ -10,28 +10,45 @@ type PaginationProps = {
   variant?: PaginationVariant;
   totalPages?: number;
   currentPage?: number;
+  onPageChange?: (page: number) => void;
 };
 
 const Pagination: React.FC<PaginationProps> = ({
   variant = "grayBlack",
-  totalPages = 5, //현재는 하드코딩 추후 API 연동 필요
+  totalPages = 5,
+  currentPage = 1,
+  onPageChange,
 }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  const handlePrev = () => {
+    if (currentPage && currentPage > 1) onPageChange?.(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage && currentPage < totalPages)
+      onPageChange?.(currentPage + 1);
+  };
+
   return (
     <div className="flex items-center gap-2">
-      <PaginationButton
-        children={<LeftIcon className="w-4 h-4" />}
-        variant={variant}
-      />
+      <PaginationButton onClick={handlePrev} variant={variant}>
+        <LeftIcon className="w-4 h-4" />
+      </PaginationButton>
+
       {pages.map((page) => (
-        <PaginationButton key={page} children={page} variant={variant} />
+        <PaginationButton
+          key={page}
+          variant={page === currentPage ? "blueBlue" : variant}
+          onClick={() => onPageChange?.(page)}
+        >
+          {page}
+        </PaginationButton>
       ))}
 
-      <PaginationButton
-        children={<RightIcon className="w-4 h-4" />}
-        variant={variant}
-      />
+      <PaginationButton onClick={handleNext} variant={variant}>
+        <RightIcon className="w-4 h-4" />
+      </PaginationButton>
     </div>
   );
 };

@@ -27,10 +27,12 @@ const Blogfind: React.FC = () => {
   const location = useLocation();
   const [showToast, setShowToast] = useState(false);
 
-  const { data: posts, isLoading, isError } = useAllPosts();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleClickPost = (postId: string) => {
-    navigate(`/post/${post.postId}`);
+  const { data: posts, isLoading, isError } = useAllPosts(currentPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   useEffect(() => {
@@ -108,7 +110,11 @@ const Blogfind: React.FC = () => {
       </div>
 
       <div className="flex justify-center items-center gap-2 mt-8 mb-16">
-        <Pagination />
+        <Pagination 
+          totalPages={5}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          />
       </div>
     </div>
   );
