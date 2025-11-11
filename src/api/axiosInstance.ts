@@ -12,7 +12,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// 🔹 요청 인터셉터: 매 요청마다 accessToken 추가
+// 요청 인터셉터: 매 요청마다 accessToken 추가
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -35,7 +35,7 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // ✅ accessToken 만료 시 재발급 시도
+    // accessToken 만료 시 재발급 시도
     if (response.status === 401 && !config._retry) {
       config._retry = true;
 
