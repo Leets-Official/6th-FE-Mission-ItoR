@@ -3,6 +3,7 @@ import Dropdown from "@ui/Dropdown";
 import TextField from "@ui/TextField"; 
 import Button from "@ui/Button/Button"; 
 import ProfilePhoto from "@ui/Profile";
+import { formatShortDate } from "@src/utils/date";
 
 export type CommentView = {
   id: number;
@@ -17,12 +18,6 @@ type Props = {
   c: CommentView;
   onRequestDelete: (id: number) => void;
   onSaveEdit: (id: number, content: string) => void;
-};
-
-const formatDate = (iso: string) => {
-  const d = new Date(iso);
-  const m = d.toLocaleString("en-US", { month: "short" });
-  return `${m} ${d.getDate()}, ${d.getFullYear()}.`;
 };
 
 export default function CommentItem({ c, onRequestDelete, onSaveEdit }: Props) {
@@ -60,7 +55,7 @@ export default function CommentItem({ c, onRequestDelete, onSaveEdit }: Props) {
             {c.nickname}
           </span>
           <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
-            · {formatDate(c.createdAt)}
+            · {formatShortDate(c.createdAt)}
           </span>
           {c.mine && (
             <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
