@@ -22,13 +22,12 @@ export interface ApiPost {
   profileUrl: string;
   createdAt: string;
   commentCount: number;
+  contents?: PostContent[];
 }
 
 export interface Post extends ApiPost {
-  contents: PostContent[];
   comments: Comment[];
   isOwner: boolean;
   introduction?: string;
-
   content?: string;
 }
