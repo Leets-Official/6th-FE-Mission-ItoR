@@ -4,19 +4,23 @@ import { useAuthStore } from "@/store/useAuthStore";
 export const createComment = async (postId: string, content: string) => {
   const accessToken = useAuthStore.getState().accessToken;
   const res = await api.post(
-    `/comments`,
-    { postId, content },
-    { headers: { Authorization: `Bearer ${accessToken}` } },
+    `/comments/${postId}`,
+    { content },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
   );
   return res.data;
 };
 
 export const updateComment = async (commentId: number, content: string) => {
   const accessToken = useAuthStore.getState().accessToken;
-  const res = await api.put(
+  const res = await api.patch(
     `/comments/${commentId}`,
     { content },
-    { headers: { Authorization: `Bearer ${accessToken}` } },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
   );
   return res.data;
 };
