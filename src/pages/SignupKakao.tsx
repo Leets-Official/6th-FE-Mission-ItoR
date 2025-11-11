@@ -58,7 +58,7 @@ const SignupKakao: React.FC = () => {
     if (!form.kakaoId) return alert("카카오 인증 정보가 없습니다.");
 
     try {
-      const res = await api.post("/auth/register/oauth", {
+      const res = await api.post("/auth/register-oauth", {
         email: form.email,
         name: form.name,
         birthDate: form.birthDate,
