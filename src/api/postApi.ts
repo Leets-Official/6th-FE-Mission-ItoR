@@ -4,17 +4,26 @@ import type { Post } from "@/types/post";
 
 export const fetchPosts = async (page: number, size: number) => {
   const accessToken = useAuthStore.getState().accessToken;
-  const res = await api.get(`/posts`, {
+  const endpoint = accessToken ? "/posts/all/token" : "/posts/all";
+
+  const res = await api.get(endpoint, {
     params: { page, size },
-    headers: { Authorization: `Bearer ${accessToken}` },
+    ...(accessToken && {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }),
   });
   return res.data;
 };
 
 export const fetchPostDetail = async (postId: string) => {
   const accessToken = useAuthStore.getState().accessToken;
-  const res = await api.get(`/posts/${postId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
+  const endpoint = accessToken ? "/posts/token" : "/posts";
+
+  const res = await api.get(endpoint, {
+    params: { postId },
+    ...(accessToken && {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }),
   });
   return res.data;
 };

@@ -1,3 +1,4 @@
+// src/pages/PostWritePage/PostWritePage.tsx
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderLegacy from "@/components/Header/HeaderLegacy";
@@ -6,8 +7,9 @@ import ImagePreview from "@/components/ImagePreview/ImagePreview";
 import Modal from "@/components/Modal/Modal";
 import * as S from "./PostWritePage.styled";
 import { useLogout } from "@/hooks/useLogout";
-import { useState } from "react";
-import { usePostForm } from "./usePostForm"; // ✅ 훅 분리
+import { useState, useRef } from "react";
+import { usePostForm } from "./usePostForm";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 const PostWritePage: React.FC = () => {
   const {
@@ -16,19 +18,35 @@ const PostWritePage: React.FC = () => {
     images,
     setTitle,
     setContent,
+    setImages,
     handlePublish,
     handleDeleteImage,
-    isEditMode,
   } = usePostForm();
 
+  const { uploadImage, uploading } = useImageUpload();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleCancel = () => {
     if (confirm("작성 중인 내용을 취소하시겠습니까?")) {
       window.location.href = "/blog";
+    }
+  };
+
+  /** ✅ Presigned URL 업로드 처리 */
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const uploadedUrl = await uploadImage(file);
+      setImages((prev: string[]) => [...prev, uploadedUrl]);
+    } catch {
+      alert("이미지 업로드에 실패했습니다.");
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -57,6 +75,24 @@ const PostWritePage: React.FC = () => {
       <section className={S.form}>
         <div className={S.spacer} />
         <HeaderLegacy showPhotoButton={true} showFileButton={false} />
+
+        {/* ✅ 이미지 업로드 버튼 */}
+        <div className="my-3">
+          <button
+            className="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-100"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+          >
+            {uploading ? "업로드 중..." : "이미지 추가"}
+          </button>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </div>
 
         <TextField
           variant="borderless"
