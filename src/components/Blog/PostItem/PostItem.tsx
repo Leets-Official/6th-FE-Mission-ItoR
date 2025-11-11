@@ -18,12 +18,21 @@ interface PostItemProps {
 }
 
 const PostItem: React.FC<PostItemProps> = ({ post, onClick }) => {
+  const previewText = (post.contents ?? []).find((c) => c.contentType === "TEXT")?.content ?? "";
+
   return (
     <li className={`${listItem} cursor-pointer`} onClick={onClick}>
       <div className={upperWrapper}>
         <div className={textSection}>
           <h2 className={postTitle}>{post.title}</h2>
+
+          {previewText && (
+            <p className="text-brand-darkGray mt-1 w-full max-w-[600px] truncate text-sm">
+              {previewText}
+            </p>
+          )}
         </div>
+
         {post.profileUrl && <img src={post.profileUrl} alt={post.title} className={postImage} />}
       </div>
 
