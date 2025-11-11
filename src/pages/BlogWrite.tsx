@@ -26,8 +26,9 @@ const BlogWrite: React.FC = () => {
   const post = location.state as Post | undefined;
 
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [contents, setContents] = useState<ContentBlock[]>([]);
   const [toastVariant, setToastVariant] = useState<"success" | "warning" | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
 
   // 게시글 생성 API
@@ -37,44 +38,36 @@ const BlogWrite: React.FC = () => {
   };
 
   // 게시글 수정 API
-  const updatePost = async ({
-    id,
-    payload,
-  }: {
-    id: string;
-    payload: PostPayload;
-  }) => {
+  const updatePost = async ({ id, payload }: { id: string; payload: PostPayload }) => {
     const { data } = await api.patch(`/posts/${id}`, payload);
     return data;
   };
 
-  // React Query Hooks
   const { mutate: createMutate } = useMutation({
     mutationFn: createPost,
     onSuccess: () => showToast("success"),
-    onError: (err: any) =>
-      alert(err.response?.data?.message || "게시글 작성 중 오류가 발생했습니다."),
+    onError: (err: any) => alert(err.response?.data?.message || "게시글 작성 중 오류가 발생했습니다."),
   });
 
   const { mutate: updateMutate } = useMutation({
     mutationFn: updatePost,
     onSuccess: () => showToast("success"),
-    onError: (err: any) =>
-      alert(err.response?.data?.message || "게시글 수정 중 오류가 발생했습니다."),
+    onError: (err: any) => alert(err.response?.data?.message || "게시글 수정 중 오류가 발생했습니다."),
   });
 
+  // 기존 게시글 편집 모드 시 데이터 채우기
   useEffect(() => {
     if (post) {
       setTitle(post.title);
-      setContent(post.content);
+      setContents([
+        {
+          contentOrder: 1,
+          content: post.content,
+          contentType: "TEXT",
+        },
+      ]);
     }
   }, [post]);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
 
   const showToast = (variant: "success" | "warning") => {
     setToastVariant(variant);
@@ -83,6 +76,28 @@ const BlogWrite: React.FC = () => {
       setToastVariant(null);
       timerRef.current = null;
     }, 3000);
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    setContents((prev) => {
+      const filtered = prev.filter((c) => c.contentType !== "TEXT");
+      return [...filtered, { contentOrder: filtered.length + 1, content: text, contentType: "TEXT" }];
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const imageUrl = URL.createObjectURL(file);
+    setContents((prev) => [
+      ...prev,
+      {
+        contentOrder: prev.length + 1,
+        content: imageUrl,
+        contentType: "IMAGE",
+      },
+    ]);
   };
 
   // 게시하기 버튼
@@ -94,13 +109,7 @@ const BlogWrite: React.FC = () => {
 
     const payload: PostPayload = {
       title,
-      contents: [
-        {
-          contentOrder: 1,
-          content,
-          contentType: "TEXT",
-        },
-      ],
+      contents,
     };
 
     if (post) {
