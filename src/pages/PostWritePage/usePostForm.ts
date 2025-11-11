@@ -27,12 +27,14 @@ export const usePostForm = () => {
         if ((res.code === 0 || res.code === 200) && post) {
           setTitle(post.title);
           setContent(
-            post.contents
+            (post.contents ?? [])
               .filter((c) => c.contentType === "TEXT")
               .map((c) => c.content)
               .join("\n"),
           );
-          setImages(post.contents.filter((c) => c.contentType === "IMAGE").map((c) => c.content));
+          setImages(
+            (post.contents ?? []).filter((c) => c.contentType === "IMAGE").map((c) => c.content),
+          );
           showToast("게시글 데이터를 불러왔습니다.", "success");
         } else {
           showToast("게시글 불러오기 실패", "error");
