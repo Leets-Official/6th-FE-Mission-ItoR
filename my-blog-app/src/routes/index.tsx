@@ -7,6 +7,7 @@ import SignUpKakaoPage from '@/pages/SignUpKakaoPage'
 import BlogDetailPage from '@/pages/BlogDetailPage'
 import BlogWritePage from '@/pages/BlogWritePage'
 import AuthKakaoCallback from '@/pages/AuthKakaoCallback'
+import RootLayout from '@/layouts/RootLayout'
 
 // test pages
 import ButtonTestPage from '@/pages/test/ButtonTestPage'
@@ -27,28 +28,34 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />, // App이 모든 페이지를 감싸는 루트 역할
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'signup', element: <SignUpPage /> },
-      { path: 'signup/email', element: <SignUpEmailPage /> },
-      { path: 'signup/kakao', element: <SignUpKakaoPage /> },
-      { path: 'oauth/kakao/callback', element: <AuthKakaoCallback /> },
-      { path: 'oauth/kakao/success', element: <AuthKakaoCallback /> },
-      { path: '/blog/:id', element: <BlogDetailPage /> },
-      { path: 'blogwrite', element: <BlogWritePage /> },
+      {
+        path: '/',
+        element: <RootLayout />, // 공통 UI 감싸기
+        children: [
+          { index: true, element: <HomePage /> },
+          { path: 'signup', element: <SignUpPage /> },
+          { path: 'signup/email', element: <SignUpEmailPage /> },
+          { path: 'signup/kakao', element: <SignUpKakaoPage /> },
+          { path: 'oauth/kakao/callback', element: <AuthKakaoCallback /> },
+          { path: 'oauth/kakao/success', element: <AuthKakaoCallback /> },
+          { path: '/blog/:id', element: <BlogDetailPage /> },
+          { path: 'blogwrite', element: <BlogWritePage /> },
 
-      // 테스트 페이지들
-      { path: 'test/button', element: <ButtonTestPage /> },
-      { path: 'test/toast', element: <ToastTestPage /> },
-      { path: 'test/menu', element: <MenuTestPage /> },
-      { path: 'test/textcard', element: <TextCardTestPage /> },
-      { path: 'test/confirmmodal', element: <ConfirmModalTestPage /> },
-      { path: 'test/header', element: <HeaderTestPage /> },
-      { path: 'test/dropdown', element: <DropdownTestPage /> },
-      { path: 'test/textfiled', element: <TextFiledTestPage /> },
-      { path: 'test/textfiledset', element: <TextFiledSetTestPage /> },
-      { path: 'test/profileimage', element: <ProfileImageTestPage /> },
-      { path: 'test/sidebar', element: <SidebarTestPage /> },
-      { path: 'test/pagination', element: <PaginationTestPage /> },
+          // 테스트 페이지들
+          { path: 'test/button', element: <ButtonTestPage /> },
+          { path: 'test/toast', element: <ToastTestPage /> },
+          { path: 'test/menu', element: <MenuTestPage /> },
+          { path: 'test/textcard', element: <TextCardTestPage /> },
+          { path: 'test/confirmmodal', element: <ConfirmModalTestPage /> },
+          { path: 'test/header', element: <HeaderTestPage /> },
+          { path: 'test/dropdown', element: <DropdownTestPage /> },
+          { path: 'test/textfiled', element: <TextFiledTestPage /> },
+          { path: 'test/textfiledset', element: <TextFiledSetTestPage /> },
+          { path: 'test/profileimage', element: <ProfileImageTestPage /> },
+          { path: 'test/sidebar', element: <SidebarTestPage /> },
+          { path: 'test/pagination', element: <PaginationTestPage /> },
+        ],
+      },
     ],
   },
 ])
