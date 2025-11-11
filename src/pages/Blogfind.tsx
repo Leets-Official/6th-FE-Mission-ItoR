@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import Toast from "@/components/Toast";
-import api from "@/api/axiosInstance";
+import { useAllPosts } from "@/hooks/usePosts";
 
 // 서버 응답 타입 정의
 interface PostResponse {
@@ -17,28 +17,12 @@ interface PostResponse {
   commentCount: number;
 }
 
-// 게시글 목록 조회 함수
-const fetchPosts = async (): Promise<PostResponse[]> => {
-  const { data } = await api.get("/posts/all", {
-    params: {
-      size: 10, // 한 페이지당 게시글 개수
-      page: 1,  // 현재 페이지 번호
-    },
-  });
-  // Swagger 구조상 data.data.posts로 감싸져 있음
-  return data?.data?.posts || [];
-};
-
 const Blogfind: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showToast, setShowToast] = useState(false);
 
-  // React Query로 데이터 가져오기
-  const { data: posts, isLoading, isError } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
-  });
+  const { data: posts, isLoading, isError } = useAllPosts();
 
   // 게시글 클릭 시 상세 페이지로 이동
   const handleClickPost = (postId: string) => {
@@ -79,15 +63,12 @@ const Blogfind: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* 상단 헤더 */}
       <Header variant="write" />
 
-      {/* 삭제 후 토스트 메시지 */}
       {showToast && (
         <Toast variant="success" message="삭제가 완료되었습니다!" />
       )}
 
-      {/* 게시글 리스트 */}
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
@@ -116,7 +97,6 @@ const Blogfind: React.FC = () => {
         )}
       </div>
 
-      {/* ✅ 페이지네이션 영역 */}
       <div className="flex justify-center items-center gap-2 mt-8 mb-16">
         <Pagination />
       </div>
