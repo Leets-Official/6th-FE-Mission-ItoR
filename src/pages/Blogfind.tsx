@@ -15,6 +15,11 @@ interface PostResponse {
   profileUrl: string;
   createdAt: string;
   commentCount: number;
+  contents? : {
+    contentOrder: number;
+    content: string;
+    contentType: "TEXT" | "IMAGE";
+  }[];
 }
 
 const Blogfind: React.FC = () => {
@@ -24,12 +29,10 @@ const Blogfind: React.FC = () => {
 
   const { data: posts, isLoading, isError } = useAllPosts();
 
-  // 게시글 클릭 시 상세 페이지로 이동
   const handleClickPost = (postId: string) => {
     navigate(`/post/${post.postId}`);
   };
 
-  // 삭제 후 토스트 표시용 state 관리
   useEffect(() => {
     if (location.state?.showToast) {
       setShowToast(true);
@@ -43,7 +46,6 @@ const Blogfind: React.FC = () => {
     }
   }, [location.state, location.pathname, navigate]);
 
-  // 로딩 중
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen text-gray-600">
@@ -52,7 +54,6 @@ const Blogfind: React.FC = () => {
     );
   }
 
-  // 오류 발생 시
   if (isError) {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500">
@@ -71,7 +72,15 @@ const Blogfind: React.FC = () => {
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {posts && posts.length > 0 ? (
-          posts.map((post) => (
+        posts.map((post) => {
+          const imageBlock = post.contents?.find(
+            (c) => c.contentType === "IMAGE"
+          );
+          const textBlock = post.contents?.find(
+            (c) => c.contentType === "TEXT"
+          );
+
+          return (
             <div
               key={post.postId}
               className="cursor-pointer w-full flex justify-center"
@@ -81,20 +90,21 @@ const Blogfind: React.FC = () => {
                 post={{
                   id: post.postId,
                   title: post.title,
-                  content: "", // API에는 본문 내용이 없음
+                  content: textBlock?.content || "내용이 없습니다.",
                   author: post.nickName,
                   createdAt: post.createdAt,
                   commentsCount: post.commentCount,
                   profileUrl: post.profileUrl,
+                  photoUrl: imageBlock?.content, 
                 }}
               />
             </div>
-          ))
-        ) : (
-          <p className="text-gray-400 text-sm mt-10">
-            게시글이 없습니다.
-          </p>
-        )}
+          );
+        })
+      ) : (
+        <p className="text-gray-400 text-sm mt-10">게시글이 없습니다.</p>
+      )}
+
       </div>
 
       <div className="flex justify-center items-center gap-2 mt-8 mb-16">
