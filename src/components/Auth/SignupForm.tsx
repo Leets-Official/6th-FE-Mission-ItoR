@@ -9,6 +9,7 @@ import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import { register, registerKakao } from "@/api/auth";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 interface SignupFormProps {
   type: "email" | "kakao";
@@ -21,7 +22,8 @@ interface SignupFormProps {
 }
 
 const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
-  const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ 파일 input ref 추가
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { uploadImage, uploading } = useImageUpload();
 
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
@@ -35,21 +37,29 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
     kakaoId: kakaoUser?.kakaoId?.toString() || "",
   });
 
+  const [previewUrl, setPreviewUrl] = useState<string>(kakaoUser?.profilePicture || "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  /** ✅ 파일 선택 시 실행 */
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((prev) => ({ ...prev, profilePicture: reader.result as string }));
-    };
-    reader.readAsDataURL(file); // Base64 인코딩 후 Avatar 미리보기용
+    try {
+      const reader = new FileReader();
+      reader.onload = () => setPreviewUrl(reader.result as string);
+      reader.readAsDataURL(file);
+
+      const uploadedUrl = await uploadImage(file);
+      setForm((prev) => ({ ...prev, profilePicture: uploadedUrl }));
+    } catch (err) {
+      console.error("프로필 사진 업로드 실패:", err);
+      alert("프로필 사진 업로드에 실패했습니다.");
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const handleChange = (key: string, value: string) => {
@@ -130,17 +140,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
       <div className={S.profileSection}>
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
-          <Avatar size="xl" src={form.profilePicture} alt="Profile" />
+          <Avatar size="xl" src={previewUrl} alt="Profile" />
 
           <SmallButton
-            label="프로필 사진 추가"
+            label={uploading ? "업로드 중..." : "프로필 사진 추가"}
             variant="secondaryOutline"
             leftIcon={<AddPhotoAlternateIcon className={S.profileAddIcon} />}
             className="border-brand-lightGray text-xs"
-            onClick={() => fileInputRef.current?.click()} // ✅ 버튼 클릭 시 파일창 열기
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
           />
 
-          {/* ✅ 숨겨진 input 추가 */}
           <input
             type="file"
             accept="image/*"
