@@ -26,9 +26,6 @@ export const loginAPI = async (data: {
   const token = res.data.data.accessToken
   if (token) {
     localStorage.setItem('accessToken', token)
-    console.log('✅ accessToken 저장 완료:', token)
-  } else {
-    console.warn('⚠️ accessToken이 응답에 없습니다:', res.data)
   }
 
   return res.data
