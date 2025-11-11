@@ -20,19 +20,10 @@ export default function HomePage() {
 
   /** 게시글 목록 불러오기 */
   useEffect(() => {
-    const token = localStorage.getItem('accessToken')
-    if (!token) {
-      setIsLoginOpen(true)
-    }
-
     axiosInstance
       .get('/posts/all', { params: { size: 10, page } })
       .then((res) => {
-        console.log('📥 게시글 목록 불러오기 성공:', res.data.data)
-
-        // 응답 형태에 따라 자동 분기
         const fetchedPosts = Array.isArray(res.data.data) ? res.data.data : res.data.data.posts
-
         setPosts(fetchedPosts || [])
       })
       .catch((err) => {
