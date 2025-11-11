@@ -44,7 +44,8 @@ export default function PostDetail() {
 
         if ((res.code === 200 || res.code === 0) && res.data) {
           setPost(res.data);
-          setCommentCount(res.data.comments?.length ?? 0);
+          const comments = res.data.comments || [];
+          setCommentCount(Array.isArray(comments) ? comments.length : 0);
         } else {
           console.error("게시글 불러오기 실패:", res.message);
           showToast("게시글을 불러오지 못했습니다.", "error");
@@ -90,7 +91,6 @@ export default function PostDetail() {
 
   return (
     <div className={S.page}>
-      {/* 상단 헤더 */}
       <div className="fixed top-0 left-0 z-50 w-full">
         <Header
           title="GITLOG"
@@ -116,7 +116,6 @@ export default function PostDetail() {
 
       <div className="h-[70px]" />
 
-      {/* 사이드바 */}
       {isSidebarOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
@@ -130,9 +129,7 @@ export default function PostDetail() {
         </>
       )}
 
-      {/* 본문 */}
       <main className={S.container}>
-        {/* 제목 + 메타 */}
         <section className={S.group}>
           <h1 className={S.title}>{post.title}</h1>
 
@@ -147,13 +144,10 @@ export default function PostDetail() {
 
         <div className={S.divider} />
 
-        {/* ✅ 게시글 본문 */}
         <section className={S.group}>
           {post.content ? (
-            // 백엔드에서 새로 추가된 content (단일 필드)
             <p className={S.content}>{post.content}</p>
           ) : (
-            // 기존 구조 유지
             post.contents?.map((c) =>
               c.contentType === "TEXT" ? (
                 <p key={c.contentOrder} className={S.content}>
@@ -173,7 +167,6 @@ export default function PostDetail() {
 
         <div className={S.divider} />
 
-        {/* 댓글 섹션 */}
         <section className={S.group} ref={commentRef}>
           <CommentSection
             isLoggedIn={isLogin}
@@ -189,10 +182,8 @@ export default function PostDetail() {
         </section>
       </main>
 
-      {/* 로그인 모달 */}
       <LoginModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
 
-      {/* 삭제 모달 */}
       <Modal
         title="해당 블로그를 삭제하시겠어요?"
         description="삭제된 블로그는 다시 확인할 수 없어요."
@@ -204,7 +195,6 @@ export default function PostDetail() {
         confirmColor="bg-brand-red text-white hover:opacity-90"
       />
 
-      {/* 로그아웃 모달 */}
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
