@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import App from '@/App' // ✅ App을 루트 element로 등록
+import App from '@/App' // App을 루트 element로 등록
 import HomePage from '@/pages/HomePage'
 import SignUpPage from '@/pages/SignUpPage'
 import SignUpEmailPage from '@/pages/SignUpEmailPage'
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       { path: 'signup/kakao', element: <SignUpKakaoPage /> },
       { path: 'oauth/kakao/callback', element: <AuthKakaoCallback /> },
       { path: 'oauth/kakao/success', element: <AuthKakaoCallback /> },
-      { path: 'post/:id', element: <BlogDetailPage /> },
+      { path: '/blog/:id', element: <BlogDetailPage /> },
       { path: 'blogwrite', element: <BlogWritePage /> },
 
       // 테스트 페이지들

@@ -42,7 +42,7 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen bg-white flex flex-col items-center'>
-      {/* 🧭 헤더 */}
+      {/* 헤더 */}
       <PageHeader
         title='GITLOG'
         rightContent={

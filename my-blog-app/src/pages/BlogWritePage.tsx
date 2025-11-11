@@ -1,7 +1,6 @@
 import PageHeader from '@/components/common/PageHeader'
 import TextCard from '@/components/common/TextCard'
 import { AddPhotoAlternateIcon } from '@/assets/icons/AddPhotoAlternateIcon'
-import Toast from '@/components/common/Toast'
 import { Button } from '@/components/Button/Button'
 import Blank from '@/components/common/Blank'
 import { TrashIcon } from '@/assets/icons/TrashIcon'
@@ -13,10 +12,7 @@ export default function BlogWritePage() {
     setTitle,
     content,
     setContent,
-    image,
-    toastType,
-    isMenuOpen,
-    setIsMenuOpen,
+    imagePreview,
     handleImageUpload,
     handleDeleteImage,
     handleSubmit,
@@ -86,47 +82,21 @@ export default function BlogWritePage() {
         <Blank size='md' />
       </div>
 
-      {/* 이미지 미리보기 + 클릭 시 메뉴 */}
-      {image && (
-        <div
-          className={`relative w-[600px] mt-6 flex flex-col justify-center items-center gap-2
-          border ${isMenuOpen ? 'border-[#00A1FF]' : 'border-gray-200'} 
-          bg-white rounded-md shadow-sm p-3 cursor-pointer`}
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-        >
+      {/* 이미지 미리보기 */}
+      {imagePreview && (
+        <div className='relative w-[600px] mt-6 flex flex-col justify-center items-center gap-2 border border-gray-200 bg-white rounded-md shadow-sm p-3'>
           <img
-            src={image}
+            src={imagePreview}
             alt='첨부된 이미지'
             className='w-full rounded-md object-contain max-h-[400px]'
           />
-          {isMenuOpen && (
-            <div
-              className='absolute flex justify-center items-center gap-2
-              px-4 py-2 border border-[#00A1FF] bg-white rounded-md shadow-sm
-              top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2'
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDeleteImage()
-                }}
-                className='flex items-center gap-2 text-[14px] text-gray-700 hover:text-negative'
-              >
-                <TrashIcon />
-                <span>삭제하기</span>
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* 토스트 */}
-      {toastType !== 'none' && (
-        <div className='fixed bottom-8 right-8'>
-          <Toast
-            type={toastType}
-            message={toastType === 'negative' ? '내용을 입력해주세요.' : '저장되었습니다!'}
-          />
+          <button
+            onClick={handleDeleteImage}
+            className='absolute top-2 right-2 text-gray-600 hover:text-negative flex items-center gap-1'
+          >
+            <TrashIcon />
+            삭제
+          </button>
         </div>
       )}
     </div>

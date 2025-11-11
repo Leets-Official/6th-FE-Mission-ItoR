@@ -2,76 +2,65 @@ import { useState } from 'react'
 import { createPostAPI } from '@/api/postAPI'
 import { useToast } from '@/context/ToastContext'
 import { useNavigate } from 'react-router-dom'
-
-type ContentType = 'TEXT' | 'IMAGE'
+import type { CreatePostRequest } from '@/api/postAPI'
 
 export function useBlogWrite() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [image, setImage] = useState<string | null>(null)
-  const [toastType, setToastType] = useState<'none' | 'positive' | 'negative'>('none')
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imageBase64, setImageBase64] = useState<string | null>(null)
   const { showToast } = useToast()
   const navigate = useNavigate()
 
-  /** 이미지 업로드 */
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = () => setImage(reader.result as string)
-      reader.readAsDataURL(file)
+    if (!file) return
+
+    // 미리보기
+    setImagePreview(URL.createObjectURL(file))
+
+    // Base64 변환
+    const reader = new FileReader()
+    reader.onload = () => {
+      setImageBase64(reader.result as string)
     }
+    reader.readAsDataURL(file)
   }
 
-  /** 이미지 삭제 */
   const handleDeleteImage = () => {
-    setImage(null)
-    setIsMenuOpen(false)
+    setImagePreview(null)
+    setImageBase64(null)
   }
 
-  /** 게시물 등록 */
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
-      setToastType('negative')
-      showToast('제목과 내용을 모두 입력해주세요.', 'negative')
-      setTimeout(() => setToastType('none'), 2000)
+      showToast('제목과 내용을 입력해주세요.', 'negative')
       return
     }
 
-    // body 구조 Swagger 스펙 완전 일치
-    const requestBody = {
-      title,
-      contents: [
-        {
-          contentOrder: 1,
-          content,
-          contentType: image ? ('IMAGE' as ContentType) : ('TEXT' as ContentType),
-        },
-      ],
+    const contents: CreatePostRequest['contents'] = [
+      {
+        contentOrder: 1,
+        content,
+        contentType: 'TEXT',
+      },
+    ]
+
+    if (imageBase64) {
+      contents.push({
+        contentOrder: 2,
+        content: imageBase64.replace(/^data:image\/\w+;base64,/, ''),
+        contentType: 'IMAGE',
+      })
     }
 
-    // 디버깅용 콘솔 (요청 데이터 & 토큰 확인)
-    console.log('🪪 Token:', localStorage.getItem('accessToken'))
-    console.log('📤 [Create Post Body]', JSON.stringify(requestBody, null, 2))
-
     try {
-      await createPostAPI(requestBody)
-      setToastType('positive')
+      await createPostAPI({ title, contents })
       showToast('게시물이 성공적으로 등록되었습니다!', 'positive')
-      setTimeout(() => {
-        navigate('/')
-      }, 1500)
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('❌ [Create Post Error]', error.message)
-      } else {
-        console.error('❌ [Create Post Error]', error)
-      }
-      setToastType('negative')
+      navigate('/')
+    } catch (error: any) {
+      console.log('🔥 서버 응답:', error.response?.data)
       showToast('게시물 등록 중 오류가 발생했습니다.', 'negative')
-    } finally {
-      setTimeout(() => setToastType('none'), 2000)
     }
   }
 
@@ -80,11 +69,7 @@ export function useBlogWrite() {
     setTitle,
     content,
     setContent,
-    image,
-    setImage,
-    toastType,
-    isMenuOpen,
-    setIsMenuOpen,
+    imagePreview,
     handleImageUpload,
     handleDeleteImage,
     handleSubmit,
