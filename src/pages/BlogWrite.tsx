@@ -102,7 +102,7 @@ const BlogWrite: React.FC = () => {
 
   // 게시하기 버튼
   const handlePost = () => {
-    if (!title.trim() || !content.trim()) {
+    if (!title.trim() || contents.length === 0) {
       showToast("warning");
       return;
     }
@@ -158,8 +158,8 @@ const BlogWrite: React.FC = () => {
 
         <textarea
           placeholder="어떠한 것을 깨달았나요?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          value={contents.find((c) => c.contentType === "TEXT")?.content || ""}
+          onChange={handleTextChange}
           className="w-full min-h-[500px] px-[16px] py-[12px] rounded-md text-[#333333] placeholder-[#909090] text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       </div>
