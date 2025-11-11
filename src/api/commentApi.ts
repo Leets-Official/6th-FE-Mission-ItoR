@@ -1,7 +1,6 @@
 import api from "./index";
 import { useAuthStore } from "@/store/useAuthStore";
 
-/** ✅ 댓글 생성 */
 export const createComment = async (postId: string, content: string) => {
   const accessToken = useAuthStore.getState().accessToken;
   const res = await api.post(
@@ -12,7 +11,6 @@ export const createComment = async (postId: string, content: string) => {
   return res.data;
 };
 
-/** ✅ 댓글 수정 */
 export const updateComment = async (commentId: number, content: string) => {
   const accessToken = useAuthStore.getState().accessToken;
   const res = await api.put(
@@ -23,7 +21,6 @@ export const updateComment = async (commentId: number, content: string) => {
   return res.data;
 };
 
-/** ✅ 댓글 삭제 */
 export const deleteComment = async (commentId: number) => {
   const accessToken = useAuthStore.getState().accessToken;
   const res = await api.delete(`/comments/${commentId}`, {
