@@ -26,32 +26,35 @@ export function useComments(postId: string) {
 }
 
 export function useCreateComment(postId: string) {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (content: string) => createComment(postId, content),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
   });
 }
 
 export function useUpdateComment(postId: string) {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (args: { commentId: number; content: string }) =>
       updateComment(args.commentId, args.content),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
   });
 }
 
 export function useDeleteComment(postId: string) {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (commentId: number) => deleteComment(commentId),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
   });
 }
