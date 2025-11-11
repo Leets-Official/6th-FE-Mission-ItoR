@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Avatar from "@/components/Avatar/Avatar";
 import CommentSection from "@/components/Blog/CommentSection/CommentSection";
@@ -9,9 +10,14 @@ import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
 import { useUserStore } from "@/store/useUserStore";
 import { useLogout } from "@/hooks/useLogout";
+import { fetchPostDetail, deletePost } from "@/api/postApi";
+import { Post } from "@/types/post";
+import { useToast } from "@/contexts/ToastContext";
 
 export default function PostDetail() {
   const { user } = useUserStore();
+  const navigate = useNavigate();
+  const { showToast } = useToast();
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
@@ -20,65 +26,93 @@ export default function PostDetail() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const commentRef = useRef<HTMLDivElement>(null);
-
-  const post = {
-    id: "post-001",
-    title: "32 Title one line",
-    userId: "user-123",
-    nickName: "내닉네임",
-    createdAt: "Feb 17. 2025.",
-    profileUrl: "https://i.pravatar.cc/40?img=3",
-    content: `
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-    `,
-  };
+  const { postId } = useParams<{ postId: string }>();
 
   const isLogin = !!user;
-  const isOwner = isLogin && user?.id === post.userId;
+  const isOwner = post?.isOwner ?? false;
+
+  useEffect(() => {
+    const loadPost = async () => {
+      if (!postId) return;
+      setLoading(true);
+      try {
+        const res = await fetchPostDetail(postId);
+
+        if ((res.code === 200 || res.code === 0) && res.data) {
+          setPost(res.data);
+          setCommentCount(res.data.comments?.length ?? 0);
+        } else {
+          console.error("게시글 불러오기 실패:", res.message);
+          showToast("게시글을 불러오지 못했습니다.", "error");
+        }
+      } catch (err) {
+        console.error("게시글 상세 조회 에러:", err);
+        showToast("서버 오류가 발생했습니다.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPost();
+  }, [postId, showToast]);
+
+  if (loading) return <div className="p-6 text-center">게시글 불러오는 중...</div>;
+  if (!post) return <div className="p-6 text-center">게시글을 찾을 수 없습니다.</div>;
 
   const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleDeletePost = async () => {
+    if (!postId) return;
+    try {
+      const res = await deletePost(postId);
+      if (res.code === 200 || res.code === 0) {
+        setIsDeleteModalOpen(false);
+        showToast("게시글이 삭제되었습니다.", "success");
+        setTimeout(() => {
+          navigate("/blog", { replace: true });
+        }, 1000);
+      } else {
+        showToast(res.message || "삭제 실패", "error");
+      }
+    } catch (err) {
+      console.error("게시글 삭제 에러:", err);
+      showToast("삭제 중 오류가 발생했습니다.", "error");
+    }
+  };
+
   const menuItems = [
-    { label: "수정하기", onClick: () => alert("수정하기 클릭") },
+    { label: "수정하기", onClick: () => navigate(`/edit/${postId}`) },
     { label: "삭제하기", onClick: () => setIsDeleteModalOpen(true) },
   ];
-
-  const handleDeletePost = () => {
-    setIsDeleteModalOpen(false);
-    alert("게시글이 삭제되었습니다.");
-  };
 
   return (
     <div className={S.page}>
       <div className="fixed top-0 left-0 z-50 w-full">
-        <div className="relative">
-          <Header
-            title="GITLOG"
-            variant="chatMenu"
-            onChatClick={handleScrollToComments}
-            onMenuClick={() => setIsSidebarOpen(true)}
-            onMoreClick={() => setIsMenuOpen((prev) => !prev)}
-            showMoreIcon={isOwner}
-          />
-
-          {isOwner && isMenuOpen && (
-            <div className="absolute top-[55px] right-6 z-50">
-              <DropdownMenuList
-                items={menuItems}
-                onItemClick={(item) => {
-                  item.onClick?.();
-                  setIsMenuOpen(false);
-                }}
-                position="right"
-              />
-            </div>
-          )}
-        </div>
+        <Header
+          title="GITLOG"
+          variant="chatMenu"
+          onChatClick={handleScrollToComments}
+          onMenuClick={() => setIsSidebarOpen(true)}
+          onMoreClick={() => setIsMenuOpen((prev) => !prev)}
+          showMoreIcon={isOwner}
+        />
+        {isOwner && isMenuOpen && (
+          <div className="absolute top-[55px] right-6 z-50">
+            <DropdownMenuList
+              items={menuItems}
+              onItemClick={(item) => {
+                item.onClick?.();
+                setIsMenuOpen(false);
+              }}
+              position="right"
+            />
+          </div>
+        )}
       </div>
 
       <div className="h-[70px]" />
@@ -104,7 +138,7 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
             <Avatar src={post.profileUrl} size="xs" />
             <span className={S.nick}>{post.nickName}</span>
             <span className={S.date}>
-              {post.createdAt} 댓글 {commentCount}
+              {new Date(post.createdAt).toLocaleDateString()} 댓글 {commentCount}
             </span>
           </div>
         </section>
@@ -112,10 +146,20 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         <div className={S.divider} />
 
         <section className={S.group}>
-          <article
-            className={S.content}
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
-          />
+          {post.contents?.map((c) =>
+            c.contentType === "TEXT" ? (
+              <p key={c.contentOrder} className={S.content}>
+                {c.content}
+              </p>
+            ) : (
+              <img
+                key={c.contentOrder}
+                src={c.content}
+                alt="게시글 이미지"
+                className="mt-4 rounded-xl"
+              />
+            ),
+          )}
         </section>
 
         <div className={S.divider} />
@@ -123,13 +167,14 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         <section className={S.group} ref={commentRef}>
           <CommentSection
             isLoggedIn={isLogin}
-            onLoginClick={() => setIsLoginOpen(true)}
-            onSubmit={(text) => {
-              alert(`댓글 등록: ${text}`);
-              setCommentCount((prev) => prev + 1);
-            }}
+            postId={postId!}
             postAuthorProfile={post.profileUrl}
             postAuthorName={post.nickName}
+            onLoginClick={() => setIsLoginOpen(true)}
+            onSubmit={(comment: string) => {
+              showToast(`댓글 등록: ${comment}`, "success");
+              setCommentCount((prev) => prev + 1);
+            }}
           />
         </section>
       </main>
@@ -158,10 +203,4 @@ Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
       />
     </div>
   );
-}
-
-function renderMarkdown(text: string) {
-  return text
-    .replace(/```(.*?)```/gs, '<pre class="code-block"><code>$1</code></pre>')
-    .replace(/\n/g, "<br>");
 }

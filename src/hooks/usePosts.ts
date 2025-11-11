@@ -1,39 +1,31 @@
-import { useEffect, useState } from "react";
-import { fetchPosts, Post } from "@/api/postApi";
+import { useState, useEffect } from "react";
+import { fetchPosts } from "@/api/postApi";
+import type { ApiPost } from "@/types/post";
 
-export function usePosts(page: number, size: number = 10) {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [pageMax, setPageMax] = useState(0);
+export const usePosts = (page: number, size: number) => {
+  const [posts, setPosts] = useState<ApiPost[]>([]);
+  const [pageMax, setPageMax] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getPosts = async () => {
+    const loadPosts = async () => {
       setLoading(true);
       try {
         const res = await fetchPosts(page, size);
-
-        const data = res?.data ?? {};
-        const postList = data.post ?? [];
-        const maxPage = data.pageMax ?? 1;
-
-        if (Array.isArray(postList)) {
-          setPosts(postList);
+        if (res.code === 0 || res.code === 200) {
+          setPosts(res.data.content || []);
+          setPageMax(res.data.totalPages || 1);
         } else {
-          console.warn("Unexpected posts structure:", postList);
-          setPosts([]);
+          console.error("게시글 조회 실패:", res.message);
         }
-
-        setPageMax(maxPage);
-      } catch (error) {
-        console.error("게시글 불러오기 실패:", error);
-        setPosts([]);
+      } catch (err) {
+        console.error("게시글 조회 에러:", err);
       } finally {
         setLoading(false);
       }
     };
-
-    getPosts();
+    loadPosts();
   }, [page, size]);
 
   return { posts, pageMax, loading };
-}
+};

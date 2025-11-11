@@ -1,54 +1,36 @@
-import { useState } from "react";
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderLegacy from "@/components/Header/HeaderLegacy";
 import TextField from "@/components/Text/TextField";
 import ImagePreview from "@/components/ImagePreview/ImagePreview";
-import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/Modal/Modal";
 import * as S from "./PostWritePage.styled";
 import { useLogout } from "@/hooks/useLogout";
+import { useState } from "react";
+import { usePostForm } from "./usePostForm"; // ✅ 훅 분리
 
 const PostWritePage: React.FC = () => {
+  const {
+    title,
+    content,
+    images,
+    setTitle,
+    setContent,
+    handlePublish,
+    handleDeleteImage,
+    isEditMode,
+  } = usePostForm();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [images, setImages] = useState<string[]>([
-    "https://picsum.photos/600/300",
-    "https://picsum.photos/700/250",
-  ]);
-
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
   const handleCancel = () => {
-    const confirmCancel = confirm("작성 중인 내용을 취소하시겠습니까?");
-    if (confirmCancel) {
-      setTitle("");
-      setContent("");
-      setImages([]);
+    if (confirm("작성 중인 내용을 취소하시겠습니까?")) {
+      window.location.href = "/blog";
     }
   };
-
-  const handlePublish = () => {
-    if (!title.trim() || !content.trim()) {
-      setToast({ message: "내용을 입력해주세요", type: "error" });
-      return;
-    }
-    setToast({ message: "저장되었습니다!", type: "success" });
-  };
-
-  const handleDeleteClick = () => setIsDeleteModalOpen(true);
-  const handleConfirmDelete = () => {
-    setIsDeleteModalOpen(false);
-    setToast({ message: "삭제되었습니다.", type: "success" });
-  };
-
-  const handleDeleteImage = (index: number) =>
-    setImages((prev) => prev.filter((_, i) => i !== index));
 
   return (
     <main className={S.layout}>
@@ -57,7 +39,7 @@ const PostWritePage: React.FC = () => {
           title="GITLOG"
           variant="action"
           onMenuClick={() => setIsSidebarOpen(true)}
-          onDeleteClick={handleDeleteClick}
+          onDeleteClick={() => setIsDeleteModalOpen(true)}
           onPublishClick={handlePublish}
           onCancelClick={handleCancel}
         />
@@ -110,21 +92,15 @@ const PostWritePage: React.FC = () => {
         )}
       </section>
 
-      {toast && (
-        <div className={S.toastWrapper}>
-          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-        </div>
-      )}
-
       <Modal
         open={isDeleteModalOpen}
         title="정말 삭제하시겠습니까?"
-        description="입력중이던 내용은 저장되지 않아요."
+        description="입력 중이던 내용은 저장되지 않아요."
         onClose={() => setIsDeleteModalOpen(false)}
         confirmText="삭제하기"
         cancelText="취소"
         confirmColor="bg-brand-red text-white hover:opacity-90"
-        onConfirm={handleConfirmDelete}
+        onConfirm={() => (window.location.href = "/blog")}
       />
 
       <Modal

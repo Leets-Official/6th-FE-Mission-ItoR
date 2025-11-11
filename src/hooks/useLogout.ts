@@ -8,13 +8,12 @@ export function useLogout() {
   const handleLogoutClick = () => setIsLogoutModalOpen(true);
 
   const handleConfirmLogout = () => {
-    // 실제 로그아웃 로직
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     sessionStorage.clear();
 
     setIsLogoutModalOpen(false);
-    navigate("/", { replace: true });
+    navigate("/blog", { replace: true });
   };
 
   const handleCloseLogoutModal = () => setIsLogoutModalOpen(false);

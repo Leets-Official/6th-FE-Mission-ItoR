@@ -24,6 +24,7 @@ export default function SignupPage() {
       <div className="fixed top-0 left-0 z-50 w-full">
         <Header title="GITLOG" variant="plain" onMenuClick={() => setIsSidebarOpen(true)} />
       </div>
+
       <div className="h-[70px]" />
 
       {isSidebarOpen && (

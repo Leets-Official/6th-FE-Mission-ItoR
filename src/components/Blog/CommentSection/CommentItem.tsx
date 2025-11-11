@@ -4,6 +4,8 @@ import { MoreVertIcon } from "@/assets/icons";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import * as S from "./CommentSection.styled";
 import { CommentItemProps } from "./CommentItem.types";
+import TextField from "@/components/Text/TextField";
+import Button from "@/components/Button/Button";
 
 const CommentItem: React.FC<CommentItemProps> = ({
   author,
@@ -13,8 +15,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
   isOwner = false,
   isLoggedIn = false,
   onDelete,
+  onEdit,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(content);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +32,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const menuItems = [{ label: "삭제하기", onClick: onDelete }];
+  const menuItems = [
+    { label: "수정하기", onClick: () => setIsEditing(true) },
+    { label: "삭제하기", onClick: onDelete },
+  ];
 
   return (
     <div className={S.commentItemWrapper}>
@@ -66,7 +74,39 @@ const CommentItem: React.FC<CommentItemProps> = ({
           )}
         </div>
 
-        <p className={S.commentText}>{content}</p>
+        {isEditing ? (
+          <div className="flex flex-col gap-2">
+            <TextField
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              size="md"
+              multiline
+              fullWidth
+            />
+            <div className="flex gap-2">
+              <Button
+                label="저장"
+                size="xs"
+                variant="inverse"
+                onClick={() => {
+                  onEdit?.(editedContent);
+                  setIsEditing(false);
+                }}
+              />
+              <Button
+                label="취소"
+                size="xs"
+                variant="tertiary"
+                onClick={() => {
+                  setEditedContent(content);
+                  setIsEditing(false);
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <p className={S.commentText}>{content}</p>
+        )}
       </div>
     </div>
   );
