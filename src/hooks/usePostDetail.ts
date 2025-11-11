@@ -1,27 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchPostDetail } from "@/api/postApi";
-import { Post } from "@/types/post";
-
-interface PostResponse {
-  code: number;
-  message: string;
-  data: Post;
-}
+import type { Post } from "@/types/post";
 
 export const usePostDetail = (postId: string) => {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadPost = async () => {
+    const loadDetail = async () => {
       setLoading(true);
       try {
-        const res: PostResponse = await fetchPostDetail(postId);
-
-        if ((res.code === 200 || res.code === 0) && res.data) {
+        const res = await fetchPostDetail(postId);
+        if (res.code === 0 || res.code === 200) {
           setPost(res.data);
         } else {
-          console.error("게시글 조회 실패:", res.message);
+          console.error("게시글 상세 조회 실패:", res.message);
         }
       } catch (err) {
         console.error("게시글 상세 조회 에러:", err);
@@ -29,8 +22,7 @@ export const usePostDetail = (postId: string) => {
         setLoading(false);
       }
     };
-
-    loadPost();
+    loadDetail();
   }, [postId]);
 
   return { post, loading };
