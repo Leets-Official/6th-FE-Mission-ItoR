@@ -1,16 +1,33 @@
 import api from "./index";
+import { useAuthStore } from "@/store/useAuthStore";
 
+/** ✅ 댓글 생성 */
 export const createComment = async (postId: string, content: string) => {
-  const res = await api.post(`/comments/${postId}`, { content });
+  const accessToken = useAuthStore.getState().accessToken;
+  const res = await api.post(
+    `/comments`,
+    { postId, content },
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+  );
   return res.data;
 };
 
+/** ✅ 댓글 수정 */
 export const updateComment = async (commentId: number, content: string) => {
-  const res = await api.patch(`/comments/${commentId}`, { content });
+  const accessToken = useAuthStore.getState().accessToken;
+  const res = await api.put(
+    `/comments/${commentId}`,
+    { content },
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+  );
   return res.data;
 };
 
+/** ✅ 댓글 삭제 */
 export const deleteComment = async (commentId: number) => {
-  const res = await api.delete(`/comments/${commentId}`);
+  const accessToken = useAuthStore.getState().accessToken;
+  const res = await api.delete(`/comments/${commentId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
   return res.data;
 };
