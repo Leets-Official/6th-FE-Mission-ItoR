@@ -24,7 +24,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 🔹 응답 인터셉터: 401일 때 자동 토큰 재발급
+//응답 인터셉터: 401일 때 자동 토큰 재발급
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -45,10 +45,11 @@ api.interceptors.response.use(
           throw new Error("refreshToken이 없습니다.");
         }
 
-        const reissueRes = await axios.post(`${BASE_URL}/auth/reissue`, null, {
-          headers: { Authorization: `Bearer ${refreshToken}` },
-          withCredentials: true,
-        });
+        const reissueRes = await axios.post(
+          `${BASE_URL}/auth/reissue`,
+          { refreshToken }, // 
+          { withCredentials: true }
+        );
 
         const newAccess = reissueRes.data?.data?.accessToken;
         const newRefresh = reissueRes.data?.data?.refreshToken;
