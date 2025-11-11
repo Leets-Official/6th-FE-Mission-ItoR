@@ -1,4 +1,3 @@
-// src/pages/PostWritePage/PostWritePage.tsx
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderLegacy from "@/components/Header/HeaderLegacy";
@@ -23,7 +22,7 @@ const PostWritePage: React.FC = () => {
     handleDeleteImage,
   } = usePostForm();
 
-  const { uploadImage, uploading } = useImageUpload();
+  const { uploadImage } = useImageUpload();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
@@ -36,7 +35,6 @@ const PostWritePage: React.FC = () => {
     }
   };
 
-  /** ✅ Presigned URL 업로드 처리 */
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -74,25 +72,19 @@ const PostWritePage: React.FC = () => {
 
       <section className={S.form}>
         <div className={S.spacer} />
-        <HeaderLegacy showPhotoButton={true} showFileButton={false} />
+        <HeaderLegacy
+          showPhotoButton={true}
+          showFileButton={false}
+          onPhotoClick={() => fileInputRef.current?.click()}
+        />
 
-        {/* ✅ 이미지 업로드 버튼 */}
-        <div className="my-3">
-          <button
-            className="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-100"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-          >
-            {uploading ? "업로드 중..." : "이미지 추가"}
-          </button>
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            className="hidden"
-          />
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          className="hidden"
+        />
 
         <TextField
           variant="borderless"
