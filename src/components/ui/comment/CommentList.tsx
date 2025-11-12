@@ -1,5 +1,4 @@
-import React from "react";
-import CommentItem, { CommentView } from "./CommentItem";
+import CommentItem, { CommentView } from "@ui/comment/CommentItem";
 
 type Props = {
   comments: CommentView[];

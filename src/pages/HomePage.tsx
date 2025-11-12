@@ -3,11 +3,11 @@ import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import PageHeader from "@ui/PageHeader";
 import Frame from "@ui/Frame";
-import PostList from "../components/home/PostList";
-import type { Post } from "../types/post";
-import clearIcon from "../assets/icons/clear.svg";
-import kakaoIcon from "../assets/icons/kakao.svg";
-import "../styles/auth.css";
+import PostList from "@src/components/home/PostList";
+import type { Post } from "@src/types/post";
+import clearIcon from "@icons/clear.svg";
+import kakaoIcon from "@icons/kakao.svg";
+import "@src/styles/auth.css";
 import { usePosts } from "@src/hooks/usePosts";
 
 const styles = {

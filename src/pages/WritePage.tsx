@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import imageIcon from "../assets/icons/image.svg";
+import imageIcon from "@icons/image.svg";
 import { useCreatePost, useUpdatePost } from "@src/hooks/usePosts";
 import { buildBlocks } from "@src/utils/blocks";
 

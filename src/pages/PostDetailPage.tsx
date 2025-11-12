@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
-import Dropdown from "../components/ui/Dropdown";
-import Modal from "../components/ui/Modal";
-import ProfilePhoto from "../components/ui/Profile";
-import TextBox from "../components/ui/TextBox";
-import PageHeader from "../components/ui/PageHeader";
+import Dropdown from "@ui/Dropdown";
+import Modal from "@ui/Modal";
+import ProfilePhoto from "@ui/Profile";
+import TextBox from "@ui/TextBox";
+import PageHeader from "@ui/PageHeader";
 import Spacer from "@ui/Spacer";
 import TitleSection, { AuthorView } from "@ui/Post/TitleSection";
 import DetailBlocks, { DetailBlock } from "@ui/Post/DetailBlocks";
