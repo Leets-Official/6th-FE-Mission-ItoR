@@ -7,7 +7,7 @@ import axios, {
 /** 개발/배포 분기 */
 const isDev = import.meta.env.DEV;
 const BASE_URL =
-  isDev ? "/api" : (import.meta.env.VITE_API_BASE_URL || "https://blog.leets.land");
+  isDev ? "/api" : import.meta.env.VITE_API_BASE_URL;
 
 /** 공용 인스턴스 */
 const api = axios.create({
