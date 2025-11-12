@@ -1,4 +1,3 @@
-// vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
@@ -7,9 +6,9 @@ export default defineConfig({
   plugins: [react(), svgr()],
   resolve: {
     alias: {
-      "@icons": "/src/assets/icons",
-      "@ui": "/src/components/ui",
       "@src": "/src",
+      "@ui": "/src/components/ui",
+      "@icons": "/src/assets/icons",
     },
   },
   server: {
@@ -19,7 +18,6 @@ export default defineConfig({
         target: "https://blog.leets.land",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
