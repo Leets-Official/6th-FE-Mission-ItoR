@@ -1,8 +1,10 @@
+// src/pages/HomePage.tsx
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import PageHeader from "@ui/PageHeader";
 import Frame from "@ui/Frame";
+import Container from "@ui/Container"; 
 import PostList from "@src/components/home/PostList";
 import type { Post } from "@src/types/post";
 import clearIcon from "@icons/clear.svg";
@@ -14,7 +16,7 @@ const styles = {
   container: {
     wrap: "mx-auto w-full max-w-[1366px]",
     pad: "px-4 sm:px-6 md:px-8",
-    main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8",
+    // main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8", 
   },
 } as const;
 
@@ -114,6 +116,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
+      {/* 헤더는 1366px 컨테이너 유지 */}
       <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)] relative z-10">
         <div className={clsx(styles.container.wrap, styles.container.pad)}>
           <PageHeader
@@ -142,11 +145,9 @@ export default function HomePage() {
         </div>
       )}
 
-      <main
-        className={clsx("flex-1 w-full", showFrame ? "md:ml-[240px]" : "ml-0")}
-      >
-        <div className={clsx(styles.container.main, "py-8")}>
-          <section className="flex flex-col gap-6">
+      <main className={clsx("flex-1 w-full", showFrame ? "md:ml-[240px]" : "ml-0")}>
+        <Container className="py-8">
+          <section className="flex flex-col gap-6 w-full">
             {isLoading && (
               <div className="text-center text-[14px] text-[var(--Gray56)] py-8">
                 로딩 중입니다...
@@ -184,7 +185,7 @@ export default function HomePage() {
               </>
             )}
           </section>
-        </div>
+        </Container>
       </main>
 
       {loginOpen && (

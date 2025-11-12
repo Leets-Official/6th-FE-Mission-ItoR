@@ -1,6 +1,7 @@
 import React from "react";
 import TextBox from "@ui/TextBox";
 import ProfilePhoto from "@ui/Profile";
+import Container from "@ui/Container";
 
 export type AuthorView = {
   name: string;
@@ -16,7 +17,7 @@ type Props = {
 
 export default function TitleSection({ title, author, date, commentCount }: Props) {
   return (
-    <section className="flex max-w-[688px] py-3 flex-col items-start self-stretch">
+    <Container>
       <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-start gap-3 self-stretch">
         <TextBox
           tbStyle="primary"
@@ -39,6 +40,6 @@ export default function TitleSection({ title, author, date, commentCount }: Prop
           </span>
         </div>
       </div>
-    </section>
+    </Container>
   );
 }

@@ -4,6 +4,7 @@ import TextField from "@ui/TextField";
 import Button from "@ui/Button/Button"; 
 import ProfilePhoto from "@ui/Profile";
 import { formatShortDate } from "@src/utils/date";
+import Container from "@ui/Container";
 
 export type CommentView = {
   id: number;
@@ -40,7 +41,7 @@ export default function CommentItem({ c, onRequestDelete, onSaveEdit }: Props) {
   };
 
   return (
-    <div className="flex max-w-[688px] px-4 py-3 items-start gap-3 self-stretch">
+    <Container className="px-4 gap-3">
       <div className="flex w-5 h-5 items-center">
         <ProfilePhoto
           size="sm"
@@ -111,6 +112,6 @@ export default function CommentItem({ c, onRequestDelete, onSaveEdit }: Props) {
           ]}
         />
       )}
-    </div>
+    </Container>
   );
 }

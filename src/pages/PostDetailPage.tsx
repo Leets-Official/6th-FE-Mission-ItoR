@@ -1,3 +1,4 @@
+// src/pages/PostDetailPage.tsx
 import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
 import Dropdown from "@ui/Dropdown";
@@ -26,7 +27,10 @@ type ApiPostDetail = {
   title: string;
   createdAt?: string;
   author?: { nickname?: string; avatarUrl?: string; introduction?: string };
-  blocks?: Array<{ type: "IMAGE"; order: number; url: string } | { type: "TEXT"; order: number; content: string }>;
+  blocks?: Array<
+    | { type: "IMAGE"; order: number; url: string }
+    | { type: "TEXT"; order: number; content: string }
+  >;
   mine?: boolean;
 };
 
@@ -36,47 +40,70 @@ export default function PostDetailPage() {
   const isLoggedIn = search.get("login") === "1";
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = usePostDetail(id ?? "");
-  const postIdForComments = id ?? "";
-  const { data: serverComments = [] } = useComments(postIdForComments);
-  const createMut = useCreateComment(postIdForComments);
-  const updateMut = useUpdateComment(postIdForComments);
-  const deleteMut = useDeleteComment(postIdForComments);
-
-  const d = data as ApiPostDetail | undefined;
-
-  const author: AuthorView | null = d
-    ? { name: d.author?.nickname ?? "익명", initial: (d.author?.nickname ?? "U").charAt(0).toUpperCase() }
-    : null;
-
-  const blocks: DetailBlock[] = Array.isArray(d?.blocks)
-    ? d!.blocks!.map((b) => (b.type === "IMAGE" ? { type: "IMAGE", order: b.order, value: b.url } : { type: "TEXT", order: b.order, value: b.content }))
-    : [];
+  //hooks는 항상 호출되도록 id가 없어도 빈 문자열로 호출
+  const pid = id ?? "";
+  const { data, isLoading, isError } = usePostDetail(pid);
+  const { data: serverComments = [] } = useComments(pid);
+  const createMut = useCreateComment(pid);
+  const updateMut = useUpdateComment(pid);
+  const deleteMut = useDeleteComment(pid);
 
   const [input, setInput] = useState("");
   const [postDeleteOpen, setPostDeleteOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
+  //hooks 호출 이후에 early return
+  if (!id) return <Navigate to="/" replace />;
+
+  const d = data as ApiPostDetail | undefined;
+
+  const author: AuthorView | null = d
+    ? {
+        name: d.author?.nickname ?? "익명",
+        initial: (d.author?.nickname ?? "U").charAt(0).toUpperCase(),
+      }
+    : null;
+
+  const blocks: DetailBlock[] = Array.isArray(d?.blocks)
+    ? d.blocks.map((b) =>
+        b.type === "IMAGE"
+          ? { type: "IMAGE", order: b.order, value: b.url }
+          : { type: "TEXT", order: b.order, value: b.content }
+      )
+    : [];
+
   const dateText = d?.createdAt ? formatDate(d.createdAt) : "";
   const isMine = !!d?.mine;
 
   type ServerCommentFlexible = {
-    id?: number; commentId?: number; content?: string; createdAt?: string;
+    id?: number;
+    commentId?: number;
+    content?: string;
+    createdAt?: string;
     author?: { nickname?: string; avatarUrl?: string };
-    nickName?: string; profileUrl?: string; mine?: boolean; isOwner?: boolean;
+    nickName?: string; // 서버 케이스 대비
+    profileUrl?: string;
+    mine?: boolean;
+    isOwner?: boolean;
   };
 
+  //CommentView는 nickname 키 사용
   const comments: CommentView[] = (serverComments as ServerCommentFlexible[]).map((c) => ({
     id: (c.id ?? c.commentId ?? 0) as number,
     content: String(c.content ?? ""),
     createdAt: c.createdAt ?? new Date().toISOString(),
-    nickName: c.author?.nickname ?? c.nickName ?? "익명",
+    nickname: c.author?.nickname ?? c.nickName ?? "익명",
     profileUrl: c.author?.avatarUrl ?? c.profileUrl,
     mine: Boolean(c.mine ?? c.isOwner),
   }));
 
-  if (!id) return <Navigate to="/" replace />;
-  if (isLoading) return <div className="min-h-dvh w-full flex items-center justify-center text-[14px] text-[var(--Gray56)]">로딩 중입니다...</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh w-full flex items-center justify-center text-[14px] text-[var(--Gray56)]">
+        로딩 중입니다...
+      </div>
+    );
+  }
   if (isError || !d || !author) return <Navigate to="/" replace />;
 
   const handleCreate = () => {
@@ -84,12 +111,16 @@ export default function PostDetailPage() {
     if (!v || !isLoggedIn) return;
     createMut.mutate(v, { onSuccess: () => setInput("") });
   };
+
   const askDelete = (cid: number) => setDeleteId(cid);
+
   const confirmDelete = () => {
     if (!deleteId) return;
     deleteMut.mutate(deleteId, { onSettled: () => setDeleteId(null) });
   };
-  const saveEdit = (cid: number, content: string) => updateMut.mutate({ commentId: cid, content });
+
+  const saveEdit = (cid: number, content: string) =>
+    updateMut.mutate({ commentId: cid, content });
 
   return (
     <div className="min-h-dvh w-full flex flex-col bg-[var(--White)]">
@@ -102,8 +133,16 @@ export default function PostDetailPage() {
                 position="right"
                 trigger={<span className="block w-6 h-6" aria-label="더보기" />}
                 items={[
-                  { id: "edit", label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>, onSelect: () => navigate(`/write/${id}`) },
-                  { id: "delete", label: <span className="text-[14px] text-[var(--Negative)]">삭제하기</span>, onSelect: () => setPostDeleteOpen(true) },
+                  {
+                    id: "edit",
+                    label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>,
+                    onSelect: () => navigate(`/write/${id}`),
+                  },
+                  {
+                    id: "delete",
+                    label: <span className="text-[14px] text-[var(--Negative)]">삭제하기</span>,
+                    onSelect: () => setPostDeleteOpen(true),
+                  },
                 ]}
                 caretOffset="md"
               />
@@ -114,14 +153,28 @@ export default function PostDetailPage() {
 
       <main className="flex-1 w-full">
         <div className="mx-auto w-full max-w-[688px]">
-          <TitleSection title={d.title} author={author} date={dateText} commentCount={comments.length} />
+          <TitleSection
+            title={d.title}
+            author={author}
+            date={dateText}
+            commentCount={comments.length}
+          />
           <Spacer y={32} />
           <DetailBlocks blocks={blocks} />
           <Spacer y={32} />
 
           <section className="flex flex-col items-start gap-10 flex-[1_0_0]">
-            <CommentInput isLoggedIn={isLoggedIn} value={input} onChange={setInput} onSubmit={handleCreate} />
-            <CommentList comments={comments} onDelete={askDelete} onEdit={saveEdit} />
+            <CommentInput
+              isLoggedIn={isLoggedIn}
+              value={input}
+              onChange={setInput}
+              onSubmit={handleCreate}
+            />
+            <CommentList
+              comments={comments}
+              onDelete={askDelete}
+              onEdit={saveEdit}
+            />
             <Spacer y={64} />
           </section>
         </div>
@@ -133,8 +186,16 @@ export default function PostDetailPage() {
               <ProfilePhoto size="lg" initial={author.initial} name={author.name} />
             </div>
             <div className="flex flex-col items-start gap-1.5 w-full">
-              <TextBox tbStyle="single" text={author.name} className="!m-0 !p-0 !bg-transparent !text-[24px] !leading-[38.4px] !font-medium !text-[var(--Black)] !text-left w-full" />
-              <TextBox tbStyle="single" text={d.author?.introduction ?? ""} className="!m-0 !p-0 !bg-transparent !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px] !text-left w-full" />
+              <TextBox
+                tbStyle="single"
+                text={author.name}
+                className="!m-0 !p-0 !bg-transparent !text-[24px] !leading-[38.4px] !font-medium !text-[var(--Black)] !text-left w-full"
+              />
+              <TextBox
+                tbStyle="single"
+                text={d.author?.introduction ?? ""}
+                className="!m-0 !p-0 !bg-transparent !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px] !text-left w-full"
+              />
             </div>
           </div>
           <Spacer y={64} className="mx-auto max-w-[688px]" />
