@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import TextField from "@ui/TextField";
 import Button from "@ui/Button/Button";
 
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export default function CommentInput({ isLoggedIn, value, onChange, onSubmit }: Props) {
+  const navigate = useNavigate(); 
+
   return (
     <>
       <div className="flex max-w-[688px] px-4 items-center gap-2">
@@ -24,7 +27,11 @@ export default function CommentInput({ isLoggedIn, value, onChange, onSubmit }: 
             </p>
           </div>
           <div className="flex max-w-[688px] px-4 py-3">
-            <Button type="button" className="px-4 rounded-[4px] h-10" onClick={() => (window.location.href = "/me")}>
+            <Button
+              type="button"
+              className="px-4 rounded-[4px] h-10"
+              onClick={() => navigate("/me")} 
+            >
               로그인하러 가기
             </Button>
           </div>
@@ -43,7 +50,12 @@ export default function CommentInput({ isLoggedIn, value, onChange, onSubmit }: 
                 if (e.key === "Enter" && value.trim()) onSubmit();
               }}
             />
-            <Button type="button" className="h-10 px-4" onClick={onSubmit} disabled={!value.trim()}>
+            <Button
+              type="button"
+              className="h-10 px-4"
+              onClick={onSubmit}
+              disabled={!value.trim()}
+            >
               등록
             </Button>
           </div>
