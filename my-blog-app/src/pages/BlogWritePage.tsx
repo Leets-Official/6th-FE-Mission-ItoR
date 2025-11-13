@@ -1,6 +1,7 @@
 import PageHeader from '@/components/common/PageHeader'
 import TextCard from '@/components/common/TextCard'
 import { AddPhotoAlternateIcon } from '@/assets/icons/AddPhotoAlternateIcon'
+import Toast from '@/components/common/Toast'
 import { Button } from '@/components/Button/Button'
 import Blank from '@/components/common/Blank'
 import { TrashIcon } from '@/assets/icons/TrashIcon'

@@ -34,6 +34,7 @@ export default function ListItem({
 
         <ListItemMeta nickname={nickname} date={date} commentCount={commentCount} />
       </div>
+
       {/* 오른쪽: 썸네일 이미지 */}
       {image && <PictureFrame src={image} />}
     </div>

@@ -5,6 +5,7 @@ import TextCard from '@/components/common/TextCard'
 import PictureFrame from './PictureFrame'
 import CommentField from './CommentField'
 import ProfileImage from '@/components/ProfileImage/ProfileImage'
+import BlogTitleSection from './BlogTitleSection'
 import { ChatIcon, MoreIcon } from '@/assets/icons'
 import CommentCount from './CommentCount'
 import DropdownMenu from '@/components/Dropdown/DropdownMenu'
@@ -31,6 +32,7 @@ export default function ListItemMain({ post }: { post: Post }) {
   const { showToast } = useToast()
   const { openModal } = useModal()
 
+  // 댓글 추가 시 토스트 표시
   const handleAddCommentWithToast = () => {
     if (!newComment.trim()) {
       showToast('내용을 입력해주세요.', 'negative')
@@ -40,6 +42,7 @@ export default function ListItemMain({ post }: { post: Post }) {
     showToast('댓글이 등록되었습니다.', 'positive')
   }
 
+  // 댓글 삭제 시 모달 → 토스트 표시
   const handleDeleteClickWithModal = (index: number) => {
     openModal('댓글을 삭제할까요?', () => {
       handleDeleteClick(index)
@@ -57,6 +60,8 @@ export default function ListItemMain({ post }: { post: Post }) {
             <button onClick={handleScrollToComments}>
               <ChatIcon />
             </button>
+
+            {/* 드롭다운 메뉴 (게시글용) */}
             <div className='relative'>
               <button onClick={() => setOpenMenuIndex(openMenuIndex === -1 ? null : -1)}>
                 <MoreIcon />
@@ -127,7 +132,7 @@ export default function ListItemMain({ post }: { post: Post }) {
               <CommentItem
                 key={index}
                 author='닉네임'
-                date='2025.11.05'
+                date='2025.11.05''
                 content={comment}
                 onDelete={() => handleDeleteClickWithModal(index)}
               />
