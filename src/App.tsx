@@ -11,6 +11,7 @@ import SignupEmail from "./pages/SignupEmail";
 import ProfileDetail from "./pages/ProfileDetail";
 import ProfileFind from "./pages/ProfileFind";
 import SignupKakao from "./pages/SignupKakao";
+import KakaoRedirectPage from "./pages/KakaoRedirectPage"; // Import KakaoRedirectPage
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/profiledetail" element={<ProfileDetail />} />
           <Route path="/profilefind" element={<ProfileFind />} />
           <Route path="/signup/kakao" element={<SignupKakao />} />
+          <Route path="/oauth/kakao/success" element={<KakaoRedirectPage />} />
         </Routes>
       </Router>
     </QueryClientProvider>
