@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('accesstoken')
+    const token = localStorage.getItem('accessToken')
     const tempLogin = localStorage.getItem('isLoggedIn')
     if (token || tempLogin === 'true') {
       setIsLoggedIn(true)
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const logout = () => {
-    localStorage.removeItem('accesstoken')
+    localStorage.removeItem('accessToken')
     localStorage.removeItem('isLoggedIn')
     setIsLoggedIn(false)
     alert('로그아웃되었습니다.')
