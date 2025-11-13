@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
+import { deleteComment, updateComment } from '@/api/commentAPI';
 
-import Blank from '../../../components/Blank';
-import ProfileImage from '../../../components/ProfileImage';
-import useFormatCreatedAt from '../../../hooks/useFormatCreatedAt';
-import MenuIcon from '../../../assets/icons/more_vert.svg?react';
-import DropdownMenu from '../../../components/DropdownMenu';
+import Blank from '@/components/Blank';
+import ProfileImage from '@/components/ProfileImage';
+import useFormatCreatedAt from '@/hooks/useFormatCreatedAt';
+import MenuIcon from '@/assets/icons/more_vert.svg?react';
+import DropdownMenu from '@/components/DropdownMenu';
 
 export interface CommentItemProps {
-  commentId?: number;
+  commentId: number;
   content?: string;
   nickName?: string;
   profileUrl?: string;
@@ -25,15 +26,41 @@ const CommentItem = ({
   onDelete,
 }: CommentItemProps) => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editContent, setEditContent] = useState<string>(content || '');
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const handleDeleteComment = () => {
-    onDelete(commentId);
+  const handleDeleteComment = async () => {
+    try {
+      await deleteComment(commentId);
+      onDelete(commentId);
+      setShowDropdown(false);
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+    }
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
     setShowDropdown(false);
   };
 
+  const handleUpdateComment = async () => {
+    try {
+      await updateComment(commentId, editContent);
+      setIsEditing(false);
+      onDelete(commentId);
+    } catch (error) {
+      console.error('댓글 수정 실패:', error);
+    }
+  };
+
   const menuItems = [
+    {
+      text: '수정하기',
+      onClick: handleEditClick,
+    },
     {
       text: '삭제하기',
       className: 'text-negative',
@@ -87,7 +114,32 @@ const CommentItem = ({
         </button>
       </section>
       <div className="ml-[26px] px-4 py-3 text-sm font-light text-gray-20 whitespace-pre-line leading-[160%]">
-        {content}
+        {isEditing ? (
+          <>
+            <textarea
+              className="w-full border border-gray-300 rounded p-2 resize-none"
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              rows={4}
+            />
+            <div className="mt-2 flex gap-2">
+              <button
+                onClick={handleUpdateComment}
+                className="px-3 py-1 bg-blue-500 text-white rounded"
+              >
+                저장
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-3 py-1 bg-gray-300 rounded"
+              >
+                취소
+              </button>
+            </div>
+          </>
+        ) : (
+          content
+        )}
       </div>
 
       <Blank variant="20" />

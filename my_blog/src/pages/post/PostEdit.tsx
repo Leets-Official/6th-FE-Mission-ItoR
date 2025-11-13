@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom'; // ! UI 우선 구현 -> API 연동 (완료) -> 추후 테스트,,,ㅠㅠ
-import { createPost } from '@/api/postAPI';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getPostById, updatePost } from '@/api/postAPI';
 
-import Blank from '../../components/Blank';
-import Devider from '../../components/Devider';
-import Header from '../../components/Header';
-import Menu from '../../components/Menu';
-import Toast from '../../components/Toast';
+import Blank from '@/components/Blank';
+import Devider from '@/components/Devider';
+import Header from '@/components/Header';
+import Menu from '@/components/Menu';
+import Toast from '@/components/Toast';
+
+import type { PostContent } from '@/types/post';
 
 type ContentBlock = {
   id: string;
@@ -14,13 +16,12 @@ type ContentBlock = {
   value: string;
 };
 
-const PostNew = () => {
-  const navigate = useNavigate(); // ! UI 우선 구현 -> API 연동 (완료) -> 추후 테스트,,,ㅠㅠ
+const PostEdit = () => {
+  const { postId } = useParams<{ postId: string }>();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
-  const [contents, setContents] = useState<ContentBlock[]>([
-    { id: crypto.randomUUID(), type: 'TEXT', value: '' },
-  ]);
+  const [contents, setContents] = useState<ContentBlock[]>([]);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
@@ -46,14 +47,39 @@ const PostNew = () => {
     imageRefs.current[id] = el;
   }, []);
 
-  const handlePostClick = async () => {
+  useEffect(() => {
+    if (!postId) return;
+    const fetchPost = async () => {
+      try {
+        const data = await getPostById(postId);
+        setTitle(data.title);
+        setContents(
+          data.contents.map((c: PostContent) => ({
+            id: crypto.randomUUID(),
+            type: c.contentType,
+            value: c.content,
+          })),
+        );
+      } catch (error) {
+        console.error('게시물 불러오기 실패:', error);
+        setToast({
+          show: true,
+          message: '게시물을 불러오지 못했습니다.',
+          variant: 'error',
+        });
+      }
+    };
+    fetchPost();
+  }, [postId]);
+
+  const handleUpdateClick = async () => {
     const hasContent = contents.some((c) => c.value.trim());
     const hasTitle = title.trim().length > 0;
 
     if (!hasTitle || !hasContent) {
       setToast({
         show: true,
-        message: '내용을 입력해주세요',
+        message: '제목과 내용을 입력해주세요.',
         variant: 'error',
       });
       return;
@@ -69,18 +95,19 @@ const PostNew = () => {
     };
 
     try {
-      await createPost(payload);
+      if (!postId) throw new Error('postId is missing');
+      await updatePost(postId, payload);
       setToast({
         show: true,
-        message: '저장되었습니다!',
+        message: '수정되었습니다!',
         variant: 'success',
       });
-      navigate('/'); // ! UI 우선 구현 -> API 연동 (완료) -> 추후 테스트,,,ㅠㅠ
+      navigate(`/post/${postId}`);
     } catch (error) {
-      console.error(error); //! 디버그용
+      console.error('게시물 수정 실패:', error);
       setToast({
         show: true,
-        message: '저장에 실패했습니다.',
+        message: '수정에 실패했습니다.',
         variant: 'error',
       });
     }
@@ -180,7 +207,7 @@ const PostNew = () => {
 
   return (
     <>
-      <Header type="write" onPost={handlePostClick} offsetTop={0} />
+      <Header type="write" onPost={handleUpdateClick} offsetTop={0} />
       <Header
         type="file"
         addImg={true}
@@ -197,7 +224,7 @@ const PostNew = () => {
         />
       </Header>
 
-      <main className="mt-32  w-full flex flex-col items-center relative">
+      <main className="mt-32 w-full flex flex-col items-center relative">
         {/* 제목 */}
         <header className="w-full max-w-[688px] min-w-mobile h-fit py-2">
           <Blank variant="32" />
@@ -208,7 +235,7 @@ const PostNew = () => {
               onInput={handleAutoHeight}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full text-2xl font-medium text-black leading-[160%] border-none resize-none placeholder:text-base placeholder:font-medium placeholder:text-gray-56"
-              placeholder="제목"
+              placeholder="제목을 입력하세요"
             />
           </div>
           <Blank variant="32" />
@@ -227,7 +254,7 @@ const PostNew = () => {
                   onChange={(e) => handleTextChange(block.id, e.target.value)}
                   onFocus={() => setFocusedIndex(index)}
                   onInput={handleAutoHeight}
-                  placeholder="어떤 것을 깨달았나요?"
+                  placeholder="어떤 내용을 수정하시겠어요?"
                   className="w-full px-4 py-3 text-sm font-light text-gray-20 border-none resize-none overflow-hidden placeholder:text-gray-56"
                 />
               ) : (
@@ -252,6 +279,7 @@ const PostNew = () => {
           <Blank variant="20" />
         </section>
       </main>
+
       {isMenuOpen && menuPosition && (
         <Menu
           top={menuPosition.top}
@@ -260,6 +288,7 @@ const PostNew = () => {
           onClose={() => setIsMenuOpen(false)}
         />
       )}
+
       {toast.show && (
         <div className="fixed top-1/12 left-1/2 -translate-x-1/2 z-50">
           <Toast
@@ -274,4 +303,4 @@ const PostNew = () => {
   );
 };
 
-export default PostNew;
+export default PostEdit;

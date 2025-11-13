@@ -22,7 +22,7 @@ import {
 import { MainPage } from './pages';
 import PostDetail from './pages/post/PostDetail';
 import PostNew from './pages/post/PostNew';
-// import { Layout } from './components/Layout';
+// import { Layout } from './components/Layout'; //! 추후 수정하겠습니다ㅠ
 
 import Mypage from './pages/mypage/Mypage';
 import ProfileEdit from './pages/mypage/ProfileEdit';
