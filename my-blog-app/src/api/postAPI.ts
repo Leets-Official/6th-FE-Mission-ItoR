@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { normalizeContentTypes } from '@/utils/normalizeContent'
 
 interface TextContent {
   contentOrder: number
@@ -17,19 +18,27 @@ export interface CreatePostRequest {
   contents: (TextContent | ImageContent)[]
 }
 
+/**
+ * 게시글 생성 API
+ * - 이미지가 없는 경우: JSON 전송
+ * - 이미지가 있는 경우: FormData 전송
+ */
 export const createPostAPI = async (data: CreatePostRequest, imageFile?: File | null) => {
+  // contentType을 TEXT/IMAGE로 통일
+  const fixedData = normalizeContentTypes(data)
+
   if (!imageFile) {
-    // 이미지가 없을 경우 → JSON 그대로 전송
-    return axiosInstance.post('/posts', data, {
+    // 이미지가 없을 경우 → JSON 전송
+    return axiosInstance.post('/posts', fixedData, {
       headers: { 'Content-Type': 'application/json' },
     })
   }
 
-  // 이미지가 있을 경우 → FormData
+  // 이미지가 있을 경우 → FormData 전송
   const formData = new FormData()
-  formData.append('title', data.title)
-  formData.append('contents', JSON.stringify(data.contents)) // 문자열형 JSON
-  formData.append('image', imageFile) // 파일 그대로
+  formData.append('title', fixedData.title)
+  formData.append('contents', JSON.stringify(fixedData.contents))
+  formData.append('image', imageFile)
 
   return axiosInstance.post('/posts', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
