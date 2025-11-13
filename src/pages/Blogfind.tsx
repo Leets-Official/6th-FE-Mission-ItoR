@@ -74,7 +74,7 @@ const Blogfind: React.FC = () => {
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {posts && posts.length > 0 ? (
-        posts.map((post) => {
+        posts.map((post: PostResponse) => {
           const imageBlock = post.contents?.find(
             (c) => c.contentType === "IMAGE"
           );

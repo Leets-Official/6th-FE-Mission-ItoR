@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // ✅
 
 import Blogfind from "./pages/Blogfind";
 import BlogDetail from "./pages/BlogDetail";
-import { dummyPosts } from "@/api/Dummy";
 import BlogWrite from "./pages/BlogWrite";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -34,15 +33,5 @@ function App() {
     </QueryClientProvider>
   );
 }
-
-// URL 파라미터 id로 더미 데이터 찾아서 BlogDetail에 전달
-const BlogDetailWrapper: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const post = dummyPosts.find((p) => p.id === Number(id));
-
-  if (!post) return <div>게시글을 찾을 수 없습니다.</div>;
-
-  return <BlogDetail post={post} />;
-};
 
 export default App;
