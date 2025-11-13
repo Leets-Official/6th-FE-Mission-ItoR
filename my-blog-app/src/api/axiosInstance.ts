@@ -1,18 +1,18 @@
-import axios from 'axios'
+import axios, { type AxiosRequestHeaders } from 'axios'
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
+  headers: { Accept: 'application/json' },
   withCredentials: false,
 })
 
-// 요청/응답 로깅 (디버깅용)
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log('📤 [Request]', config.method?.toUpperCase(), config.url, config.data)
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      if (!config.headers) config.headers = {} as AxiosRequestHeaders
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => Promise.reject(error),
@@ -20,10 +20,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    console.error('❌ [Response Error]', error.response?.data || error.message)
-    return Promise.reject(error)
-  },
+  (error) => Promise.reject(error),
 )
 
 export default axiosInstance

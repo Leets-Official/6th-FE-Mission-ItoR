@@ -1,48 +1,76 @@
 import { useState } from 'react'
+import { createPostAPI } from '@/api/postAPI'
+import { useToast } from '@/context/ToastContext'
+import { useNavigate } from 'react-router-dom'
+import type { CreatePostRequest } from '@/api/postAPI'
 
 export function useBlogWrite() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [image, setImage] = useState<string | null>(null)
-  const [toastType, setToastType] = useState<'none' | 'positive' | 'negative'>('none')
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imageBase64, setImageBase64] = useState<string | null>(null)
+  const { showToast } = useToast()
+  const navigate = useNavigate()
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = () => setImage(reader.result as string)
-      reader.readAsDataURL(file)
+    if (!file) return
+
+    // 미리보기
+    setImagePreview(URL.createObjectURL(file))
+
+    // Base64 변환
+    const reader = new FileReader()
+    reader.onload = () => {
+      setImageBase64(reader.result as string)
     }
+    reader.readAsDataURL(file)
   }
 
   const handleDeleteImage = () => {
-    setImage(null)
-    setIsMenuOpen(false)
+    setImagePreview(null)
+    setImageBase64(null)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
-      setToastType('negative')
-      setTimeout(() => setToastType('none'), 2000)
+      showToast('제목과 내용을 입력해주세요.', 'negative')
       return
     }
-    console.log('제목:', title)
-    console.log('내용:', content)
-    setToastType('positive')
-    setTimeout(() => setToastType('none'), 2000)
+
+    const contents: CreatePostRequest['contents'] = [
+      {
+        contentOrder: 1,
+        content,
+        contentType: 'TEXT',
+      },
+    ]
+
+    if (imageBase64) {
+      contents.push({
+        contentOrder: 2,
+        content: imageBase64.replace(/^data:image\/\w+;base64,/, ''),
+        contentType: 'IMAGE',
+      })
+    }
+
+    try {
+      await createPostAPI({ title, contents })
+      showToast('게시물이 성공적으로 등록되었습니다!', 'positive')
+      navigate('/')
+    } catch (error: any) {
+      console.log('🔥 서버 응답:', error.response?.data)
+      showToast('게시물 등록 중 오류가 발생했습니다.', 'negative')
+    }
   }
+
 
   return {
     title,
     setTitle,
     content,
     setContent,
-    image,
-    setImage,
-    toastType,
-    isMenuOpen,
-    setIsMenuOpen,
+    imagePreview,
     handleImageUpload,
     handleDeleteImage,
     handleSubmit,

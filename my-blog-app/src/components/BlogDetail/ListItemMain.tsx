@@ -13,8 +13,9 @@ import CommentItem from './CommentItem'
 import { useComment } from '@/hooks/useComment'
 import { useToast } from '@/context/ToastContext'
 import { useModal } from '@/context/ModalContext'
+import type { Post } from '@/types/post'
 
-export default function ListItemMain() {
+export default function ListItemMain({ post }: { post: Post }) {
   const [commentState] = useState<'beforeLogin' | 'active' | 'writing'>('active')
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
 
@@ -51,7 +52,7 @@ export default function ListItemMain() {
 
   return (
     <div className='flex flex-col w-[1366px] min-h-screen items-center bg-white'>
-      {/* 1. PageHeader */}
+      {/* 1. 상단 헤더 */}
       <PageHeader
         title='GITLOG'
         rightContent={
@@ -70,7 +71,7 @@ export default function ListItemMain() {
                   <DropdownMenu
                     variant='arrow'
                     items={[
-                      { label: '수정하기', onClick: () => alert('수정 페이지 이동 예정') },
+                      { label: '수정하기', onClick: () => alert('수정 예정') },
                       {
                         label: '삭제하기',
                         onClick: () =>
@@ -89,75 +90,76 @@ export default function ListItemMain() {
 
       <Blank size='lg' />
 
-      {/* 2. Title Section */}
-      <BlogTitleSection />
-
-      {/* 3. 본문 Section */}
-      <Blank size='md' />
-      <section className='flex flex-col w-[688px] max-w-[688px] bg-white px-4 py-3 gap-[10px] rounded-[4px]'>
-        <TextCard variant='body'>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        </TextCard>
-        <PictureFrame src='/src/assets/images/blogdetail1.png' type='small' />
-        <TextCard variant='body'>
-          It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-          passages.
-        </TextCard>
-        <PictureFrame src='/src/assets/images/blogdetail2.png' type='large' />
+      {/* 2. 제목 / 작성자 */}
+      <section className='w-[688px]'>
+        <h1 className='text-2xl font-bold mb-2'>{post.title}</h1>
+        <div className='text-gray-500 text-sm'>
+          {post.nickName} · {new Date(post.createdAt).toLocaleString()}
+        </div>
       </section>
 
-      {/* 4. 댓글 Section */}
       <Blank size='md' />
+
+      {/* 3. 본문 */}
+      <section className='flex flex-col w-[688px] px-4 py-3 gap-[10px] rounded-[4px]'>
+        {post.contents?.map((content, index: number) =>
+          content.contentType === 'IMAGE' ? (
+            <PictureFrame key={index} src={content.content} type='large' />
+          ) : (
+            <TextCard key={index} variant='body'>
+              {content.content}
+            </TextCard>
+          ),
+        )}
+      </section>
+
+      <Blank size='md' />
+
+      {/* 4. 댓글 */}
       <section
         ref={commentRef}
         className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-white'
       >
-        <div className='w-[688px] max-w-[688px] flex flex-col px-4 py-3 gap-[10px]'>
+        <div className='w-[688px] flex flex-col px-4 py-3 gap-[10px]'>
           <CommentCount count={comments.length} />
 
-          {/* 댓글 리스트 */}
           {comments.length === 0 ? (
-            <TextCard variant='body' className='flex justify-center items-center'>
-              <div className='text-center text-[14px] text-[#C8C8C8] font-light leading-[160%]'>
-                작성된 댓글이 없습니다.
-                <br /> 응원의 첫 번째 댓글을 달아주세요.
-              </div>
+            <TextCard variant='body' className='flex justify-center items-center text-[#C8C8C8]'>
+              아직 댓글이 없습니다.
             </TextCard>
           ) : (
             comments.map((comment, index) => (
               <CommentItem
                 key={index}
                 author='닉네임'
-                date='Feb 17. 2025.'
+                date='2025.11.05''
                 content={comment}
                 onDelete={() => handleDeleteClickWithModal(index)}
               />
             ))
           )}
 
-          {/* 댓글 입력 영역 */}
           <Blank size='sm' />
-          <div className='flex gap-2'>
-            <CommentField
-              state={commentState}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              onSubmit={handleAddCommentWithToast}
-            />
-          </div>
+          <CommentField
+            state={commentState}
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onSubmit={handleAddCommentWithToast}
+          />
         </div>
       </section>
 
-      {/* 5. Footer (작성자 소개) */}
       <Blank size='lg' />
+
+      {/* 5. 작성자 정보 */}
       <section className='flex flex-col items-center w-full border-t border-[#F5F5F5] bg-[#F5F5F5] py-[64px]'>
         <div className='flex flex-col items-start gap-[12px] w-[688px] px-4 py-3'>
-          <ProfileImage size='lg' />
+          <ProfileImage size='lg' src={post.profileUrl} />
           <TextCard
             variant='primary'
-            title='%{닉네임}'
-            subtitle='%{한 줄 소개}'
-            className='flex flex-col items-center text-center px-0 py-0'
+            title={post.nickName}
+            subtitle='게시물 작성자입니다.'
+            className='text-center'
           />
         </div>
       </section>

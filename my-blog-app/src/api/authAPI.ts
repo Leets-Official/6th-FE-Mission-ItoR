@@ -21,6 +21,13 @@ export const loginAPI = async (data: {
   password: string
 }): Promise<AuthResponse> => {
   const res = await axiosInstance.post<AuthResponse>('/auth/login', data)
+
+  // accessToken 저장 (핵심 수정 부분)
+  const token = res.data.data.accessToken
+  if (token) {
+    localStorage.setItem('accessToken', token)
+  }
+
   return res.data
 }
 

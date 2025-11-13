@@ -9,6 +9,7 @@ interface ListItemProps {
   nickname?: string
   date?: string
   commentCount?: number
+  onClick?: () => void
 }
 
 export default function ListItem({
@@ -18,9 +19,13 @@ export default function ListItem({
   nickname,
   date,
   commentCount,
+  onClick,
 }: ListItemProps) {
   return (
-    <div className='flex w-[688px] max-w-[688px] py-4 items-start gap-6 border-b border-[#F5F5F5] bg-transparent'>
+    <div
+      className='flex w-[688px] max-w-[688px] py-4 items-start gap-6 border-b border-[#F5F5F5] bg-transparent'
+      onClick={onClick}
+    >
       {/* 왼쪽: 텍스트 영역 */}
       <div className='flex flex-col gap-2 flex-1'>
         <h3 className='text-[16px] font-semibold text-[#333]'>{title}</h3>

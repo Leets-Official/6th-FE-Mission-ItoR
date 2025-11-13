@@ -4,16 +4,21 @@ import GitlogLogo from '@/components/common/GitlogLogo'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
 import { ClearIcon } from '@/assets/icons/ClearIcon'
 import TextFiledSet from '@/components/TextFiled/TextFiledSet'
-import { useLoginMutation } from '@/hooks/useAuth'
+import { useLoginMutation } from '@/hooks/useLoginMutation'
 import { useToast } from '@/context/ToastContext'
+import { emailRegex, passwordRegex } from '@/utils/validation'
 
 const BACKEND_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { mutate: login } = useLoginMutation()
   const navigate = useNavigate()
+  const { mutate: login } = useLoginMutation(() => {
+    onClose()
+    navigate('/')
+  })
+
   const { showToast } = useToast()
 
   const handleLogin = () => {
@@ -23,14 +28,12 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
     }
 
     // 이메일 형식 검증
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       showToast('이메일 형식이 올바르지 않습니다.', 'negative')
       return
     }
 
-    // 비밀번호 검증 (영문+숫자 8자 이상)
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    // 영문, 숫자, 특수문자 포함 가능 (8자 이상)
     if (!passwordRegex.test(password)) {
       showToast('비밀번호는 영문과 숫자를 포함해 8자 이상 입력해주세요.', 'negative')
       return
