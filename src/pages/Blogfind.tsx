@@ -81,7 +81,7 @@ const Blogfind: React.FC = () => {
                   content: textBlock?.content || "내용이 없습니다.",
                   author: post.nickName,
                   createdAt: post.createdAt,
-                  commentsCount: post.comments.length,
+                  commentsCount: post.commentCount,
                   profileUrl: post.profileUrl,
                   photoUrl: imageBlock?.content, 
                 }}

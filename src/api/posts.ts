@@ -19,12 +19,7 @@ export interface PostResponse {
   profileIntro?: string;
   createdAt: string;
   isOwner: boolean;
-  comments: {
-    commentId: string;
-    content: string;
-    author: string;
-    createdAt: string;
-  }[];
+  commentCount: number; // Changed from comments array to commentCount
 }
 
 // 게시글 생성
@@ -64,8 +59,8 @@ export const getAllPosts = async (page: number): Promise<PostListResponse> => {
 export const getPostById = async (postId: string): Promise<PostResponse> => {
   const token = localStorage.getItem("accessToken");
 
-  // 토큰이 있으면 /posts/token 사용 (로그인 유저)
-  if (token) {
+  // 토큰이 유효한 경우에만 /posts/token 사용 (로그인 유저)
+  if (token && token !== "undefined") {
     const { data } = await api.get("/posts/token", {
       params: { postId },
       headers: {
@@ -75,7 +70,7 @@ export const getPostById = async (postId: string): Promise<PostResponse> => {
     return data.data;
   }
 
-  // 토큰이 없으면 /posts 사용 (비회원 유저)
+  // 토큰이 없거나 유효하지 않으면 /posts 사용 (비회원 유저)
   const { data } = await api.get("/posts", {
     params: { postId },
   });
