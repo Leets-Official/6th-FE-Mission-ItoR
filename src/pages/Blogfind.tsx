@@ -6,21 +6,7 @@ import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import Toast from "@/components/Toast";
 import { useAllPosts } from "@/hooks/usePosts";
-
-// 서버 응답 타입 정의
-interface PostResponse {
-  postId: string;
-  title: string;
-  nickName: string;
-  profileUrl: string;
-  createdAt: string;
-  commentCount: number;
-  contents? : {
-    contentOrder: number;
-    content: string;
-    contentType: "TEXT" | "IMAGE";
-  }[];
-}
+import { PostResponse } from "@/api/posts"; // Import PostResponse
 
 const Blogfind: React.FC = () => {
   const navigate = useNavigate();
@@ -29,7 +15,7 @@ const Blogfind: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: posts, isLoading, isError } = useAllPosts(currentPage);
+  const { data, isLoading, isError } = useAllPosts(currentPage); // Destructure data directly
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -73,8 +59,8 @@ const Blogfind: React.FC = () => {
       )}
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
-        {posts && posts.length > 0 ? (
-        posts.map((post: PostResponse) => {
+        {data?.posts && data.posts.length > 0 ? ( // Use data.posts
+        data.posts.map((post: PostResponse) => { // Use data.posts
           const imageBlock = post.contents?.find(
             (c) => c.contentType === "IMAGE"
           );
@@ -95,7 +81,7 @@ const Blogfind: React.FC = () => {
                   content: textBlock?.content || "내용이 없습니다.",
                   author: post.nickName,
                   createdAt: post.createdAt,
-                  commentsCount: post.commentCount,
+                  commentsCount: post.comments.length,
                   profileUrl: post.profileUrl,
                   photoUrl: imageBlock?.content, 
                 }}
@@ -111,7 +97,7 @@ const Blogfind: React.FC = () => {
 
       <div className="flex justify-center items-center gap-2 mt-8 mb-16">
         <Pagination 
-          totalPages={5}
+          totalPages={data?.pageMax ?? 1} // Use data.pageMax
           currentPage={currentPage}
           onPageChange={handlePageChange}
           />

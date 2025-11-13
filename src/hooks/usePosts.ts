@@ -8,6 +8,7 @@ import {
   getPostById,
   type PostBody,
   type PostResponse,
+  type PostListResponse, // Import PostListResponse
 } from "@src/api/posts";
 
 /** 게시글 생성 */
@@ -49,14 +50,9 @@ export const useDeletePost = () =>
 
 /** 게시글 전체 조회 */
 export const useAllPosts = (page: number) => {
-  return useQuery({
+  return useQuery<PostListResponse>({ // Specify return type
     queryKey: ["posts", page],
-    queryFn: async () => {
-      const { data } = await api.get("/posts/all", {
-        params: { size: 10, page },
-      });
-      return data.data.posts;
-    },
+    queryFn: async () => getAllPosts(page), // Call getAllPosts directly
   });
 };
 

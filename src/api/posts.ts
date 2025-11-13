@@ -27,13 +27,13 @@ export interface PostResponse {
   }[];
 }
 
-/** 게시글 생성 */
+// 게시글 생성
 export const createPost = async (body: PostBody): Promise<any> => {
   const { data } = await api.post("/posts", body);
   return data.data;
 };
 
-/** 게시글 수정 */
+// 게시글 수정
 export const updatePost = async (
   id: string,
   body: PostBody
@@ -47,15 +47,20 @@ export const deletePost = async (id: string): Promise<void> => {
   await api.delete(`/posts/${id}`);
 };
 
-/** 게시글 전체 조회 */
-export const getAllPosts = async (page: number): Promise<any[]> => {
+export interface PostListResponse {
+  posts: PostResponse[];
+  pageMax: number;
+}
+
+// 게시글 전체 조회
+export const getAllPosts = async (page: number): Promise<PostListResponse> => {
   const { data } = await api.get("/posts/all", {
     params: { size: 10, page },
   });
-  return data.data.posts;
+  return data.data;  // posts만이 아니라 { posts, pageMax } 전체 반환
 };
 
-/** 게시글 단일 조회 (수정됨) */
+//게시글 단일 조회
 export const getPostById = async (postId: string): Promise<PostResponse> => {
   const token = localStorage.getItem("accessToken");
 
