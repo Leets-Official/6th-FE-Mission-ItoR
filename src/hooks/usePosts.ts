@@ -12,7 +12,7 @@ export const usePosts = (page: number, size: number) => {
       setLoading(true);
       try {
         const res = await fetchPosts(page, size);
-        if (res.code === 0 || res.code === 200) {
+        if (res.code === 200) {
           setPosts(res.data.posts || []);
           setPageMax(res.data.pageMax || 1);
         } else {

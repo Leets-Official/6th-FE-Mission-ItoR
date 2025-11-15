@@ -42,7 +42,7 @@ export default function PostDetail() {
       try {
         const res = await fetchPostDetail(postId);
 
-        if ((res.code === 200 || res.code === 0) && res.data) {
+        if (res.code === 200 && res.data) {
           setPost(res.data);
           const comments = res.data.comments || [];
           setCommentCount(Array.isArray(comments) ? comments.length : 0);
@@ -71,7 +71,7 @@ export default function PostDetail() {
     if (!postId) return;
     try {
       const res = await deletePost(postId);
-      if (res.code === 200 || res.code === 0) {
+      if (res.code === 200) {
         setIsDeleteModalOpen(false);
         showToast("게시글이 삭제되었습니다.", "success");
         setTimeout(() => navigate("/blog", { replace: true }), 1000);

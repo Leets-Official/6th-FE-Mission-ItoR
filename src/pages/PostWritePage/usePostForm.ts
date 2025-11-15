@@ -24,7 +24,7 @@ export const usePostForm = () => {
         const res = await fetchPostDetail(postId);
         const post: Post | undefined = res?.data;
 
-        if ((res.code === 0 || res.code === 200) && post) {
+        if (res.code === 200 && post) {
           setTitle(post.title);
           setContent(
             (post.contents ?? [])

@@ -61,7 +61,7 @@ export const useComments = (postId: string) => {
     if (!content.trim()) return;
     try {
       const res = await createComment(postId, content);
-      if (res.code === 201 || res.code === 200 || res.code === 0) {
+      if (res.code === 201 || res.code === 200) {
         await fetchComments();
       } else {
         setError(res.message || "댓글 등록 실패");
@@ -74,7 +74,7 @@ export const useComments = (postId: string) => {
   const editComment = async (id: number, newContent: string) => {
     try {
       const res = await updateComment(id, newContent);
-      if (res.code === 201 || res.code === 200 || res.code === 0) {
+      if (res.code === 201 || res.code === 200) {
         await fetchComments();
       } else {
         setError(res.message || "댓글 수정 실패");
@@ -87,7 +87,7 @@ export const useComments = (postId: string) => {
   const removeComment = async (id: number) => {
     try {
       const res = await deleteComment(id);
-      if (res.code === 201 || res.code === 200 || res.code === 0) {
+      if (res.code === 201 || res.code === 200) {
         await fetchComments();
       } else {
         setError(res.message || "댓글 삭제 실패");
