@@ -81,6 +81,19 @@ export default function BlogWritePage() {
     }
   }
 
+  // 게시물 삭제
+  const handleDeletePost = async () => {
+    if (!postId) return showToast('게시글 ID가 없습니다.', 'negative')
+
+    try {
+      await axiosInstance.delete('/posts', { params: { postId } })
+      showToast('게시글이 삭제되었습니다.', 'positive')
+      navigate('/') // 삭제 후 홈으로 이동 (또는 게시글 목록 페이지)
+    } catch (error) {
+      showToast('게시글 삭제에 실패했습니다.', 'negative')
+    }
+  }
+
   return (
     <div className='flex flex-col items-center min-h-screen bg-white'>
       <PageHeader
@@ -88,7 +101,7 @@ export default function BlogWritePage() {
         rightContent={
           <div className='flex gap-4'>
             {postId && (
-              <Button intent='flat' className='!text-negative' onClick={handleDeleteImage}>
+              <Button intent='flat' className='!text-negative' onClick={handleDeletePost}>
                 삭제하기
               </Button>
             )}

@@ -61,12 +61,16 @@ export default function ListItemMain({ post }: { post: Post }) {
   const handleDeletePost = () => {
     openModal('게시글을 삭제할까요?', async () => {
       try {
-        await axiosInstance.delete(`/posts/${post.postId}`)
+        await axiosInstance.delete('/posts', { params: { postId: post.postId } })
         showToast('게시글이 삭제되었습니다.', 'positive')
-        navigate('/') // 삭제 후 홈으로 이동
-      } catch (error) {
-        console.error('삭제 실패:', error)
-        showToast('게시글 삭제에 실패했습니다.', 'negative')
+        navigate('/')
+      } catch (err: any) {
+        const status = err?.response?.status
+        console.error('삭제 실패:', status, err?.response?.data)
+        if (status === 401) showToast('로그인이 필요합니다.', 'negative')
+        else if (status === 403) showToast('본인 글만 삭제할 수 있습니다.', 'negative')
+        else if (status === 404) showToast('게시글을 찾을 수 없거나 권한이 없습니다.', 'negative')
+        else showToast('삭제에 실패했습니다.', 'negative')
       }
     })
   }
