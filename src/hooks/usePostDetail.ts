@@ -11,7 +11,7 @@ export const usePostDetail = (postId: string) => {
       setLoading(true);
       try {
         const res = await fetchPostDetail(postId);
-        if (res.code === 0 || res.code === 200) {
+        if (res.code === 200) {
           setPost(res.data);
         } else {
           console.error("게시글 상세 조회 실패:", res.message);

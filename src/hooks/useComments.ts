@@ -31,13 +31,13 @@ export const useComments = (postId: string) => {
     try {
       const res = await api.get<{
         code: number;
-        message?: string; // ✅ 추가
+        message?: string;
         data: { comments: CommentResponse[] };
       }>("/posts/token", { params: { postId } });
 
       if (res.data.code === 0 || res.data.code === 200) {
         const list: Comment[] =
-          res.data.data.comments?.map((c) => ({
+          res.data.data?.comments?.map((c) => ({
             id: c.commentId,
             author: c.nickName,
             content: c.content,
@@ -61,8 +61,11 @@ export const useComments = (postId: string) => {
     if (!content.trim()) return;
     try {
       const res = await createComment(postId, content);
-      if (res.code === 201) await fetchComments();
-      else setError(res.message || "댓글 등록 실패");
+      if (res.code === 201 || res.code === 200) {
+        await fetchComments();
+      } else {
+        setError(res.message || "댓글 등록 실패");
+      }
     } catch {
       setError("댓글 등록 중 오류가 발생했습니다.");
     }
@@ -71,8 +74,11 @@ export const useComments = (postId: string) => {
   const editComment = async (id: number, newContent: string) => {
     try {
       const res = await updateComment(id, newContent);
-      if (res.code === 201) await fetchComments();
-      else setError(res.message || "댓글 수정 실패");
+      if (res.code === 201 || res.code === 200) {
+        await fetchComments();
+      } else {
+        setError(res.message || "댓글 수정 실패");
+      }
     } catch {
       setError("댓글 수정 중 오류가 발생했습니다.");
     }
@@ -81,8 +87,11 @@ export const useComments = (postId: string) => {
   const removeComment = async (id: number) => {
     try {
       const res = await deleteComment(id);
-      if (res.code === 201) await fetchComments();
-      else setError(res.message || "댓글 삭제 실패");
+      if (res.code === 201 || res.code === 200) {
+        await fetchComments();
+      } else {
+        setError(res.message || "댓글 삭제 실패");
+      }
     } catch {
       setError("댓글 삭제 중 오류가 발생했습니다.");
     }

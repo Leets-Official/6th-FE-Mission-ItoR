@@ -42,9 +42,10 @@ export default function PostDetail() {
       try {
         const res = await fetchPostDetail(postId);
 
-        if ((res.code === 200 || res.code === 0) && res.data) {
+        if (res.code === 200 && res.data) {
           setPost(res.data);
-          setCommentCount(res.data.comments?.length ?? 0);
+          const comments = res.data.comments || [];
+          setCommentCount(Array.isArray(comments) ? comments.length : 0);
         } else {
           console.error("게시글 불러오기 실패:", res.message);
           showToast("게시글을 불러오지 못했습니다.", "error");
@@ -70,12 +71,10 @@ export default function PostDetail() {
     if (!postId) return;
     try {
       const res = await deletePost(postId);
-      if (res.code === 200 || res.code === 0) {
+      if (res.code === 200) {
         setIsDeleteModalOpen(false);
         showToast("게시글이 삭제되었습니다.", "success");
-        setTimeout(() => {
-          navigate("/blog", { replace: true });
-        }, 1000);
+        setTimeout(() => navigate("/blog", { replace: true }), 1000);
       } else {
         showToast(res.message || "삭제 실패", "error");
       }
@@ -146,19 +145,23 @@ export default function PostDetail() {
         <div className={S.divider} />
 
         <section className={S.group}>
-          {post.contents?.map((c) =>
-            c.contentType === "TEXT" ? (
-              <p key={c.contentOrder} className={S.content}>
-                {c.content}
-              </p>
-            ) : (
-              <img
-                key={c.contentOrder}
-                src={c.content}
-                alt="게시글 이미지"
-                className="mt-4 rounded-xl"
-              />
-            ),
+          {post.content ? (
+            <p className={S.content}>{post.content}</p>
+          ) : (
+            post.contents?.map((c) =>
+              c.contentType === "TEXT" ? (
+                <p key={c.contentOrder} className={S.content}>
+                  {c.content}
+                </p>
+              ) : (
+                <img
+                  key={c.contentOrder}
+                  src={c.content}
+                  alt="게시글 이미지"
+                  className="mt-4 rounded-xl"
+                />
+              ),
+            )
           )}
         </section>
 
@@ -171,7 +174,7 @@ export default function PostDetail() {
             postAuthorProfile={post.profileUrl}
             postAuthorName={post.nickName}
             onLoginClick={() => setIsLoginOpen(true)}
-            onSubmit={(comment: string) => {
+            onSubmit={(comment) => {
               showToast(`댓글 등록: ${comment}`, "success");
               setCommentCount((prev) => prev + 1);
             }}

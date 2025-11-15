@@ -12,9 +12,9 @@ export const usePosts = (page: number, size: number) => {
       setLoading(true);
       try {
         const res = await fetchPosts(page, size);
-        if (res.code === 0 || res.code === 200) {
-          setPosts(res.data.content || []);
-          setPageMax(res.data.totalPages || 1);
+        if (res.code === 200) {
+          setPosts(res.data.posts || []);
+          setPageMax(res.data.pageMax || 1);
         } else {
           console.error("게시글 조회 실패:", res.message);
         }

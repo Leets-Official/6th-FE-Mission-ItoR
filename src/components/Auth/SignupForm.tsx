@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import * as S from "./Signup.styled";
 import TextFieldSet from "@/components/Text/TextFieldSet";
 import Button from "@/components/Button/Button";
@@ -9,6 +9,7 @@ import TextField from "@/components/Text/TextField";
 import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import { register, registerKakao } from "@/api/auth";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 interface SignupFormProps {
   type: "email" | "kakao";
@@ -20,11 +21,10 @@ interface SignupFormProps {
   };
 }
 
-/**
- * ✅ 회원가입 폼
- * - 이메일 / 카카오 모두 처리
- */
 const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { uploadImage, uploading } = useImageUpload();
+
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
     password: "",
@@ -37,10 +37,46 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
     kakaoId: kakaoUser?.kakaoId?.toString() || "",
   });
 
+  const [previewUrl, setPreviewUrl] = useState<string>(kakaoUser?.profilePicture || "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 파일 검증
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert("JPG, PNG, GIF, WebP 형식의 이미지만 업로드 가능합니다.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      alert("파일 크기는 5MB 이하만 가능합니다.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    try {
+      const reader = new FileReader();
+      reader.onload = () => setPreviewUrl(reader.result as string);
+      reader.readAsDataURL(file);
+
+      const uploadedUrl = await uploadImage(file);
+      setForm((prev) => ({ ...prev, profilePicture: uploadedUrl }));
+    } catch (err) {
+      console.error("프로필 사진 업로드 실패:", err);
+      alert("프로필 사진 업로드에 실패했습니다.");
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const handleChange = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -120,12 +156,23 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
       <div className={S.profileSection}>
         <label className={S.profileLabel}>프로필 사진</label>
         <div className={S.profileInner}>
-          <Avatar size="xl" src={form.profilePicture} alt="Profile" />
+          <Avatar size="xl" src={previewUrl} alt="Profile" />
+
           <SmallButton
-            label="프로필 사진 추가"
+            label={uploading ? "업로드 중..." : "프로필 사진 추가"}
             variant="secondaryOutline"
             leftIcon={<AddPhotoAlternateIcon className={S.profileAddIcon} />}
             className="border-brand-lightGray text-xs"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+          />
+
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handlePhotoChange}
           />
         </div>
       </div>
