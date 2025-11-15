@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PageHeader from '@/components/common/PageHeader'
 import Blank from '@/components/common/Blank'
 import TextCard from '@/components/common/TextCard'
@@ -12,11 +13,13 @@ import CommentItem from './CommentItem'
 import { useComment } from '@/hooks/useComment'
 import { useToast } from '@/context/ToastContext'
 import { useModal } from '@/context/ModalContext'
+import axiosInstance from '@/api/axiosInstance'
 import type { Post } from '@/types/post'
 
 export default function ListItemMain({ post }: { post: Post }) {
   const [commentState] = useState<'beforeLogin' | 'active' | 'writing'>('active')
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
+  const navigate = useNavigate()
 
   const {
     comments,
@@ -31,6 +34,7 @@ export default function ListItemMain({ post }: { post: Post }) {
   const { showToast } = useToast()
   const { openModal } = useModal()
 
+  /** 댓글 등록 */
   const handleAddCommentWithToast = () => {
     if (!newComment.trim()) {
       showToast('내용을 입력해주세요.', 'negative')
@@ -40,10 +44,30 @@ export default function ListItemMain({ post }: { post: Post }) {
     showToast('댓글이 등록되었습니다.', 'positive')
   }
 
+  /** 댓글 삭제 */
   const handleDeleteClickWithModal = (index: number) => {
     openModal('댓글을 삭제할까요?', () => {
       handleDeleteClick(index)
       showToast('댓글이 삭제되었습니다.', 'positive')
+    })
+  }
+
+  /** 게시글 수정 이동 */
+  const handleEditPost = () => {
+    navigate(`/blogwrite/${post.postId}`)
+  }
+
+  /** 게시글 삭제 */
+  const handleDeletePost = () => {
+    openModal('게시글을 삭제할까요?', async () => {
+      try {
+        await axiosInstance.delete(`/posts/${post.postId}`)
+        showToast('게시글이 삭제되었습니다.', 'positive')
+        navigate('/') // 삭제 후 홈으로 이동
+      } catch (error) {
+        console.error('삭제 실패:', error)
+        showToast('게시글 삭제에 실패했습니다.', 'negative')
+      }
     })
   }
 
@@ -66,14 +90,8 @@ export default function ListItemMain({ post }: { post: Post }) {
                   <DropdownMenu
                     variant='arrow'
                     items={[
-                      { label: '수정하기', onClick: () => alert('수정 예정') },
-                      {
-                        label: '삭제하기',
-                        onClick: () =>
-                          openModal('게시글을 삭제할까요?', () =>
-                            showToast('게시글이 삭제되었습니다.', 'positive'),
-                          ),
-                      },
+                      { label: '수정하기', onClick: handleEditPost },
+                      { label: '삭제하기', onClick: handleDeletePost },
                     ]}
                   />
                 </div>

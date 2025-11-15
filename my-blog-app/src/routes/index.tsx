@@ -38,8 +38,9 @@ const router = createBrowserRouter([
           { path: 'signup/kakao', element: <SignUpKakaoPage /> },
           { path: 'oauth/kakao/callback', element: <AuthKakaoCallback /> },
           { path: 'oauth/kakao/success', element: <AuthKakaoCallback /> },
-          { path: '/blog/:id', element: <BlogDetailPage /> },
+          { path: 'blog/:postId', element: <BlogDetailPage /> },
           { path: 'blogwrite', element: <BlogWritePage /> },
+          { path: 'blogwrite/:postId', element: <BlogWritePage /> },
 
           // 테스트 페이지들
           { path: 'test/button', element: <ButtonTestPage /> },
