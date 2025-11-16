@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "./Button";
 import ProfileIcon from "@/assets/svgs/Profile.svg?react";
+import ClearIcon from "@/assets/svgs/clear.svg?react"; // Import ClearIcon
 
 // 공통 스타일 상수 정의
 const FRAME_WIDTH = "w-[240px]";
@@ -16,11 +17,21 @@ const USERNAME_TEXT =
 interface FrameProps {
   username: string;
   onButtonClick?: () => void;
+  onClose?: () => void; // Add onClose prop
 }
 
-const Frame: React.FC<FrameProps> = ({ username, onButtonClick }) => {
+const Frame: React.FC<FrameProps> = ({ username, onButtonClick, onClose }) => {
   return (
-    <div className={`${FRAME_WIDTH} h-[768px] bg-gray-50 border-r border-gray-300 flex flex-col gap-[10px]`}>
+    <div className={`${FRAME_WIDTH} h-screen bg-gray-50 border-r border-gray-300 flex flex-col gap-[10px] relative`}>
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute top-[20px] right-[16px] w-6 h-6 flex items-center justify-center text-gray-500 hover:text-gray-800"
+        aria-label="Close menu"
+      >
+        <ClearIcon className="w-6 h-6" />
+      </button>
+
       <div className={`${FRAME_WIDTH} ${SECTION_HEIGHT.header} ${FRAME_SECTION}`}>
         <ProfileIcon className="w-[64px] h-[64px]" />
       </div>
