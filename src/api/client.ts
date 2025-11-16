@@ -1,3 +1,4 @@
+// src/api/client.ts
 import axios, {
   AxiosError,
   AxiosRequestConfig,
@@ -6,8 +7,7 @@ import axios, {
 
 /** 개발/배포 분기 */
 const isDev = import.meta.env.DEV;
-const BASE_URL =
-  isDev ? "/api" : import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = isDev ? "/api" : import.meta.env.VITE_API_BASE_URL;
 
 /** 공용 인스턴스 */
 const api = axios.create({
@@ -20,7 +20,6 @@ export const raw = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
-
 
 function pickString(obj: unknown, key: string): string | undefined {
   if (!obj || typeof obj !== "object") return undefined;
@@ -59,14 +58,12 @@ function setAuthOnConfig(
   cfg.headers = headers as AxiosRequestConfig["headers"];
 }
 
-/* -------------------- 요청 인터셉터 -------------------- */
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("accessToken");
   if (token) setAuthOnConfig(config, token);
   return config;
 });
 
-/* -------------------- 응답 인터셉터(401 재발급 큐) -------------------- */
 type RetryableConfig = AxiosRequestConfig & { _retry?: boolean };
 
 let isRefreshing = false;
@@ -98,7 +95,10 @@ api.interceptors.response.use(
           waitQueue.push((newToken) => {
             const next: RetryableConfig = { ...cfg, _retry: true };
             if (newToken) setAuthOnConfig(next, newToken);
-            api.request(next).then(resolve).catch(reject);
+            api
+              .request(next)
+              .then(resolve)
+              .catch(reject);
           });
         });
       }
