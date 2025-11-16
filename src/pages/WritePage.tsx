@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import imageIcon from "@icons/image.svg";
-import { useCreatePost, useUpdatePost } from "@src/hooks/usePosts";
+import { useCreatePost, useUpdatePost, usePostDetail } from "@src/hooks/usePosts";
 import { buildBlocks } from "@src/utils/blocks";
 
 export default function WritePage() {
   const { id } = useParams<{ id: string }>();
-  const editingId = id;
+  const editingId = id ?? null;
 
   const nav = useNavigate();
 
@@ -16,6 +16,47 @@ export default function WritePage() {
 
   const fileRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
+
+  // 수정 모드일 때 기존 글 데이터
+  const {
+    data: detail,
+    isLoading: isDetailLoading,
+    isError: isDetailError,
+  } = usePostDetail(editingId ?? "");
+
+  // 최초 한 번만 프리필하도록 플래그
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!editingId) return;
+    if (!detail) return;
+    if (initialized) return;
+
+    // 제목
+    if (detail.title) {
+      setTitle(detail.title);
+    }
+
+    // TEXT 블록들 합쳐서 body로
+    if (Array.isArray(detail.blocks)) {
+      const textBlocks = detail.blocks
+        .filter((b) => b.type === "TEXT")
+        .sort((a, b) => a.order - b.order)
+        .map((b) => b.content ?? "");
+
+      if (textBlocks.length > 0) {
+        setBody(textBlocks.join("\n\n"));
+      }
+
+      // 첫 번째 IMAGE 블록을 대표 이미지로
+      const imageBlock = detail.blocks.find((b) => b.type === "IMAGE");
+      if (imageBlock) {
+        setImageUrl(imageBlock.url);
+      }
+    }
+
+    setInitialized(true);
+  }, [editingId, detail, initialized]);
 
   const canPublish = title.trim().length > 0 && (body.trim().length > 0 || !!imageUrl);
 
@@ -40,6 +81,7 @@ export default function WritePage() {
     setBody("");
     setImageUrl(null);
     if (fileRef.current) fileRef.current.value = "";
+    setInitialized(false);
   };
 
   const createMut = useCreatePost();
@@ -47,10 +89,12 @@ export default function WritePage() {
 
   const publish = () => {
     if (!canPublish) return;
+
     const payload = {
       title: title.trim(),
       blocks: buildBlocks(body, imageUrl ?? undefined),
     };
+
     if (editingId) {
       updateMut.mutate(payload, {
         onSuccess: () => nav(`/post/${editingId}`),
@@ -67,6 +111,23 @@ export default function WritePage() {
       });
     }
   };
+
+  // 수정 모드에서만 로딩/에러 처리
+  if (editingId && isDetailLoading) {
+    return (
+      <div className="flex min-h-dvh w-full items-center justify-center bg-white text-[14px] text-[var(--Gray56)]">
+        게시글을 불러오는 중입니다...
+      </div>
+    );
+  }
+
+  if (editingId && isDetailError) {
+    return (
+      <div className="flex min-h-dvh w-full items-center justify-center bg-white text-[14px] text-[var(--Gray56)]">
+        게시글을 불러오지 못했어요. 다시 시도해주세요.
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
@@ -107,7 +168,13 @@ export default function WritePage() {
             <img src={imageIcon} alt="" className="h-[16px] w-[16px]" />
             <span>사진 추가하기</span>
           </button>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={onFileChange}
+          />
         </div>
       </div>
 
@@ -118,11 +185,17 @@ export default function WritePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="제목"
-              className={`w-full border-none px-0 text-[24px] font-medium leading-[38.4px] text-[var(--Black)] placeholder-[var(--Gray-78,#C8C8C8)] outline-none ${title ? "text-[var(--Black)]" : ""}`}
+              className={`w-full border-none px-0 text-[24px] font-medium leading-[38.4px] text-[var(--Black)] placeholder-[var(--Gray-78,#C8C8C8)] outline-none ${
+                title ? "text-[var(--Black)]" : ""
+              }`}
             />
           </section>
 
-          <div className="mb-4 h-[1px] w-full bg-[var(--Gray90)]" role="separator" aria-hidden="true" />
+          <div
+            className="mb-4 h-[1px] w-full bg-[var(--Gray90)]"
+            role="separator"
+            aria-hidden="true"
+          />
 
           <section className="mb-6">
             <textarea
@@ -136,7 +209,11 @@ export default function WritePage() {
 
           {imageUrl && (
             <section className="mb-6">
-              <img src={imageUrl} alt="preview" className="max-h-[400px] w-full rounded-[4px] object-cover" />
+              <img
+                src={imageUrl}
+                alt="preview"
+                className="max-h-[400px] w-full rounded-[4px] object-cover"
+              />
             </section>
           )}
 

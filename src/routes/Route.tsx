@@ -16,7 +16,7 @@ const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
   { path: '/post/:id', element: <PostDetailPage /> },
   { path: '/write', element: <WritePage /> },
-  { path: '*', element: <Navigate to="/" replace /> },
+  { path: "/write/:id", element: <WritePage /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/join",  element: <SignUpPage /> },
   { path: "/join/email", element: <SignUpFormPage /> },

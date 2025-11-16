@@ -13,7 +13,7 @@ import CommentInput from "@ui/Post/CommentInput";
 import ConfirmDialog from "@ui/ConfirmDialog";
 import CommentList from "@ui/comment/CommentList";
 import type { CommentView } from "@ui/comment/CommentItem";
-import { usePostDetail } from "@src/hooks/usePosts";
+import { usePostDetail, useDeletePost } from "@src/hooks/usePosts";
 import {
   useComments,
   useCreateComment,
@@ -45,7 +45,6 @@ export default function PostDetailPage() {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuthStatus();
 
-  // hooks는 항상 호출되도록 id가 없어도 빈 문자열로 호출
   const pid = id ?? "";
   const { data, isLoading, isError } = usePostDetail(pid);
   const { data: serverComments = [] } = useComments(pid);
@@ -53,11 +52,12 @@ export default function PostDetailPage() {
   const updateMut = useUpdateComment(pid);
   const deleteMut = useDeleteComment(pid);
 
+  const deletePostMut = useDeletePost(pid);
+
   const [input, setInput] = useState("");
   const [postDeleteOpen, setPostDeleteOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  // hooks 호출 이후에 early return
   if (!id) return <Navigate to="/" replace />;
 
   const d = data as ApiPostDetail | undefined;
@@ -86,13 +86,12 @@ export default function PostDetailPage() {
     content?: string;
     createdAt?: string;
     author?: { nickname?: string; avatarUrl?: string };
-    nickName?: string; // 서버 케이스 대비
+    nickName?: string;
     profileUrl?: string;
     mine?: boolean;
     isOwner?: boolean;
   };
 
-  // CommentView는 nickname 키 사용
   const comments: CommentView[] = (serverComments as ServerCommentFlexible[]).map((c) => ({
     id: (c.id ?? c.commentId ?? 0) as number,
     content: String(c.content ?? ""),
@@ -215,7 +214,13 @@ export default function PostDetailPage() {
         open={postDeleteOpen}
         onClose={() => setPostDeleteOpen(false)}
         onCancel={() => setPostDeleteOpen(false)}
-        onConfirm={() => navigate("/", { replace: true })}
+        onConfirm={() => {
+          if (!id) return;
+          deletePostMut.mutate(undefined, {
+            onSuccess: () => navigate("/", { replace: true }),
+            onSettled: () => setPostDeleteOpen(false),
+          });
+        }}
         titleLines={["해당 블로그를 삭제하시겠어요?"]}
         descriptionLines={["삭제된 블로그는 다시 확인할 수 없어요."]}
         confirmText="삭제하기"
