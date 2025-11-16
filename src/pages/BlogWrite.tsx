@@ -12,7 +12,7 @@ import api from "@/api/axiosInstance";
 interface ContentBlock {
   contentOrder: number;
   content: string;
-  contentType: "TEXT";
+  contentType: "TEXT" | "IMAGE"; // Allow IMAGE type
 }
 
 // 게시글 생성/수정에 공통으로 쓰일 Payload 타입
