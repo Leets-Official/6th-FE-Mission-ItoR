@@ -1,3 +1,4 @@
+// src/pages/SignUpFormPage.tsx
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,12 +11,16 @@ import Button from "@ui/Button/Button";
 
 import ReorderIcon from "@icons/reorder.svg?react";
 import imageIcon from "@icons/image.svg";
+import { uploadImageToPresignedUrl } from "@src/api/imageApi"; 
 
 export default function SignUpFormPage() {
   const nav = useNavigate();
 
   const fileRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+
+  const [profileUrl, setProfileUrl] = useState<string | null>(null);
+  const [isUploadingProfile, setIsUploadingProfile] = useState(false);
 
   const { values, errors, handleChange, runValidation, reset } = useForm({
     initialValues: {
@@ -42,11 +47,28 @@ export default function SignUpFormPage() {
 
   const pickFile = () => fileRef.current?.click();
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    const url = URL.createObjectURL(f);
-    setPreview(url);
+
+    // 로컬 미리보기
+    const localUrl = URL.createObjectURL(f);
+    setPreview(localUrl);
+
+    try {
+      setIsUploadingProfile(true);
+      const uploadedUrl = await uploadImageToPresignedUrl(f);
+      setProfileUrl(uploadedUrl); 
+    } catch (err) {
+      console.error(err);
+      alert("프로필 이미지 업로드에 실패했어요. 다시 시도해주세요.");
+      setProfileUrl(null);
+      setPreview(null);
+      if (fileRef.current) fileRef.current.value = "";
+    } finally {
+      setIsUploadingProfile(false);
+      URL.revokeObjectURL(localUrl);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,11 +76,16 @@ export default function SignUpFormPage() {
     const ok = runValidation();
     if (!ok) return;
 
+    if (isUploadingProfile) {
+      alert("프로필 이미지를 업로드 중입니다. 잠시만 기다려주세요.");
+      return;
+    }
+
     signUp({
       email: values.email,
       nickname: values.nickname,
       password: values.password,
-      profilePicture: preview || undefined,
+      profilePicture: profileUrl || undefined, 
       birthDate: values.birth || undefined,
       name: values.realname || undefined,
       introduction: values.intro || undefined,
@@ -94,6 +121,7 @@ export default function SignUpFormPage() {
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
+      {/* 헤더 */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
@@ -106,6 +134,7 @@ export default function SignUpFormPage() {
         </div>
       </header>
 
+      {/* 섹션: 타이틀 */}
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8">
           <div className="mx-auto h-8 max-h-8 max-w-[688px]" />
@@ -119,8 +148,10 @@ export default function SignUpFormPage() {
         </div>
       </section>
 
+      {/* 메인 폼 */}
       <main className="w-full flex-1">
         <form className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8" onSubmit={handleSubmit}>
+          {/* 프로필 이미지 */}
           <div className="flex flex-col items-start gap-3">
             <span className="text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray56)]">
               프로필 사진
@@ -139,10 +170,10 @@ export default function SignUpFormPage() {
                 type="button"
                 onClick={pickFile}
                 className="inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--Gray90)] px-2 py-1 text-[12px] font-normal leading-[19.2px] text-[var(--Gray56)]"
-                disabled={isPending}
+                disabled={isPending || isUploadingProfile}
               >
                 <img src={imageIcon} alt="" className="h-[14px] w-[14px]" />
-                프로필 사진 추가
+                {isUploadingProfile ? "이미지 업로드 중..." : "프로필 사진 추가"}
               </button>
 
               <input
@@ -151,11 +182,12 @@ export default function SignUpFormPage() {
                 accept="image/*"
                 className="hidden"
                 onChange={onFileChange}
-                disabled={isPending}
+                disabled={isPending || isUploadingProfile}
               />
             </div>
           </div>
 
+          {/* 입력 필드들 */}
           <div className="flex flex-col gap-4">
             {inputFields.map((f) => (
               <div key={f.name} className="flex flex-col gap-2">
@@ -171,7 +203,9 @@ export default function SignUpFormPage() {
                   disabled={isPending}
                 />
                 {f.helper && (
-                  <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">{f.helper}</p>
+                  <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
+                    {f.helper}
+                  </p>
                 )}
               </div>
             ))}
@@ -187,15 +221,29 @@ export default function SignUpFormPage() {
             />
 
             {isError && (
-              <p className="text-[12px] leading-[19.2px] text-[var(--Negative)]">가입에 실패했습니다. 다시 시도해주세요.</p>
+              <p className="text-[12px] leading-[19.2px] text-[var(--Negative)]">
+                가입에 실패했습니다. 다시 시도해주세요.
+              </p>
             )}
           </div>
 
+          {/* 버튼 영역 */}
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="neutralOutline" className="flex-1" onClick={reset} disabled={isPending}>
+            <Button
+              type="button"
+              variant="neutralOutline"
+              className="flex-1"
+              onClick={reset}
+              disabled={isPending || isUploadingProfile}
+            >
               취소
             </Button>
-            <Button type="submit" variant="outlinePointWhite" className="flex-1" disabled={isPending}>
+            <Button
+              type="submit"
+              variant="outlinePointWhite"
+              className="flex-1"
+              disabled={isPending || isUploadingProfile}
+            >
               {isPending ? "가입 중..." : "회원가입 완료"}
             </Button>
           </div>
