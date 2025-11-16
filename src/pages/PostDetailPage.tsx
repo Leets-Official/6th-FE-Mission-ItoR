@@ -1,6 +1,6 @@
 // src/pages/PostDetailPage.tsx
 import React, { useState } from "react";
-import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router-dom";
 import Dropdown from "@ui/Dropdown";
 import Modal from "@ui/Modal";
 import ProfilePhoto from "@ui/Profile";
@@ -14,7 +14,13 @@ import ConfirmDialog from "@ui/ConfirmDialog";
 import CommentList from "@ui/comment/CommentList";
 import type { CommentView } from "@ui/comment/CommentItem";
 import { usePostDetail } from "@src/hooks/usePosts";
-import { useComments, useCreateComment, useUpdateComment, useDeleteComment } from "@src/hooks/useComments";
+import {
+  useComments,
+  useCreateComment,
+  useUpdateComment,
+  useDeleteComment,
+} from "@src/hooks/useComments";
+import { useAuthStatus } from "@src/hooks/useAuthStatus";
 
 const formatDate = (iso: string) => {
   const d = new Date(iso);
@@ -36,11 +42,10 @@ type ApiPostDetail = {
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [search] = useSearchParams();
-  const isLoggedIn = search.get("login") === "1";
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuthStatus();
 
-  //hooks는 항상 호출되도록 id가 없어도 빈 문자열로 호출
+  // hooks는 항상 호출되도록 id가 없어도 빈 문자열로 호출
   const pid = id ?? "";
   const { data, isLoading, isError } = usePostDetail(pid);
   const { data: serverComments = [] } = useComments(pid);
@@ -52,7 +57,7 @@ export default function PostDetailPage() {
   const [postDeleteOpen, setPostDeleteOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  //hooks 호출 이후에 early return
+  // hooks 호출 이후에 early return
   if (!id) return <Navigate to="/" replace />;
 
   const d = data as ApiPostDetail | undefined;
@@ -87,7 +92,7 @@ export default function PostDetailPage() {
     isOwner?: boolean;
   };
 
-  //CommentView는 nickname 키 사용
+  // CommentView는 nickname 키 사용
   const comments: CommentView[] = (serverComments as ServerCommentFlexible[]).map((c) => ({
     id: (c.id ?? c.commentId ?? 0) as number,
     content: String(c.content ?? ""),
@@ -135,12 +140,20 @@ export default function PostDetailPage() {
                 items={[
                   {
                     id: "edit",
-                    label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>,
+                    label: (
+                      <span className="text-[14px] text-[var(--Black)]">
+                        수정하기
+                      </span>
+                    ),
                     onSelect: () => navigate(`/write/${id}`),
                   },
                   {
                     id: "delete",
-                    label: <span className="text-[14px] text-[var(--Negative)]">삭제하기</span>,
+                    label: (
+                      <span className="text-[14px] text-[var(--Negative)]">
+                        삭제하기
+                      </span>
+                    ),
                     onSelect: () => setPostDeleteOpen(true),
                   },
                 ]}
@@ -170,11 +183,7 @@ export default function PostDetailPage() {
               onChange={setInput}
               onSubmit={handleCreate}
             />
-            <CommentList
-              comments={comments}
-              onDelete={askDelete}
-              onEdit={saveEdit}
-            />
+            <CommentList comments={comments} onDelete={askDelete} onEdit={saveEdit} />
             <Spacer y={64} />
           </section>
         </div>

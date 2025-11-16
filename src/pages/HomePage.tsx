@@ -11,6 +11,7 @@ import clearIcon from "@icons/clear.svg";
 import kakaoIcon from "@icons/kakao.svg";
 import "@src/styles/auth.css";
 import { usePosts } from "@src/hooks/usePosts";
+import { useAuthStatus } from "@src/hooks/useAuthStatus";
 
 const styles = {
   container: {
@@ -67,7 +68,8 @@ export default function HomePage() {
   const [showFrame, setShowFrame] = useState(false);
   const toggleFrame = () => setShowFrame((v) => !v);
 
-  const isAuthed = true;
+  const { isLoggedIn } = useAuthStatus();
+  const isAuthed = isLoggedIn;
   const user = {
     username: "saeryeom",
     nickname: "닉네임",
@@ -122,7 +124,7 @@ export default function HomePage() {
           <PageHeader
             variant="write"
             onClickMenu={toggleFrame}
-            onClickWrite={openLogin}
+            onClickWrite={goWrite} 
             className="!w-full"
           />
         </div>
