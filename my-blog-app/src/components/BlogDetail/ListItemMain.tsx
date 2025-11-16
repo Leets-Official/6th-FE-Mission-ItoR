@@ -41,8 +41,11 @@ export default function ListItemMain({ post }: { post: Post }) {
   /** 댓글 조회 */
   const fetchComments = useCallback(async () => {
     try {
-      const res = await axiosInstance.get(`/comments/${post.postId}`)
-      setComments(res.data.data)
+      const res = await axiosInstance.get(`/posts/token`, {
+        params: { postId: post.postId },
+      })
+
+      setComments(res.data.data.comments ?? [])
     } catch (err) {
       console.error('댓글 불러오기 실패:', err)
     }
