@@ -1,8 +1,10 @@
+// src/pages/WritePage.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import imageIcon from "@icons/image.svg";
 import { useCreatePost, useUpdatePost, usePostDetail } from "@src/hooks/usePosts";
 import { buildBlocks } from "@src/utils/blocks";
+import { uploadImageToPresignedUrl } from "@src/api/imageApi";
 
 export default function WritePage() {
   const { id } = useParams<{ id: string }>();
@@ -12,32 +14,34 @@ export default function WritePage() {
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+
+  // 실제 서버에 저장할 이미지 URL
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // 화면에 보여줄 미리보기(로컬/원격 둘 다 가능)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
-  // 수정 모드일 때 기존 글 데이터
   const {
     data: detail,
     isLoading: isDetailLoading,
     isError: isDetailError,
   } = usePostDetail(editingId ?? "");
 
-  // 최초 한 번만 프리필하도록 플래그
   const [initialized, setInitialized] = useState(false);
 
+  // 수정 모드일 때 기존 글 프리필
   useEffect(() => {
     if (!editingId) return;
     if (!detail) return;
     if (initialized) return;
 
-    // 제목
     if (detail.title) {
       setTitle(detail.title);
     }
 
-    // TEXT 블록들 합쳐서 body로
     if (Array.isArray(detail.blocks)) {
       const textBlocks = detail.blocks
         .filter((b) => b.type === "TEXT")
@@ -48,25 +52,45 @@ export default function WritePage() {
         setBody(textBlocks.join("\n\n"));
       }
 
-      // 첫 번째 IMAGE 블록을 대표 이미지로
       const imageBlock = detail.blocks.find((b) => b.type === "IMAGE");
       if (imageBlock) {
         setImageUrl(imageBlock.url);
+        setPreviewUrl(imageBlock.url);
       }
     }
 
     setInitialized(true);
   }, [editingId, detail, initialized]);
 
-  const canPublish = title.trim().length > 0 && (body.trim().length > 0 || !!imageUrl);
+  const canPublish =
+    title.trim().length > 0 && (body.trim().length > 0 || !!imageUrl);
 
   const openFile = () => fileRef.current?.click();
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    const url = URL.createObjectURL(f);
-    setImageUrl(url);
+
+    // 로컬 미리보기 먼저
+    const localUrl = URL.createObjectURL(f);
+    setPreviewUrl(localUrl);
+
+    try {
+      setIsUploadingImage(true);
+      const uploadedUrl = await uploadImageToPresignedUrl(f);
+      setImageUrl(uploadedUrl);
+      setPreviewUrl(uploadedUrl);
+    } catch (err) {
+      console.error(err);
+      alert("이미지 업로드에 실패했어요. 다시 시도해주세요.");
+      setImageUrl(null);
+      setPreviewUrl(null);
+      if (fileRef.current) fileRef.current.value = "";
+    } finally {
+      setIsUploadingImage(false);
+      // 필요하면 로컬 URL 정리
+      URL.revokeObjectURL(localUrl);
+    }
   };
 
   useEffect(() => {
@@ -80,15 +104,16 @@ export default function WritePage() {
     setTitle("");
     setBody("");
     setImageUrl(null);
-    if (fileRef.current) fileRef.current.value = "";
+    setPreviewUrl(null);
     setInitialized(false);
+    if (fileRef.current) fileRef.current.value = "";
   };
 
   const createMut = useCreatePost();
   const updateMut = useUpdatePost(editingId ?? "");
 
   const publish = () => {
-    if (!canPublish) return;
+    if (!canPublish || isUploadingImage) return;
 
     const payload = {
       title: title.trim(),
@@ -112,7 +137,6 @@ export default function WritePage() {
     }
   };
 
-  // 수정 모드에서만 로딩/에러 처리
   if (editingId && isDetailLoading) {
     return (
       <div className="flex min-h-dvh w-full items-center justify-center bg-white text-[14px] text-[var(--Gray56)]">
@@ -133,7 +157,9 @@ export default function WritePage() {
     <div className="flex min-h-dvh w-full flex-col bg-white">
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
-          <div className="logo-text text-[24px] leading-[1.2] text-[var(--Black)]">GITLOG</div>
+          <div className="logo-text text-[24px] leading-[1.2] text-[var(--Black)]">
+            GITLOG
+          </div>
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -145,14 +171,22 @@ export default function WritePage() {
             <button
               type="button"
               onClick={publish}
-              disabled={!canPublish || createMut.isPending || updateMut.isPending}
+              disabled={
+                !canPublish ||
+                createMut.isPending ||
+                updateMut.isPending ||
+                isUploadingImage
+              }
               className={`rounded-[25px] border px-4 py-[6px] text-[14px] font-light leading-[22.4px] ${
-                canPublish && !createMut.isPending && !updateMut.isPending
+                canPublish &&
+                !createMut.isPending &&
+                !updateMut.isPending &&
+                !isUploadingImage
                   ? "border-[var(--Point,#00A1FF)] text-[var(--Point,#00A1FF)]"
                   : "border-[var(--Gray90)] text-[var(--Gray56)] opacity-40 cursor-not-allowed"
               }`}
             >
-              게시하기
+              {isUploadingImage ? "이미지 업로드 중..." : "게시하기"}
             </button>
           </div>
         </div>
@@ -207,10 +241,10 @@ export default function WritePage() {
             />
           </section>
 
-          {imageUrl && (
+          {previewUrl && (
             <section className="mb-6">
               <img
-                src={imageUrl}
+                src={previewUrl}
                 alt="preview"
                 className="max-h-[400px] w-full rounded-[4px] object-cover"
               />
