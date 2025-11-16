@@ -1,63 +1,85 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import axiosInstance from '@/api/axiosInstance'
 
-export function useComment() {
-  const [comments, setComments] = useState<string[]>([])
+export interface Comment {
+  commentId: number
+  content: string
+  nickName: string
+  createdAt: string
+}
+
+export function useComment(postId: number) {
+  const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
-  const [toast, setToast] = useState({
-    show: false,
-    message: '',
-    type: 'positive' as 'positive' | 'negative',
-  })
 
   const commentRef = useRef<HTMLDivElement>(null)
 
-  /** 댓글 영역으로 스크롤 이동 */
+  /** 댓글 영역 스크롤 */
   const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  /** 댓글 추가 */
-  const handleAddComment = () => {
-    if (!newComment.trim()) {
-      setToast({ show: true, message: '내용을 입력해주세요.', type: 'negative' })
-      setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
-      return
+  /** 1) 댓글 조회 — GET */
+  const fetchComments = async () => {
+    try {
+      const res = await axiosInstance.get(`/comments/post/${postId}`)
+      setComments(res.data.data || [])
+    } catch (err) {
+      console.error('댓글 불러오기 실패:', err)
     }
-    setComments((prev) => [...prev, newComment.trim()])
-    setNewComment('')
-    setToast({ show: true, message: '댓글이 등록되었습니다.', type: 'positive' })
-    setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
   }
 
-  /** 댓글 삭제 요청 */
-  const handleDeleteClick = (index: number) => {
-    setDeleteIndex(index)
-    setConfirmOpen(true)
+  useEffect(() => {
+    fetchComments()
+  }, [postId])
+
+  /** 2) 댓글 등록 — POST */
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return
+
+    try {
+      await axiosInstance.post('/comments', {
+        postId,
+        content: newComment.trim(),
+      })
+
+      setNewComment('')
+      fetchComments() // 최신 댓글 다시 불러오기
+    } catch (err) {
+      console.error('댓글 등록 실패:', err)
+    }
   }
 
-  /** 댓글 삭제 확정 */
-  const handleDeleteConfirm = () => {
-    if (deleteIndex !== null) {
-      setComments((prev) => prev.filter((_, i) => i !== deleteIndex))
-      setToast({ show: true, message: '댓글이 삭제되었습니다.', type: 'positive' })
-      setTimeout(() => setToast({ show: false, message: '', type: 'positive' }), 2000)
+  /** 3) 댓글 삭제 — DELETE */
+  const handleDeleteClick = async (commentId: number) => {
+    try {
+      await axiosInstance.delete(`/comments/${commentId}`)
+      fetchComments()
+    } catch (err) {
+      console.error('댓글 삭제 실패:', err)
     }
-    setConfirmOpen(false)
+  }
+
+  /** 4) 댓글 수정 — PATCH */
+  const handleUpdateComment = async (commentId: number, content: string) => {
+    try {
+      await axiosInstance.patch(`/comments/${commentId}`, {
+        content,
+      })
+      fetchComments()
+    } catch (err) {
+      console.error('댓글 수정 실패:', err)
+    }
   }
 
   return {
     comments,
     newComment,
-    confirmOpen,
-    toast,
     commentRef,
     setNewComment,
-    setConfirmOpen,
     handleScrollToComments,
     handleAddComment,
     handleDeleteClick,
-    handleDeleteConfirm,
+    handleUpdateComment,
   }
 }

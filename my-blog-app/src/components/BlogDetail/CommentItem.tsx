@@ -21,7 +21,6 @@ export default function CommentItem({ author, date, content, onDelete }: Comment
       <div className='flex justify-between items-start w-full px-4 py-3'>
         <CommentMetaInfo author={author} date={date} />
 
-        {/* MoreIcon + DropdownMenu */}
         <div className='relative'>
           <button onClick={() => setMenuOpen((prev) => !prev)}>
             <MoreIcon className='w-[16px] h-[16px] text-gray-400 cursor-pointer' />
@@ -35,12 +34,10 @@ export default function CommentItem({ author, date, content, onDelete }: Comment
         </div>
       </div>
 
-      {/* 댓글 본문 */}
       <TextCard variant='body' className='px-4 py-2 text-[#333]'>
         {content}
       </TextCard>
 
-      {/* 구분 여백 */}
       <Blank size='sm' />
     </div>
   )
