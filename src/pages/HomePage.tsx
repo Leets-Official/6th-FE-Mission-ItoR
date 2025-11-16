@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import PageHeader from "@ui/PageHeader";
 import Frame from "@ui/Frame";
-import Container from "@ui/Container"; 
+import Container from "@ui/Container";
 import PostList from "@src/components/home/PostList";
 import type { Post } from "@src/types/post";
 import clearIcon from "@icons/clear.svg";
@@ -12,12 +12,12 @@ import kakaoIcon from "@icons/kakao.svg";
 import "@src/styles/auth.css";
 import { usePosts } from "@src/hooks/usePosts";
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
+import { useKakaoStart } from "@src/hooks/useAuth";
 
 const styles = {
   container: {
     wrap: "mx-auto w-full max-w-[1366px]",
     pad: "px-4 sm:px-6 md:px-8",
-    // main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8", 
   },
 } as const;
 
@@ -116,6 +116,13 @@ export default function HomePage() {
 
   const totalPages = pickNumber(data, "totalPages") ?? 1;
 
+  const { mutate: startKakaoLogin, isPending: isKakaoStarting } = useKakaoStart();
+
+  const handleKakaoLogin = () => {
+    if (isKakaoStarting) return;
+    startKakaoLogin();
+  };
+
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
       {/* 헤더는 1366px 컨테이너 유지 */}
@@ -124,7 +131,7 @@ export default function HomePage() {
           <PageHeader
             variant="write"
             onClickMenu={toggleFrame}
-            onClickWrite={goWrite} 
+            onClickWrite={goWrite}
             className="!w-full"
           />
         </div>
@@ -225,9 +232,20 @@ export default function HomePage() {
 
               <div className="auth-sns-sep">또는</div>
 
-              <button type="button" className="auth-btn auth-btn--kakao">
-                <img src={kakaoIcon} alt="" width={18} height={18} style={{ display: "block" }} />
-                카카오로 계속하기
+              <button
+                type="button"
+                className="auth-btn auth-btn--kakao"
+                onClick={handleKakaoLogin}
+                disabled={isKakaoStarting}
+              >
+                <img
+                  src={kakaoIcon}
+                  alt=""
+                  width={18}
+                  height={18}
+                  style={{ display: "block" }}
+                />
+                {isKakaoStarting ? "카카오로 이동 중..." : "카카오로 계속하기"}
               </button>
 
               <div className="auth-switch">
