@@ -52,21 +52,47 @@ export async function getPosts(page: number, size: number) {
         profileUrl?: string;
         createdAt: string;
         commentCount: number;
+        contents?: Array<{
+          contentOrder: number;
+          content: string;
+          contentType: "TEXT" | "IMAGE" | string;
+        }>;
       }>;
       pageMax: number;
     };
   }>(url, { params: { page, size } });
 
   const items: PostSummary[] =
-    data?.data?.posts?.map((p) => ({
-      id: p.postId,
-      title: p.title,
-      createdAt: p.createdAt,
-      author: { nickname: p.nickname },
-      thumbnailUrl: undefined,
-      commentCount: p.commentCount ?? 0,
-      excerpt: undefined,
-    })) ?? [];
+    data?.data?.posts?.map((p) => {
+      const contents = p.contents ?? [];
+
+      // contentOrder 기준으로 정렬
+      const sorted = [...contents].sort(
+        (a, b) => a.contentOrder - b.contentOrder
+      );
+
+      // 첫 번째 TEXT 블록을 excerpt로 사용
+      const firstText = sorted.find(
+        (c) => (c.contentType || "").toUpperCase() === "TEXT"
+      );
+      const excerpt = firstText?.content;
+
+      // 첫 번째 IMAGE 블록을 썸네일로 사용 (있으면)
+      const firstImage = sorted.find(
+        (c) => (c.contentType || "").toUpperCase() === "IMAGE"
+      );
+      const thumbnailUrl = firstImage?.content;
+
+      return {
+        id: p.postId,
+        title: p.title,
+        createdAt: p.createdAt,
+        author: { nickname: p.nickname },
+        thumbnailUrl,
+        commentCount: p.commentCount ?? 0,
+        excerpt,
+      } as PostSummary;
+    }) ?? [];
 
   return {
     data: items,
