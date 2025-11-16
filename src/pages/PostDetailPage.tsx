@@ -1,63 +1,20 @@
-import React, { useMemo, useState } from "react";
-import clsx from "clsx";
+// src/pages/PostDetailPage.tsx
+import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams, Navigate } from "react-router-dom";
-
-import PageHeader from "../components/ui/PageHeader";
-import TextBox from "../components/ui/TextBox";
-import TextField from "../components/ui/TextField";
-import ProfilePhoto from "../components/ui/Profile";
 import Dropdown from "@ui/Dropdown";
 import Modal from "@ui/Modal";
-import Button from "../components/ui/Button/Button";
-
-import type { Post } from "../types/post";
-import {
-  postDetailMock,
-  type CommentModel,
-  type DetailBlock,
-} from "../lib/mocks";
-
-const POSTS: Post[] = [
-  {
-    id: 1,
-    title: "32 Title one line",
-    date: "Feb 17, 2025.",
-    author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
-    detail: "detail",
-    commentCount: 12,
-  },
-  {
-    id: 2,
-    title: "32 Title one line",
-    date: "Feb 17, 2025.",
-    author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
-    detail: "detail",
-    commentCount: 8,
-  },
-  {
-    id: 3,
-    title: "32 Title one line",
-    date: "Feb 17, 2025.",
-    author: { name: "닉네임", initial: "G", bio: "한 줄 소개" },
-    detail: "detail",
-    commentCount: 0,
-  },
-];
-
-const Spacer = ({
-  y = 32,
-  className,
-}: {
-  y?: 20 | 32 | 64;
-  className?: string;
-}) => {
-  const map: Record<20 | 32 | 64, string> = {
-    20: "h-5",
-    32: "h-8",
-    64: "h-16",
-  };
-  return <div aria-hidden className={clsx("w-full", map[y], className)} />;
-};
+import ProfilePhoto from "@ui/Profile";
+import TextBox from "@ui/TextBox";
+import PageHeader from "@ui/PageHeader";
+import Spacer from "@ui/Spacer";
+import TitleSection, { AuthorView } from "@ui/Post/TitleSection";
+import DetailBlocks, { DetailBlock } from "@ui/Post/DetailBlocks";
+import CommentInput from "@ui/Post/CommentInput";
+import ConfirmDialog from "@ui/ConfirmDialog";
+import CommentList from "@ui/comment/CommentList";
+import type { CommentView } from "@ui/comment/CommentItem";
+import { usePostDetail } from "@src/hooks/usePosts";
+import { useComments, useCreateComment, useUpdateComment, useDeleteComment } from "@src/hooks/useComments";
 
 const formatDate = (iso: string) => {
   const d = new Date(iso);
@@ -65,248 +22,145 @@ const formatDate = (iso: string) => {
   return `${month} ${d.getDate()}, ${d.getFullYear()}.`;
 };
 
-const TitleSection: React.FC<{
+type ApiPostDetail = {
+  id: string;
   title: string;
-  author: Post["author"];
-  date: string;
-  commentCount: number;
-}> = ({ title, author, date, commentCount }) => (
-  <section className="flex max-w-[688px] py-3 flex-col items-start self-stretch">
-    <div className="flex max-w-[688px] px-4 py-3 flex-col justify-center items-start gap-3 self-stretch">
-      <TextBox
-        tbStyle="primary"
-        title={title}
-        className="!w-[688px] !max-w-[688px] !p-0 !bg-transparent"
-      />
-    </div>
-
-    <Spacer y={32} />
-
-    <div className="flex w-[688px] px-4 py-3 flex-col items-start gap-10">
-      <div className="flex items-center gap-2">
-        <div className="flex w-5 h-5 items-center aspect-square">
-          <ProfilePhoto
-            size="sm"
-            initial={author.initial}
-            name={author.name}
-          />
-        </div>
-        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
-          {author.name}
-        </span>
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
-          · {date}
-        </span>
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
-          · 댓글 {commentCount}개
-        </span>
-      </div>
-    </div>
-  </section>
-);
-
-const DetailBlocksSection: React.FC<{ blocks: DetailBlock[] }> = ({
-  blocks,
-}) => {
-  const sorted = useMemo(
-    () => [...blocks].sort((a, b) => a.order - b.order),
-    [blocks]
-  );
-  return (
-    <section className="flex flex-col items-center self-stretch">
-      {sorted.map((b) =>
-        b.type === "IMAGE" ? (
-          <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
-            <img
-              src={b.value}
-              alt=""
-              className="w-full h-auto object-cover rounded-[2px] bg-[var(--Gray96)]"
-            />
-          </div>
-        ) : (
-          <div key={b.order} className="w-full max-w-[688px] px-4 py-2">
-            <TextBox
-              tbStyle="single"
-              text={b.value}
-              className="!m-0 !p-0 !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px]"
-            />
-          </div>
-        )
-      )}
-    </section>
-  );
+  createdAt?: string;
+  author?: { nickname?: string; avatarUrl?: string; introduction?: string };
+  blocks?: Array<
+    | { type: "IMAGE"; order: number; url: string }
+    | { type: "TEXT"; order: number; content: string }
+  >;
+  mine?: boolean;
 };
 
-const CommentRow: React.FC<{ c: CommentModel }> = ({ c }) => (
-  <div className="flex max-w-[688px] px-4 py-3 items-start gap-3 self-stretch">
-    <div className="flex w-5 h-5 items-center">
-      <ProfilePhoto
-        size="sm"
-        initial={c.nickName.charAt(0).toUpperCase()}
-        name={c.nickName}
-      />
-    </div>
-    <div className="flex-1">
-      <div className="flex items-center gap-2">
-        <span className="text-[12px] leading-[19.2px] font-normal text-[var(--Gray20)]">
-          {c.nickName}
-        </span>
-        <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
-          · {formatDate(c.createdAt)}
-        </span>
-        {c.mine && (
-          <span className="text-[12px] leading-[19.2px] font-light text-[var(--Gray56)]">
-            · 내 댓글
-          </span>
-        )}
-      </div>
-      <p className="mt-1 text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray20)]">
-        {c.content}
-      </p>
-    </div>
-    {c.mine && (
-      <button
-        type="button"
-        aria-label="more"
-        className="px-2 text-[var(--Gray56)]"
-      >
-        •••
-      </button>
-    )}
-  </div>
-);
-
-const CommentInput: React.FC<{
-  isLoggedIn: boolean;
-  value: string;
-  onChange: (v: string) => void;
-  onSubmit: () => void;
-}> = ({ isLoggedIn, value, onChange, onSubmit }) => (
-  <>
-    <div className="flex max-w-[688px] px-4 pt-4 pb-3 items-start gap-10 self-stretch" />
-    <div className="flex max-w-[688px] px-4 items-center gap-2">
-      <span className="text-[16px] leading-[25.6px] text-[var(--Black)]">
-        댓글
-      </span>
-    </div>
-
-    {!isLoggedIn && (
-      <>
-        <div className="flex max-w-[688px] px-4 py-3 justify-center items-center self-stretch">
-          <p className="text-center text-[14px] leading-[22.4px] font-light tracking-[-0.07px] text-[var(--Gray-78,#C8C8C8)]">
-            댓글을 입력하려면 로그인하세요.
-          </p>
-        </div>
-        <div className="flex max-w-[688px] px-4 py-3">
-          <Button
-            type="button"
-            variant="neutralOutline"
-            className="px-4 rounded-[4px] h-10"
-            onClick={() => (window.location.href = "/me")}
-          >
-            로그인하러 가기
-          </Button>
-        </div>
-      </>
-    )}
-
-    {isLoggedIn && (
-      <div className="flex max-w-[688px] px-4 py-3 flex-col gap-[10px] self-stretch">
-        <div className="flex h-[66px] items-center">
-          <TextField
-            placeholder="댓글을 입력하세요..."
-            fullWidth
-            size="lg"
-            className="!h-[66px] placeholder:text-gray-78"
-            value={value}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange(e.target.value)
-            }
-            onKeyDown={(
-              e: React.KeyboardEvent<HTMLInputElement>
-            ) => {
-              if (e.key === "Enter" && value.trim()) onSubmit();
-            }}
-          />
-        </div>
-      </div>
-    )}
-  </>
-);
-
-const PostDetailPage: React.FC = () => {
+export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [search] = useSearchParams();
   const isLoggedIn = search.get("login") === "1";
   const navigate = useNavigate();
 
-  const detail = useMemo(() => postDetailMock, []);
-  const [comments, setComments] = useState<CommentModel[]>(detail.comments);
+  //hooks는 항상 호출되도록 id가 없어도 빈 문자열로 호출
+  const pid = id ?? "";
+  const { data, isLoading, isError } = usePostDetail(pid);
+  const { data: serverComments = [] } = useComments(pid);
+  const createMut = useCreateComment(pid);
+  const updateMut = useUpdateComment(pid);
+  const deleteMut = useDeleteComment(pid);
+
   const [input, setInput] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [postDeleteOpen, setPostDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const author: Post["author"] = {
-    name: detail.author.nickName,
-    initial: detail.author.nickName.charAt(0).toUpperCase(),
-    bio: detail.author.introduction ?? "",
+  //hooks 호출 이후에 early return
+  if (!id) return <Navigate to="/" replace />;
+
+  const d = data as ApiPostDetail | undefined;
+
+  const author: AuthorView | null = d
+    ? {
+        name: d.author?.nickname ?? "익명",
+        initial: (d.author?.nickname ?? "U").charAt(0).toUpperCase(),
+      }
+    : null;
+
+  const blocks: DetailBlock[] = Array.isArray(d?.blocks)
+    ? d.blocks.map((b) =>
+        b.type === "IMAGE"
+          ? { type: "IMAGE", order: b.order, value: b.url }
+          : { type: "TEXT", order: b.order, value: b.content }
+      )
+    : [];
+
+  const dateText = d?.createdAt ? formatDate(d.createdAt) : "";
+  const isMine = !!d?.mine;
+
+  type ServerCommentFlexible = {
+    id?: number;
+    commentId?: number;
+    content?: string;
+    createdAt?: string;
+    author?: { nickname?: string; avatarUrl?: string };
+    nickName?: string; // 서버 케이스 대비
+    profileUrl?: string;
+    mine?: boolean;
+    isOwner?: boolean;
   };
-  const dateText = formatDate(detail.createdAt);
-  const commentCount = comments.length;
 
-  const post = POSTS.find((p) => String(p.id) === id) ?? null;
-  if (!post) return <Navigate to="/" replace />;
+  //CommentView는 nickname 키 사용
+  const comments: CommentView[] = (serverComments as ServerCommentFlexible[]).map((c) => ({
+    id: (c.id ?? c.commentId ?? 0) as number,
+    content: String(c.content ?? ""),
+    createdAt: c.createdAt ?? new Date().toISOString(),
+    nickname: c.author?.nickname ?? c.nickName ?? "익명",
+    profileUrl: c.author?.avatarUrl ?? c.profileUrl,
+    mine: Boolean(c.mine ?? c.isOwner),
+  }));
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh w-full flex items-center justify-center text-[14px] text-[var(--Gray56)]">
+        로딩 중입니다...
+      </div>
+    );
+  }
+  if (isError || !d || !author) return <Navigate to="/" replace />;
+
+  const handleCreate = () => {
+    const v = input.trim();
+    if (!v || !isLoggedIn) return;
+    createMut.mutate(v, { onSuccess: () => setInput("") });
+  };
+
+  const askDelete = (cid: number) => setDeleteId(cid);
+
+  const confirmDelete = () => {
+    if (!deleteId) return;
+    deleteMut.mutate(deleteId, { onSettled: () => setDeleteId(null) });
+  };
+
+  const saveEdit = (cid: number, content: string) =>
+    updateMut.mutate({ commentId: cid, content });
 
   return (
     <div className="min-h-dvh w-full flex flex-col bg-[var(--White)]">
       <header className="w-full bg-white/90 backdrop-blur-[2px] relative">
         <div className="max-w-[1366px] w-full px-4 sm:px-6 md:px-8 mx-auto relative">
           <PageHeader variant="comment" onClickMore={() => {}} />
-
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-50">
-            <Dropdown
-              position="right"
-              trigger={
-                <span
-                  className="block w-6 h-6"
-                  aria-label="더보기"
-                />
-              }
-              items={[
-                {
-                  id: "edit",
-                  label: (
-                    <span className="text-[14px] text-[var(--Black)]">
-                      수정하기
-                    </span>
-                  ),
-                  onSelect: () => navigate(`/write/${post.id}`),
-                },
-                {
-                  id: "delete",
-                  label: (
-                    <span className="text-[14px] text-[var(--Negative)]">
-                      삭제하기
-                    </span>
-                  ),
-                  onSelect: () => setConfirmOpen(true),
-                },
-              ]}
-              caretOffset="md"
-            />
-          </div>
+          {isMine && (
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 z-50">
+              <Dropdown
+                position="right"
+                trigger={<span className="block w-6 h-6" aria-label="더보기" />}
+                items={[
+                  {
+                    id: "edit",
+                    label: <span className="text-[14px] text-[var(--Black)]">수정하기</span>,
+                    onSelect: () => navigate(`/write/${id}`),
+                  },
+                  {
+                    id: "delete",
+                    label: <span className="text-[14px] text-[var(--Negative)]">삭제하기</span>,
+                    onSelect: () => setPostDeleteOpen(true),
+                  },
+                ]}
+                caretOffset="md"
+              />
+            </div>
+          )}
         </div>
       </header>
 
       <main className="flex-1 w-full">
         <div className="mx-auto w-full max-w-[688px]">
           <TitleSection
-            title={post.title}
+            title={d.title}
             author={author}
             date={dateText}
-            commentCount={commentCount}
+            commentCount={comments.length}
           />
           <Spacer y={32} />
-          <DetailBlocksSection blocks={detail.contents} />
+          <DetailBlocks blocks={blocks} />
           <Spacer y={32} />
 
           <section className="flex flex-col items-start gap-10 flex-[1_0_0]">
@@ -314,30 +168,13 @@ const PostDetailPage: React.FC = () => {
               isLoggedIn={isLoggedIn}
               value={input}
               onChange={setInput}
-              onSubmit={() => {
-                const v = input.trim();
-                if (!v || !isLoggedIn) return;
-                const next: CommentModel = {
-                  id: comments.length
-                    ? Math.max(...comments.map((x) => x.id)) + 1
-                    : 1,
-                  content: v,
-                  nickName: author.name,
-                  profileUrl: detail.author.profileUrl,
-                  createdAt: new Date().toISOString(),
-                  mine: true,
-                };
-
-                setComments((prev) => [next, ...prev]);
-
-                setInput("");
-              }}
+              onSubmit={handleCreate}
             />
-            <div className="w-full">
-              {comments.map((c) => (
-                <CommentRow key={c.id} c={c} />
-              ))}
-            </div>
+            <CommentList
+              comments={comments}
+              onDelete={askDelete}
+              onEdit={saveEdit}
+            />
             <Spacer y={64} />
           </section>
         </div>
@@ -346,11 +183,7 @@ const PostDetailPage: React.FC = () => {
           <Spacer y={64} className="mx-auto max-w-[688px]" />
           <div className="mx-auto w-full max-w-[688px] px-4 py-3 flex flex-col items-start gap-3">
             <div className="flex w-16 h-16 items-center justify-start">
-              <ProfilePhoto
-                size="lg"
-                initial={author.initial}
-                name={author.name}
-              />
+              <ProfilePhoto size="lg" initial={author.initial} name={author.name} />
             </div>
             <div className="flex flex-col items-start gap-1.5 w-full">
               <TextBox
@@ -360,7 +193,7 @@ const PostDetailPage: React.FC = () => {
               />
               <TextBox
                 tbStyle="single"
-                text={author.bio ?? ""}
+                text={d.author?.introduction ?? ""}
                 className="!m-0 !p-0 !bg-transparent !text-[14px] !leading-[22.4px] !font-light !text-[var(--Gray20)] tracking-[-0.07px] !text-left w-full"
               />
             </div>
@@ -370,20 +203,26 @@ const PostDetailPage: React.FC = () => {
       </main>
 
       <Modal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onCancel={() => setConfirmOpen(false)}
+        open={postDeleteOpen}
+        onClose={() => setPostDeleteOpen(false)}
+        onCancel={() => setPostDeleteOpen(false)}
         onConfirm={() => navigate("/", { replace: true })}
         titleLines={["해당 블로그를 삭제하시겠어요?"]}
-        descriptionLines={[
-          "삭제된 블로그는 다시 확인할 수 없어요.",
-        ]}
+        descriptionLines={["삭제된 블로그는 다시 확인할 수 없어요."]}
         confirmText="삭제하기"
         cancelText="취소"
         confirmVariant="negative"
       />
+
+      <ConfirmDialog
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="댓글을 삭제하시겠어요?"
+        description="삭제 후에는 복구할 수 없어요."
+        confirmText="삭제"
+        variant="negative"
+      />
     </div>
   );
-};
-
-export default PostDetailPage;
+}

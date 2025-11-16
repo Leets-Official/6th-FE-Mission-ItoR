@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import ReorderIcon from "@icons/reorder.svg?react";
-import kakaoIcon from "../assets/icons/kakao.svg";
-import Spacer from "../components/ui/Spacer";
+import kakaoIcon from "@icons/kakao.svg";
+import Spacer from "@ui/Spacer";
 
 export default function SignUpPage() {
   const nav = useNavigate();

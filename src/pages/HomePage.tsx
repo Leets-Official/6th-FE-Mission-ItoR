@@ -1,41 +1,54 @@
-import React, { useState, useEffect } from "react";
+// src/pages/HomePage.tsx
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-
 import PageHeader from "@ui/PageHeader";
 import Frame from "@ui/Frame";
-import PostList from "../components/home/PostList";
-import type { Post } from "../types/post";
-
-import clearIcon from "../assets/icons/clear.svg";
-import kakaoIcon from "../assets/icons/kakao.svg";
-import "../styles/auth.css";
-
-const POSTS: Post[] = Array.from({ length: 16 }).map((_, i) => ({
-  id: i + 1,
-  title: "16 Title one line",
-  excerpt:
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-  date: "Feb 17, 2025.",
-  author: { name: "닉네임", avatarInitial: "N" },
-  thumbnailUrl:
-    i % 2 === 0
-      ? "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop"
-      : undefined,
-}));
+import Container from "@ui/Container"; 
+import PostList from "@src/components/home/PostList";
+import type { Post } from "@src/types/post";
+import clearIcon from "@icons/clear.svg";
+import kakaoIcon from "@icons/kakao.svg";
+import "@src/styles/auth.css";
+import { usePosts } from "@src/hooks/usePosts";
 
 const styles = {
   container: {
     wrap: "mx-auto w-full max-w-[1366px]",
     pad: "px-4 sm:px-6 md:px-8",
-    main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8",
+    // main: "mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8", 
   },
 } as const;
+
+type ApiPostSummary = {
+  id: number;
+  title: string;
+  createdAt?: string;
+  author?: { nickname?: string };
+  thumbnailUrl?: string;
+  commentCount?: number;
+  excerpt?: string;
+};
+
+const pickArray = <T,>(d: unknown, key: string): T[] => {
+  if (typeof d === "object" && d !== null) {
+    const v = (d as Record<string, unknown>)[key];
+    if (Array.isArray(v)) return v as T[];
+  }
+  return [];
+};
+
+const pickNumber = (d: unknown, key: string): number | undefined => {
+  if (typeof d === "object" && d !== null) {
+    const v = (d as Record<string, unknown>)[key];
+    if (typeof v === "number") return v;
+  }
+  return undefined;
+};
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-
   const [search, setSearch] = useSearchParams();
   const loginOpen = search.get("login") === "1";
   const openLogin = () => setSearch({ login: "1" }, { replace: true });
@@ -45,11 +58,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    if (loginOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = loginOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -75,8 +84,39 @@ export default function HomePage() {
   const goSettings = () => navigate("/account/profile");
   const doLogout = () => navigate("/", { replace: true });
 
+  const { data, isLoading, isError } = usePosts(page, 10);
+
+  const apiPostsFromContent = pickArray<ApiPostSummary>(data, "content");
+  const apiPostsFromItems = pickArray<ApiPostSummary>(data, "items");
+  const apiPosts: ApiPostSummary[] =
+    apiPostsFromContent.length ? apiPostsFromContent : apiPostsFromItems;
+
+  const posts: Post[] = apiPosts.map((p) => {
+    const nick = p.author?.nickname ?? "익명";
+    const initial = nick.charAt(0).toUpperCase();
+    const dateText = p.createdAt
+      ? new Date(p.createdAt).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }) + "."
+      : "";
+    return {
+      id: p.id,
+      title: p.title,
+      excerpt: p.excerpt ?? "",
+      date: dateText,
+      author: { name: nick, avatarInitial: initial },
+      thumbnailUrl: p.thumbnailUrl,
+      commentCount: p.commentCount ?? 0,
+    };
+  });
+
+  const totalPages = pickNumber(data, "totalPages") ?? 1;
+
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
+      {/* 헤더는 1366px 컨테이너 유지 */}
       <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)] relative z-10">
         <div className={clsx(styles.container.wrap, styles.container.pad)}>
           <PageHeader
@@ -105,17 +145,47 @@ export default function HomePage() {
         </div>
       )}
 
-      <main
-        className={clsx(
-          "flex-1 w-full",
-          showFrame ? "md:ml-[240px]" : "ml-0"
-        )}
-      >
-        <div className={clsx(styles.container.main, "py-8")}>
-          <section className="flex flex-col gap-6">
-            <PostList posts={POSTS} page={page} onPageChange={setPage} />
+      <main className={clsx("flex-1 w-full", showFrame ? "md:ml-[240px]" : "ml-0")}>
+        <Container className="py-8">
+          <section className="flex flex-col gap-6 w-full">
+            {isLoading && (
+              <div className="text-center text-[14px] text-[var(--Gray56)] py-8">
+                로딩 중입니다...
+              </div>
+            )}
+            {isError && (
+              <div className="text-center text-[14px] text-[var(--Negative)] py-8">
+                목록을 불러오지 못했어요.
+              </div>
+            )}
+            {!isLoading && !isError && (
+              <>
+                <PostList posts={posts} />
+                <div className="flex items-center justify-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page <= 1}
+                  >
+                    이전
+                  </button>
+                  <span className="text-[12px] text-[var(--Gray20)]">
+                    {page} / {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page >= totalPages}
+                  >
+                    다음
+                  </button>
+                </div>
+              </>
+            )}
           </section>
-        </div>
+        </Container>
       </main>
 
       {loginOpen && (
@@ -138,48 +208,23 @@ export default function HomePage() {
 
             <div className="auth-hero">
               <div className="logo-text">GITLOG</div>
-              <p className="auth-hero__caption">
-                나의 성장 기록, 지금 시작하세요
-              </p>
+              <p className="auth-hero__caption">나의 성장 기록, 지금 시작하세요</p>
             </div>
 
-            <form
-              className="auth-form"
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
               <div className="auth-fields">
-                <input
-                  className="auth-input"
-                  type="email"
-                  placeholder="이메일"
-                />
-                <input
-                  className="auth-input"
-                  type="password"
-                  placeholder="비밀번호"
-                />
+                <input className="auth-input" type="email" placeholder="이메일" />
+                <input className="auth-input" type="password" placeholder="비밀번호" />
               </div>
 
-              <button
-                type="submit"
-                className="auth-btn auth-btn--primary"
-              >
+              <button type="submit" className="auth-btn auth-btn--primary">
                 로그인
               </button>
 
               <div className="auth-sns-sep">또는</div>
 
-              <button
-                type="button"
-                className="auth-btn auth-btn--kakao"
-              >
-                <img
-                  src={kakaoIcon}
-                  alt=""
-                  width={18}
-                  height={18}
-                  style={{ display: "block" }}
-                />
+              <button type="button" className="auth-btn auth-btn--kakao">
+                <img src={kakaoIcon} alt="" width={18} height={18} style={{ display: "block" }} />
                 카카오로 계속하기
               </button>
 

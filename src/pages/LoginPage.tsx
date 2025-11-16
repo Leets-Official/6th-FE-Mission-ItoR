@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useForm } from "@src/hooks/useForm";
 import Button from "@ui/Button/Button";
-import AuthInput from "@src/components/ui/AuthInput";
+import AuthInput from "@ui/AuthInput";
 import clearIcon from "@icons/clear.svg";
 import "@src/styles/auth.css";
 import { useLogin } from "@src/hooks/useAuth";

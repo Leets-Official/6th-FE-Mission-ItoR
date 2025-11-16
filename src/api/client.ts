@@ -1,74 +1,80 @@
 // src/api/client.ts
 import axios, {
   AxiosError,
-  AxiosHeaders,
   AxiosRequestConfig,
-  RawAxiosRequestHeaders,
+  InternalAxiosRequestConfig,
 } from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL as string;
+/** 개발/배포 분기 */
+const isDev = import.meta.env.DEV;
+const BASE_URL = isDev ? "/api" : import.meta.env.VITE_API_BASE_URL;
 
-
-// 1. 기본 인스턴스 정의
+/** 공용 인스턴스 */
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
-// 2. 인터셉터 미적용 인스턴스 (토큰 재발급 전용)
-const raw = axios.create({
-  baseURL: API_BASE_URL,
+/** 인터셉터 미적용 인스턴스 */
+export const raw = axios.create({
+  baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
-// 3. Authorization 안전 세팅 헬퍼
-function attachAuth(config: AxiosRequestConfig, tokenWithBearer: string): void {
-  const headers = config.headers;
-
-  if (headers instanceof AxiosHeaders) {
-    headers.set("Authorization", tokenWithBearer);
-    return;
-  }
-
-  if (headers && typeof headers === "object" && !Array.isArray(headers)) {
-    (headers as RawAxiosRequestHeaders)["Authorization"] = tokenWithBearer;
-    return;
-  }
-
-  // headers가 없거나 이상한 타입이면 새로 생성
-  config.headers = new AxiosHeaders({ Authorization: tokenWithBearer });
+function pickString(obj: unknown, key: string): string | undefined {
+  if (!obj || typeof obj !== "object") return undefined;
+  const v = (obj as Record<string, unknown>)[key];
+  return typeof v === "string" ? v : undefined;
 }
 
-// 4. 요청 인터셉터: accessToken 자동 첨부
+function unwrapData(input: unknown): unknown {
+  if (input && typeof input === "object" && "data" in input) {
+    const inner = (input as { data: unknown }).data;
+    return inner ?? input;
+  }
+  return input;
+}
 
-api.interceptors.request.use((config) => {
+type HeadersWithSet = Record<string, unknown> & {
+  set?: (name: string, value: string) => unknown;
+};
+
+function asHeadersWithSet(h: AxiosRequestConfig["headers"]): HeadersWithSet {
+  if (!h) return {};
+  return h as unknown as HeadersWithSet;
+}
+
+function setAuthOnConfig(
+  cfg: InternalAxiosRequestConfig | AxiosRequestConfig,
+  token: string
+): void {
+  const headers = asHeadersWithSet(cfg.headers);
+  if (typeof headers.set === "function") {
+    headers.set("Authorization", `Bearer ${token}`);
+  } else {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  // 원래 선언 타입 범위로만 재대입
+  cfg.headers = headers as AxiosRequestConfig["headers"];
+}
+
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("accessToken");
-  if (!token) return config;
-
-  const tokenWithBearer = `Bearer ${token}`;
-  attachAuth(config, tokenWithBearer);
+  if (token) setAuthOnConfig(config, token);
   return config;
 });
 
-// 5. 재시도 타입 및 큐 정의
 type RetryableConfig = AxiosRequestConfig & { _retry?: boolean };
 
 let isRefreshing = false;
-const waitQueue: Array<(tokenWithBearer: string) => void> = [];
+const waitQueue: Array<(token: string | null) => void> = [];
 
-// 6. 안전한 문자열 추출 함수
-function pickString(obj: Record<string, unknown>, key: string): string | undefined {
-  const value = obj?.[key];
-  return typeof value === "string" ? value : undefined;
-}
-
-// 7. 응답 인터셉터: 토큰 재발급 로직
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
     const cfg: RetryableConfig = (error.config || {}) as RetryableConfig;
     const status = error.response?.status ?? 0;
-    const rdata = (error.response?.data ?? {}) as Record<string, unknown>;
+    const rdata = error.response?.data as unknown;
 
     const message =
       pickString(rdata, "message") ??
@@ -76,7 +82,6 @@ api.interceptors.response.use(
       error.message ??
       "요청 처리 중 오류가 발생했습니다.";
 
-    // 401 에러 시 토큰 재발급 시도
     if (status === 401 && !cfg._retry) {
       const refreshToken = localStorage.getItem("refreshToken");
       if (!refreshToken) {
@@ -84,13 +89,16 @@ api.interceptors.response.use(
         return Promise.reject(new Error(message));
       }
 
-      // 이미 재발급 중이라면 큐에 요청 대기
+      // 이미 재발급 중이면 큐에 대기
       if (isRefreshing) {
-        return new Promise((resolve) => {
-          waitQueue.push((newAccessWithBearer) => {
+        return new Promise((resolve, reject) => {
+          waitQueue.push((newToken) => {
             const next: RetryableConfig = { ...cfg, _retry: true };
-            attachAuth(next, newAccessWithBearer);
-            resolve(api(next));
+            if (newToken) setAuthOnConfig(next, newToken);
+            api
+              .request(next)
+              .then(resolve)
+              .catch(reject);
           });
         });
       }
@@ -98,38 +106,43 @@ api.interceptors.response.use(
       try {
         isRefreshing = true;
 
-        // 토큰 재발급 요청
         const { data } = await raw.post("/auth/reissue", { refreshToken });
-        const payload = (data?.data ?? data) as Record<string, unknown>;
-        const newAccess = pickString(payload, "accessToken") ?? "";
-        const newRefresh = pickString(payload, "refreshToken") ?? "";
+        const payload = unwrapData(data);
+        const newAccess = pickString(payload, "accessToken") ?? null;
+        const newRefresh = pickString(payload, "refreshToken") ?? null;
 
-        if (newAccess) localStorage.setItem("accessToken", newAccess);
+        if (!newAccess) throw new Error("Invalid reissue response");
+
+        localStorage.setItem("accessToken", newAccess);
         if (newRefresh) localStorage.setItem("refreshToken", newRefresh);
 
-        const newAccessWithBearer = `Bearer ${newAccess}`;
+        // 대기열 처리
+        while (waitQueue.length) {
+          const resume = waitQueue.shift()!;
+          resume(newAccess);
+        }
 
-        // 대기 중인 요청들 재개
-        waitQueue.splice(0).forEach((resume) => resume(newAccessWithBearer));
-
-        // 현재 요청 재시도
+        // 원 요청 재시도
         const next: RetryableConfig = { ...cfg, _retry: true };
-        attachAuth(next, newAccessWithBearer);
-        return api(next);
-      } catch {
+        setAuthOnConfig(next, newAccess);
+        return api.request(next);
+      } catch (e) {
+        // 실패 시 정리
+        while (waitQueue.length) {
+          const resume = waitQueue.shift()!;
+          resume(null);
+        }
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        return Promise.reject(new Error(message));
+        return Promise.reject(e instanceof Error ? e : new Error(message));
       } finally {
         isRefreshing = false;
       }
     }
 
-    // 401 이외의 에러는 그대로 반환
+    // 그 외 에러
     return Promise.reject(new Error(message));
   }
 );
 
-// 8. export
 export default api;
-export { raw };
