@@ -4,12 +4,10 @@ import {
   fetchMyInfo,
   updateUser,
   updateUserPicture,
-  updateUserPassword,
   updateUserNickname,
   type MyInfo,
   type UpdateUserBody,
   type UpdatePictureBody,
-  type UpdatePasswordBody,
   type UpdateNicknameBody,
   type ApiEnvelope,
 } from "@src/api/user";
@@ -24,14 +22,13 @@ export function useMyInfo() {
   });
 }
 
-/** 2) 내 정보 수정 훅 (비밀번호 제외) */
+/** 2) 내 정보 수정 훅 */
 export function useUpdateUser() {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (body: UpdateUserBody) => updateUser(body),
     onSuccess: () => {
-      // 수정 후 내 정보 다시 불러오기
       qc.invalidateQueries({ queryKey: MY_INFO_KEY });
     },
   });
@@ -49,14 +46,7 @@ export function useUpdateUserPicture() {
   });
 }
 
-/** 4) 비밀번호 변경 훅 (필요하면 나중에 별도 페이지에서 사용) */
-export function useUpdateUserPassword() {
-  return useMutation({
-    mutationFn: (body: UpdatePasswordBody) => updateUserPassword(body),
-  });
-}
-
-/** 5) 닉네임 변경 훅  */
+/** 4) 닉네임 변경 훅  */
 export function useUpdateUserNickname() {
   const qc = useQueryClient();
 

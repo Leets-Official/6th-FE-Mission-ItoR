@@ -57,7 +57,7 @@ export default function HomePage() {
     if (!isAuthed) return openLogin();
     navigate("/write");
   };
-  const goSettings = () => navigate("/account/profile");
+  const goSettings = () => navigate("/me/edit");
   const doLogout = () => navigate("/", { replace: true });
 
   const { data, isLoading, isError } = usePosts(page, 10);
