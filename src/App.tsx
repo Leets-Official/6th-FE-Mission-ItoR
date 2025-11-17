@@ -18,7 +18,7 @@ function App() {
         <Route path="/write" element={<PostWritePage />} />
         <Route path="/edit/:postId" element={<PostWritePage />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypage/setting" element={<MyPageSetting loginType="email" />} />
+        <Route path="/mypage/setting" element={<MyPageSetting />} />
         <Route path="/oauth/kakao/success" element={<OAuthCallback />} />
       </Routes>
     </ToastProvider>
