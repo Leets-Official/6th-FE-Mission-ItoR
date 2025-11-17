@@ -8,6 +8,34 @@ import Modal from "@/components/Modal";
 import Done from "@/assets/svgs/done.svg?react";
 import { usePostDetail, useDeletePost } from "@/hooks/usePosts";
 
+// Local type definitions as a diagnostic step
+interface Comment {
+  commentId: string;
+  content: string;
+  nickName: string;
+  profileUrl: string;
+  createdAt: string;
+  isOwner: boolean;
+}
+
+interface ContentBlock {
+  contentOrder: number;
+  content: string;
+  contentType: "TEXT" | "IMAGE";
+}
+
+interface PostDetailResponse {
+  postId: string;
+  title: string;
+  contents: ContentBlock[];
+  nickName: string;
+  profileUrl?: string;
+  introduction?: string;
+  createdAt: string;
+  isOwner: boolean;
+  comments: Comment[];
+}
+
 const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -24,7 +52,7 @@ const BlogDetail: React.FC = () => {
 
   const isLoggedIn = true;
   const loggedInUserName = localStorage.getItem("nickname") || "홍길동";
-  const isAuthor = isLoggedIn && post && loggedInUserName === (post.nickName || post.author);
+  const isAuthor = isLoggedIn && post && loggedInUserName === post.nickName;
 
   // 게시글 삭제 로직
   const handleBlogDeleteConfirm = () => {
@@ -72,15 +100,15 @@ const BlogDetail: React.FC = () => {
 
       {/* 본문 */}
       <div className="w-[688px] p-4 text-gray-800 text-[14px] leading-[160%] mt-4 whitespace-pre-line">
-        {post.contents?.map((block) => (
+        {post.contents?.map((block: { contentOrder: React.Key; content: string }) => (
           <p key={block.contentOrder}>{block.content}</p>
         ))}
       </div>
 
       {/* 이미지 */}
       {post.contents
-        ?.filter((c) => c.contentType === "IMAGE")
-        .map((img, idx) => (
+        ?.filter((c: { contentType: string }) => c.contentType === "IMAGE")
+        .map((img: { content: string }, idx: number) => (
           <div key={idx} className="w-[688px] mt-6 mb-6">
             <img
               src={img.content}
@@ -92,7 +120,7 @@ const BlogDetail: React.FC = () => {
 
       {/* 댓글 영역 (임시 - 실제 연동 시 /comments 연결 가능) */}
       <div className="w-[688px] mt-8">
-        <p className="font-medium text-gray-900 text-[16px]">댓글 0</p>
+        <p className="font-medium text-gray-900 text-[16px]">댓글 {post.comments.length}</p>
         <div className="border border-gray-300 rounded-md mt-3 p-4">
           <textarea
             placeholder="댓글을 입력하세요."
@@ -115,9 +143,9 @@ const BlogDetail: React.FC = () => {
             alt={`${post.nickName} 프로필`}
             className="w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10"
           />
-          <span className="text-[24px] font-medium text-gray-900">{post.author}</span>
+          <span className="text-[24px] font-medium text-gray-900">{post.nickName}</span>
           <span className="text-[14px] text-gray-700 mt-2">
-            {"한 줄 소개가 없습니다."}
+            {post.introduction || "한 줄 소개가 없습니다."}
           </span>
         </div>
       </div>

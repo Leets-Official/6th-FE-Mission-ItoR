@@ -4,15 +4,15 @@ import Header from "@/components/Header";
 import AddPhoto from "@/assets/svgs/add_photo_alternate.svg?react";
 import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 import Toast from "@/components/Toast";
-import { type Post } from "@/api/Dummy";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api/axiosInstance";
+import { PostDetailResponse } from "../api/posts";
 
 // 게시글 본문 타입
 interface ContentBlock {
   contentOrder: number;
   content: string;
-  contentType: "TEXT" | "IMAGE"; // Allow IMAGE type
+  contentType: "TEXT" | "IMAGE";
 }
 
 // 게시글 생성/수정에 공통으로 쓰일 Payload 타입
@@ -23,7 +23,7 @@ interface PostPayload {
 
 const BlogWrite: React.FC = () => {
   const location = useLocation();
-  const post = location.state as Post | undefined;
+  const post = location.state as PostDetailResponse | undefined;
 
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState<ContentBlock[]>([]);
@@ -59,13 +59,7 @@ const BlogWrite: React.FC = () => {
   useEffect(() => {
     if (post) {
       setTitle(post.title);
-      setContents([
-        {
-          contentOrder: 1,
-          content: post.content,
-          contentType: "TEXT",
-        },
-      ]);
+      setContents(post.contents || []);
     }
   }, [post]);
 
@@ -81,8 +75,12 @@ const BlogWrite: React.FC = () => {
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
     setContents((prev) => {
-      const filtered = prev.filter((c) => c.contentType !== "TEXT");
-      return [...filtered, { contentOrder: filtered.length + 1, content: text, contentType: "TEXT" }];
+      const hasText = prev.some(c => c.contentType === 'TEXT');
+      if (hasText) {
+        return prev.map(c => c.contentType === 'TEXT' ? { ...c, content: text } : c);
+      } else {
+        return [...prev, { contentOrder: prev.length + 1, content: text, contentType: "TEXT" }];
+      }
     });
   };
 
@@ -113,7 +111,7 @@ const BlogWrite: React.FC = () => {
     };
 
     if (post) {
-      updateMutate({ id: post.id, payload });
+      updateMutate({ id: post.postId, payload });
     } else {
       createMutate(payload);
     }

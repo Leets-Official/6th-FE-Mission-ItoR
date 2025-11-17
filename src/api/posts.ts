@@ -6,20 +6,41 @@ export interface PostBody {
   imageUrl?: string;
 }
 
-export interface PostResponse {
-  postId: string; // uuid
-  title: string;
-  contents: {
-    contentOrder: number;
-    content: string;
-    contentType: "TEXT" | "IMAGE";
-  }[];
-  nickName: string; // author 대신 nickName
-  profileUrl?: string;
-  profileIntro?: string;
+export interface Comment {
+  commentId: string;
+  content: string;
+  nickName: string;
+  profileUrl: string;
   createdAt: string;
   isOwner: boolean;
-  commentCount: number; // Changed from comments array to commentCount
+}
+
+export interface ContentBlock {
+  contentOrder: number;
+  content: string;
+  contentType: "TEXT" | "IMAGE";
+}
+
+export interface PostDetailResponse {
+  postId: string;
+  title: string;
+  contents: ContentBlock[];
+  nickName: string;
+  profileUrl?: string;
+  introduction?: string;
+  createdAt: string;
+  isOwner: boolean;
+  comments: Comment[];
+}
+
+export interface PostListItem {
+  postId: string;
+  title: string;
+  nickName: string;
+  profileUrl?: string;
+  createdAt: string;
+  commentCount: number;
+  contents?: ContentBlock[];
 }
 
 // 게시글 생성
@@ -32,7 +53,7 @@ export const createPost = async (body: PostBody): Promise<any> => {
 export const updatePost = async (
   id: string,
   body: PostBody
-): Promise<PostResponse> => {
+): Promise<PostDetailResponse> => {
   const { data } = await api.patch(`/posts/${id}`, body);
   return data.data;
 };
@@ -43,7 +64,7 @@ export const deletePost = async (id: string): Promise<void> => {
 };
 
 export interface PostListResponse {
-  posts: PostResponse[];
+  posts: PostListItem[];
   pageMax: number;
 }
 
@@ -52,11 +73,11 @@ export const getAllPosts = async (page: number): Promise<PostListResponse> => {
   const { data } = await api.get("/posts/all", {
     params: { size: 10, page },
   });
-  return data.data;  // posts만이 아니라 { posts, pageMax } 전체 반환
+  return data.data;
 };
 
 //게시글 단일 조회
-export const getPostById = async (postId: string): Promise<PostResponse> => {
+export const getPostById = async (postId: string): Promise<PostDetailResponse> => {
   const token = localStorage.getItem("accessToken");
 
   // 토큰이 유효한 경우에만 /posts/token 사용 (로그인 유저)

@@ -6,7 +6,7 @@ import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import Toast from "@/components/Toast";
 import { useAllPosts } from "@/hooks/usePosts";
-import { PostResponse } from "@/api/posts"; // Import PostResponse
+import { PostListItem } from "@/api/posts"; // Use aliased path
 
 const Blogfind: React.FC = () => {
   const navigate = useNavigate();
@@ -60,12 +60,12 @@ const Blogfind: React.FC = () => {
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {data?.posts && data.posts.length > 0 ? ( // Use data.posts
-        data.posts.map((post: PostResponse) => { // Use data.posts
+        data.posts.map((post: PostListItem) => { // Use PostListItem
           const imageBlock = post.contents?.find(
-            (c) => c.contentType === "IMAGE"
+            (c: { contentType: string }) => c.contentType === "IMAGE"
           );
           const textBlock = post.contents?.find(
-            (c) => c.contentType === "TEXT"
+            (c: { contentType: string }) => c.contentType === "TEXT"
           );
 
           return (

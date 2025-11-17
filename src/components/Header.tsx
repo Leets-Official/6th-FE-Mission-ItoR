@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="relative w-[1366px] h-[72px] bg-white/90 backdrop-blur-sm z-10">
+      <header className="relative w-[1366px] h-[72px] bg-white/90 backdrop-blur-sm">
         <div className="absolute inset-0 flex items-center justify-between pl-[12px] pr-[16px]">
           {/* 좌측 로고 및 메뉴 */}
           <div className="flex items-center gap-4">

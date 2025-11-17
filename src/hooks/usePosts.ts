@@ -1,15 +1,15 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllPosts } from "@/api/posts";
-import api from "@/api/axiosInstance";
 import {
+  getAllPosts,
   createPost,
   updatePost,
   deletePost,
   getPostById,
-  type PostBody,
-  type PostResponse,
-  type PostListResponse, // Import PostListResponse
-} from "@src/api/posts";
+  PostBody,
+  PostDetailResponse,
+  PostListResponse,
+} from "@/api/posts";
+import { AxiosError } from "axios";
 
 /** 게시글 생성 */
 export const useCreatePost = () =>
@@ -59,7 +59,7 @@ export const useAllPosts = (page: number) => {
 
 /** 게시글 단일 조회 */
 export const usePostDetail = (id: string) =>
-  useQuery<PostResponse>({
+  useQuery<PostDetailResponse>({ // Updated return type
     queryKey: ["post", id],
     queryFn: () => getPostById(id),
     enabled: !!id,
