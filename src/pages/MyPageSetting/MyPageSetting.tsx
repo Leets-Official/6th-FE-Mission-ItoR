@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import Avatar from "@/components/Avatar/Avatar";
@@ -9,74 +9,130 @@ import * as S from "./MyPageSetting.styled";
 import TextField from "@/components/Text/TextField";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { useLogout } from "@/hooks/useLogout";
+import { useUserStore, type User } from "@/store/useUserStore";
+import { updateUserInfo } from "@/api/userApi";
+import { useToast } from "@/contexts/ToastContext";
 
-interface MyPageSettingProps {
-  loginType: "email" | "kakao";
-}
-
-export default function MyPageSetting({ loginType }: MyPageSettingProps) {
+export default function MyPageSetting() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user, setUser } = useUserStore();
+  const { showToast } = useToast();
+
+  const loginType = user?.loginType ?? "email";
+
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const [form, setForm] = useState({
-    email: "chaemin@example.com",
-    name: "김채민",
-    birth: "2002-07-14",
-    nickname: "닉채민",
-    intro: "You can make anything by writing.",
-    profile: "https://i.pravatar.cc/120?img=8",
-  });
-  const [tempForm, setTempForm] = useState(form);
+  type FormState = {
+    email: string;
+    name: string;
+    birth: string;
+    nickname: string;
+    intro: string;
+    profile: string;
+  };
+
+  const emptyForm: FormState = {
+    email: "",
+    name: "",
+    birth: "",
+    nickname: "",
+    intro: "",
+    profile: "",
+  };
+
+  const [form, setForm] = useState<FormState>(emptyForm);
+  const [tempForm, setTempForm] = useState<FormState>(emptyForm);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
-  const handleChange = (field: string, value: string) =>
+  useEffect(() => {
+    if (!user) return;
+
+    const loaded: FormState = {
+      email: user.email,
+      name: user.name,
+      birth: user.birthDate,
+      nickname: user.nickname,
+      intro: user.introduction,
+      profile: user.profilePicture,
+    };
+
+    setForm(loaded);
+    setTempForm(loaded);
+  }, [user]);
+
+  const handleChange = (field: keyof FormState, value: string) =>
     setTempForm((prev) => ({ ...prev, [field]: value }));
 
   const handleEditClick = () => setIsEditMode(true);
+
   const handleCancelClick = () => setIsCancelModalOpen(true);
+
   const handleConfirmCancel = () => {
     setTempForm(form);
     setIsEditMode(false);
     setIsCancelModalOpen(false);
   };
 
-  const handleSaveClick = () => {
-    setForm(tempForm);
-    setIsEditMode(false);
-    navigate("/mypage", { state: { toastMessage: "저장되었습니다!" } });
+  const handleSaveClick = async () => {
+    try {
+      await updateUserInfo({
+        email: tempForm.email,
+        name: tempForm.name,
+        birthDate: tempForm.birth,
+        nickname: tempForm.nickname,
+        introduction: tempForm.intro,
+        profilePicture: tempForm.profile,
+      });
+
+      const updated: User = {
+        id: user?.id ?? 0,
+        email: tempForm.email,
+        name: tempForm.name,
+        birthDate: tempForm.birth,
+        nickname: tempForm.nickname,
+        introduction: tempForm.intro,
+        profilePicture: tempForm.profile,
+        loginType: user?.loginType ?? "email",
+      };
+
+      setUser(updated);
+      setForm(tempForm);
+      setIsEditMode(false);
+
+      navigate("/mypage", { state: { toastMessage: "저장되었습니다!" } });
+    } catch {
+      showToast("수정 중 오류가 발생했습니다.", "error");
+    }
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = () => setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
     reader.readAsDataURL(file);
   };
 
-  type FormFieldKey = keyof typeof form;
+  type BaseField = {
+    title: string;
+    field: keyof FormState;
+    placeholder: string;
+    type: string;
+  };
 
-  const formFields = [
+  const BASE_FIELDS: BaseField[] = [
     { title: "이메일", field: "email", placeholder: "이메일", type: "text" },
-    ...(loginType === "email"
-      ? [
-          { title: "비밀번호", field: "password", placeholder: "......", type: "password" },
-          {
-            title: "비밀번호 확인",
-            field: "passwordConfirm",
-            placeholder: "......",
-            type: "password",
-          },
-        ]
-      : []),
     { title: "이름", field: "name", placeholder: "이름", type: "text" },
     { title: "생년월일", field: "birth", placeholder: "YYYY-MM-DD", type: "text" },
   ];
+
+  const RENDER_FIELDS = BASE_FIELDS;
 
   return (
     <div className={S.container}>
@@ -90,6 +146,7 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
           onSaveClick={handleSaveClick}
         />
       </div>
+
       <div className="h-[60px]" />
 
       {isSidebarOpen && (
@@ -149,15 +206,15 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
           </div>
         )}
 
-        {formFields.map(({ title, field, placeholder, type }) => (
+        {RENDER_FIELDS.map(({ title, field, placeholder, type }) => (
           <TextFieldSet
             key={field}
             title={title}
             placeholder={placeholder}
             type={type}
-            value={tempForm[field as FormFieldKey] ?? ""}
+            value={tempForm[field]}
             disabled={!isEditMode}
-            onChange={(e) => handleChange(field as FormFieldKey, e.target.value)}
+            onChange={(e) => handleChange(field, e.target.value)}
           />
         ))}
       </main>
@@ -170,7 +227,6 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
         onConfirm={handleConfirmCancel}
         confirmText="취소하기"
         cancelText="계속 수정하기"
-        confirmColor="bg-brand-red text-white hover:opacity-90"
       />
 
       <Modal
@@ -180,7 +236,6 @@ export default function MyPageSetting({ loginType }: MyPageSettingProps) {
         onConfirm={handleConfirmLogout}
         confirmText="로그아웃"
         cancelText="취소"
-        confirmColor="bg-brand-blue text-white hover:opacity-90"
       />
     </div>
   );
