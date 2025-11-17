@@ -2,29 +2,25 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
+
+import Header from "@src/components/Header";
 import PageHeader from "@ui/PageHeader";
 import Frame from "@ui/Frame";
 import Container from "@ui/Container";
 import PostList from "@src/components/home/PostList";
 import type { Post } from "@src/types/post";
+
 import clearIcon from "@icons/clear.svg";
 import kakaoIcon from "@icons/kakao.svg";
+
 import "@src/styles/auth.css";
 import { usePosts } from "@src/hooks/usePosts";
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
 import { useKakaoStart } from "@src/hooks/useAuth";
 
-const styles = {
-  container: {
-    wrap: "mx-auto w-full max-w-[1366px]",
-    pad: "px-4 sm:px-6 md:px-8",
-  },
-} as const;
-
 export default function HomePage() {
   const navigate = useNavigate();
 
-  // UI 기준 1페이지부터 시작 (스웨거 예시도 page=1)
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useSearchParams();
@@ -47,6 +43,7 @@ export default function HomePage() {
 
   const { isLoggedIn } = useAuthStatus();
   const isAuthed = isLoggedIn;
+
   const user = {
     username: "saeryeom",
     nickname: "닉네임",
@@ -63,21 +60,19 @@ export default function HomePage() {
   const goSettings = () => navigate("/account/profile");
   const doLogout = () => navigate("/", { replace: true });
 
-  // 🔥 여기서 page 그대로 사용 (1 기반)
-  const { data, isLoading, isError } = usePosts(page, 10); // 내부에서 getPosts(page, size) 호출한다고 가정
+  const { data, isLoading, isError } = usePosts(page, 10);
 
-  // data는 PageResult<PostSummary> 라고 가정
   const postSummaries = data?.data ?? [];
 
   const posts: Post[] = postSummaries.map((p) => {
     const nick = p.author?.nickname ?? "익명";
     const initial = nick.charAt(0).toUpperCase();
     const dateText = p.createdAt
-      ? new Date(p.createdAt).toLocaleDateString("en-US", {
+      ? `${new Date(p.createdAt).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
-        }) + "."
+        })}.`
       : "";
 
     return {
@@ -91,7 +86,6 @@ export default function HomePage() {
     };
   });
 
-  // totalPages가 0으로 올 수 있으니 UI에서는 최소 1
   const totalPages = Math.max(data?.totalPages ?? 1, 1);
 
   const { mutate: startKakaoLogin, isPending: isKakaoStarting } = useKakaoStart();
@@ -103,17 +97,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh w-full bg-white flex flex-col">
-      {/* 헤더는 1366px 컨테이너 유지 */}
-      <header className="w-full bg-white/90 backdrop-blur-[2px] border-b border-[var(--Gray96)] relative z-10">
-        <div className={clsx(styles.container.wrap, styles.container.pad)}>
-          <PageHeader
-            variant="write"
-            onClickMenu={toggleFrame}
-            onClickWrite={goWrite}
-            className="!w-full"
-          />
-        </div>
-      </header>
+      <Header />
 
       {showFrame && (
         <div className="hidden md:block z-20">
@@ -134,12 +118,20 @@ export default function HomePage() {
 
       <main className={clsx("flex-1 w-full", showFrame ? "md:ml-[240px]" : "ml-0")}>
         <Container className="py-8">
+          <PageHeader
+            variant="write"
+            onClickMenu={toggleFrame}
+            onClickWrite={goWrite}
+            className="!w-full mb-6"
+          />
+
           <section className="flex flex-col gap-6 w-full">
             {isLoading && (
               <div className="text-center text-[14px] text-[var(--Gray56)] py-8">
                 로딩 중입니다...
               </div>
             )}
+
             {isError && (
               <div className="text-center text-[14px] text-[var(--Negative)] py-8">
                 목록을 불러오지 못했어요.
