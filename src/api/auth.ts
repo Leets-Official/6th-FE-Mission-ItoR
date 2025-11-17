@@ -44,8 +44,9 @@ export interface LoginResponse {
 }
 
 export const loginRequest = async (body: LoginBody): Promise<LoginResponse> => {
-  const { data } = await api.post("/auth/login", body);
-  return data;
+  const response = await api.post("/auth/login", body);
+  // API 응답이 data 객체로 한번 더 감싸져 오는 경우가 있어, 이를 처리합니다.
+  return response.data?.data || response.data;
 };
 
 export const oauthRegisterRequest = async (body: OAuthSignUpBody) => {

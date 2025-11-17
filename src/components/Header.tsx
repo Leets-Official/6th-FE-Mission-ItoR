@@ -124,8 +124,6 @@ const Header: React.FC<HeaderProps> = ({
       {isFrameVisible && (
         <div className="fixed top-0 left-0 z-50">
           <Frame
-            username="홍길동"
-            onButtonClick={() => alert("깃로그 시작하기 클릭!")}
             onClose={toggleFrameVisibility}
           />
         </div>
