@@ -37,9 +37,13 @@ export type PostDetail = {
   mine?: boolean;
 };
 
+// 게시글 리스트 조회 (스웨거: GET /posts/all, /posts/all/token)
 export async function getPosts(page: number, size: number) {
-  const hasToken = !!localStorage.getItem("accessToken");
-  const url = hasToken ? "/posts/all/token" : "/posts/all";
+  // 🔥 지금은 토큰 유무 상관없이 공용 리스트 API만 사용
+  // const hasToken = !!localStorage.getItem("accessToken");
+  // const url = hasToken ? "/posts/all/token" : "/posts/all";
+
+  const url = "/posts/all";
 
   const { data } = await api.get<{
     code: number;
@@ -48,7 +52,7 @@ export async function getPosts(page: number, size: number) {
       posts: Array<{
         postId: string;
         title: string;
-        nickname: string;
+        nickName: string;
         profileUrl?: string;
         createdAt: string;
         commentCount: number;
@@ -66,18 +70,15 @@ export async function getPosts(page: number, size: number) {
     data?.data?.posts?.map((p) => {
       const contents = p.contents ?? [];
 
-      // contentOrder 기준으로 정렬
       const sorted = [...contents].sort(
         (a, b) => a.contentOrder - b.contentOrder
       );
 
-      // 첫 번째 TEXT 블록을 excerpt로 사용
       const firstText = sorted.find(
         (c) => (c.contentType || "").toUpperCase() === "TEXT"
       );
       const excerpt = firstText?.content;
 
-      // 첫 번째 IMAGE 블록을 썸네일로 사용 (있으면)
       const firstImage = sorted.find(
         (c) => (c.contentType || "").toUpperCase() === "IMAGE"
       );
@@ -87,7 +88,7 @@ export async function getPosts(page: number, size: number) {
         id: p.postId,
         title: p.title,
         createdAt: p.createdAt,
-        author: { nickname: p.nickname },
+        author: { nickname: p.nickName },
         thumbnailUrl,
         commentCount: p.commentCount ?? 0,
         excerpt,
@@ -101,6 +102,7 @@ export async function getPosts(page: number, size: number) {
   } as PageResult<PostSummary>;
 }
 
+// 게시글 상세 조회 (스웨거: GET /posts, /posts/token)
 export async function getPostDetail(id: string) {
   const hasToken = !!localStorage.getItem("accessToken");
   const url = hasToken ? "/posts/token" : "/posts";
@@ -118,14 +120,14 @@ export async function getPostDetail(id: string) {
       }>;
       isOwner: boolean;
       comments: Array<{
-        commentId: string;
+        commentId: number; // 스웨거: int
         content: string;
-        nickname: string;
+        nickName: string; // 스웨거 필드명: nickName
         profileUrl?: string;
         createdAt: string;
         isOwner: boolean;
       }>;
-      nickname: string;
+      nickName: string; // 작성자 닉네임
       profileUrl?: string;
       introduction?: string;
       createdAt: string;
@@ -144,18 +146,22 @@ export async function getPostDetail(id: string) {
 
   const comments =
     d.comments?.map((c) => ({
-      id: c.commentId,
+      id: String(c.commentId), // number → string 변환
       content: c.content,
       createdAt: c.createdAt,
       mine: c.isOwner,
-      author: { nickname: c.nickname, avatarUrl: c.profileUrl },
+      author: { nickname: c.nickName, avatarUrl: c.profileUrl },
     })) ?? [];
 
   return {
     id: d.postId,
     title: d.title,
     createdAt: d.createdAt,
-    author: { nickname: d.nickname, avatarUrl: d.profileUrl, introduction: d.introduction },
+    author: {
+      nickname: d.nickName,
+      avatarUrl: d.profileUrl,
+      introduction: d.introduction,
+    },
     blocks,
     comments,
     mine: d.isOwner,

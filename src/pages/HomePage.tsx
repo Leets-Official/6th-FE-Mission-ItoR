@@ -21,35 +21,12 @@ const styles = {
   },
 } as const;
 
-type ApiPostSummary = {
-  id: number;
-  title: string;
-  createdAt?: string;
-  author?: { nickname?: string };
-  thumbnailUrl?: string;
-  commentCount?: number;
-  excerpt?: string;
-};
-
-const pickArray = <T,>(d: unknown, key: string): T[] => {
-  if (typeof d === "object" && d !== null) {
-    const v = (d as Record<string, unknown>)[key];
-    if (Array.isArray(v)) return v as T[];
-  }
-  return [];
-};
-
-const pickNumber = (d: unknown, key: string): number | undefined => {
-  if (typeof d === "object" && d !== null) {
-    const v = (d as Record<string, unknown>)[key];
-    if (typeof v === "number") return v;
-  }
-  return undefined;
-};
-
 export default function HomePage() {
   const navigate = useNavigate();
+
+  // UI 기준 1페이지부터 시작 (스웨거 예시도 page=1)
   const [page, setPage] = useState(1);
+
   const [search, setSearch] = useSearchParams();
   const loginOpen = search.get("login") === "1";
   const openLogin = () => setSearch({ login: "1" }, { replace: true });
@@ -86,14 +63,13 @@ export default function HomePage() {
   const goSettings = () => navigate("/account/profile");
   const doLogout = () => navigate("/", { replace: true });
 
-  const { data, isLoading, isError } = usePosts(page, 10);
+  // 🔥 여기서 page 그대로 사용 (1 기반)
+  const { data, isLoading, isError } = usePosts(page, 10); // 내부에서 getPosts(page, size) 호출한다고 가정
 
-  const apiPostsFromContent = pickArray<ApiPostSummary>(data, "content");
-  const apiPostsFromItems = pickArray<ApiPostSummary>(data, "items");
-  const apiPosts: ApiPostSummary[] =
-    apiPostsFromContent.length ? apiPostsFromContent : apiPostsFromItems;
+  // data는 PageResult<PostSummary> 라고 가정
+  const postSummaries = data?.data ?? [];
 
-  const posts: Post[] = apiPosts.map((p) => {
+  const posts: Post[] = postSummaries.map((p) => {
     const nick = p.author?.nickname ?? "익명";
     const initial = nick.charAt(0).toUpperCase();
     const dateText = p.createdAt
@@ -103,6 +79,7 @@ export default function HomePage() {
           year: "numeric",
         }) + "."
       : "";
+
     return {
       id: p.id,
       title: p.title,
@@ -114,7 +91,8 @@ export default function HomePage() {
     };
   });
 
-  const totalPages = pickNumber(data, "totalPages") ?? 1;
+  // totalPages가 0으로 올 수 있으니 UI에서는 최소 1
+  const totalPages = Math.max(data?.totalPages ?? 1, 1);
 
   const { mutate: startKakaoLogin, isPending: isKakaoStarting } = useKakaoStart();
 
@@ -167,9 +145,17 @@ export default function HomePage() {
                 목록을 불러오지 못했어요.
               </div>
             )}
+
             {!isLoading && !isError && (
               <>
-                <PostList posts={posts} />
+                {posts.length === 0 ? (
+                  <div className="text-center text-[14px] text-[var(--Gray56)] py-8">
+                    아직 작성된 게시글이 없습니다.
+                  </div>
+                ) : (
+                  <PostList posts={posts} />
+                )}
+
                 <div className="flex items-center justify-center gap-2 pt-2">
                   <button
                     type="button"
@@ -185,7 +171,9 @@ export default function HomePage() {
                   <button
                     type="button"
                     className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    onClick={() =>
+                      setPage((p) => (p < totalPages ? p + 1 : p))
+                    }
                     disabled={page >= totalPages}
                   >
                     다음
