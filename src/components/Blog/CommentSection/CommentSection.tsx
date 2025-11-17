@@ -72,7 +72,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         {isLoggedIn ? (
           <div className={S.commentWrapper}>
             <div className={S.commentProfile}>
-              <Avatar src={user?.profileUrl ?? postAuthorProfile} size="xs" />
+              <Avatar src={user?.profilePicture ?? postAuthorProfile} size="xs" />
               <p className={S.commentNick}>{user?.nickname ?? "익명"}</p>
             </div>
             <div className={S.commentBox}>
