@@ -19,12 +19,24 @@
   justify-content: center;
   align-items: center;
   align-content: center;
-  width: 782px;
+
+  /* ★ 변경: 모바일에서 화면보다 넓어지는 문제 해결 */
+  width: 100%;
   max-width: 782px;
-  padding: 80px 0;
+
+  /* ★ 변경: 모바일 기본 패딩 조금 줄이고, 데스크탑에서 다시 키움 */
+  padding: 24px 16px;
+
   border-radius: 9px;
   background: var(--Gray7);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* ★ 추가: 데스크탑(태블릿 이상)에서는 기존 디자인 유지 */
+@media (min-width: 768px) {
+  .auth-card {
+    padding: 80px 0;
+  }
 }
 
 /* Close */

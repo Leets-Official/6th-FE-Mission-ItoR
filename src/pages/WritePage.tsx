@@ -2,7 +2,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import imageIcon from "@icons/image.svg";
-import { useCreatePost, useUpdatePost, usePostDetail } from "@src/hooks/usePosts";
+import {
+  useCreatePost,
+  useUpdatePost,
+  usePostDetail,
+} from "@src/hooks/usePosts";
 import { buildBlocks } from "@src/utils/blocks";
 import { uploadImageToPresignedUrl } from "@src/api/imageApi";
 
@@ -88,11 +92,11 @@ export default function WritePage() {
       if (fileRef.current) fileRef.current.value = "";
     } finally {
       setIsUploadingImage(false);
-      // 필요하면 로컬 URL 정리
       URL.revokeObjectURL(localUrl);
     }
   };
 
+  // textarea 자동 높이
   useEffect(() => {
     const el = bodyRef.current;
     if (!el) return;
@@ -154,9 +158,10 @@ export default function WritePage() {
   }
 
   return (
-    <div className="flex min-h-dvh w-full flex-col bg-white">
+    <div className="page-shell">
+      {/* 상단 헤더(브랜드 + 버튼) */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
-        <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
+        <div className="page-header-inner h-12 sm:h-14">
           <div className="logo-text text-[24px] leading-[1.2] text-[var(--Black)]">
             GITLOG
           </div>
@@ -183,7 +188,7 @@ export default function WritePage() {
                 !updateMut.isPending &&
                 !isUploadingImage
                   ? "border-[var(--Point,#00A1FF)] text-[var(--Point,#00A1FF)]"
-                  : "border-[var(--Gray90)] text-[var(--Gray56)] opacity-40 cursor-not-allowed"
+                  : "cursor-not-allowed border-[var(--Gray90)] text-[var(--Gray56)] opacity-40"
               }`}
             >
               {isUploadingImage ? "이미지 업로드 중..." : "게시하기"}
@@ -192,8 +197,9 @@ export default function WritePage() {
         </div>
       </header>
 
+      {/* 툴바: 사진 추가 버튼 */}
       <div className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
-        <div className="mx-auto flex w-full max-w-[1366px] items-center px-4 py-2 sm:px-6 md:px-8">
+        <div className="page-header-inner">
           <button
             type="button"
             onClick={openFile}
@@ -212,8 +218,9 @@ export default function WritePage() {
         </div>
       </div>
 
+      {/* 에디터 영역 */}
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-[688px] px-4 py-6">
+        <div className="page-inner page-main">
           <section className="mb-4">
             <input
               value={title}

@@ -19,12 +19,7 @@ function InfoItem({ label, value }: { label: string; value: string }) {
 export default function MyPage() {
   const nav = useNavigate();
 
-  const {
-    data,
-    isLoading,
-    error,
-  } = useMyInfo(); // ApiEnvelope<MyInfo> 를 반환
-
+  const { data, isLoading, error } = useMyInfo(); // ApiEnvelope<MyInfo> 를 반환
   const me = data?.data;
 
   if (isLoading) {
@@ -40,15 +35,15 @@ export default function MyPage() {
   }
 
   return (
-    <div className="flex min-h-dvh w-full flex-col bg-white">
+    <div className="page-shell">
       {/* 헤더 */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
-        <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
+        <div className="page-header-inner h-12 sm:h-14">
           <div className="flex items-center gap-3">
             <button
               type="button"
               aria-label="메뉴 열기"
-              className="inline-flex h-6 w-6 items-center justify-center"
+              className="btn-reset inline-flex h-6 w-6 items-center justify-center"
             >
               <ReorderIcon className="h-6 w-6" />
             </button>
@@ -68,41 +63,41 @@ export default function MyPage() {
 
       {/* 상단 프로필 영역 */}
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
-        <div className="mx-auto w-full max-w-[1366px]">
-          <div className="mx-auto h-16 max-w-[688px] px-4" />
+        <div className="page-header-inner">
+          <div className="mx-auto h-16 max-w-[688px] px-0" />
+        </div>
 
-          <div className="mx-auto flex w-full max-w-[688px] flex-col items-start gap-3 px-4">
-            <div className="flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-[var(--Black)]">
-              {me.profilePicture ? (
-                <img
-                  src={me.profilePicture}
-                  alt="profile"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="logo-text text-[36px] leading-[28px] text-[var(--White)]">
-                  G
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <div className="text-[24px] font-medium leading-[38.4px] text-[var(--Black)]">
-                {me.nickname}
-              </div>
-              <div className="text-[14px] font-light leading-[22.4px] text-[var(--Gray20)]">
-                {me.introduction || "소개글이 없습니다."}
-              </div>
-            </div>
+        <div className="page-inner flex flex-col items-start gap-3">
+          <div className="flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-[var(--Black)]">
+            {me.profilePicture ? (
+              <img
+                src={me.profilePicture}
+                alt="profile"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="logo-text text-[36px] leading-[28px] text-[var(--White)]">
+                G
+              </span>
+            )}
           </div>
 
-          <div className="mx-auto h-5 max-h-5 max-w-[688px]" />
+          <div className="flex flex-col gap-1">
+            <div className="text-[24px] font-medium leading-[38.4px] text-[var(--Black)]">
+              {me.nickname}
+            </div>
+            <div className="text-[14px] font-light leading-[22.4px] text-[var(--Gray20)]">
+              {me.introduction || "소개글이 없습니다."}
+            </div>
+          </div>
         </div>
+
+        <div className="page-inner h-5 max-h-5" />
       </section>
 
       {/* 상세 정보 */}
       <main className="w-full flex-1">
-        <div className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8">
+        <div className="page-inner page-main flex flex-col gap-6">
           <InfoItem label="이메일" value={me.email} />
           <InfoItem label="이름" value={me.name || "-"} />
           <InfoItem label="생년월일" value={me.birthDate || "-"} />

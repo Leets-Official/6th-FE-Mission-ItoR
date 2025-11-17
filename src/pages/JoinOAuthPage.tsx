@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useForm } from "@src/hooks/useForm";
 import { useOAuthSignUp } from "@src/hooks/useAuth";
-import { type OAuthSignUpBody } from "@src/api/auth";
+import type { RegisterResponse } from "@src/api/auth";
 
 import LabeledInput from "@src/components/ui/LabeledInput";
 import LabeledTextArea from "@src/components/ui/LabeledTextArea";
@@ -13,23 +13,15 @@ import Button from "@ui/Button/Button";
 import ReorderIcon from "@icons/reorder.svg?react";
 import imageIcon from "@icons/image.svg";
 
-// 카카오 redirect에서 받은 state 타입
+// 카카오 redirect 에서 넘겨주는 state 형태
 type OAuthState = {
-  kakaoId?: number;
   email?: string;
   nickname?: string;
-  profileUrl?: string;
   introduction?: string;
+  profileUrl?: string;
+  kakaoId?: number;
+  // 그 외 필드도 올 수 있음
   [key: string]: unknown;
-};
-
-type OAuthKakaoBody = OAuthSignUpBody & { kakaoId: number };
-
-type OAuthSignUpTokenResponse = {
-  data?: {
-    accessToken?: string;
-    refreshToken?: string;
-  };
 };
 
 export default function JoinOAuthPage() {
@@ -37,8 +29,9 @@ export default function JoinOAuthPage() {
   const location = useLocation();
   const state = (location.state as OAuthState | null) || null;
 
+  // 잘못 들어온 경우 홈으로 보냄
   useEffect(() => {
-    if (!state || typeof state.kakaoId !== "number") {
+    if (!state || !state.email || !state.nickname) {
       nav("/", { replace: true });
     }
   }, [state, nav]);
@@ -50,9 +43,9 @@ export default function JoinOAuthPage() {
 
   const { values, errors, handleChange, runValidation } = useForm({
     initialValues: {
-      email: (state?.email as string) || "",
-      nickname: (state?.nickname as string) || "",
-      intro: (state?.introduction as string) || "",
+      email: state?.email ?? "",
+      nickname: state?.nickname ?? "",
+      intro: state?.introduction ?? "",
     },
     validate: (v) => {
       const err: Record<string, string> = {};
@@ -77,44 +70,49 @@ export default function JoinOAuthPage() {
     e.preventDefault();
     const ok = runValidation();
     if (!ok) return;
-    if (!state || typeof state.kakaoId !== "number") return;
 
-    const body: OAuthKakaoBody = {
-      kakaoId: state.kakaoId,
-      email: values.email,
-      nickname: values.nickname,
-      // 더미 값
-      password: "",
-      provider: "kakao",
-      profilePicture: preview || state.profileUrl || undefined,
-      birthDate: undefined,
-      name: undefined,
-      introduction: values.intro || state.introduction || undefined,
-    };
-
-    oauthSignUp(body, {
-      onSuccess: (res) => {
-        const r = res as unknown as OAuthSignUpTokenResponse;
-        const inner = r.data ?? {};
-
-        const accessToken =
-          typeof inner.accessToken === "string" ? inner.accessToken : undefined;
-        const refreshToken =
-          typeof inner.refreshToken === "string" ? inner.refreshToken : undefined;
-
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-        }
-        if (refreshToken) {
-          localStorage.setItem("refreshToken", refreshToken);
-        }
-
-        nav("/", { replace: true });
+    oauthSignUp(
+      {
+        email: values.email,
+        nickname: values.nickname,
+        password: "", // 카카오는 실제 비밀번호 없음 (더미 값)
+        provider: "kakao",
+        profilePicture: preview || state?.profileUrl || undefined,
+        birthDate: undefined,
+        name: undefined,
+        introduction: values.intro || state?.introduction || undefined,
       },
-    });
+      {
+        // useOAuthSignUp 의 성공 타입은 RegisterResponse 로 추론됨
+        onSuccess: (res: RegisterResponse) => {
+          // 백엔드가 토큰을 같이 내려줄 수도 있으니 확장 타입으로 안전하게 파싱
+          type TokenishData = RegisterResponse["data"] & {
+            accessToken?: string;
+            refreshToken?: string;
+          };
+
+          const rawData = res?.data as TokenishData;
+
+          const accessToken =
+            typeof rawData.accessToken === "string" ? rawData.accessToken : undefined;
+          const refreshToken =
+            typeof rawData.refreshToken === "string" ? rawData.refreshToken : undefined;
+
+          if (accessToken) {
+            localStorage.setItem("accessToken", accessToken);
+          }
+          if (refreshToken) {
+            localStorage.setItem("refreshToken", refreshToken);
+          }
+
+          nav("/", { replace: true });
+        },
+      }
+    );
   };
 
-  const initial = (values.nickname?.trim()?.[0] ?? "").toUpperCase();
+  const initialNickname = values.nickname.trim();
+  const initial = initialNickname ? initialNickname[0].toUpperCase() : "";
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
@@ -139,7 +137,7 @@ export default function JoinOAuthPage() {
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8">
           <div className="mx-auto h-8 max-h-8 max-w-[688px]" />
-          <div className="mx-auto flex w/full max-w-[688px] flex-col items-start justify-center gap-3 px-4 py-3">
+          <div className="mx-auto flex w-full max-w-[688px] flex-col items-start justify-center gap-3 px-4 py-3">
             <h1 className="text-[24px] font-medium leading-[38.4px] text-[var(--Black)]">
               카카오 회원가입
             </h1>
@@ -248,6 +246,7 @@ export default function JoinOAuthPage() {
             )}
           </div>
 
+          {/* 버튼 */}
           <div className="flex gap-3 pt-2">
             <Button
               type="button"

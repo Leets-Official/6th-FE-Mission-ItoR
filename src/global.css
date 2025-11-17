@@ -73,4 +73,26 @@
   .btn-text-14 { @apply text-[14px] leading-[22.4px] font-normal tracking-[-0.07px]; }
   .btn-text-12 { @apply text-[12px] leading-[19.2px] font-normal; }
   .logo-text { @apply text-[20px] leading-[28px] font-normal; font-family: "Smooch", cursive; color: var(--Black); }
+
+  /* === 공통 레이아웃 유틸 === */
+
+  /* 전체 페이지 쉘 (배경 + 최소 높이) */
+  .page-shell {
+    @apply min-h-screen bg-[var(--White)];
+  }
+
+  /* 메인 콘텐츠 공통 폭 (모바일~데스크탑) */
+  .page-inner {
+    @apply mx-auto w-full max-w-[688px] px-4 sm:px-6 md:px-0;
+  }
+
+  /* 페이지 메인 영역 상하 여백 */
+  .page-main {
+    @apply py-6 sm:py-10;
+  }
+
+  /* 헤더 내부 컨테이너 (전역 헤더용, 글쓰기 헤더용 공통) */
+  .page-header-inner {
+    @apply mx-auto flex w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8;
+  }
 }

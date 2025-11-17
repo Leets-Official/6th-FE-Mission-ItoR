@@ -12,7 +12,7 @@ export default function KakaoRedirectPage() {
 
   useEffect(() => {
     if (!code) {
-      // Gitlog는 /login 페이지가 없으므로, 홈 + 로그인 모달
+      // code 없으면 홈 + 로그인 모달
       navigate("/?login=1", { replace: true });
       return;
     }
@@ -22,15 +22,14 @@ export default function KakaoRedirectPage() {
         const { accessToken, refreshToken, ...rest } = payload;
 
         if (accessToken) {
-          // 1) 기존 가입자 → 토큰 저장 후 홈으로 이동
+          // 기존 가입자: 토큰 저장 후 홈으로 이동
           localStorage.setItem("accessToken", accessToken);
-          if (typeof refreshToken === "string") {
+          if (refreshToken) {
             localStorage.setItem("refreshToken", refreshToken);
           }
-
           navigate("/", { replace: true });
         } else {
-          // 2) 미가입자 → OAuth 회원가입 페이지로 이동
+          // 신규 가입자: OAuth 회원가입 페이지로 state 넘기기
           navigate("/join/oauth", { state: rest, replace: true });
         }
       },
@@ -41,10 +40,10 @@ export default function KakaoRedirectPage() {
   }, [code, mutate, navigate]);
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-start bg-black pt-20 text-center text-sm text-white">
+    <div className="flex min-h-dvh items-center justify-center bg-black text-white">
       {isPending && "카카오 로그인 처리 중입니다..."}
       {isError && "로그인에 실패했습니다. 다시 시도해주세요."}
-      {!isPending && !isError && "처리 중..."}
+      {!isPending && !isError && "처리 중입니다..."}
     </div>
   );
 }
