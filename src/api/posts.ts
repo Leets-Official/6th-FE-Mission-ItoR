@@ -79,21 +79,14 @@ export const getAllPosts = async (page: number): Promise<PostListResponse> => {
 //게시글 단일 조회
 export const getPostById = async (postId: string): Promise<PostDetailResponse> => {
   const token = localStorage.getItem("accessToken");
+  const isLoggedIn = token && token !== "undefined";
 
-  // 토큰이 유효한 경우에만 /posts/token 사용 (로그인 유저)
-  if (token && token !== "undefined") {
-    const { data } = await api.get("/posts/token", {
-      params: { postId },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return data.data;
-  }
-
-  // 토큰이 없거나 유효하지 않으면 /posts 사용 (비회원 유저)
-  const { data } = await api.get("/posts", {
+  const endpoint = isLoggedIn ? "/posts/token" : "/posts";
+  const config = {
     params: { postId },
-  });
+    ...(isLoggedIn && { headers: { Authorization: `Bearer ${token}` } }),
+  };
+
+  const { data } = await api.get(endpoint, config);
   return data.data;
 };
