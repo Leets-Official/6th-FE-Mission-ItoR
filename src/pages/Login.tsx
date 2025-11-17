@@ -4,7 +4,7 @@ import Blogfind from "./Blogfind";
 import Frame7 from "@/assets/svgs/Frame7.svg?react";
 import ClearIcon from "@/assets/svgs/clear.svg?react";
 import KakaoIcon from "@/assets/svgs/kakao.svg?react";
-import api from "@/api/axiosInstance";
+import { loginRequest } from "@/api/auth";
 import { AxiosError } from "axios";
 
 const Login: React.FC = () => {
@@ -25,12 +25,10 @@ const Login: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const res = await api.post("/auth/login", {
+      const data = await loginRequest({
         email: form.email.trim(),
         password: form.password,
       });
-
-      const data = res.data?.data || res.data;
 
       // 토큰 저장
       localStorage.setItem("accessToken", data.accessToken);
