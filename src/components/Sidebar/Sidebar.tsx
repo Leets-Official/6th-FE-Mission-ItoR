@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ variant, onLogoutClick, onLoginClick 
     <aside className={baseSidebar}>
       {variant === "guest" && (
         <div className={profileSection}>
-          <Avatar size="lg" src={user?.profileUrl} />
+          <Avatar size="lg" src={user?.profilePicture} />
           <p className={intro}>You can make anything by writing</p>
           <div className={singleButtonWrapper}>
             <Button
@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ variant, onLogoutClick, onLoginClick 
         <>
           <div className={container}>
             <div onClick={handleMyPageClick} className={profileSection}>
-              <Avatar size="lg" src={user?.profileUrl} />
+              <Avatar size="lg" src={user?.profilePicture} />
               <p className={nickname}>{user?.nickname ?? "닉네임"}</p>
               <p className={intro}>{user?.introduction ?? "You can make anything by writing"}</p>
             </div>
