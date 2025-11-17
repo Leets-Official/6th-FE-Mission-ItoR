@@ -11,7 +11,7 @@ import MyPage from "../pages/MyPage";
 import AccountProfilePage from "../pages/AccountProfilePage";  
 
 import KakaoRedirectPage from "../pages/KakaoRedirectPage";
-import OAuthSignUpPage from "../pages/OAuthSignUpPage";
+import JoinOAuthPage from "../pages/JoinOAuthPage";
 
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
 
   // OAuth 관련
   { path: "/oauth/kakao/success", element: <KakaoRedirectPage /> },
-  { path: "/join/oauth", element: <OAuthSignUpPage /> },
+  { path: "/join/oauth", element: <JoinOAuthPage /> },
 
   { path: '*', element: <Navigate to="/" replace /> },
 ]);

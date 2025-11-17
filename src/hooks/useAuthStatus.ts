@@ -1,28 +1,15 @@
-// src/hooks/useAuthStatus.ts
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMyInfo } from "@src/api/user";
 
 export function useAuthStatus() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    try {
-      return !!localStorage.getItem("accessToken");
-    } catch {
-      return false;
-    }
+  const { data, isError } = useQuery({
+    queryKey: ["me"],
+    queryFn: fetchMyInfo,
+    retry: false,
   });
 
-  // localStorage 변화 감지 → 로그인 상태 자동 반영
-  useEffect(() => {
-    const handler = () => {
-      const hasToken = !!localStorage.getItem("accessToken");
-      setIsLoggedIn(hasToken);
-    };
-
-    window.addEventListener("storage", handler);
-
-    return () => {
-      window.removeEventListener("storage", handler);
-    };
-  }, []);
-
-  return { isLoggedIn, setIsLoggedIn };
+  return {
+    isLoggedIn: !!data?.data && !isError,
+    user: data?.data ?? null,
+  };
 }
