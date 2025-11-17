@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useKakaoRedirectLogin } from "@src/hooks/auth/useAuth";
 
@@ -6,6 +6,7 @@ export default function KakaoRedirectPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const code = params.get("code");
+  const hasBeenCalled = useRef(false); // Prevent double call in Strict Mode
 
   const { mutate, isPending, isError } = useKakaoRedirectLogin();
 
@@ -14,6 +15,9 @@ export default function KakaoRedirectPage() {
       navigate("/login", { replace: true });
       return;
     }
+
+    if (hasBeenCalled.current) return;
+    hasBeenCalled.current = true;
 
     mutate(code, {
       onSuccess: (payload) => {

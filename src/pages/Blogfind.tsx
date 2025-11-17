@@ -1,57 +1,105 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
-import { dummyPosts, type Post } from "@/api/Dummy";
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import Toast from "@/components/Toast";
+import { useAllPosts } from "@/hooks/usePosts";
+import { PostListItem } from "@/api/posts"; // Use aliased path
 
 const Blogfind: React.FC = () => {
-  const [posts] = useState<Post[]>(dummyPosts);
-  const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [showToast, setShowToast] = useState(false);
 
-  const handleClickPost = (post: Post) => {
-    navigate(`/post/${post.id}`);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { data, isLoading, isError } = useAllPosts(currentPage); // Destructure data directly
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  // 삭제로 전달된 state가 있을 때만 토스트 표시
   useEffect(() => {
     if (location.state?.showToast) {
       setShowToast(true);
 
       const timer = setTimeout(() => {
         setShowToast(false);
-        // state 초기화, 뒤로가기에도 다시 뜨지 않도록
         navigate(location.pathname, { replace: true, state: {} });
-      }, 5000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
   }, [location.state, location.pathname, navigate]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-gray-600">
+        게시글을 불러오는 중입니다...
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-red-500">
+        게시글을 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center w-full">
       <Header variant="write" />
 
-      {/* 삭제 토스트 */}
-      {showToast && <Toast variant="success" message="삭제가 완료되었습니다!"/>}
+      {showToast && (
+        <Toast variant="success" message="삭제가 완료되었습니다!" />
+      )}
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="cursor-pointer w-full flex justify-center"
-            onClick={() => handleClickPost(post)}
-          >
-            <PostCard post={post} />
-          </div>
-        ))}
+        {data?.posts && data.posts.length > 0 ? ( // Use data.posts
+        data.posts.map((post: PostListItem) => { // Use PostListItem
+          const imageBlock = post.contents?.find(
+            (c: { contentType: string }) => c.contentType === "IMAGE"
+          );
+          const textBlock = post.contents?.find(
+            (c: { contentType: string }) => c.contentType === "TEXT"
+          );
+
+          return (
+            <div
+              key={post.postId}
+              className="cursor-pointer w-full flex justify-center"
+              onClick={() => navigate(`/post/${post.postId}`)}
+            >
+              <PostCard
+                post={{
+                  id: post.postId,
+                  title: post.title,
+                  content: textBlock?.content || "내용이 없습니다.",
+                  author: post.nickName,
+                  createdAt: post.createdAt,
+                  commentsCount: post.commentCount,
+                  profileUrl: post.profileUrl,
+                  photoUrl: imageBlock?.content, 
+                }}
+              />
+            </div>
+          );
+        })
+      ) : (
+        <p className="text-gray-400 text-sm mt-10">게시글이 없습니다.</p>
+      )}
+
       </div>
 
       <div className="flex justify-center items-center gap-2 mt-8 mb-16">
-        <Pagination />
+        <Pagination 
+          totalPages={data?.pageMax ?? 1} // Use data.pageMax
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          />
       </div>
     </div>
   );

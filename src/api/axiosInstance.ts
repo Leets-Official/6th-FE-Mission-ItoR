@@ -12,7 +12,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// 🔹 요청 인터셉터: 매 요청마다 accessToken 추가
+// 요청 인터셉터: 매 요청마다 accessToken 추가
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -24,7 +24,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 🔹 응답 인터셉터: 401일 때 자동 토큰 재발급
+//응답 인터셉터: 401일 때 자동 토큰 재발급
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -35,8 +35,11 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // ✅ accessToken 만료 시 재발급 시도
-    if (response.status === 401 && !config._retry) {
+    const isJwtExpiredError =
+      response.status === 500 && response.data?.message?.includes("JWT expired");
+
+    // accessToken 만료 시 재발급 시도 (401 또는 500 + JWT expired 메시지)
+    if ((response.status === 401 || isJwtExpiredError) && !config._retry) {
       config._retry = true;
 
       try {
@@ -45,15 +48,20 @@ api.interceptors.response.use(
           throw new Error("refreshToken이 없습니다.");
         }
 
-        const reissueRes = await axios.post(`${BASE_URL}/auth/reissue`, null, {
-          headers: { Authorization: `Bearer ${refreshToken}` },
-          withCredentials: true,
-        });
+        const reissueRes = await axios.post(
+          `${BASE_URL}/auth/reissue`,
+          { refreshToken },
+          { withCredentials: true }
+        );
 
         const newAccess = reissueRes.data?.data?.accessToken;
         const newRefresh = reissueRes.data?.data?.refreshToken;
 
-        if (newAccess) localStorage.setItem("accessToken", newAccess);
+        if (!newAccess) {
+          throw new Error("Failed to get new access token from reissue response");
+        }
+
+        localStorage.setItem("accessToken", newAccess);
         if (newRefresh) localStorage.setItem("refreshToken", newRefresh);
 
         // 재시도
@@ -64,6 +72,7 @@ api.interceptors.response.use(
         localStorage.clear();
         alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
         window.location.href = "/login";
+        return Promise.reject(reissueError);
       }
     }
 
