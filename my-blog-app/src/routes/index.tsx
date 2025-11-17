@@ -6,6 +6,7 @@ import SignUpEmailPage from '@/pages/SignUpEmailPage'
 import SignUpKakaoPage from '@/pages/SignUpKakaoPage'
 import BlogDetailPage from '@/pages/BlogDetailPage'
 import BlogWritePage from '@/pages/BlogWritePage'
+import SettingsPage from '@/pages/SettingsPage'
 import AuthKakaoCallback from '@/pages/AuthKakaoCallback'
 import RootLayout from '@/layouts/RootLayout'
 
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
           { path: 'blog/:postId', element: <BlogDetailPage /> },
           { path: 'blogwrite', element: <BlogWritePage /> },
           { path: 'blogwrite/:postId', element: <BlogWritePage /> },
+          { path: 'settings', element: <SettingsPage /> },
 
           // 테스트 페이지들
           { path: 'test/button', element: <ButtonTestPage /> },

@@ -1,6 +1,8 @@
 import { ToastProvider } from '@/context/ToastContext'
 import { ModalProvider } from '@/context/ModalContext'
 import { AuthProvider } from '@/context/AuthContext'
+import { SidebarProvider } from '@/context/SidebarContext'
+import SidebarOverlay from '@/components/Sidebar/SidebarOverlay'
 import { Outlet } from 'react-router-dom'
 
 function App() {
@@ -8,7 +10,11 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <ModalProvider>
-          <Outlet />
+          <SidebarProvider>
+            <SidebarOverlay />
+
+            <Outlet />
+          </SidebarProvider>
         </ModalProvider>
       </ToastProvider>
     </AuthProvider>

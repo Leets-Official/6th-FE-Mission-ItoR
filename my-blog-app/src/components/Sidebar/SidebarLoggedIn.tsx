@@ -44,13 +44,18 @@ export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
 
       {/* 하단 버튼 (설정 / 로그아웃) */}
       <div className='flex justify-center gap-3 w-full'>
-        <Button intent='secondary' size='sm' className='w-[99px]'>
+        <Button
+          intent='secondary'
+          size='sm'
+          className='w-[99px]'
+          onClick={() => navigate('/settings')}
+        >
           설정
         </Button>
         <Button
-          intent='primary'
+          intent='secondary'
           size='sm'
-          className='w-[99px] bg-primary text-white hover:bg-primary-hover'
+          className='w-[99px] bg-primary hover:bg-primary-hover'
           onClick={handleLogoutClick}
         >
           로그아웃
