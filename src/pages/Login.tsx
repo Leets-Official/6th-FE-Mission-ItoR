@@ -5,6 +5,7 @@ import Frame7 from "@/assets/svgs/Frame7.svg?react";
 import ClearIcon from "@/assets/svgs/clear.svg?react";
 import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import api from "@/api/axiosInstance";
+import { AxiosError } from "axios";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -42,9 +43,13 @@ const Login: React.FC = () => {
 
       alert("로그인 성공!");
       navigate("/", { replace: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("로그인 실패:", error);
-      alert(error.response?.data?.message || "로그인 중 오류가 발생했습니다.");
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message || "로그인 중 오류가 발생했습니다.");
+      } else {
+        alert("로그인 중 알 수 없는 오류가 발생했습니다.");
+      }
     } finally {
       setIsLoading(false);
     }

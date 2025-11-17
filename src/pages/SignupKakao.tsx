@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import TextFieldSet from "@/components/TextFieldSet";
-import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import Profile from "@/assets/svgs/Profile.svg?react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import api from "@/api/axiosInstance";
+import { AxiosError } from "axios";
 
 type FormState = {
   email: string;
@@ -76,9 +76,13 @@ const SignupKakao: React.FC = () => {
 
       alert("카카오 회원가입 완료!");
       navigate("/", { replace: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("카카오 회원가입 실패:", error);
-      alert(error.response?.data?.message || "회원가입 중 오류가 발생했습니다.");
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message || "회원가입 중 오류가 발생했습니다.");
+      } else {
+        alert("회원가입 중 알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 

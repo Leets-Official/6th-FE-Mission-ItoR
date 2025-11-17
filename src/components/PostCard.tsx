@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import { type Post } from "@/api/Dummy";
-import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 
 interface PostCardProps {
   post: Post;

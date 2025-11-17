@@ -8,34 +8,6 @@ import Modal from "@/components/Modal";
 import Done from "@/assets/svgs/done.svg?react";
 import { usePostDetail, useDeletePost } from "@/hooks/usePosts";
 
-// Local type definitions as a diagnostic step
-interface Comment {
-  commentId: string;
-  content: string;
-  nickName: string;
-  profileUrl: string;
-  createdAt: string;
-  isOwner: boolean;
-}
-
-interface ContentBlock {
-  contentOrder: number;
-  content: string;
-  contentType: "TEXT" | "IMAGE";
-}
-
-interface PostDetailResponse {
-  postId: string;
-  title: string;
-  contents: ContentBlock[];
-  nickName: string;
-  profileUrl?: string;
-  introduction?: string;
-  createdAt: string;
-  isOwner: boolean;
-  comments: Comment[];
-}
-
 const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();

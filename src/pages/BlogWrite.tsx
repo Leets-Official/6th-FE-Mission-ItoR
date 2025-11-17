@@ -7,6 +7,7 @@ import Toast from "@/components/Toast";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api/axiosInstance";
 import { PostDetailResponse } from "../api/posts";
+import { AxiosError } from "axios";
 
 // 게시글 본문 타입
 interface ContentBlock {
@@ -28,7 +29,6 @@ const BlogWrite: React.FC = () => {
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState<ContentBlock[]>([]);
   const [toastVariant, setToastVariant] = useState<"success" | "warning" | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
 
   // 게시글 생성 API
@@ -46,13 +46,13 @@ const BlogWrite: React.FC = () => {
   const { mutate: createMutate } = useMutation({
     mutationFn: createPost,
     onSuccess: () => showToast("success"),
-    onError: (err: any) => alert(err.response?.data?.message || "게시글 작성 중 오류가 발생했습니다."),
+    onError: (err: AxiosError<{ message?: string }>) => alert(err.response?.data?.message || "게시글 작성 중 오류가 발생했습니다."),
   });
 
   const { mutate: updateMutate } = useMutation({
     mutationFn: updatePost,
     onSuccess: () => showToast("success"),
-    onError: (err: any) => alert(err.response?.data?.message || "게시글 수정 중 오류가 발생했습니다."),
+    onError: (err: AxiosError<{ message?: string }>) => alert(err.response?.data?.message || "게시글 수정 중 오류가 발생했습니다."),
   });
 
   // 기존 게시글 편집 모드 시 데이터 채우기
@@ -82,20 +82,6 @@ const BlogWrite: React.FC = () => {
         return [...prev, { contentOrder: prev.length + 1, content: text, contentType: "TEXT" }];
       }
     });
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const imageUrl = URL.createObjectURL(file);
-    setContents((prev) => [
-      ...prev,
-      {
-        contentOrder: prev.length + 1,
-        content: imageUrl,
-        contentType: "IMAGE",
-      },
-    ]);
   };
 
   // 게시하기 버튼

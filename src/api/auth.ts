@@ -35,7 +35,15 @@ export const signUpRequest = async (body: SignUpBody) => {
   return data;
 };
 
-export const loginRequest = async (body: LoginBody) => {
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  nickname?: string;
+  profilePicture?: string;
+  introduction?: string;
+}
+
+export const loginRequest = async (body: LoginBody): Promise<LoginResponse> => {
   const { data } = await api.post("/auth/login", body);
   return data;
 };

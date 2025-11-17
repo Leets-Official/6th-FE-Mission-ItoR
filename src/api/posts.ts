@@ -44,7 +44,7 @@ export interface PostListItem {
 }
 
 // 게시글 생성
-export const createPost = async (body: PostBody): Promise<any> => {
+export const createPost = async (body: PostBody): Promise<PostDetailResponse> => {
   const { data } = await api.post("/posts", body);
   return data.data;
 };
