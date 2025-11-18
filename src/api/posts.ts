@@ -59,8 +59,11 @@ export const updatePost = async (
 };
 
 /** 게시글 삭제 */
+
 export const deletePost = async (id: string): Promise<void> => {
-  await api.delete(`/posts/${id}`);
+
+  await api.delete("/posts", { params: { postId: id } });
+
 };
 
 export interface PostListResponse {
