@@ -1,12 +1,23 @@
-export default function NicknameEdit() {
+import { useState } from 'react'
+import TextFieldSet from '@/components/TextFiled/TextFiledSet'
+import { useUserSettings } from '@/hooks/useUserSettings'
+
+export default function NicknameEdit({ initialValue }: { initialValue: string }) {
+  const [nickname, setNickname] = useState(initialValue)
+  const { setNewNickname } = useUserSettings()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value)
+    setNewNickname(e.target.value)
+  }
+
   return (
-    <div className='w-full max-w-[688px] px-4'>
-      <label className='block text-sm text-gray-700 mb-1'>닉네임</label>
-      <input
-        type='text'
-        className='w-full border border-gray-300 rounded px-3 py-2'
-        placeholder='닉네임 입력'
-      />
-    </div>
+    <TextFieldSet
+      label='닉네임'
+      placeholder='닉네임'
+      value={nickname}
+      onChange={handleChange}
+      showHelper={false}
+    />
   )
 }
