@@ -58,9 +58,13 @@ export const useAllPosts = (page: number) => {
 
 
 /** 게시글 단일 조회 */
-export const usePostDetail = (id: string) =>
-  useQuery<PostDetailResponse>({ // Updated return type
-    queryKey: ["post", id],
+export const usePostDetail = (id: string) => {
+  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = !!token;
+
+  return useQuery<PostDetailResponse>({
+    queryKey: ["post", id, isLoggedIn], // 로그인 상태를 쿼리 키에 포함
     queryFn: () => getPostById(id),
     enabled: !!id,
   });
+};

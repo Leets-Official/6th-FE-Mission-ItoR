@@ -22,9 +22,8 @@ const BlogDetail: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
   const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
 
-  const isLoggedIn = true;
-  const loggedInUserName = localStorage.getItem("nickname") || "홍길동";
-  const isAuthor = isLoggedIn && post && loggedInUserName === post.nickName;
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+  const isAuthor = post?.isOwner ?? false;
 
   // 게시글 삭제 로직
   const handleBlogDeleteConfirm = () => {
@@ -59,7 +58,7 @@ const BlogDetail: React.FC = () => {
         </div>
       )}
 
-      <Header variant="detail" isLoggedIn={isLoggedIn} isAuthor={isAuthor} onDelete={() => setIsBlogDeleteModalOpen(true)} />
+      <Header variant="detail" isLoggedIn={isLoggedIn} isAuthor={isAuthor} post={post} onDelete={() => setIsBlogDeleteModalOpen(true)} />
 
       {/* 제목 및 정보 */}
       <div className="w-[688px] border-b border-gray-300 py-3">

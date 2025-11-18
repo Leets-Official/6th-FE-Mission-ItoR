@@ -7,8 +7,8 @@ import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
 import ReorderIcon from "@/assets/svgs/reorder.svg?react";
 import GitLog from "@/assets/svgs/Frame7.svg?react";
 import DropdownMenu from "./DropdownMenu";
-import { type Post } from "@/api/Dummy";
-import Frame from "./Frame"; // Import Frame
+import { type PostDetailResponse } from "@/api/posts";
+import Frame from "./Frame";
 
 // ✅ none 추가
 type HeaderVariant = "write" | "detail" | "edit" | "profile" | "none";
@@ -19,7 +19,7 @@ interface HeaderProps {
   onDelete?: () => void;
   isLoggedIn?: boolean;
   isAuthor?: boolean;
-  post?: Post;
+  post?: PostDetailResponse;
 }
 
 const Header: React.FC<HeaderProps> = ({

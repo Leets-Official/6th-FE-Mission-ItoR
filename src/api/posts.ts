@@ -79,12 +79,11 @@ export const getAllPosts = async (page: number): Promise<PostListResponse> => {
 //게시글 단일 조회
 export const getPostById = async (postId: string): Promise<PostDetailResponse> => {
   const token = localStorage.getItem("accessToken");
-  const isLoggedIn = token && token !== "undefined";
+  const isLoggedIn = !!token;
 
   const endpoint = isLoggedIn ? "/posts/token" : "/posts";
   const config = {
     params: { postId },
-    ...(isLoggedIn && { headers: { Authorization: `Bearer ${token}` } }),
   };
 
   const { data } = await api.get(endpoint, config);
