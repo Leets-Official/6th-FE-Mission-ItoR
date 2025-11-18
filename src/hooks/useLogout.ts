@@ -17,8 +17,9 @@ export function useLogout() {
 
   const handleConfirmLogout = () => {
     clearTokens();
-
     clearUser();
+
+    localStorage.removeItem("user-storage");
 
     setIsLogoutModalOpen(false);
 
