@@ -10,7 +10,7 @@ export default function SettingsPage() {
   return (
     <div className='min-h-screen flex flex-col items-center bg-white'>
       {/* 상단 헤더 */}
-      <PageHeader title='마이페이지' />
+      <PageHeader title='GITLOG' />
 
       {/* 상단 회색 영역 + 제목 */}
       <div className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-[#F5F5F5]'>

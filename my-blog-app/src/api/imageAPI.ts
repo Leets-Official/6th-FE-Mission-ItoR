@@ -14,7 +14,7 @@ export const uploadToS3 = async (presignedUrl: string, file: File): Promise<stri
     method: 'PUT',
     headers: {
       'Content-Type': file.type,
-    },햐
+    },
     body: file,
   })
 
