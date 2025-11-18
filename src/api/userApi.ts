@@ -1,5 +1,6 @@
 import api from "./index";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useUserStore } from "@/store/useUserStore";
 
 const authHeader = () => {
   const token = useAuthStore.getState().accessToken;
@@ -8,7 +9,12 @@ const authHeader = () => {
 
 export const fetchMyInfo = async () => {
   const res = await api.get("/users/me", { headers: authHeader() });
-  return res.data;
+  const currentUser = useUserStore.getState().user;
+
+  return {
+    ...res.data,
+    loginType: res.data.loginType ?? currentUser?.loginType ?? "email",
+  };
 };
 
 export const updateUserInfo = async (payload: {
@@ -20,5 +26,10 @@ export const updateUserInfo = async (payload: {
   introduction?: string;
 }) => {
   const res = await api.patch("/users", payload, { headers: authHeader() });
-  return res.data;
+  const currentUser = useUserStore.getState().user;
+
+  return {
+    ...res.data,
+    loginType: res.data.loginType ?? currentUser?.loginType ?? "email",
+  };
 };
