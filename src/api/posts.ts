@@ -111,6 +111,25 @@ export const createComment = async ({
 };
 
 // 댓글 삭제
+
 export const deleteComment = async (commentId: string): Promise<void> => {
+
   await api.delete(`/comments/${commentId}`);
+
+};
+
+
+
+// 내 게시글 조회
+
+export const getMyPosts = async (page: number, size: number): Promise<PostListResponse> => {
+
+  const { data } = await api.get("/posts/all/token", {
+
+    params: { size, page },
+
+  });
+
+  return data.data;
+
 };

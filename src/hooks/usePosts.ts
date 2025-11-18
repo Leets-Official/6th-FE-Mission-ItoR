@@ -6,7 +6,8 @@ import {
   deletePost,
   getPostById,
   createComment,
-  deleteComment, // Import deleteComment
+  deleteComment,
+  getMyPosts, // Import getMyPosts
   PostBody,
   CommentBody,
   PostDetailResponse,
@@ -90,6 +91,14 @@ export const useDeleteComment = (postId: string) => {
       console.error("댓글 삭제 실패:", message);
       alert(message);
     },
+  });
+};
+
+/** 내 게시글 조회 */
+export const useMyPosts = (page: number) => {
+  return useQuery<PostListResponse>({
+    queryKey: ["myPosts", page],
+    queryFn: () => getMyPosts(page, 10), // size 10 is default
   });
 };
 

@@ -1,14 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   signUpRequest,
   loginRequest,
   oauthRegisterRequest,
   reissueToken,
   kakaoRedirectLogin,
+  getUserProfile, // Import getUserProfile
   type SignUpBody,
   type LoginBody,
   type OAuthSignUpBody,
   type ReissueBody,
+  type UserProfileResponse, // Import UserProfileResponse
 } from "@src/api/auth";
 
 /** 카카오 리다이렉트 응답에서 토큰을 표준화한 타입 */
@@ -74,4 +76,10 @@ export const useKakaoRedirectLogin = () =>
       const raw = await kakaoRedirectLogin(code);
       return extractKakaoPayload(raw);
     },
+  });
+
+export const useUserProfile = () =>
+  useQuery<UserProfileResponse>({
+    queryKey: ["userProfile"],
+    queryFn: () => getUserProfile(),
   });

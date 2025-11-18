@@ -66,3 +66,18 @@ export const kakaoRedirectLogin = async (code: string) => {
 
 // registerOAuth 별칭으로 export (useRegisterOAuthMutation에서 사용)
 export { oauthRegisterRequest as registerOAuth };
+
+export interface UserProfileResponse {
+  id: number;
+  email: string;
+  nickname: string;
+  profilePicture: string;
+  name: string;
+  birthDate: string;
+  introduction: string;
+}
+
+export const getUserProfile = async (): Promise<UserProfileResponse> => {
+  const { data } = await api.get("/users/me");
+  return data.data;
+};
