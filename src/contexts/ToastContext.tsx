@@ -17,7 +17,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
 
   const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 2000); // 2초 뒤 자동 닫기
+    setTimeout(() => setToast(null), 2000);
   }, []);
 
   return (

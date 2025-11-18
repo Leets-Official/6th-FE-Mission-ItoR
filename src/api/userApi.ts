@@ -1,5 +1,4 @@
 import api from "./index";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 
 export const fetchMyInfo = async () => {

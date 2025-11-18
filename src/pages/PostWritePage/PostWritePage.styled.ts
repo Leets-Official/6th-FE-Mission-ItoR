@@ -18,9 +18,6 @@ export const sidebarOverlay = "fixed inset-0 z-40 bg-black/10";
 
 export const sidebar = "animate-slideIn fixed top-0 left-0 z-50 h-full w-64";
 
-export const toastWrapper =
-  "fixed top-[80px] left-1/2 -translate-x-1/2 z-[9999] flex justify-center pointer-events-none";
-
 export const spacer = "h-[50px]";
 
 export const imageList = "flex flex-col gap-6 mt-6 items-center";

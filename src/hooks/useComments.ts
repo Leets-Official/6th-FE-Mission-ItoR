@@ -31,7 +31,6 @@ export const useComments = (postId: string) => {
     if (!postId) return;
     setLoading(true);
     try {
-      // 로그인 여부에 따라 다른 엔드포인트 사용
       const endpoint = accessToken ? "/posts/token" : "/posts";
       const config = accessToken
         ? {

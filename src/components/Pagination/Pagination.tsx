@@ -19,7 +19,6 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className={cn(basePagination, className)}>
-      {/* 이전 화살표 */}
       <button
         className={cn(
           pageButtonBase,
@@ -31,7 +30,6 @@ const Pagination: React.FC<PaginationProps> = ({
         <NavigateBeforeIcon width={20} height={20} />
       </button>
 
-      {/* 페이지 숫자 */}
       {Array.from({ length: totalPages }, (_, idx) => {
         const page = idx + 1;
         const isActive = page === currentPage;
@@ -50,7 +48,6 @@ const Pagination: React.FC<PaginationProps> = ({
         );
       })}
 
-      {/* 다음 화살표 */}
       <button
         className={cn(
           pageButtonBase,

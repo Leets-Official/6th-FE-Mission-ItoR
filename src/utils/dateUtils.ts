@@ -5,7 +5,6 @@ export function formatPostDate(createdAt: string | Date): string {
   const diffHours = diffMs / (1000 * 60 * 60);
 
   if (diffHours >= 24) {
-    // 24시간 이상 → 날짜로
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",

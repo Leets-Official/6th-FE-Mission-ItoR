@@ -1,4 +1,3 @@
-// AppLayout.tsx
 import { useState } from "react";
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
@@ -19,7 +18,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   const handleConfirmLogout = () => {
     setIsLogoutModalOpen(false);
-    // 실제 로그아웃 로직 (예: 쿠키 삭제, 리다이렉트 등)
     console.log("로그아웃 완료");
   };
 
