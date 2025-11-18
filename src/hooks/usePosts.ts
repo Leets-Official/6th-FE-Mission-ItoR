@@ -1,11 +1,13 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAllPosts,
   createPost,
   updatePost,
   deletePost,
   getPostById,
+  createComment, // Import createComment
   PostBody,
+  CommentBody, // Import CommentBody
   PostDetailResponse,
   PostListResponse,
 } from "@/api/posts";
@@ -47,6 +49,24 @@ export const useDeletePost = () =>
       alert(message);
     },
   });
+
+/** 댓글 생성 */
+export const useCreateComment = (postId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (content: string) => createComment({ postId, content }),
+    onSuccess: () => {
+      // 댓글 생성 성공 시, 해당 게시글의 쿼리를 무효화하여 다시 불러옵니다.
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
+    },
+    onError: (error: AxiosError<{ message?: string }>) => {
+      const message =
+        error.response?.data?.message ?? "댓글 작성 중 오류가 발생했습니다.";
+      console.error("댓글 생성 실패:", message);
+      alert(message);
+    },
+  });
+};
 
 /** 게시글 전체 조회 */
 export const useAllPosts = (page: number) => {

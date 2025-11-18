@@ -6,26 +6,31 @@ import Img from "@/assets/svgs/Img.png";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import Done from "@/assets/svgs/done.svg?react";
-import { usePostDetail, useDeletePost } from "@/hooks/usePosts";
+import { usePostDetail, useDeletePost, useCreateComment } from "@/hooks/usePosts";
 
 const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // 게시글 상세 API 호출
+  // --- Data Fetching ---
   const { data: post, isLoading, isError } = usePostDetail(id!);
-
-  // 삭제 API
   const { mutate: deletePost } = useDeletePost();
+  const { mutate: createComment } = useCreateComment(id!);
 
+  // --- State ---
   const [commentText, setCommentText] = useState("");
   const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
   const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
 
+  // --- User & Auth Info ---
   const isLoggedIn = !!localStorage.getItem("accessToken");
   const isAuthor = post?.isOwner ?? false;
+  const loggedInUser = {
+    nickname: localStorage.getItem("nickname"),
+    profilePicture: localStorage.getItem("profilePicture"),
+  };
 
-  // 게시글 삭제 로직
+  // --- Event Handlers ---
   const handleBlogDeleteConfirm = () => {
     if (!id) return;
     deletePost(id, {
@@ -41,11 +46,22 @@ const BlogDetail: React.FC = () => {
     setIsBlogDeleteModalOpen(false);
   };
 
-  // 로딩 및 에러 처리
+  const handleCommentSubmit = () => {
+    if (!commentText.trim()) return;
+    createComment(commentText.trim(), {
+      onSuccess: () => {
+        setCommentText(""); // 입력창 비우기
+      },
+    });
+  };
+
+  // --- Render Logic ---
   if (isLoading)
     return <div className="flex justify-center items-center min-h-screen">게시글을 불러오는 중입니다...</div>;
   if (isError || !post)
     return <div className="flex justify-center items-center min-h-screen text-red-500">게시글을 불러오지 못했습니다.</div>;
+
+  const isCommentSubmitDisabled = !commentText.trim();
 
   return (
     <div className="flex flex-col items-center w-full relative">
@@ -89,20 +105,42 @@ const BlogDetail: React.FC = () => {
           </div>
         ))}
 
-      {/* 댓글 영역 (임시 - 실제 연동 시 /comments 연결 가능) */}
+      {/* 댓글 영역 */}
       <div className="w-[688px] mt-8">
         <p className="font-medium text-gray-900 text-[16px]">댓글 {post.comments.length}</p>
         <div className="border border-gray-300 rounded-md mt-3 p-4">
-          <textarea
-            placeholder="댓글을 입력하세요."
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            className="w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none"
-          />
-          <LineEnd />
-          <div className="flex justify-end mt-2">
-            <Button variant="grayBorder">등록</Button>
-          </div>
+          {isLoggedIn ? (
+            <>
+              <div className="flex items-center gap-2 mb-3">
+                <img
+                  src={loggedInUser.profilePicture || Img}
+                  alt="profile"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <span className="font-medium text-sm">{loggedInUser.nickname}</span>
+              </div>
+              <textarea
+                placeholder="댓글을 입력하세요."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                className="w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none"
+              />
+              <LineEnd />
+              <div className="flex justify-end mt-2">
+                <Button
+                  variant={isCommentSubmitDisabled ? "grayBorder" : "blackWhite"}
+                  onClick={handleCommentSubmit}
+                  disabled={isCommentSubmitDisabled}
+                >
+                  등록
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center text-gray-500 py-10">
+              로그인 후 댓글을 작성할 수 있습니다.
+            </div>
+          )}
         </div>
       </div>
 

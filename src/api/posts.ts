@@ -93,3 +93,19 @@ export const getPostById = async (postId: string): Promise<PostDetailResponse> =
   const { data } = await api.get(endpoint, config);
   return data.data;
 };
+
+export interface CommentBody {
+  content: string;
+}
+
+// 댓글 생성
+export const createComment = async ({
+  postId,
+  content,
+}: {
+  postId: string;
+  content: string;
+}): Promise<Comment> => {
+  const { data } = await api.post(`/comments/${postId}`, { content });
+  return data.data;
+};
