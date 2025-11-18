@@ -13,7 +13,7 @@ interface LoginResponse {
     name: string;
     birthDate: string;
     introduction: string;
-    loginType: "email" | "kakao";
+    loginType?: "email" | "kakao";
   };
 }
 
@@ -50,7 +50,7 @@ export const login = async (email: string, password: string): Promise<User> => {
       name: data.data.user.name,
       birthDate: data.data.user.birthDate,
       introduction: data.data.user.introduction,
-      loginType: data.data.user.loginType,
+      loginType: data.data.user.loginType ?? "email",
     };
   } catch (err) {
     const error = err as AxiosError<ApiErrorResponse>;
