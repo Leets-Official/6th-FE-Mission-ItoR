@@ -18,22 +18,39 @@ interface LoginResponse {
   };
 }
 
-interface KakaoSignupResponse {
-  code: 401;
-  message: string;
-  data: {
-    nickname: string;
-    picture: string;
-    kakaoId: number;
-    httpStatus: string;
-    responseMessage: string;
-  };
+interface KakaoSignupNeeded {
+  nickname: string;
+  picture: string;
+  kakaoId: number;
+  httpStatus: string;
+  responseMessage: string;
 }
+
+interface KakaoLoginSuccess {
+  id: number;
+  email: string;
+  name: string;
+  nickname: string;
+  picture?: string;
+  profilePicture?: string;
+  birthDate: string;
+  introduction?: string;
+  accessToken: string;
+  refreshToken: string;
+  loginType?: "kakao";
+}
+
+export type KakaoCallbackResponse = ApiResponse<KakaoLoginSuccess> | ApiResponse<KakaoSignupNeeded>;
 
 interface ApiErrorResponse {
   message?: string;
   code?: number;
   data?: unknown;
+}
+
+interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const login = async (email: string, password: string): Promise<User> => {
@@ -69,13 +86,21 @@ export const getKakaoLoginUrl = async (): Promise<string> => {
   return res.data.data;
 };
 
-export const handleKakaoCallback = async (code: string): Promise<User | KakaoSignupResponse> => {
+export const handleKakaoCallback = async (
+  code: string,
+): Promise<User | ApiResponse<KakaoSignupNeeded>> => {
   try {
-    const res = await api.get<ApiResponse<any>>(`/auth/kakao/redirect?code=${code}`);
+    const res = await api.get<KakaoCallbackResponse>(`/auth/kakao/redirect?code=${code}`);
 
-    if (res.data.code === 401) return res.data as KakaoSignupResponse;
+    if (res.data.code === 401) {
+      return {
+        code: 401,
+        message: res.data.message,
+        data: res.data.data as KakaoSignupNeeded,
+      };
+    }
 
-    const u = res.data.data;
+    const u = res.data.data as KakaoLoginSuccess;
 
     localStorage.setItem("accessToken", u.accessToken);
     localStorage.setItem("refreshToken", u.refreshToken);
@@ -121,11 +146,6 @@ export const registerKakao = async (userData: {
   const res = await api.post<ApiResponse<null>>("/auth/register-oauth", userData);
   return res.data;
 };
-
-interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
 
 export const reissueToken = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
