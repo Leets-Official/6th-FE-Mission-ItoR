@@ -6,7 +6,9 @@ import Img from "@/assets/svgs/Img.png";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import Done from "@/assets/svgs/done.svg?react";
-import { usePostDetail, useDeletePost, useCreateComment } from "@/hooks/usePosts";
+import DropdownMenu from "@/components/DropdownMenu"; // Import DropdownMenu
+import MoreVertIcon from "@/assets/svgs/more_vert.svg?react"; // Import MoreVertIcon
+import { usePostDetail, useDeletePost, useCreateComment, useDeleteComment } from "@/hooks/usePosts";
 
 const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,11 +18,14 @@ const BlogDetail: React.FC = () => {
   const { data: post, isLoading, isError } = usePostDetail(id!);
   const { mutate: deletePost } = useDeletePost();
   const { mutate: createComment } = useCreateComment(id!);
+  const { mutate: deleteComment } = useDeleteComment(id!); // Use deleteComment hook
 
   // --- State ---
   const [commentText, setCommentText] = useState("");
   const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
   const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
+  const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false); // State for comment delete modal
+  const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null); // State to store comment ID to delete
 
   // --- User & Auth Info ---
   const isLoggedIn = !!localStorage.getItem("accessToken");
@@ -53,6 +58,24 @@ const BlogDetail: React.FC = () => {
         setCommentText(""); // 입력창 비우기
       },
     });
+  };
+
+  const handleDeleteCommentClick = (commentId: string) => {
+    setCommentToDeleteId(commentId);
+    setIsCommentDeleteModalOpen(true);
+  };
+
+  const handleCommentDeleteConfirm = () => {
+    if (!commentToDeleteId) return;
+    deleteComment(commentToDeleteId, {
+      onSuccess: () => {
+        setToastMessage({ variant: "success", message: "댓글이 삭제되었습니다!" });
+        setTimeout(() => setToastMessage(null), 1500);
+      },
+      onError: () => alert("댓글 삭제에 실패했습니다."),
+    });
+    setIsCommentDeleteModalOpen(false);
+    setCommentToDeleteId(null);
   };
 
   // --- Render Logic ---
@@ -112,7 +135,7 @@ const BlogDetail: React.FC = () => {
           {post.comments.length > 0 && (
             <div className="mb-4">
               {post.comments.map((comment) => (
-                <div key={comment.commentId} className="rounded-md p-3 mb-2 last:mb-0">
+                <div key={comment.commentId} className="rounded-md p-3 mb-2 last:mb-0 relative">
                   <div className="flex items-center gap-2 mb-1">
                     <img
                       src={comment.profileUrl || Img}
@@ -127,6 +150,18 @@ const BlogDetail: React.FC = () => {
                     </div>
                   </div>
                   <p className="text-gray-800 text-sm ml-9">{comment.content}</p>
+                  {comment.isOwner && (
+                    <div className="absolute top-2 right-2">
+                      <DropdownMenu
+                        trigger={<MoreVertIcon className="w-5 h-5 text-gray-700 cursor-pointer" />}
+                        items={[
+                          // { label: "수정하기", onClick: () => handleEditComment(comment.commentId) }, // 수정 기능은 나중에 구현
+                          { label: "삭제하기", onClick: () => handleDeleteCommentClick(comment.commentId) },
+                        ]}
+                        position="right"
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -190,6 +225,16 @@ const BlogDetail: React.FC = () => {
           description="삭제된 게시글은 복구할 수 없습니다."
           onClose={() => setIsBlogDeleteModalOpen(false)}
           onConfirm={handleBlogDeleteConfirm}
+        />
+      )}
+
+      {/* 댓글 삭제 모달 */}
+      {isCommentDeleteModalOpen && (
+        <Modal
+          titleLine1="해당 댓글을 삭제하시겠어요?"
+          description="삭제된 댓글은 복구할 수 없습니다."
+          onClose={() => setIsCommentDeleteModalOpen(false)}
+          onConfirm={handleCommentDeleteConfirm}
         />
       )}
     </div>

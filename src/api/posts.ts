@@ -109,3 +109,8 @@ export const createComment = async ({
   const { data } = await api.post(`/comments/${postId}`, { content });
   return data.data;
 };
+
+// 댓글 삭제
+export const deleteComment = async (commentId: string): Promise<void> => {
+  await api.delete(`/comments/${commentId}`);
+};

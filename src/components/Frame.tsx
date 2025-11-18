@@ -45,6 +45,13 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.clear(); // Clear all stored tokens and user data
+    setIsLoggedIn(false); // Update local state
+    navigate("/login", { replace: true }); // Redirect to login page
+    onClose?.(); // Close the frame if it's open
+  };
+
   return (
     <div
       className={`${FRAME_WIDTH} h-screen bg-gray-50 border-r border-gray-300 flex flex-col gap-[10px] relative`}
@@ -96,6 +103,17 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
           </Button>
         )}
       </div>
+
+      {isLoggedIn && (
+        <div className={`${FRAME_WIDTH} ${FRAME_SECTION} flex-row gap-2 mt-auto mb-4`}>
+          <Button variant="grayBorder" onClick={() => navigate("/settings")} className="flex-1">
+            설정
+          </Button>
+          <Button variant="grayBorder" onClick={handleLogout} className="flex-1">
+            로그아웃
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
