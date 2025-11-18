@@ -6,7 +6,8 @@ import {
   reissueToken,
   kakaoRedirectLogin,
   getUserProfile,
-  updateUserProfile, // Import updateUserProfile
+  updateUserProfile,
+  updateProfilePicture,
   type SignUpBody,
   type LoginBody,
   type OAuthSignUpBody,
@@ -92,6 +93,17 @@ export const useUpdateUserProfile = () => {
     mutationFn: (payload: UpdateUserProfilePayload) => updateUserProfile(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+    },
+  });
+};
+
+export const useUpdateProfilePicture = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: { profilePicture: string }) => updateProfilePicture(payload),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      localStorage.setItem("profilePicture", variables.profilePicture);
     },
   });
 };

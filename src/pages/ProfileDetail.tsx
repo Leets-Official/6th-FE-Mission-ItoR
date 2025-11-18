@@ -1,30 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "@/components/Header";
 import Pagination from "@/components/Pagination";
 import ProfileIcon from "@/assets/svgs/Profile.svg?react";
 import { useNavigate } from "react-router-dom";
 import SettingIcon from "@/assets/svgs/settings.svg?react";
-import { useMyPosts } from "@/hooks/usePosts"; // Import the new hook
+import { useMyPosts, useUploadImage } from "@/hooks/usePosts";
+import { useUpdateProfilePicture } from "@/hooks/auth/useAuth";
 
 const ProfileDetail: React.FC = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch user's posts using the new hook
+  // --- Hooks ---
   const { data, isLoading, isError } = useMyPosts(page);
+  const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
+  const { mutate: updatePicture } = useUpdateProfilePicture();
 
-  // Get user info from localStorage
+  // --- User Info ---
   const loggedInUser = {
     nickname: localStorage.getItem("nickname") || "사용자",
     introduction: localStorage.getItem("introduction") || "한 줄 소개가 없습니다.",
     profilePicture: localStorage.getItem("profilePicture"),
   };
 
+  // --- Event Handlers ---
+  const handleProfileClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 1. Upload image to pre-signed URL
+    uploadImage(file, {
+      onSuccess: (url) => {
+        // 2. Update user's profile with the new image URL
+        updatePicture({ profilePicture: url }, {
+          onSuccess: () => {
+            // 3. Force reload to show the new image everywhere
+            window.location.reload();
+          },
+          onError: () => {
+            alert("프로필 사진 업데이트에 실패했습니다.");
+          }
+        });
+      },
+      onError: () => {
+        alert("이미지 업로드에 실패했습니다.");
+      }
+    });
+  };
+
+  // --- Derived State ---
   const userPosts = data?.posts.filter(post => post.nickName === loggedInUser.nickname) || [];
-  
-  // This heuristic calculates totalPages based on the *filtered* list.
-  // If the number of user's posts on this page is less than the page size,
-  // we assume this is the last page containing the user's posts.
   const pageSize = 10;
   const apiTotalPages = data?.pageMax || 1;
   const isLastPageOfUserPosts = userPosts.length < pageSize;
@@ -34,13 +64,23 @@ const ProfileDetail: React.FC = () => {
   return (
     <div className="flex flex-col w-full min-h-screen bg-white">
       <Header variant="write" />
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        hidden
+      />
 
       <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex flex-col items-center justify-center">
-        {loggedInUser.profilePicture ? (
-          <img src={loggedInUser.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
-        ) : (
-          <ProfileIcon className="w-[88px] h-[88px]" />
-        )}
+        <button onClick={handleProfileClick} className="rounded-full" disabled={isUploading}>
+          {loggedInUser.profilePicture ? (
+            <img src={loggedInUser.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
+          ) : (
+            <ProfileIcon className="w-[88px] h-[88px]" />
+          )}
+        </button>
+        {isUploading && <p className="text-sm text-gray-500 mt-2">업로드 중...</p>}
         <h1 className="text-[24px] font-semibold mt-4">{loggedInUser.nickname}</h1>
         <p className="text-[#606060] text-[14px] mt-1">
           {loggedInUser.introduction}
@@ -63,7 +103,7 @@ const ProfileDetail: React.FC = () => {
           userPosts.map((post) => (
             <div
               key={post.postId}
-              onClick={() => navigate(`/post/${post.postId}`)}
+              onClick={() => navigate(`/blog/${post.postId}`)}
               className="flex justify-between items-start w-full py-6 border-b border-gray-200 cursor-pointer"
             >
               <div className="flex flex-col max-w-[500px]">

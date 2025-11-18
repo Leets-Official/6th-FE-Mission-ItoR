@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import LineEnd from "@/assets/svgs/LineEnd.svg?react";
-import Img from "@/assets/svgs/Img.png";
+import ProfileIcon from "@/assets/svgs/Profile.svg?react"; // Import default profile icon
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import Done from "@/assets/svgs/done.svg?react";
-import DropdownMenu from "@/components/DropdownMenu"; // Import DropdownMenu
-import MoreVertIcon from "@/assets/svgs/more_vert.svg?react"; // Import MoreVertIcon
+import DropdownMenu from "@/components/DropdownMenu";
+import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
 import { usePostDetail, useDeletePost, useCreateComment, useDeleteComment } from "@/hooks/usePosts";
 
 const BlogDetail: React.FC = () => {
@@ -18,14 +18,14 @@ const BlogDetail: React.FC = () => {
   const { data: post, isLoading, isError } = usePostDetail(id!);
   const { mutate: deletePost } = useDeletePost();
   const { mutate: createComment } = useCreateComment(id!);
-  const { mutate: deleteComment } = useDeleteComment(id!); // Use deleteComment hook
+  const { mutate: deleteComment } = useDeleteComment(id!);
 
   // --- State ---
   const [commentText, setCommentText] = useState("");
   const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
   const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
-  const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false); // State for comment delete modal
-  const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null); // State to store comment ID to delete
+  const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false);
+  const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null);
 
   // --- User & Auth Info ---
   const isLoggedIn = !!localStorage.getItem("accessToken");
@@ -137,11 +137,15 @@ const BlogDetail: React.FC = () => {
               {post.comments.map((comment) => (
                 <div key={comment.commentId} className="rounded-md p-3 mb-2 last:mb-0 relative">
                   <div className="flex items-center gap-2 mb-1">
-                    <img
-                      src={comment.profileUrl || Img}
-                      alt={comment.nickName}
-                      className="w-7 h-7 rounded-full object-cover"
-                    />
+                    {comment.profileUrl ? (
+                      <img
+                        src={comment.profileUrl}
+                        alt={comment.nickName}
+                        className="w-7 h-7 rounded-full object-cover"
+                      />
+                    ) : (
+                      <ProfileIcon className="w-7 h-7" />
+                    )}
                     <div>
                       <span className="font-medium text-sm">{comment.nickName}</span>
                       <p className="text-xs text-gray-500">
@@ -155,7 +159,6 @@ const BlogDetail: React.FC = () => {
                       <DropdownMenu
                         trigger={<MoreVertIcon className="w-5 h-5 text-gray-700 cursor-pointer" />}
                         items={[
-                          // { label: "수정하기", onClick: () => handleEditComment(comment.commentId) }, // 수정 기능은 나중에 구현
                           { label: "삭제하기", onClick: () => handleDeleteCommentClick(comment.commentId) },
                         ]}
                         position="right"
@@ -171,11 +174,15 @@ const BlogDetail: React.FC = () => {
           {isLoggedIn ? (
             <>
               <div className="flex items-center gap-2 mb-3">
-                <img
-                  src={loggedInUser.profilePicture || Img}
-                  alt="profile"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
+                {loggedInUser.profilePicture ? (
+                  <img
+                    src={loggedInUser.profilePicture}
+                    alt="profile"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <ProfileIcon className="w-8 h-8" />
+                )}
                 <span className="font-medium text-sm">{loggedInUser.nickname}</span>
               </div>
               <textarea
@@ -206,11 +213,15 @@ const BlogDetail: React.FC = () => {
       {/* 작성자 프로필 */}
       <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
         <div className="flex flex-col items-start w-[688px] py-4">
-          <img
-            src={Img}
-            alt={`${post.nickName} 프로필`}
-            className="w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10"
-          />
+          {post.profileUrl ? (
+            <img
+              src={post.profileUrl}
+              alt={`${post.nickName} 프로필`}
+              className="w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10"
+            />
+          ) : (
+            <ProfileIcon className="w-[64px] h-[64px] mb-4 mt-10" />
+          )}
           <span className="text-[24px] font-medium text-gray-900">{post.nickName}</span>
           <span className="text-[14px] text-gray-700 mt-2">
             {post.introduction || "한 줄 소개가 없습니다."}

@@ -86,9 +86,8 @@ const BlogWrite: React.FC = () => {
     const payload: PostBody = { title, contents: finalContents };
 
     const options = {
-      onSuccess: (data: PostDetailResponse) => {
+      onSuccess: () => {
         showToast("저장되었습니다.");
-        setTimeout(() => navigate(`/blog/${data.postId}`), 1500);
       },
       onError: () => {
         showToast("저장에 실패했습니다.");

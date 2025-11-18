@@ -1,6 +1,18 @@
 import React from "react";
 import clsx from "clsx";
-import { type Post } from "@/api/Dummy";
+import ProfileIcon from "@/assets/svgs/Profile.svg?react";
+
+// Define the shape of the post object expected by this component
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  author: string;
+  createdAt: string;
+  commentsCount: number;
+  profileUrl?: string;
+  photoUrl?: string;
+}
 
 interface PostCardProps {
   post: Post;
@@ -32,11 +44,15 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </p>
 
           <div className="flex flex-row items-center gap-2 text-sm text-gray-500 mt-3">
-            <img
-              src={post.profileUrl}
-              alt={post.author}
-              className="w-[20px] h-[20px] rounded-full object-cover"
-            />
+            {post.profileUrl ? (
+              <img
+                src={post.profileUrl}
+                alt={post.author}
+                className="w-[20px] h-[20px] rounded-full object-cover"
+              />
+            ) : (
+              <ProfileIcon className="w-[20px] h-[20px]" />
+            )}
             <span>{post.author}</span>
             <span className="text-gray-300">·</span>
             <span>{new Date(post.createdAt).toLocaleDateString()}</span>
@@ -55,7 +71,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </div>
         )}
       </div>
-
     </div>
   );
 };

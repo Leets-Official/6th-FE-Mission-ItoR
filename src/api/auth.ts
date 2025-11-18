@@ -94,3 +94,7 @@ export interface UpdateUserProfilePayload {
 export const updateUserProfile = async (payload: UpdateUserProfilePayload): Promise<void> => {
   await api.patch("/users", payload);
 };
+
+export const updateProfilePicture = async (payload: { profilePicture: string }): Promise<void> => {
+  await api.patch("/user/picture", payload);
+};

@@ -29,6 +29,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
   const [userData, setUserData] = useState({
     nickname: "",
     introduction: "",
+    profilePicture: "",
   });
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
         nickname: localStorage.getItem("nickname") || "사용자",
         introduction:
           localStorage.getItem("introduction") || "한 줄 소개가 없습니다.",
+        profilePicture: localStorage.getItem("profilePicture") || "",
       });
     } else {
       setIsLoggedIn(false);
@@ -67,7 +69,15 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
       <div
         className={`${FRAME_WIDTH} ${SECTION_HEIGHT.header} ${FRAME_SECTION}`}
       >
-        <ProfileIcon className="w-[64px] h-[64px]" />
+        {isLoggedIn && userData.profilePicture ? (
+          <img
+            src={userData.profilePicture}
+            alt="profile"
+            className="w-[64px] h-[64px] rounded-full object-cover"
+          />
+        ) : (
+          <ProfileIcon className="w-[64px] h-[64px]" />
+        )}
       </div>
 
       <div

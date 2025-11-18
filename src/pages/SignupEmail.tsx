@@ -6,6 +6,7 @@ import Profile from "@/assets/svgs/Profile.svg?react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/axiosInstance";
 import { AxiosError } from "axios";
+import { useUploadImage } from "@/hooks/usePosts"; // Import the upload hook
 
 const SignupEmail: React.FC = () => {
   const [form, setForm] = useState({
@@ -23,6 +24,7 @@ const SignupEmail: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { mutate: uploadImage, isPending: isUploading } = useUploadImage(); // Use the hook
 
   /** 이메일 유효성 검사 */
   const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -84,14 +86,14 @@ const SignupEmail: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((prev) => ({
-        ...prev,
-        profilePicture: reader.result as string,
-      }));
-    };
-    reader.readAsDataURL(file);
+    uploadImage(file, {
+      onSuccess: (url) => {
+        setForm((prev) => ({ ...prev, profilePicture: url }));
+      },
+      onError: () => {
+        alert("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+      },
+    });
   };
 
   const fields = [
@@ -128,12 +130,13 @@ const SignupEmail: React.FC = () => {
             <Profile className="w-[88px] h-[88px]" />
           )}
           <label className="text-[12px] text-gray-600 border border-gray-300 px-3 py-1 rounded-[2px] cursor-pointer hover:bg-gray-50 transition">
-            프로필 사진 추가
+            {isUploading ? "업로드 중..." : "프로필 사진 추가"}
             <input
               type="file"
               accept="image/*"
               className="hidden"
               onChange={handleProfileChange}
+              disabled={isUploading}
             />
           </label>
         </div>
