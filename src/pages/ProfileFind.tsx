@@ -12,9 +12,9 @@ const ProfileFind: React.FC = () => {
     password: "",
     confirmPassword: "",
     name: "",
-    birthDate: "", // Changed from 'birth' to 'birthDate' to match API
+    birthDate: "",
     nickname: "",
-    introduction: "", // Changed from 'intro' to 'introduction' to match API
+    introduction: "",
   });
 
   useEffect(() => {
@@ -31,13 +31,13 @@ const ProfileFind: React.FC = () => {
     }
   }, [userProfile]);
 
-  // 반복되는 필드 정의
+  // 반복되는 필드 정의 (닉네임과 한줄소개 제외)
   const fields = [
-    { key: "email", label: "메일", placeholder: "이메일", disabled: true }, // Email is usually not editable
-    { key: "password", label: "비밀번호", placeholder: "......", type: "password" },
-    { key: "confirmPassword", label: "비밀번호 확인", placeholder: "......", type: "password" },
-    { key: "name", label: "이름", placeholder: "이름" },
-    { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD" }, // Changed key
+    { key: "email", label: "메일", placeholder: "이메일", disabled: true, type: "email" },
+    { key: "password", label: "비밀번호", placeholder: "......", type: "password", disabled: true },
+    { key: "confirmPassword", label: "비밀번호 확인", placeholder: "......", type: "password", disabled: true },
+    { key: "name", label: "이름", placeholder: "이름", disabled: true, type: "text" },
+    { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD", disabled: true, type: "text" },
   ] as const;
 
   if (isLoading) return <div className="flex justify-center items-center min-h-screen">프로필 정보를 불러오는 중입니다...</div>;
@@ -47,31 +47,36 @@ const ProfileFind: React.FC = () => {
     <div className="flex flex-col w-full min-h-screen bg-white">
       <Header variant="profile" />
 
-      <div className="w-full bg-gray-50 border-b border-gray-300 py-[60px] flex flex-col items-center justify-center">
-        {userProfile?.profilePicture ? (
-          <img src={userProfile.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
-        ) : (
-          <Profile className="w-[88px] h-[88px] mr-[700px]" />
-        )}
-        <div className="flex flex-col px-[430px]">
-          <div className="w-[688px] flex flex-col gap-1 mr-[110px] text-gray-200 mt-[10px]">
+      {/* 상단 프로필 배너 */}
+      <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex items-center justify-center">
+        <div className="flex items-start justify-center gap-8 w-[688px]">
+          {/* 프로필 사진 */}
+          {userProfile?.profilePicture ? (
+            <img src={userProfile.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
+          ) : (
+            <Profile className="w-[88px] h-[88px]" />
+          )}
+          {/* 닉네임 및 한줄소개 */}
+          <div className="flex flex-col gap-2 w-[568px]">
             <TextFieldSet
-              label=""
-              value={form.nickname} // Display nickname here
+              label="닉네임"
+              value={form.nickname}
               onChange={(value) => setForm({ ...form, nickname: value })}
+              disabled={true}
             />
-            <p className="text-gray-200 text-xs">* 20글자 이내</p>
             <TextFieldSet
-              label=""
-              value={form.introduction} // Display introduction here
+              label="한 줄 소개"
+              value={form.introduction}
               onChange={(value) => setForm({ ...form, introduction: value })}
+              disabled={true}
             />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col mt-[60px] px-[430px]">
-        <div className="w-[688px] flex flex-col gap-4">
+      {/* 하단 폼 필드 */}
+      <div className="flex flex-col mt-[60px] mx-auto w-[688px]">
+        <div className="w-full flex flex-col gap-4">
           {fields.map(({ key, label, placeholder, disabled, type }) => (
             <TextFieldSet
               key={key}

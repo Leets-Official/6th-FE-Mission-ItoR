@@ -34,7 +34,7 @@ const TextField: React.FC<TextFieldProps> = ({
 
   return (
     <input
-      type="text"
+      type={props.type || "text"}
       placeholder={placeholder}
       className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       {...props}
