@@ -83,6 +83,7 @@ export const getUserProfile = async (): Promise<UserProfileResponse> => {
 };
 
 export interface UpdateUserProfilePayload {
+  email?: string;
   nickname?: string;
   profilePicture?: string;
   birthDate?: string;

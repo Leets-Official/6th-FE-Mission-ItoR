@@ -86,8 +86,8 @@ const ProfileFind: React.FC = () => {
     { key: "email", label: "메일", placeholder: "이메일", disabled: !isEditing, type: "email" },
     { key: "password", label: "비밀번호", placeholder: "••••••••", type: "password", disabled: !isEditing },
     { key: "confirmPassword", label: "비밀번호 확인", placeholder: "••••••••", type: "password", disabled: !isEditing },
-    { key: "name", label: "이름", placeholder: "이름", disabled: !isEditing },
-    { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD", disabled: !isEditing },
+    { key: "name", label: "이름", placeholder: "이름", disabled: !isEditing, type: "text" },
+    { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD", disabled: !isEditing, type: "text" },
   ] as const;
 
   if (isLoading) return <div className="flex justify-center items-center min-h-screen">프로필 정보를 불러오는 중입니다...</div>;
