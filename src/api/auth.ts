@@ -1,6 +1,7 @@
 import api from "./index";
 import type { AxiosError } from "axios";
 import type { User } from "@/store/useUserStore";
+import type { ApiResponse } from "./index";
 
 interface LoginResponse {
   accessToken: string;
@@ -37,20 +38,25 @@ interface ApiErrorResponse {
 
 export const login = async (email: string, password: string): Promise<User> => {
   try {
-    const { data } = await api.post<{ data: LoginResponse }>("/auth/login", { email, password });
+    const res = await api.post<ApiResponse<LoginResponse>>("/auth/login", {
+      email,
+      password,
+    });
 
-    localStorage.setItem("accessToken", data.data.accessToken);
-    localStorage.setItem("refreshToken", data.data.refreshToken);
+    const { accessToken, refreshToken, user } = res.data.data;
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
     return {
-      id: data.data.user.id,
-      email: data.data.user.email,
-      nickname: data.data.user.nickname,
-      profilePicture: data.data.user.profilePicture,
-      name: data.data.user.name,
-      birthDate: data.data.user.birthDate,
-      introduction: data.data.user.introduction,
-      loginType: data.data.user.loginType ?? "email",
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      profilePicture: user.profilePicture,
+      name: user.name,
+      birthDate: user.birthDate,
+      introduction: user.introduction,
+      loginType: user.loginType ?? "email",
     };
   } catch (err) {
     const error = err as AxiosError<ApiErrorResponse>;
@@ -59,35 +65,31 @@ export const login = async (email: string, password: string): Promise<User> => {
 };
 
 export const getKakaoLoginUrl = async (): Promise<string> => {
-  const { data } = await api.get<{ data: string }>("/auth/kakao", { withCredentials: false });
-  return data.data;
+  const res = await api.get<ApiResponse<string>>("/auth/kakao");
+  return res.data.data;
 };
 
 export const handleKakaoCallback = async (code: string): Promise<User | KakaoSignupResponse> => {
   try {
-    const { data } = await api.get(`/auth/kakao/redirect?code=${code}`);
+    const res = await api.get<ApiResponse<any>>(`/auth/kakao/redirect?code=${code}`);
 
-    if (data.code === 401) return data as KakaoSignupResponse;
+    if (res.data.code === 401) return res.data as KakaoSignupResponse;
 
-    if (data.code === 200 && data.data) {
-      const { accessToken, refreshToken, ...u } = data.data;
+    const u = res.data.data;
 
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("accessToken", u.accessToken);
+    localStorage.setItem("refreshToken", u.refreshToken);
 
-      return {
-        id: u.id,
-        email: u.email,
-        nickname: u.nickname,
-        profilePicture: u.profilePicture ?? u.picture ?? "",
-        name: u.name,
-        birthDate: u.birthDate,
-        introduction: u.introduction ?? "",
-        loginType: u.loginType ?? "kakao",
-      };
-    }
-
-    throw new Error("응답 형식이 올바르지 않습니다.");
+    return {
+      id: u.id,
+      email: u.email,
+      nickname: u.nickname,
+      profilePicture: u.profilePicture ?? u.picture ?? "",
+      name: u.name,
+      birthDate: u.birthDate,
+      introduction: u.introduction ?? "",
+      loginType: u.loginType ?? "kakao",
+    };
   } catch (err) {
     const error = err as AxiosError<ApiErrorResponse>;
     throw new Error(error.response?.data?.message ?? "카카오 로그인 처리 중 오류가 발생했습니다.");
@@ -103,8 +105,8 @@ export const register = async (userData: {
   name: string;
   introduction?: string;
 }) => {
-  const { data } = await api.post("/auth/register", userData);
-  return data;
+  const res = await api.post<ApiResponse<null>>("/auth/register", userData);
+  return res.data;
 };
 
 export const registerKakao = async (userData: {
@@ -116,20 +118,25 @@ export const registerKakao = async (userData: {
   introduction?: string;
   kakaoId: number;
 }) => {
-  const { data } = await api.post("/auth/register-oauth", userData);
-  return data;
+  const res = await api.post<ApiResponse<null>>("/auth/register-oauth", userData);
+  return res.data;
 };
+
+interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
 
 export const reissueToken = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
   if (!refreshToken) throw new Error("No refresh token");
 
-  const { data } = await api.post<{ data: { accessToken: string; refreshToken: string } }>(
-    "/auth/reissue",
-    { refreshToken },
-  );
+  const res = await api.post<ApiResponse<TokenResponse>>("/auth/reissue", {
+    refreshToken,
+  });
 
-  localStorage.setItem("accessToken", data.data.accessToken);
-  localStorage.setItem("refreshToken", data.data.refreshToken);
-  return data;
+  localStorage.setItem("accessToken", res.data.data.accessToken);
+  localStorage.setItem("refreshToken", res.data.data.refreshToken);
+
+  return res.data;
 };
