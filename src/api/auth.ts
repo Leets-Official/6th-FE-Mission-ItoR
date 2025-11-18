@@ -66,13 +66,7 @@ export const login = async (email: string, password: string): Promise<User> => {
     localStorage.setItem("refreshToken", refreshToken);
 
     return {
-      id: user.id,
-      email: user.email,
-      nickname: user.nickname,
-      profilePicture: user.profilePicture,
-      name: user.name,
-      birthDate: user.birthDate,
-      introduction: user.introduction,
+      ...user,
       loginType: user.loginType ?? "email",
     };
   } catch (err) {
