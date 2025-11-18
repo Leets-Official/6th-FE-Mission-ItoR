@@ -2,8 +2,7 @@ import api from "@/api/axiosInstance";
 
 export interface PostBody {
   title: string;
-  content: string;
-  imageUrl?: string;
+  contents: ContentBlock[];
 }
 
 export interface Comment {
@@ -54,7 +53,9 @@ export const updatePost = async (
   id: string,
   body: PostBody
 ): Promise<PostDetailResponse> => {
-  const { data } = await api.patch(`/posts/${id}`, body);
+  const { data } = await api.patch("/posts", body, {
+    params: { postId: id },
+  });
   return data.data;
 };
 

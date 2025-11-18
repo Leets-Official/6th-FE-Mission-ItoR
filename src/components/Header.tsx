@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleWriteClick = () => {
-    const loggedIn = true;
+    const loggedIn = !!localStorage.getItem("accessToken");
     if (loggedIn) navigate("/write");
     else navigate("/login");
   };

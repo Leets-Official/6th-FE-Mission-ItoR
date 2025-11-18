@@ -1,26 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import AddPhoto from "@/assets/svgs/add_photo_alternate.svg?react";
 import LineEnd from "@/assets/svgs/LineEnd.svg?react";
 import Toast from "@/components/Toast";
-import { useMutation } from "@tanstack/react-query";
-import api from "@/api/axiosInstance";
-import { PostDetailResponse } from "../api/posts";
-import { AxiosError } from "axios";
-
-// 게시글 본문 타입
-interface ContentBlock {
-  contentOrder: number;
-  content: string;
-  contentType: "TEXT" | "IMAGE";
-}
-
-// 게시글 생성/수정에 공통으로 쓰일 Payload 타입
-interface PostPayload {
-  title: string;
-  contents: ContentBlock[];
-}
+import { useCreatePost, useUpdatePost } from "@/hooks/usePosts";
+import { PostDetailResponse, PostBody, ContentBlock } from "../api/posts";
 
 const BlogWrite: React.FC = () => {
   const location = useLocation();
@@ -31,38 +16,6 @@ const BlogWrite: React.FC = () => {
   const [toastVariant, setToastVariant] = useState<"success" | "warning" | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  // 게시글 생성 API
-  const createPost = async (payload: PostPayload) => {
-    const { data } = await api.post("/posts", payload);
-    return data;
-  };
-
-  // 게시글 수정 API
-  const updatePost = async ({ id, payload }: { id: string; payload: PostPayload }) => {
-    const { data } = await api.patch(`/posts/${id}`, payload);
-    return data;
-  };
-
-  const { mutate: createMutate } = useMutation({
-    mutationFn: createPost,
-    onSuccess: () => showToast("success"),
-    onError: (err: AxiosError<{ message?: string }>) => alert(err.response?.data?.message || "게시글 작성 중 오류가 발생했습니다."),
-  });
-
-  const { mutate: updateMutate } = useMutation({
-    mutationFn: updatePost,
-    onSuccess: () => showToast("success"),
-    onError: (err: AxiosError<{ message?: string }>) => alert(err.response?.data?.message || "게시글 수정 중 오류가 발생했습니다."),
-  });
-
-  // 기존 게시글 편집 모드 시 데이터 채우기
-  useEffect(() => {
-    if (post) {
-      setTitle(post.title);
-      setContents(post.contents || []);
-    }
-  }, [post]);
-
   const showToast = (variant: "success" | "warning") => {
     setToastVariant(variant);
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -71,6 +24,18 @@ const BlogWrite: React.FC = () => {
       timerRef.current = null;
     }, 3000);
   };
+
+  // 중앙 관리되는 훅 사용
+  const { mutate: createMutate } = useCreatePost();
+  const { mutate: updateMutate } = useUpdatePost();
+
+  // 기존 게시글 편집 모드 시 데이터 채우기
+  useEffect(() => {
+    if (post) {
+      setTitle(post.title);
+      setContents(post.contents || []);
+    }
+  }, [post]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -85,23 +50,27 @@ const BlogWrite: React.FC = () => {
   };
 
   // 게시하기 버튼
-  const handlePost = () => {
-    if (!title.trim() || contents.length === 0) {
+  const handlePost = useCallback(() => {
+    if (!title.trim() || contents.length === 0 || (contents.length === 1 && !contents[0].content.trim())) {
       showToast("warning");
       return;
     }
 
-    const payload: PostPayload = {
+    const payload: PostBody = {
       title,
       contents,
     };
 
     if (post) {
-      updateMutate({ id: post.postId, payload });
+      updateMutate({ id: post.postId, body: payload }, {
+        onSuccess: () => showToast("success"),
+      });
     } else {
-      createMutate(payload);
+      createMutate(payload, {
+        onSuccess: () => showToast("success"),
+      });
     }
-  };
+  }, [title, contents, post, createMutate, updateMutate]);
 
   const toastMessage =
     toastVariant === "success"
