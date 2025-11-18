@@ -10,13 +10,14 @@ import DropdownMenu from "./DropdownMenu";
 import { type PostDetailResponse } from "@/api/posts";
 import Frame from "./Frame";
 
-// ✅ none 추가
-type HeaderVariant = "write" | "detail" | "edit" | "profile" | "none";
+// ✅ none, profile-edit 추가
+type HeaderVariant = "write" | "detail" | "edit" | "profile" | "profile-edit" | "none";
 
 interface HeaderProps {
   variant: HeaderVariant;
   onPost?: () => void;
   onDelete?: () => void;
+  onCancel?: () => void; // onCancel prop 추가
   isLoggedIn?: boolean;
   isAuthor?: boolean;
   post?: PostDetailResponse;
@@ -26,6 +27,7 @@ const Header: React.FC<HeaderProps> = ({
   variant,
   onPost,
   onDelete,
+  onCancel, // onCancel prop 받기
   isLoggedIn = false,
   isAuthor = false,
   post,
@@ -111,6 +113,25 @@ const Header: React.FC<HeaderProps> = ({
                   onClick={onPost}
                 >
                   수정하기
+                </button>
+              </div>
+            )}
+
+            {variant === "profile-edit" && (
+              <div className="flex items-center gap-6">
+                <button
+                  type="button"
+                  className="text-[14px] text-gray-500"
+                  onClick={onCancel}
+                >
+                  취소하기
+                </button>
+                <button
+                  type="button"
+                  className="text-[14px] text-black"
+                  onClick={onPost}
+                >
+                  저장하기
                 </button>
               </div>
             )}

@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "./TextField";
+import clsx from "clsx";
 
 interface TextFieldSetProps {
   label: string;
@@ -42,7 +43,10 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
         size={size}
         placeholder={placeholder}
         disabled={disabled}
-        className="text-[#909090] placeholder-[#B0B0B0]"
+        className={clsx(
+          "placeholder-[#B0B0B0]",
+          disabled ? "text-[#C8C8C8]" : "text-[#000000]"
+        )}
       />
     </div>
   );

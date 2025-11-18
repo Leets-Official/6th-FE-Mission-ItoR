@@ -81,3 +81,15 @@ export const getUserProfile = async (): Promise<UserProfileResponse> => {
   const { data } = await api.get("/users/me");
   return data.data;
 };
+
+export interface UpdateUserProfilePayload {
+  nickname?: string;
+  profilePicture?: string;
+  birthDate?: string;
+  name?: string;
+  introduction?: string;
+}
+
+export const updateUserProfile = async (payload: UpdateUserProfilePayload): Promise<void> => {
+  await api.patch("/users", payload);
+};
