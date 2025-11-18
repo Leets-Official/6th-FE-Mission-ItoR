@@ -53,11 +53,14 @@ export const useDeletePost = () =>
 /** 댓글 생성 */
 export const useCreateComment = (postId: string) => {
   const queryClient = useQueryClient();
+  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = !!token;
+
   return useMutation({
     mutationFn: (content: string) => createComment({ postId, content }),
     onSuccess: () => {
-      // 댓글 생성 성공 시, 해당 게시글의 쿼리를 무효화하여 다시 불러옵니다.
-      queryClient.invalidateQueries({ queryKey: ["post", postId] });
+      // 댓글 생성 성공 시, 해당 게시글의 쿼리를 정확한 키로 무효화하여 다시 불러옵니다.
+      queryClient.invalidateQueries({ queryKey: ["post", postId, isLoggedIn] });
     },
     onError: (error: AxiosError<{ message?: string }>) => {
       const message =

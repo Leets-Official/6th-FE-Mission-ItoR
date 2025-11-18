@@ -108,7 +108,31 @@ const BlogDetail: React.FC = () => {
       {/* 댓글 영역 */}
       <div className="w-[688px] mt-8">
         <p className="font-medium text-gray-900 text-[16px]">댓글 {post.comments.length}</p>
+        {/* 댓글 목록 렌더링 */}
+          {post.comments.length > 0 && (
+            <div className="mb-4">
+              {post.comments.map((comment) => (
+                <div key={comment.commentId} className="rounded-md p-3 mb-2 last:mb-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <img
+                      src={comment.profileUrl || Img}
+                      alt={comment.nickName}
+                      className="w-7 h-7 rounded-full object-cover"
+                    />
+                    <div>
+                      <span className="font-medium text-sm">{comment.nickName}</span>
+                      <p className="text-xs text-gray-500">
+                        {new Date(comment.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-gray-800 text-sm ml-9">{comment.content}</p>
+                </div>
+              ))}
+            </div>
+          )}
         <div className="border border-gray-300 rounded-md mt-3 p-4">
+          {/* 댓글 입력 섹션 */}
           {isLoggedIn ? (
             <>
               <div className="flex items-center gap-2 mb-3">
@@ -123,7 +147,7 @@ const BlogDetail: React.FC = () => {
                 placeholder="댓글을 입력하세요."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none"
+                className="w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none border border-gray-300"
               />
               <LineEnd />
               <div className="flex justify-end mt-2">
