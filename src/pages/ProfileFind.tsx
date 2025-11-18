@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import TextFieldSet from "@/components/TextFieldSet";
 import Profile from "@/assets/svgs/Profile.svg?react";
 import Toast from "@/components/Toast";
 import { useUserProfile, useUpdateUserProfile } from "@/hooks/auth/useAuth";
+import { useUploadImage } from "@/hooks/usePosts";
 import { UpdateUserProfilePayload } from "@/api/auth";
 
 const ProfileFind: React.FC = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // --- Hooks ---
   const { data: userProfile, isLoading, isError } = useUserProfile();
   const { mutate: updateUser } = useUpdateUserProfile();
+  const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
 
+  // --- State ---
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -21,6 +27,7 @@ const ProfileFind: React.FC = () => {
     birthDate: "",
     nickname: "",
     introduction: "",
+    profilePicture: "", // Add profilePicture to form state
   });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -34,15 +41,17 @@ const ProfileFind: React.FC = () => {
         birthDate: userProfile.birthDate || "",
         nickname: userProfile.nickname || "",
         introduction: userProfile.introduction || "",
+        profilePicture: userProfile.profilePicture || "", // Initialize with user data
       });
     }
   }, [userProfile]);
 
+  // --- Event Handlers ---
   const handleEditClick = () => setIsEditing(true);
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    // Reset form to original data
+    // Reset form to original data, including profile picture
     if (userProfile) {
       setForm({
         ...form,
@@ -50,6 +59,7 @@ const ProfileFind: React.FC = () => {
         birthDate: userProfile.birthDate || "",
         nickname: userProfile.nickname || "",
         introduction: userProfile.introduction || "",
+        profilePicture: userProfile.profilePicture || "",
         password: "",
         confirmPassword: "",
       });
@@ -63,20 +73,15 @@ const ProfileFind: React.FC = () => {
       nickname: form.nickname,
       birthDate: form.birthDate,
       introduction: form.introduction,
+      profilePicture: form.profilePicture, // Include profile picture in the payload
     };
-
-    console.log("--- 프로필 업데이트 시도 ---");
-    console.log("전송될 데이터 (payload):", payload);
 
     updateUser(payload, {
       onSuccess: () => {
-        console.log("--- 업데이트 성공 (onSuccess 콜백 실행) ---");
-        
-        // 로컬 스토리지 업데이트
+        // Update localStorage with all new values
         localStorage.setItem("nickname", form.nickname);
         localStorage.setItem("introduction", form.introduction);
-        console.log("localStorage에 새 닉네임 저장 시도:", form.nickname);
-        console.log("저장 후 localStorage에서 읽은 닉네임:", localStorage.getItem("nickname"));
+        localStorage.setItem("profilePicture", form.profilePicture);
 
         setToastMessage("저장되었습니다.");
         setTimeout(() => {
@@ -84,12 +89,33 @@ const ProfileFind: React.FC = () => {
         }, 1500);
       },
       onError: (error) => {
-        console.error("--- 업데이트 실패 (onError 콜백 실행) ---", error);
         alert(error.message || "프로필 업데이트에 실패했습니다.");
       },
     });
   };
 
+  const handleProfileClick = () => {
+    if (isEditing) {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Only upload the image and update the local form state for preview
+    uploadImage(file, {
+      onSuccess: (url) => {
+        setForm(prev => ({ ...prev, profilePicture: url }));
+      },
+      onError: () => {
+        alert("이미지 업로드에 실패했습니다.");
+      },
+    });
+  };
+
+  // --- Render Data ---
   const fields = [
     { key: "email", label: "메일", placeholder: "이메일", disabled: !isEditing, type: "email" },
     { key: "password", label: "비밀번호", placeholder: "••••••••", type: "password", disabled: !isEditing },
@@ -108,18 +134,26 @@ const ProfileFind: React.FC = () => {
       ) : (
         <Header variant="profile" onPost={handleEditClick} />
       )}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        hidden
+      />
 
       {toastMessage && <Toast variant="success" message={toastMessage} />}
 
-      {/* 상단 프로필 배너 */}
       <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex flex-col items-center justify-center">
-        {/* 프로필 사진 */}
-        {userProfile?.profilePicture ? (
-          <img src={userProfile.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
-        ) : (
-          <Profile className="w-[88px] h-[88px]" />
-        )}
-        {/* 닉네임 및 한줄소개 */}
+        <button onClick={handleProfileClick} className="rounded-full disabled:cursor-not-allowed" disabled={!isEditing || isUploading}>
+          {form.profilePicture ? (
+            <img src={form.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
+          ) : (
+            <Profile className="w-[88px] h-[88px]" />
+          )}
+        </button>
+        {isUploading && <p className="text-sm text-gray-500 mt-2">업로드 중...</p>}
+        
         <div className="flex flex-col gap-2 w-[568px] mt-4">
           <TextFieldSet
             label="닉네임"
@@ -136,7 +170,6 @@ const ProfileFind: React.FC = () => {
         </div>
       </div>
 
-      {/* 하단 폼 필드 */}
       <div className="flex flex-col mt-[60px] mx-auto w-[688px] mb-20">
         <div className="w-full flex flex-col gap-4">
           {fields.map(({ key, label, placeholder, disabled, type }) => (

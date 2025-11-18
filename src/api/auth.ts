@@ -96,5 +96,5 @@ export const updateUserProfile = async (payload: UpdateUserProfilePayload): Prom
 };
 
 export const updateProfilePicture = async (payload: { profilePicture: string }): Promise<void> => {
-  await api.patch("/user/picture", payload);
+  await api.patch("/users/picture", payload);
 };
