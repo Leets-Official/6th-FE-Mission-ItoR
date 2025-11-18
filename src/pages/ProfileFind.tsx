@@ -57,26 +57,34 @@ const ProfileFind: React.FC = () => {
   };
 
   const handleSaveClick = () => {
-    // TODO: Add password confirmation logic if password is changed
     const payload: UpdateUserProfilePayload = {
       email: form.email,
       name: form.name,
       nickname: form.nickname,
       birthDate: form.birthDate,
       introduction: form.introduction,
-      // profilePicture: form.profilePicture, // TODO: Add profile picture upload logic
     };
+
+    console.log("--- 프로필 업데이트 시도 ---");
+    console.log("전송될 데이터 (payload):", payload);
 
     updateUser(payload, {
       onSuccess: () => {
+        console.log("--- 업데이트 성공 (onSuccess 콜백 실행) ---");
+        
+        // 로컬 스토리지 업데이트
+        localStorage.setItem("nickname", form.nickname);
+        localStorage.setItem("introduction", form.introduction);
+        console.log("localStorage에 새 닉네임 저장 시도:", form.nickname);
+        console.log("저장 후 localStorage에서 읽은 닉네임:", localStorage.getItem("nickname"));
+
         setToastMessage("저장되었습니다.");
         setTimeout(() => {
-          setToastMessage(null);
-          setIsEditing(false);
-          navigate("/profiledetail");
+          window.location.href = "/profiledetail";
         }, 1500);
       },
       onError: (error) => {
+        console.error("--- 업데이트 실패 (onError 콜백 실행) ---", error);
         alert(error.message || "프로필 업데이트에 실패했습니다.");
       },
     });
