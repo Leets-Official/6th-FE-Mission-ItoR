@@ -1,5 +1,6 @@
 // src/api/auth.ts
 import api from "@/api/axiosInstance";
+import axios from "axios";
 
 export interface SignUpBody {
   email: string;
@@ -60,7 +61,8 @@ export const reissueToken = async (body: ReissueBody) => {
 };
 
 export const kakaoRedirectLogin = async (code: string) => {
-  const { data } = await api.get("/auth/kakao/redirect", { params: { code } });
+  // Interceptor를 피하기 위해 clean axios 사용
+  const { data } = await axios.get("https://blog.leets.land/auth/kakao/redirect", { params: { code } });
   return data;
 };
 

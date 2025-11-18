@@ -57,8 +57,11 @@ const Login: React.FC = () => {
 
   /** 카카오 로그인 요청 */
   const handleKakaoLogin = () => {
-  window.location.href = "https://blog.leets.land/auth/kakao";
-};
+    const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+    const KAKAO_REDIRECT_URI = "https://blog.leets.land/auth/kakao/redirect";
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
   return (
     <div className="relative w-full min-h-screen">

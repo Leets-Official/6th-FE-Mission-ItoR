@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import {
   signUpRequest,
   loginRequest,
@@ -13,7 +14,7 @@ import {
   type OAuthSignUpBody,
   type ReissueBody,
   type UserProfileResponse,
-  type UpdateUserProfilePayload, // Import UpdateUserProfilePayload
+  type UpdateUserProfilePayload,
 } from "@src/api/auth";
 
 /** 카카오 리다이렉트 응답에서 토큰을 표준화한 타입 */
@@ -76,8 +77,18 @@ export const useKakaoStart = () =>
 export const useKakaoRedirectLogin = () =>
   useMutation<KakaoTokenPayload, Error, string>({
     mutationFn: async (code: string) => {
-      const raw = await kakaoRedirectLogin(code);
-      return extractKakaoPayload(raw);
+      try {
+        const raw = await kakaoRedirectLogin(code);
+        return extractKakaoPayload(raw);
+      } catch (error) {
+        if (error instanceof AxiosError && error.response?.status === 401) {
+          // 401은 신규 유저를 의미하므로, 에러가 아닌 성공 케이스로 처리
+          // 에러 응답 본문을 payload로 사용
+          return extractKakaoPayload(error.response.data);
+        }
+        // 그 외 다른 에러는 그대로 던져서 onError 콜백을 트리거
+        throw error;
+      }
     },
   });
 
