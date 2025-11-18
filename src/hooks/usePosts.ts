@@ -7,7 +7,9 @@ import {
   getPostById,
   createComment,
   deleteComment,
-  getMyPosts, // Import getMyPosts
+  getMyPosts,
+  getPreSignedUrl,
+  uploadImageToPreSignedUrl,
   PostBody,
   CommentBody,
   PostDetailResponse,
@@ -120,5 +122,28 @@ export const usePostDetail = (id: string) => {
     queryKey: ["post", id, isLoggedIn], // 로그인 상태를 쿼리 키에 포함
     queryFn: () => getPostById(id),
     enabled: !!id,
+  });
+};
+
+/** 이미지 업로드 */
+export const useUploadImage = () => {
+  return useMutation({
+    mutationFn: async (file: File) => {
+      // 1. Get pre-signed URL from our backend
+      const preSignedUrl = await getPreSignedUrl(file.name);
+
+      // 2. Upload the file to the pre-signed URL
+      await uploadImageToPreSignedUrl(preSignedUrl, file);
+
+      // 3. Return the clean URL (without query parameters)
+      const cleanUrl = preSignedUrl.split("?")[0];
+      return cleanUrl;
+    },
+    onError: (error: AxiosError<{ message?: string }>) => {
+      const message =
+        error.response?.data?.message ?? "이미지 업로드 중 오류가 발생했습니다.";
+      console.error("이미지 업로드 실패:", message);
+      alert(message);
+    },
   });
 };

@@ -1,4 +1,5 @@
 import api from "@/api/axiosInstance";
+import axios from "axios";
 
 export interface PostBody {
   title: string;
@@ -132,4 +133,24 @@ export const getMyPosts = async (page: number, size: number): Promise<PostListRe
 
   return data.data;
 
+};
+
+// --- Image Upload Functions ---
+
+export const getPreSignedUrl = async (fileName: string): Promise<string> => {
+  const response = await api.get("/images/presigned-url", {
+    params: { fileName },
+  });
+  return response.data.data;
+};
+
+export const uploadImageToPreSignedUrl = async (
+  preSignedUrl: string,
+  file: File
+): Promise<void> => {
+  await axios.put(preSignedUrl, file, {
+    headers: {
+      "Content-Type": file.type,
+    },
+  });
 };
