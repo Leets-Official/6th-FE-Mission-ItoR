@@ -36,14 +36,17 @@ export default function MyPage() {
       try {
         const res = await fetchMyInfo();
         if (res.code === 200 && res.data) {
-          setUser(res.data);
+          setUser({
+            ...res.data,
+            loginType: user?.loginType ?? res.data.loginType ?? "email",
+          });
         }
       } catch {
-        showToast("", "error");
+        showToast("사용자 정보를 불러오지 못했습니다.", "error");
       }
     };
     load();
-  }, [setUser, showToast]);
+  }, [setUser, showToast, user?.loginType]);
 
   useEffect(() => {
     if (location.state?.toastMessage) {
