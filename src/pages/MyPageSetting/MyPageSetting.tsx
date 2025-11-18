@@ -80,7 +80,7 @@ export default function MyPageSetting() {
 
   const handleSaveClick = async () => {
     try {
-      await updateUserInfo({
+      const res = await updateUserInfo({
         email: tempForm.email,
         name: tempForm.name,
         birthDate: tempForm.birth,
@@ -89,26 +89,35 @@ export default function MyPageSetting() {
         profilePicture: tempForm.profile,
       });
 
-      const updated: User = {
-        id: user?.id ?? 0,
-        email: tempForm.email,
-        name: tempForm.name,
-        birthDate: tempForm.birth,
-        nickname: tempForm.nickname,
-        introduction: tempForm.intro,
-        profilePicture: tempForm.profile,
-        loginType: user?.loginType ?? "email",
+      if (res.code !== 200 || !res.data) {
+        showToast("수정에 실패했습니다.", "error");
+        return;
+      }
+
+      const serverUser = res.data;
+
+      const updatedUser: User = {
+        ...serverUser,
+        loginType: user?.loginType ?? serverUser.loginType ?? "email",
       };
 
-      setUser(updated);
-      setForm(tempForm);
-      setIsEditMode(false);
+      setUser(updatedUser);
+      setForm({
+        email: updatedUser.email,
+        name: updatedUser.name,
+        birth: updatedUser.birthDate,
+        nickname: updatedUser.nickname,
+        intro: updatedUser.introduction,
+        profile: updatedUser.profilePicture,
+      });
 
+      setIsEditMode(false);
       navigate("/mypage", { state: { toastMessage: "저장되었습니다!" } });
     } catch {
       showToast("수정 중 오류가 발생했습니다.", "error");
     }
   };
+
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
