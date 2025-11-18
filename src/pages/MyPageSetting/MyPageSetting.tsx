@@ -109,7 +109,6 @@ export default function MyPageSetting() {
       showToast("수정 중 오류가 발생했습니다.", "error");
     }
   };
-
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
