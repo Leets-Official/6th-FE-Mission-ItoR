@@ -1,3 +1,5 @@
+import { RouterProvider } from 'react-router-dom'
+import router from './routes'
 import { ToastProvider } from '@/context/ToastContext'
 import { ModalProvider } from '@/context/ModalContext'
 import { AuthProvider } from '@/context/AuthContext'

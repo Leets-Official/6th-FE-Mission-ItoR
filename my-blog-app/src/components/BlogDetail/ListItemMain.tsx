@@ -137,6 +137,7 @@ export default function ListItemMain({ post }: { post: Post }) {
               <ChatIcon />
             </button>
 
+            {/* 드롭다운 메뉴 (게시글용) */}
             <div className='relative'>
               <button onClick={() => setOpenMenuIndex(openMenuIndex === -1 ? null : -1)}>
                 <MoreIcon />
