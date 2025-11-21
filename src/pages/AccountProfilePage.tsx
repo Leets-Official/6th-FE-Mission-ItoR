@@ -13,7 +13,7 @@ import LabeledInput from "../components/ui/LabeledInput";
 import LabeledTextArea from "../components/ui/LabeledTextArea";
 
 import { useMyInfo, useUpdateUser } from "@src/hooks/useUser";
-import api from "../api/client"; // presigned URL 요청용 axios 인스턴스
+import { uploadImageToPresignedUrl } from "@src/api/imageApi"; 
 
 type FormState = {
   nickname: string;
@@ -32,40 +32,6 @@ const EMPTY_FORM: FormState = {
   birth: "",
   preview: null,
 };
-
-// 1) presigned URL 요청: GET /images/presigned-url?fileName=...
-// - 서버 응답: { code, message, data: string }  (data = presigned PUT URL)
-async function requestProfilePresignedUrl(fileName: string): Promise<string> {
-  const res = await api.get<{
-    code: number;
-    message: string;
-    data: string;
-  }>("/images/presigned-url", {
-    params: { fileName },
-  });
-
-  return res.data.data; // presigned PUT URL
-}
-
-// 2) S3에 실제 이미지 업로드 (PUT)
-async function uploadFileToS3(uploadUrl: string, file: File) {
-  const res = await fetch(uploadUrl, {
-    method: "PUT",
-    body: file,
-    headers: {
-      "Content-Type": file.type,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("S3 업로드에 실패했습니다.");
-  }
-}
-
-// 3) presigned PUT URL → 최종 이미지 URL
-function extractFileUrlFromPresigned(presignedUrl: string): string {
-  return presignedUrl.split("?")[0];
-}
 
 export default function AccountProfilePage() {
   const nav = useNavigate();
@@ -137,6 +103,7 @@ export default function AccountProfilePage() {
 
   const onSave = useCallback(async () => {
     if (!form.email || !form.nickname) {
+      // 최소한의 클라이언트 검증
       alert("이메일과 닉네임은 필수입니다.");
       return;
     }
@@ -149,13 +116,9 @@ export default function AccountProfilePage() {
 
       // 새 파일이 선택된 경우에만 presigned 업로드 수행
       if (selectedFile) {
-        const presignedUrl = await requestProfilePresignedUrl(
-          selectedFile.name
-        );
-
-        await uploadFileToS3(presignedUrl, selectedFile);
-
-        profilePictureUrlToSave = extractFileUrlFromPresigned(presignedUrl);
+        // 공통 imageApi 사용
+        const uploadedUrl = await uploadImageToPresignedUrl(selectedFile);
+        profilePictureUrlToSave = uploadedUrl;
       }
 
       updateUser(
@@ -169,7 +132,7 @@ export default function AccountProfilePage() {
         },
         {
           onSuccess: () => {
-            nav("/me");
+            nav("/me"); // 조회 페이지로 이동
           },
           onError: () => {
             alert("정보 수정에 실패했습니다. 다시 시도해주세요.");
