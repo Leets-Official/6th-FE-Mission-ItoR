@@ -10,6 +10,11 @@ import Button from "@ui/Button/Button";
 
 import imageIcon from "@icons/image.svg";
 import { uploadImageToPresignedUrl } from "@src/api/imageApi";
+import {
+  validateEmail,
+  validatePassword,
+  validateNickname,
+} from "@src/utils/validators";
 
 type Props = {
   onSuccess: () => void;
@@ -33,13 +38,20 @@ export default function SignUpForm({ onSuccess }: Props) {
     },
     validate: (v) => {
       const err: Record<string, string> = {};
-      if (!v.email.trim()) err.email = "이메일을 입력해주세요.";
-      if (!v.password.trim()) err.password = "비밀번호를 입력해주세요.";
-      else if (v.password.length < 6)
-        err.password = "비밀번호는 6자 이상이어야 합니다.";
-      if (v.password2.trim() !== v.password.trim())
+
+      const emailError = validateEmail(v.email);
+      if (emailError) err.email = emailError;
+
+      const passwordError = validatePassword(v.password);
+      if (passwordError) err.password = passwordError;
+
+      const nicknameError = validateNickname(v.nickname);
+      if (nicknameError) err.nickname = nicknameError;
+
+      if (v.password2.trim() !== v.password.trim()) {
         err.password2 = "비밀번호가 일치하지 않습니다.";
-      if (!v.nickname.trim()) err.nickname = "닉네임을 입력해주세요.";
+      }
+
       return err;
     },
   });
@@ -167,7 +179,6 @@ export default function SignUpForm({ onSuccess }: Props) {
       className="mx-auto flex w/full max-w-[688px] flex-col gap-6 px-4 py-8"
       onSubmit={handleSubmit}
     >
-      {/* 프로필 이미지 */}
       <div className="flex flex-col items-start gap-3">
         <span className="text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray56)]">
           프로필 사진
@@ -209,7 +220,6 @@ export default function SignUpForm({ onSuccess }: Props) {
         </div>
       </div>
 
-      {/* 입력 필드들 */}
       <div className="flex flex-col gap-4">
         {inputFields.map((f) => (
           <div key={f.name} className="flex flex-col gap-2">
@@ -249,7 +259,6 @@ export default function SignUpForm({ onSuccess }: Props) {
         )}
       </div>
 
-      {/* 버튼 영역 */}
       <div className="flex gap-3 pt-2">
         <Button
           type="button"

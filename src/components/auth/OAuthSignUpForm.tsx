@@ -11,6 +11,7 @@ import Button from "@ui/Button/Button";
 
 import imageIcon from "@icons/image.svg";
 import { saveTokens } from "@src/lib/authStorage";
+import { validateEmail, validateNickname } from "@src/utils/validators";
 
 type OAuthStateLike = {
   email?: string;
@@ -40,8 +41,12 @@ export default function OAuthSignUpForm({ state, onSuccess }: Props) {
     },
     validate: (v) => {
       const err: Record<string, string> = {};
-      if (!v.email.trim()) err.email = "이메일 정보가 없습니다.";
-      if (!v.nickname.trim()) err.nickname = "닉네임을 입력해주세요.";
+      const emailError = validateEmail(v.email);
+      if (emailError) err.email = emailError;
+
+      const nicknameError = validateNickname(v.nickname);
+      if (nicknameError) err.nickname = nicknameError;
+
       return err;
     },
   });
@@ -106,7 +111,6 @@ export default function OAuthSignUpForm({ state, onSuccess }: Props) {
       className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8"
       onSubmit={handleSubmit}
     >
-      {/* 프로필 사진 */}
       <div className="flex flex-col items-start gap-3">
         <span className="text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray56)]">
           프로필 사진
@@ -148,9 +152,7 @@ export default function OAuthSignUpForm({ state, onSuccess }: Props) {
         </div>
       </div>
 
-      {/* 입력 필드들 */}
       <div className="flex flex-col gap-4">
-        {/* 이메일 (읽기 전용) */}
         <LabeledInput
           label="이메일"
           name="email"
@@ -163,7 +165,6 @@ export default function OAuthSignUpForm({ state, onSuccess }: Props) {
           disabled
         />
 
-        {/* 닉네임 */}
         <LabeledInput
           label="닉네임"
           name="nickname"
@@ -179,7 +180,6 @@ export default function OAuthSignUpForm({ state, onSuccess }: Props) {
           * 20글자 이내로 입력해주세요.
         </p>
 
-        {/* 한 줄 소개 */}
         <LabeledTextArea
           label="한 줄 소개"
           name="intro"
@@ -197,7 +197,6 @@ export default function OAuthSignUpForm({ state, onSuccess }: Props) {
         )}
       </div>
 
-      {/* 버튼 */}
       <div className="flex gap-3 pt-2">
         <Button
           type="button"

@@ -9,7 +9,7 @@ import clearIcon from "@icons/clear.svg";
 import "@src/styles/auth.css";
 import { useLogin } from "@src/hooks/useAuth";
 import KakaoLoginButton from "@src/components/KakaoLoginButton";
-import { saveTokens } from "@src/lib/authStorage";
+import { validateEmail, validatePassword } from "@src/utils/validators";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -21,13 +21,13 @@ export default function LoginPage() {
       password: "",
     },
     validate: (v) => {
-      const err: { [key: string]: string } = {};
-      if (!v.email.trim()) {
-        err.email = "이메일을 입력해주세요.";
-      }
-      if (!v.password.trim()) {
-        err.password = "비밀번호를 입력해주세요.";
-      }
+      const err: Record<string, string> = {};
+      const emailError = validateEmail(v.email);
+      if (emailError) err.email = emailError;
+
+      const passwordError = validatePassword(v.password);
+      if (passwordError) err.password = passwordError;
+
       return err;
     },
   });
@@ -47,7 +47,10 @@ export default function LoginPage() {
       {
         onSuccess: (res) => {
           const { accessToken, refreshToken } = res.data;
-          saveTokens(accessToken, refreshToken);
+
+          if (accessToken) localStorage.setItem("accessToken", accessToken);
+          if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+
           nav("/");
         },
       }
