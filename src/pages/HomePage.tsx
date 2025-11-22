@@ -1,7 +1,7 @@
 // src/pages/HomePage.tsx
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import Header from "@src/components/Header";
 import PageHeader from "@ui/PageHeader";
@@ -10,13 +10,10 @@ import Container from "@ui/Container";
 import PostList from "@src/components/home/PostList";
 import type { Post } from "@src/types/post";
 
-import clearIcon from "@icons/clear.svg";
-import kakaoIcon from "@icons/kakao.svg";
-
-import "@src/styles/auth.css";
 import { usePosts } from "@src/hooks/usePosts";
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
 import { useKakaoStart } from "@src/hooks/useAuth";
+import HomeLoginModal from "@src/components/home/HomeLoginModal";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -25,7 +22,8 @@ export default function HomePage() {
 
   const [search, setSearch] = useSearchParams();
   const loginOpen = search.get("login") === "1";
-  const openLogin = () => setSearch({ login: "1" }, { replace: true });
+  const openLogin = () =>
+    setSearch({ login: "1" }, { replace: true });
   const closeLogin = () => {
     search.delete("login");
     setSearch(search, { replace: true });
@@ -52,7 +50,8 @@ export default function HomePage() {
   };
 
   const goStart = () => navigate("/join");
-  const goMyGitlog = () => navigate(`/profile/${user.username}`);
+  const goMyGitlog = () =>
+    navigate(`/profile/${user.username}`);
   const goWrite = () => {
     if (!isAuthed) return openLogin();
     navigate("/write");
@@ -61,7 +60,6 @@ export default function HomePage() {
   const doLogout = () => navigate("/", { replace: true });
 
   const { data, isLoading, isError } = usePosts(page, 10);
-
   const postSummaries = data?.data ?? [];
 
   const posts: Post[] = postSummaries.map((p) => {
@@ -88,7 +86,10 @@ export default function HomePage() {
 
   const totalPages = Math.max(data?.totalPages ?? 1, 1);
 
-  const { mutate: startKakaoLogin, isPending: isKakaoStarting } = useKakaoStart();
+  const {
+    mutate: startKakaoLogin,
+    isPending: isKakaoStarting,
+  } = useKakaoStart();
 
   const handleKakaoLogin = () => {
     if (isKakaoStarting) return;
@@ -116,7 +117,12 @@ export default function HomePage() {
         </div>
       )}
 
-      <main className={clsx("flex-1 w-full", showFrame ? "md:ml-[240px]" : "ml-0")}>
+      <main
+        className={clsx(
+          "flex-1 w-full",
+          showFrame ? "md:ml-[240px]" : "ml-0"
+        )}
+      >
         <Container className="py-8">
           <PageHeader
             variant="write"
@@ -152,7 +158,9 @@ export default function HomePage() {
                   <button
                     type="button"
                     className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() =>
+                      setPage((p) => Math.max(1, p - 1))
+                    }
                     disabled={page <= 1}
                   >
                     이전
@@ -164,7 +172,9 @@ export default function HomePage() {
                     type="button"
                     className="px-3 py-1 text-[12px] rounded border border-[var(--Gray90)] disabled:text-[var(--Gray78)] disabled:border-[var(--Gray90)]"
                     onClick={() =>
-                      setPage((p) => (p < totalPages ? p + 1 : p))
+                      setPage((p) =>
+                        p < totalPages ? p + 1 : p
+                      )
                     }
                     disabled={page >= totalPages}
                   >
@@ -177,66 +187,12 @@ export default function HomePage() {
         </Container>
       </main>
 
-      {loginOpen && (
-        <div className="auth-dim" onClick={closeLogin} role="presentation">
-          <section
-            className="auth-card"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label="로그인"
-          >
-            <button
-              type="button"
-              className="auth-close"
-              onClick={closeLogin}
-              aria-label="닫기"
-            >
-              <img src={clearIcon} alt="" />
-            </button>
-
-            <div className="auth-hero">
-              <div className="logo-text">GITLOG</div>
-              <p className="auth-hero__caption">나의 성장 기록, 지금 시작하세요</p>
-            </div>
-
-            <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
-              <div className="auth-fields">
-                <input className="auth-input" type="email" placeholder="이메일" />
-                <input className="auth-input" type="password" placeholder="비밀번호" />
-              </div>
-
-              <button type="submit" className="auth-btn auth-btn--primary">
-                로그인
-              </button>
-
-              <div className="auth-sns-sep">또는</div>
-
-              <button
-                type="button"
-                className="auth-btn auth-btn--kakao"
-                onClick={handleKakaoLogin}
-                disabled={isKakaoStarting}
-              >
-                <img
-                  src={kakaoIcon}
-                  alt=""
-                  width={18}
-                  height={18}
-                  style={{ display: "block" }}
-                />
-                {isKakaoStarting ? "카카오로 이동 중..." : "카카오로 계속하기"}
-              </button>
-
-              <div className="auth-switch">
-                <Link to="/join" className="auth-switch__btn">
-                  아직 회원이 아니신가요? 회원가입
-                </Link>
-              </div>
-            </form>
-          </section>
-        </div>
-      )}
+      <HomeLoginModal
+        open={loginOpen}
+        onClose={closeLogin}
+        onKakaoLogin={handleKakaoLogin}
+        isKakaoStarting={isKakaoStarting}
+      />
     </div>
   );
 }
