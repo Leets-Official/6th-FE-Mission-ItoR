@@ -12,15 +12,14 @@ import Button from "@ui/Button/Button";
 
 import ReorderIcon from "@icons/reorder.svg?react";
 import imageIcon from "@icons/image.svg";
+import { saveTokens } from "@src/lib/authStorage";
 
-// 카카오 redirect 에서 넘겨주는 state 형태
 type OAuthState = {
   email?: string;
   nickname?: string;
   introduction?: string;
   profileUrl?: string;
   kakaoId?: number;
-  // 그 외 필드도 올 수 있음
   [key: string]: unknown;
 };
 
@@ -29,7 +28,6 @@ export default function JoinOAuthPage() {
   const location = useLocation();
   const state = (location.state as OAuthState | null) || null;
 
-  // 잘못 들어온 경우 홈으로 보냄
   useEffect(() => {
     if (!state || !state.email || !state.nickname) {
       nav("/", { replace: true });
@@ -75,7 +73,7 @@ export default function JoinOAuthPage() {
       {
         email: values.email,
         nickname: values.nickname,
-        password: "", // 카카오는 실제 비밀번호 없음 (더미 값)
+        password: "",
         provider: "kakao",
         profilePicture: preview || state?.profileUrl || undefined,
         birthDate: undefined,
@@ -83,9 +81,7 @@ export default function JoinOAuthPage() {
         introduction: values.intro || state?.introduction || undefined,
       },
       {
-        // useOAuthSignUp 의 성공 타입은 RegisterResponse 로 추론됨
         onSuccess: (res: RegisterResponse) => {
-          // 백엔드가 토큰을 같이 내려줄 수도 있으니 확장 타입으로 안전하게 파싱
           type TokenishData = RegisterResponse["data"] & {
             accessToken?: string;
             refreshToken?: string;
@@ -98,12 +94,7 @@ export default function JoinOAuthPage() {
           const refreshToken =
             typeof rawData.refreshToken === "string" ? rawData.refreshToken : undefined;
 
-          if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
-          }
-          if (refreshToken) {
-            localStorage.setItem("refreshToken", refreshToken);
-          }
+          saveTokens(accessToken, refreshToken);
 
           nav("/", { replace: true });
         },
@@ -116,7 +107,6 @@ export default function JoinOAuthPage() {
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
-      {/* 헤더 */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
@@ -133,7 +123,6 @@ export default function JoinOAuthPage() {
         </div>
       </header>
 
-      {/* 상단 영역 */}
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto w-full max-w-[1366px] px-4 sm:px-6 md:px-8">
           <div className="mx-auto h-8 max-h-8 max-w-[688px]" />
@@ -149,13 +138,11 @@ export default function JoinOAuthPage() {
         </div>
       </section>
 
-      {/* 본문 */}
       <main className="w-full flex-1">
         <form
           className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8"
           onSubmit={handleSubmit}
         >
-          {/* 프로필 사진 */}
           <div className="flex flex-col items-start gap-3">
             <span className="text-[14px] font-light leading-[22.4px] tracking-[-0.07px] text-[var(--Gray56)]">
               프로필 사진
@@ -197,9 +184,7 @@ export default function JoinOAuthPage() {
             </div>
           </div>
 
-          {/* 입력 필드들 */}
           <div className="flex flex-col gap-4">
-            {/* 이메일 (읽기 전용) */}
             <LabeledInput
               label="이메일"
               name="email"
@@ -212,7 +197,6 @@ export default function JoinOAuthPage() {
               disabled
             />
 
-            {/* 닉네임 */}
             <LabeledInput
               label="닉네임"
               name="nickname"
@@ -228,7 +212,6 @@ export default function JoinOAuthPage() {
               * 20글자 이내로 입력해주세요.
             </p>
 
-            {/* 한 줄 소개 */}
             <LabeledTextArea
               label="한 줄 소개"
               name="intro"
@@ -246,7 +229,6 @@ export default function JoinOAuthPage() {
             )}
           </div>
 
-          {/* 버튼 */}
           <div className="flex gap-3 pt-2">
             <Button
               type="button"

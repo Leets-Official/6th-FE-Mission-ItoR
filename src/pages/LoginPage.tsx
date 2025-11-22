@@ -9,6 +9,7 @@ import clearIcon from "@icons/clear.svg";
 import "@src/styles/auth.css";
 import { useLogin } from "@src/hooks/useAuth";
 import KakaoLoginButton from "@src/components/KakaoLoginButton";
+import { saveTokens } from "@src/lib/authStorage";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -31,7 +32,6 @@ export default function LoginPage() {
     },
   });
 
-  // 실제로 사용하는 값만 구조분해 (unused 경고 방지)
   const { mutate: login, isPending, isError, error } = useLogin();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,10 +47,7 @@ export default function LoginPage() {
       {
         onSuccess: (res) => {
           const { accessToken, refreshToken } = res.data;
-
-          if (accessToken) localStorage.setItem("accessToken", accessToken);
-          if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
-
+          saveTokens(accessToken, refreshToken);
           nav("/");
         },
       }

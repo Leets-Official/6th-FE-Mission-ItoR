@@ -4,17 +4,21 @@ import axios, {
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from "axios";
+import {
+  getAccessToken,
+  getRefreshToken,
+  saveTokens,
+  clearTokens,
+} from "@src/lib/authStorage";
 
 const BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "https://blog.leets.land";
 
-/** 공용 인스턴스 */
 const api = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
-/** 인터셉터 미적용 인스턴스 */
 export const raw = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
@@ -53,12 +57,11 @@ function setAuthOnConfig(
   } else {
     headers["Authorization"] = `Bearer ${token}`;
   }
-  // 원래 선언 타입 범위로만 재대입
   cfg.headers = headers as AxiosRequestConfig["headers"];
 }
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem("accessToken");
+  const token = getAccessToken();
   if (token) setAuthOnConfig(config, token);
   return config;
 });
@@ -82,13 +85,12 @@ api.interceptors.response.use(
       "요청 처리 중 오류가 발생했습니다.";
 
     if (status === 401 && !cfg._retry) {
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = getRefreshToken();
       if (!refreshToken) {
-        localStorage.removeItem("accessToken");
+        clearTokens();
         return Promise.reject(new Error(message));
       }
 
-      // 이미 재발급 중이면 큐에 대기
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           waitQueue.push((newToken) => {
@@ -112,34 +114,28 @@ api.interceptors.response.use(
 
         if (!newAccess) throw new Error("Invalid reissue response");
 
-        localStorage.setItem("accessToken", newAccess);
-        if (newRefresh) localStorage.setItem("refreshToken", newRefresh);
+        saveTokens(newAccess, newRefresh);
 
-        // 대기열 처리
         while (waitQueue.length) {
           const resume = waitQueue.shift()!;
           resume(newAccess);
         }
 
-        // 원 요청 재시도
         const next: RetryableConfig = { ...cfg, _retry: true };
         setAuthOnConfig(next, newAccess);
         return api.request(next);
       } catch (e) {
-        // 실패 시 정리
         while (waitQueue.length) {
           const resume = waitQueue.shift()!;
           resume(null);
         }
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        clearTokens();
         return Promise.reject(e instanceof Error ? e : new Error(message));
       } finally {
         isRefreshing = false;
       }
     }
 
-    // 그 외 에러
     return Promise.reject(new Error(message));
   }
 );

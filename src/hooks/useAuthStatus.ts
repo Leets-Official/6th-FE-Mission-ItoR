@@ -1,15 +1,15 @@
+// src/hooks/useAuthStatus.ts
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyInfo } from "@src/api/user";
+import { hasAnyToken } from "@src/lib/authStorage";
 
 export function useAuthStatus() {
-  const hasToken =
-    !!localStorage.getItem("accessToken") ||
-    !!localStorage.getItem("refreshToken");
+  const hasToken = hasAnyToken();
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ["me"],
     queryFn: fetchMyInfo,
-    enabled: hasToken, // 토큰 없으면 /me 호출 안 함
+    enabled: hasToken,
     retry: false,
   });
 
