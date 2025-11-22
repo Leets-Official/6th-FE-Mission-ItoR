@@ -1,6 +1,5 @@
 // src/pages/AccountProfilePage.tsx
 import React, {
-  useRef,
   useState,
   useCallback,
   useEffect,
@@ -9,8 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 import ReorderIcon from "@icons/reorder.svg?react";
 import Button from "@ui/Button/Button";
-import LabeledInput from "@ui/LabeledInput";
-import LabeledTextArea from "@ui/LabeledTextArea";
 import Toast from "@ui/Toast";
 
 import { useMyInfo, useUpdateUser } from "@src/hooks/useUser";
@@ -19,13 +16,12 @@ import {
   uploadFileToS3,
   extractFileUrlFromPresigned,
 } from "@src/lib/imageUpload";
+import ProfileImageUploader from "@src/components/account/ProfileImageUploader";
+import AccountProfileForm, {
+  AccountProfileFormState,
+} from "@src/components/account/AccountProfileForm";
 
-type FormState = {
-  nickname: string;
-  intro: string;
-  email: string;
-  realname: string;
-  birth: string;
+type FormState = AccountProfileFormState & {
   preview: string | null;
 };
 
@@ -86,30 +82,23 @@ export default function AccountProfilePage() {
     setOriginal(next);
   }, [me]);
 
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const pickFile = () => fileRef.current?.click();
-
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-
-    if (form.preview && form.preview.startsWith("blob:")) {
-      URL.revokeObjectURL(form.preview);
-    }
-
-    const url = URL.createObjectURL(f);
-
-    setSelectedFile(f);
-    setForm((prev) => ({ ...prev, preview: url }));
-  };
-
-  const handleChange = useCallback(
+  const handleFormChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       setForm((prev) => ({
         ...prev,
         [name]: value,
+      }));
+    },
+    []
+  );
+
+  const handleImageChange = useCallback(
+    (file: File | null, previewUrl: string | null) => {
+      setSelectedFile(file);
+      setForm((prev) => ({
+        ...prev,
+        preview: previewUrl,
       }));
     },
     []
@@ -139,7 +128,9 @@ export default function AccountProfilePage() {
 
         await uploadFileToS3(presignedUrl, selectedFile);
 
-        profilePictureUrlToSave = extractFileUrlFromPresigned(presignedUrl);
+        profilePictureUrlToSave = extractFileUrlFromPresigned(
+          presignedUrl
+        );
       }
 
       updateUser(
@@ -199,6 +190,7 @@ export default function AccountProfilePage() {
         </div>
       )}
 
+      {/* 헤더: 레이아웃 그대로 유지 */}
       <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
         <div className="mx-auto flex h-[56px] w-full max-w-[1366px] items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
@@ -235,38 +227,17 @@ export default function AccountProfilePage() {
         </div>
       </header>
 
+      {/* 상단 영역: 프로필 요약 + 이미지 업로더 */}
       <section className="w-full border-b border-[var(--Gray96)] bg-[var(--Gray96)]">
         <div className="mx-auto w-full max-w-[1366px]">
           <div className="mx-auto h-16 max-w-[688px] px-4" />
 
-          <div className="mx-auto flex w-full max-w-[688px] flex-col items-start gap-3 px-4">
-            <button
-              type="button"
-              onClick={pickFile}
-              className="flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-[var(--Black)]"
-              aria-label="프로필 이미지 변경"
+          <div className="mx-auto flex w-full max-w-[688px] flex-col items-start gap-4 px-4 py-3">
+            <ProfileImageUploader
+              nickname={form.nickname}
+              preview={form.preview}
               disabled={isBusy}
-            >
-              {form.preview ? (
-                <img
-                  src={form.preview}
-                  alt="profile"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="logo-text text-[32px] leading-none text-[var(--White)]">
-                  {form.nickname.charAt(0).toUpperCase() || "G"}
-                </span>
-              )}
-            </button>
-
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={onFileChange}
-              disabled={isBusy}
+              onChange={handleImageChange}
             />
 
             <div className="flex flex-col items-start gap-1">
@@ -283,67 +254,19 @@ export default function AccountProfilePage() {
         </div>
       </section>
 
+      {/* 본문 폼: 분리된 컴포넌트 사용 */}
       <main className="w-full flex-1">
-        <div className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8">
-          <div className="flex flex-col gap-4">
-            <LabeledInput
-              label="이메일"
-              name="email"
-              type="email"
-              placeholder="이메일"
-              value={form.email}
-              onChange={handleChange}
-              disabled
-            />
-
-            <LabeledInput
-              label="닉네임"
-              name="nickname"
-              type="text"
-              placeholder="닉네임"
-              value={form.nickname}
-              onChange={handleChange}
-              disabled={isBusy}
-            />
-            <p className="text-[12px] font-light leading-[19.2px] text-[var(--Gray-78,#C8C8C8)]">
-              * 20글자 이내로 입력해주세요.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <LabeledInput
-              label="이름"
-              name="realname"
-              type="text"
-              placeholder="이름"
-              value={form.realname}
-              onChange={handleChange}
-              disabled={isBusy}
-            />
-
-            <LabeledInput
-              label="생년월일"
-              name="birth"
-              type="text"
-              placeholder="YYYY-MM-DD"
-              value={form.birth}
-              onChange={handleChange}
-              disabled={isBusy}
-            />
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <LabeledTextArea
-              label="소개"
-              name="intro"
-              value={form.intro}
-              placeholder="한 줄 소개 또는 소개글"
-              rows={2}
-              onChange={handleChange}
-              disabled={isBusy}
-            />
-          </div>
-        </div>
+        <AccountProfileForm
+          form={{
+            email: form.email,
+            nickname: form.nickname,
+            intro: form.intro,
+            realname: form.realname,
+            birth: form.birth,
+          }}
+          disabled={isBusy}
+          onChange={handleFormChange}
+        />
       </main>
     </div>
   );
