@@ -33,16 +33,22 @@ export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
         </div>
 
         <div className='flex gap-3'>
-          <Button intent='primary' size='sm' className='w-[99px]'>
+          <Button
+            intent='primary'
+            size='sm'
+            className='w-[99px]'
+            onClick={() => navigate('/profile')}
+          >
             나의 깃로그
           </Button>
+
           <Button intent='primary' size='sm' className='w-[99px]' onClick={onWriteClick}>
             깃로그 쓰기
           </Button>
         </div>
       </div>
 
-      {/* 하단 버튼 (설정 / 로그아웃) */}
+      {/* 하단 버튼 */}
       <div className='flex justify-center gap-3 w-full'>
         <Button
           intent='secondary'
@@ -52,6 +58,7 @@ export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
         >
           설정
         </Button>
+
         <Button
           intent='secondary'
           size='sm'
