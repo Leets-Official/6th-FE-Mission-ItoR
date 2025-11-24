@@ -54,11 +54,15 @@ export const useDeletePost = () =>
     },
   });
 
+const useAuthInfo = () => {
+  const token = localStorage.getItem("accessToken");
+  return { isLoggedIn: !!token };
+};
+
 /** 댓글 생성 */
 export const useCreateComment = (postId: string) => {
   const queryClient = useQueryClient();
-  const token = localStorage.getItem("accessToken");
-  const isLoggedIn = !!token;
+  const { isLoggedIn } = useAuthInfo();
 
   return useMutation({
     mutationFn: (content: string) => createComment({ postId, content }),
@@ -78,8 +82,7 @@ export const useCreateComment = (postId: string) => {
 /** 댓글 삭제 */
 export const useDeleteComment = (postId: string) => {
   const queryClient = useQueryClient();
-  const token = localStorage.getItem("accessToken");
-  const isLoggedIn = !!token;
+  const { isLoggedIn } = useAuthInfo();
 
   return useMutation({
     mutationFn: (commentId: string) => deleteComment(commentId),
