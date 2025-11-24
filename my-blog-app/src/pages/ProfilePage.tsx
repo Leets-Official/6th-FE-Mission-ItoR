@@ -61,6 +61,7 @@ export default function ProfilePage() {
           <Button
             intent='tag'
             className='flex gap-1 border border-[#E6E6E6] rounded-[2px] px-[8px] py-[3px] items-center'
+            onClick={() => navigate('/settings')}
           >
             <SettingsIcon />
             <span className='text-[#909090] text-[12px] leading-[160%] font-normal'>

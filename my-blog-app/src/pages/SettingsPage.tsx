@@ -3,117 +3,192 @@ import PageHeader from '@/components/common/PageHeader'
 import Blank from '@/components/common/Blank'
 import TextCard from '@/components/common/TextCard'
 import ProfileImageUploader from '@/components/Settings/ProfileImageUploader'
-import NicknameEdit from '@/components/Settings/NicknameEdit'
-import PasswordEdit from '@/components/Settings/PasswordEdit'
+import SignUpFormFields from '@/components/SignUpFormFields'
+import TextFiledSet from '@/components/TextFiled/TextFiledSet'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button/Button'
 import axiosInstance from '@/api/axiosInstance'
 
-interface UserInfo {
-  id: number
-  email: string
-  nickname: string
-  profilePicture: string
-  name: string
-  birthDate: string
-  introduction: string
-}
-
 export default function SettingsPage() {
-  // ✔ 내 정보 state
-  const [user, setUser] = useState<UserInfo | null>(null)
+  const [mode, setMode] = useState<'view' | 'edit'>('view')
+  const isView = mode === 'view'
 
-  // ✔ 수정 값 state (최종 저장 버튼 누르면 PATCH)
-  const [newNickname, setNewNickname] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [newProfile, setNewProfile] = useState('')
+  const [user, setUser] = useState<any>(null)
+  const navigate = useNavigate()
 
-  /** 1) GET /users/me - 사용자 정보 로드 */
-  const fetchUserInfo = async () => {
-    try {
-      const res = await axiosInstance.get('/users/me')
-      setUser(res.data.data)
+  // 상태들
+  const [profile, setProfile] = useState('')
+  const [nickname, setNickname] = useState('')
+  const [introduction, setIntroduction] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [name, setName] = useState('')
+  const [birthDate, setBirthDate] = useState('')
 
-      // 초기값 저장 (수정용 state)
-      setNewNickname(res.data.data.nickname)
-      setNewProfile(res.data.data.profilePicture)
-    } catch (e) {
-      alert('내 정보를 불러오지 못했습니다.')
-    }
+  const fetchUser = async () => {
+    const res = await axiosInstance.get('/users/me')
+    const data = res.data.data
+
+    setUser(data)
+
+    setProfile(data.profilePicture)
+    setNickname(data.nickname)
+    setIntroduction(data.introduction)
+    setEmail(data.email)
+    setName(data.name)
+    setBirthDate(data.birthDate)
   }
 
   useEffect(() => {
-    fetchUserInfo()
+    fetchUser()
   }, [])
 
-  /** 2) 모든 변경 저장 PATCH */
-  const handleSaveAll = async () => {
+  const handleSave = async () => {
     try {
-      // 닉네임 변경
-      if (newNickname !== user?.nickname) {
-        await axiosInstance.patch('/users/nickname', {
-          nickname: newNickname,
-        })
+      if (nickname !== user.nickname) {
+        await axiosInstance.patch('/users/nickname', { nickname })
+      }
+      if (introduction !== user.introduction) {
+        await axiosInstance.patch('/users/introduction', { introduction })
+      }
+      if (password && password === passwordConfirm) {
+        await axiosInstance.patch('/users/password', { password })
+      }
+      if (profile !== user.profilePicture) {
+        await axiosInstance.patch('/users/picture', { profilePicture: profile })
+      }
+      if (name !== user.name || birthDate !== user.birthDate) {
+        await axiosInstance.patch('/users/info', { name, birthDate })
       }
 
-      // 비밀번호 변경
-      if (newPassword.trim().length > 0) {
-        await axiosInstance.patch('/users/password', {
-          password: newPassword,
-        })
-      }
-
-      // 프로필 이미지 변경
-      if (newProfile !== user?.profilePicture) {
-        await axiosInstance.patch('/users/picture', {
-          profilePicture: newProfile,
-        })
-      }
-
-      alert('변경사항이 저장되었습니다!')
-      fetchUserInfo()
-    } catch (e) {
-      alert('변경 저장 중 오류가 발생했습니다.')
+      alert('변경 사항이 저장되었습니다.')
+      setMode('view')
+      navigate('/profile')
+      fetchUser()
+    } catch {
+      alert('저장 중 오류가 발생했습니다.')
     }
   }
 
   if (!user) return <div className='mt-20'>로딩 중...</div>
 
   return (
-    <div className='min-h-screen flex flex-col items-center bg-white'>
-      {/* 상단 헤더 */}
-      <PageHeader title='GITLOG' />
+    <div className='min-h-screen bg-white flex flex-col items-center'>
+      <PageHeader
+        title='GITLOG'
+        rightContent={
+          <div className='flex gap-4'>
+            {/* edit 모드에서만 취소 버튼 표시 */}
+            {mode === 'edit' && (
+              <Button intent='flat' className='!text-negative' onClick={() => setMode('view')}>
+                취소하기
+              </Button>
+            )}
+
+            {/* 수정하기 / 저장하기 동적 텍스트 */}
+            <Button
+              intent='flat'
+              className='!text-black'
+              onClick={mode === 'edit' ? handleSave : () => setMode('edit')}
+            >
+              {mode === 'edit' ? '저장하기' : '수정하기'}
+            </Button>
+          </div>
+        }
+      />
 
       {/* 상단 회색 영역 */}
-      <div className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-[#F5F5F5]'>
-        <Blank size='md' />
-        <TextCard
-          variant='primary'
-          title='계정 설정'
-          subtitle='내 계정 정보를 수정할 수 있습니다.'
-          className='max-w-[688px] px-[16px] py-[12px] text-[24px] font-medium text-black leading-[160%]'
-        />
-        <Blank size='sm' />
+      <div className='w-full bg-[#F5F5F5] border-b border-[#F5F5F5] flex justify-center'>
+        <div className='max-w-[688px] w-full px-4 py-6 flex flex-col gap-4'>
+          <ProfileImageUploader value={profile} onChange={setProfile} disabled={isView} />
+
+          {/* 프로필 아래: 닉네임 + 한 줄 소개 */}
+          <TextFiledSet
+            label='닉네임'
+            placeholder='닉네임'
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            disabled={isView}
+            showHelper
+            helperText={nickname.length > 20 ? '* 닉네임은 최대 20자까지입니다.' : '* 20글자 이내'}
+            hasError={nickname.length > 20}
+          />
+
+          <TextFiledSet
+            label='한 줄 소개'
+            placeholder='한 줄 소개'
+            value={introduction}
+            onChange={(e) => setIntroduction(e.target.value)}
+            disabled={isView}
+            showHelper={false}
+          />
+        </div>
       </div>
 
       <Blank size='md' />
 
-      {/* 프로필 이미지 */}
-      <ProfileImageUploader value={newProfile} onChange={(url: string) => setNewProfile(url)} />
+      {/* 하단 폼: 이메일 / 비밀번호 / 비밀번호 확인 / 이름 / 생년월일 */}
+      <div className='w-full flex justify-center'>
+        <div className='w-full max-w-[688px] px-4 flex flex-col gap-4'>
+          {/* 이메일 - 항상 비활성화 */}
+          <TextFiledSet
+            label='이메일'
+            placeholder='이메일'
+            value={email}
+            disabled
+            showHelper={false}
+          />
 
-      <div className='flex flex-col items-center w-full max-w-[688px] px-4 py-8'>
-        {/* 닉네임 */}
-        <NicknameEdit value={newNickname} onChange={(v) => setNewNickname(v)} />
+          {/* 비밀번호 / 비밀번호 확인 - edit 모드에서만 표시 + helperText 포함 */}
+          {!isView && (
+            <>
+              <TextFiledSet
+                label='비밀번호'
+                type='password'
+                placeholder='******'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                showHelper={false}
+              />
 
-        <Blank size='md' />
+              <TextFiledSet
+                label='비밀번호 확인'
+                type='password'
+                placeholder='******'
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                showHelper
+                helperText={
+                  passwordConfirm && passwordConfirm !== password
+                    ? '* 비밀번호가 일치하지 않습니다.'
+                    : '* 동일하게 입력해주세요.'
+                }
+                hasError={passwordConfirm && passwordConfirm !== password}
+              />
+            </>
+          )}
 
-        {/* 비밀번호 */}
-        <PasswordEdit value={newPassword} onChange={(v) => setNewPassword(v)} />
+          {/* 이름 */}
+          <TextFiledSet
+            label='이름'
+            placeholder='이름'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            disabled={isView}
+            showHelper={false}
+          />
 
-        <Blank size='lg' />
-
-        <Button intent='primary' className='w-full max-w-[300px]' onClick={handleSaveAll}>
-          모든 변경 저장
-        </Button>
+          {/* 생년월일 */}
+          <TextFiledSet
+            label='생년월일'
+            placeholder='YYYY - MM - DD'
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+            disabled={isView}
+            showHelper={false}
+          />
+        </div>
       </div>
 
       <Blank size='lg' />
