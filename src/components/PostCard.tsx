@@ -6,7 +6,7 @@ import ProfileIcon from "@/assets/svgs/Profile.svg?react";
 interface Post {
   id: string;
   title: string;
-  content: string;
+  content: string[]; // content is an array of strings
   author: string;
   createdAt: string;
   commentsCount: number;
@@ -40,7 +40,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </h3>
 
           <p className="font-[Noto Sans KR] font-normal text-[14px] text-gray-700 leading-[160%] line-clamp-2 mt-1">
-            {post.content}
+            {post.content[0]}
           </p>
 
           <div className="flex flex-row items-center gap-2 text-sm text-gray-500 mt-3">
