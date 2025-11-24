@@ -39,7 +39,11 @@ export const useUserStore = create<UserState>((set) => ({
     // Assuming localStorage is updated elsewhere upon successful login
   },
   logout: () => {
-    localStorage.clear(); // Clear all stored tokens and user data
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("nickname");
+    localStorage.removeItem("introduction");
+    localStorage.removeItem("profilePicture");
     set({ isLoggedIn: false, user: null });
   },
   setUserProfile: (nickname, introduction, profilePicture) => {
