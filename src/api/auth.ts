@@ -2,14 +2,21 @@
 import api from "@/api/axiosInstance";
 import axios from "axios";
 
-export interface SignUpBody {
+export interface BaseUserProfile {
+  email?: string;
+  name?: string;
+  nickname?: string;
+  birthDate?: string;
+  introduction?: string | null;
+  profilePicture?: string | null;
+}
+
+export interface SignUpBody extends BaseUserProfile {
   email: string;
   password: string;
   name: string;
   birthDate: string;
   nickname: string;
-  introduction?: string;
-  profilePicture?: string;
 }
 
 export interface LoginBody {
@@ -17,13 +24,10 @@ export interface LoginBody {
   password: string;
 }
 
-export interface OAuthSignUpBody {
+export interface OAuthSignUpBody extends BaseUserProfile {
   email: string;
   name: string;
-  birthDate?: string;
   nickname: string;
-  introduction?: string;
-  profilePicture?: string;
   kakaoId: number;
 }
 
@@ -69,7 +73,7 @@ export const kakaoRedirectLogin = async (code: string) => {
 // registerOAuth 별칭으로 export (useRegisterOAuthMutation에서 사용)
 export { oauthRegisterRequest as registerOAuth };
 
-export interface UserProfileResponse {
+export interface UserProfileResponse extends BaseUserProfile {
   id: number;
   email: string;
   nickname: string;
@@ -84,14 +88,7 @@ export const getUserProfile = async (): Promise<UserProfileResponse> => {
   return data.data;
 };
 
-export interface UpdateUserProfilePayload {
-  email?: string;
-  nickname?: string;
-  profilePicture?: string;
-  birthDate?: string;
-  name?: string;
-  introduction?: string;
-}
+export interface UpdateUserProfilePayload extends BaseUserProfile {}
 
 export const updateUserProfile = async (payload: UpdateUserProfilePayload): Promise<void> => {
   await api.patch("/users", payload);

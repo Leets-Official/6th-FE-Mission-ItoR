@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useUserStore } from "@/store/userStore";
 import {
   signUpRequest,
   loginRequest,
@@ -110,11 +111,14 @@ export const useUpdateUserProfile = () => {
 
 export const useUpdateProfilePicture = () => {
   const queryClient = useQueryClient();
+  const { setProfilePicture } = useUserStore();
   return useMutation({
-    mutationFn: (payload: { profilePicture: string }) => updateProfilePicture(payload),
+    mutationFn: (payload: { profilePicture: string }) =>
+      updateProfilePicture(payload),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
       localStorage.setItem("profilePicture", variables.profilePicture);
+      setProfilePicture(variables.profilePicture);
     },
   });
 };
