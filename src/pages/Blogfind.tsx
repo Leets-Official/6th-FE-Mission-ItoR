@@ -59,13 +59,14 @@ const Blogfind: React.FC = () => {
 
       <div className="flex flex-col items-center w-full mt-8 gap-8">
         {data?.posts && data.posts.length > 0 ? ( // Use data.posts
-        data.posts.map((post: PostListItem) => { // Use PostListItem
+        data.posts.map((post: PostListItem) => {
           const imageBlock = post.contents?.find(
-            (c: { contentType: string }) => c.contentType === "IMAGE"
+            (c) => c.contentType === "IMAGE"
           );
-          const textBlock = post.contents?.find(
-            (c: { contentType: string }) => c.contentType === "TEXT"
-          );
+          const textContents =
+            post.contents
+              ?.filter((c) => c.contentType === "TEXT")
+              .map((c) => c.content) || [];
 
           return (
             <div
@@ -77,12 +78,15 @@ const Blogfind: React.FC = () => {
                 post={{
                   id: post.postId,
                   title: post.title,
-                  content: textBlock?.content || "내용이 없습니다.",
+                  content:
+                    textContents.length > 0
+                      ? textContents
+                      : ["내용이 없습니다."],
                   author: post.nickName,
                   createdAt: post.createdAt,
                   commentsCount: post.commentCount,
                   profileUrl: post.profileUrl,
-                  photoUrl: imageBlock?.content, 
+                  photoUrl: imageBlock?.content,
                 }}
               />
             </div>

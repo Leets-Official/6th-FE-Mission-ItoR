@@ -1,28 +1,27 @@
 import { create } from "zustand";
 
+interface UserProfile {
+  nickname: string;
+  introduction: string;
+  profilePicture: string;
+}
+
+interface LoginPayload extends UserProfile {
+  accessToken: string;
+  refreshToken: string;
+}
+
 interface UserState {
   isLoggedIn: boolean;
-  user: {
-    nickname: string;
-    introduction: string;
-    profilePicture: string;
-  } | null;
-  login: (
-    nickname: string,
-    introduction: string,
-    profilePicture: string,
-  ) => void;
+  user: UserProfile | null;
+  login: (payload: LoginPayload) => void;
   logout: () => void;
-  setUserProfile: (
-    nickname: string,
-    introduction: string,
-    profilePicture: string,
-  ) => void;
+  setUserProfile: (profile: Partial<UserProfile>) => void;
   setProfilePicture: (profilePicture: string) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
-  isLoggedIn: !!localStorage.getItem("accessToken"), // Initialize based on localStorage
+  isLoggedIn: !!localStorage.getItem("accessToken"),
   user: localStorage.getItem("accessToken")
     ? {
         nickname: localStorage.getItem("nickname") || "",
@@ -31,12 +30,20 @@ export const useUserStore = create<UserState>((set) => ({
       }
     : null,
 
-  login: (nickname, introduction, profilePicture) => {
+  login: (payload) => {
+    localStorage.setItem("accessToken", payload.accessToken);
+    localStorage.setItem("refreshToken", payload.refreshToken);
+    localStorage.setItem("nickname", payload.nickname);
+    localStorage.setItem("introduction", payload.introduction || "");
+    localStorage.setItem("profilePicture", payload.profilePicture || "");
     set({
       isLoggedIn: true,
-      user: { nickname, introduction, profilePicture },
+      user: {
+        nickname: payload.nickname,
+        introduction: payload.introduction,
+        profilePicture: payload.profilePicture,
+      },
     });
-    // Assuming localStorage is updated elsewhere upon successful login
   },
   logout: () => {
     localStorage.removeItem("accessToken");
@@ -46,16 +53,18 @@ export const useUserStore = create<UserState>((set) => ({
     localStorage.removeItem("profilePicture");
     set({ isLoggedIn: false, user: null });
   },
-  setUserProfile: (nickname, introduction, profilePicture) => {
+  setUserProfile: (profile) => {
+    if (profile.nickname !== undefined) localStorage.setItem("nickname", profile.nickname);
+    if (profile.introduction !== undefined) localStorage.setItem("introduction", profile.introduction);
+    if (profile.profilePicture !== undefined) localStorage.setItem("profilePicture", profile.profilePicture);
     set((state) => ({
-      user: state.user
-        ? { ...state.user, nickname, introduction, profilePicture }
-        : { nickname, introduction, profilePicture },
+      user: state.user ? { ...state.user, ...profile } : null,
     }));
   },
   setProfilePicture: (profilePicture) => {
+    localStorage.setItem("profilePicture", profilePicture || "");
     set((state) => ({
-      user: state.user ? { ...state.user, profilePicture } : null, // Handle case where user might be null
+      user: state.user ? { ...state.user, profilePicture } : null,
     }));
   },
 }));

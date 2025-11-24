@@ -50,10 +50,21 @@ export const useSignUp = () =>
     mutationFn: (body: SignUpBody) => signUpRequest(body),
   });
 
-export const useLogin = () =>
-  useMutation({
+export const useLogin = () => {
+  const { login } = useUserStore();
+  return useMutation({
     mutationFn: (body: LoginBody) => loginRequest(body),
+    onSuccess: (data) => {
+      login({
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+        nickname: data.nickname || "",
+        introduction: data.introduction || "",
+        profilePicture: data.profilePicture || "",
+      });
+    },
   });
+};
 
 // OAuth 회원가입
 export const useOAuthSignUp = () =>
