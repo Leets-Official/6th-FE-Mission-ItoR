@@ -30,7 +30,7 @@ export default function CommentInput({ isLoggedIn, value, onChange, onSubmit }: 
             <Button
               type="button"
               className="px-4 rounded-[4px] h-10"
-              onClick={() => navigate("/me")} 
+              onClick={() => navigate("/login")} 
             >
               로그인하러 가기
             </Button>

@@ -1,3 +1,4 @@
+// src/pages/KakaoRedirectPage.tsx
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useKakaoRedirectLogin } from "@src/hooks/useAuth";
@@ -11,7 +12,8 @@ export default function KakaoRedirectPage() {
 
   useEffect(() => {
     if (!code) {
-      navigate("/login", { replace: true });
+      // code 없으면 홈 + 로그인 모달
+      navigate("/?login=1", { replace: true });
       return;
     }
 
@@ -20,28 +22,28 @@ export default function KakaoRedirectPage() {
         const { accessToken, refreshToken, ...rest } = payload;
 
         if (accessToken) {
-          // 가입자: 토큰 저장 후 홈으로 이동
+          // 기존 가입자: 토큰 저장 후 홈으로 이동
           localStorage.setItem("accessToken", accessToken);
-          if (typeof refreshToken === "string") {
+          if (refreshToken) {
             localStorage.setItem("refreshToken", refreshToken);
           }
           navigate("/", { replace: true });
         } else {
-          // 미가입자: OAuth 회원가입 페이지로 (백엔드가 내려준 추가정보 state로 전달)
+          // 신규 가입자: OAuth 회원가입 페이지로 state 넘기기
           navigate("/join/oauth", { state: rest, replace: true });
         }
       },
       onError: () => {
-        navigate("/login", { replace: true });
+        navigate("/?login=1", { replace: true });
       },
     });
   }, [code, mutate, navigate]);
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-start bg-black pt-20 text-center text-sm text-white">
+    <div className="flex min-h-dvh items-center justify-center bg-black text-white">
       {isPending && "카카오 로그인 처리 중입니다..."}
       {isError && "로그인에 실패했습니다. 다시 시도해주세요."}
-      {!isPending && !isError && "처리 중..."}
+      {!isPending && !isError && "처리 중입니다..."}
     </div>
   );
 }
