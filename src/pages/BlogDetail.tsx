@@ -72,7 +72,10 @@ const BlogDetail: React.FC = () => {
         setToastMessage({ variant: "success", message: "댓글이 삭제되었습니다!" });
         setTimeout(() => setToastMessage(null), 1500);
       },
-      onError: () => alert("댓글 삭제에 실패했습니다."),
+      onError: () => {
+        setToastMessage({ variant: "warning", message: "댓글 삭제에 실패했습니다." });
+        setTimeout(() => setToastMessage(null), 1500);
+      },
     });
     setIsCommentDeleteModalOpen(false);
     setCommentToDeleteId(null);
