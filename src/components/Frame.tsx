@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import ProfileIcon from "@/assets/svgs/Profile.svg?react";
 import ClearIcon from "@/assets/svgs/clear.svg?react";
+import { useUserStore } from "@/store/userStore";
 
 // 공통 스타일 상수 정의
 const FRAME_WIDTH = "w-[240px]";
@@ -25,33 +26,12 @@ interface FrameProps {
 
 const Frame: React.FC<FrameProps> = ({ onClose }) => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({
-    nickname: "",
-    introduction: "",
-    profilePicture: "",
-  });
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      setIsLoggedIn(true);
-      setUserData({
-        nickname: localStorage.getItem("nickname") || "사용자",
-        introduction:
-          localStorage.getItem("introduction") || "한 줄 소개가 없습니다.",
-        profilePicture: localStorage.getItem("profilePicture") || "",
-      });
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
+  const { isLoggedIn, user, logout } = useUserStore();
 
   const handleLogout = () => {
-    localStorage.clear(); // Clear all stored tokens and user data
-    setIsLoggedIn(false); // Update local state
-    navigate("/login", { replace: true }); // Redirect to login page
-    onClose?.(); // Close the frame if it's open
+    logout();
+    navigate("/login", { replace: true });
+    onClose?.();
   };
 
   return (
@@ -69,9 +49,9 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
       <div
         className={`${FRAME_WIDTH} ${SECTION_HEIGHT.header} ${FRAME_SECTION}`}
       >
-        {isLoggedIn && userData.profilePicture ? (
+        {isLoggedIn && user?.profilePicture ? (
           <img
-            src={userData.profilePicture}
+            src={user.profilePicture}
             alt="profile"
             className="w-[64px] h-[64px] rounded-full object-cover"
           />
@@ -83,10 +63,10 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
       <div
         className={`${FRAME_WIDTH} ${SECTION_HEIGHT.content} ${FRAME_SECTION} flex-col items-start`}
       >
-        {isLoggedIn ? (
+        {isLoggedIn && user ? (
           <>
-            <span className={USERNAME_TEXT}>{userData.nickname}</span>
-            <span className={INTRO_TEXT}>{userData.introduction}</span>
+            <span className={USERNAME_TEXT}>{user.nickname}</span>
+            <span className={INTRO_TEXT}>{user.introduction}</span>
           </>
         ) : (
           <span className={LOGOUT_TEXT}>
