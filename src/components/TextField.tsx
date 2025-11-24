@@ -29,12 +29,12 @@ const TextField: React.FC<TextFieldProps> = ({
     blue: "bg-blue-50 text-blue-700 placeholder-blue-300 focus:ring-2 focus:ring-blue-500",
     black: "bg-black text-white placeholder-gray-500 focus:ring-2 focus:ring-gray-700",
     filled: "bg-gray-100 text-black placeholder-gray-400 focus:ring-2 focus:ring-blue-500",
-    outlineblack: "bg-transparent border-gray-400 text-black placeholder-gray-400 focus:border-blue-500",
+    outlineblack: "bg-transparent border-gray-400 placeholder-gray-400 focus:border-blue-500",
   };
 
   return (
     <input
-      type="text"
+      type={props.type || "text"}
       placeholder={placeholder}
       className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       {...props}

@@ -1,9 +1,9 @@
 import api from "@/api/axiosInstance";
+import axios from "axios";
 
 export interface PostBody {
   title: string;
-  content: string;
-  imageUrl?: string;
+  contents: ContentBlock[];
 }
 
 export interface Comment {
@@ -54,13 +54,18 @@ export const updatePost = async (
   id: string,
   body: PostBody
 ): Promise<PostDetailResponse> => {
-  const { data } = await api.patch(`/posts/${id}`, body);
+  const { data } = await api.patch("/posts", body, {
+    params: { postId: id },
+  });
   return data.data;
 };
 
 /** 게시글 삭제 */
+
 export const deletePost = async (id: string): Promise<void> => {
-  await api.delete(`/posts/${id}`);
+
+  await api.delete("/posts", { params: { postId: id } });
+
 };
 
 export interface PostListResponse {
@@ -79,14 +84,73 @@ export const getAllPosts = async (page: number): Promise<PostListResponse> => {
 //게시글 단일 조회
 export const getPostById = async (postId: string): Promise<PostDetailResponse> => {
   const token = localStorage.getItem("accessToken");
-  const isLoggedIn = token && token !== "undefined";
+  const isLoggedIn = !!token;
 
   const endpoint = isLoggedIn ? "/posts/token" : "/posts";
   const config = {
     params: { postId },
-    ...(isLoggedIn && { headers: { Authorization: `Bearer ${token}` } }),
   };
 
   const { data } = await api.get(endpoint, config);
   return data.data;
+};
+
+export interface CommentBody {
+  content: string;
+}
+
+// 댓글 생성
+export const createComment = async ({
+  postId,
+  content,
+}: {
+  postId: string;
+  content: string;
+}): Promise<Comment> => {
+  const { data } = await api.post(`/comments/${postId}`, { content });
+  return data.data;
+};
+
+// 댓글 삭제
+
+export const deleteComment = async (commentId: string): Promise<void> => {
+
+  await api.delete(`/comments/${commentId}`);
+
+};
+
+
+
+// 내 게시글 조회
+
+export const getMyPosts = async (page: number, size: number): Promise<PostListResponse> => {
+
+  const { data } = await api.get("/posts/all/token", {
+
+    params: { size, page },
+
+  });
+
+  return data.data;
+
+};
+
+// --- Image Upload Functions ---
+
+export const getPreSignedUrl = async (fileName: string): Promise<string> => {
+  const response = await api.get("/images/presigned-url", {
+    params: { fileName },
+  });
+  return response.data.data;
+};
+
+export const uploadImageToPreSignedUrl = async (
+  preSignedUrl: string,
+  file: File
+): Promise<void> => {
+  await axios.put(preSignedUrl, file, {
+    headers: {
+      "Content-Type": file.type,
+    },
+  });
 };

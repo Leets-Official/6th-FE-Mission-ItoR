@@ -83,10 +83,10 @@ api.interceptors.response.use(
     console.log("Response:", response?.status, response?.data);
     console.groupEnd();
 
-    alert(
-      response?.data?.message ||
-        "요청 중 오류가 발생했습니다."
-    );
+    // alert(
+    //   response?.data?.message ||
+    //     "요청 중 오류가 발생했습니다."
+    // );
 
     return Promise.reject(error);
   }

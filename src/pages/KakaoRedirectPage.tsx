@@ -33,7 +33,7 @@ export default function KakaoRedirectPage() {
           navigate("/signup/kakao", { state: rest, replace: true });
         }
       },
-      onError: () => {
+      onError: (error) => {
         navigate("/login", { replace: true });
       },
     });

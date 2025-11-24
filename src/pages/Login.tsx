@@ -4,7 +4,7 @@ import Blogfind from "./Blogfind";
 import Frame7 from "@/assets/svgs/Frame7.svg?react";
 import ClearIcon from "@/assets/svgs/clear.svg?react";
 import KakaoIcon from "@/assets/svgs/kakao.svg?react";
-import api from "@/api/axiosInstance";
+import { loginRequest } from "@/api/auth";
 import { AxiosError } from "axios";
 
 const Login: React.FC = () => {
@@ -25,12 +25,10 @@ const Login: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const res = await api.post("/auth/login", {
+      const data = await loginRequest({
         email: form.email.trim(),
         password: form.password,
       });
-
-      const data = res.data?.data || res.data;
 
       // 토큰 저장
       localStorage.setItem("accessToken", data.accessToken);
@@ -59,8 +57,11 @@ const Login: React.FC = () => {
 
   /** 카카오 로그인 요청 */
   const handleKakaoLogin = () => {
-  window.location.href = "https://blog.leets.land/auth/kakao";
-};
+    const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+    const KAKAO_REDIRECT_URI = "https://blog.leets.land/auth/kakao/redirect";
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
   return (
     <div className="relative w-full min-h-screen">
