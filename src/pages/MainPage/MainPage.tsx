@@ -33,6 +33,7 @@ export default function MainPage() {
     <PageLayout
       headerVariant="write"
       onWriteClick={() => (isLogin ? navigate("/write") : setIsLoginOpen(true))}
+      onLoginClick={() => setIsLoginOpen(true)}
     >
       <main className={styles.mainWrapper}>
         {posts.length === 0 ? (
