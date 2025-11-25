@@ -34,8 +34,8 @@ const ProfileSection = ({
           <TextBox
             showIcon
             icon={<AddPhotoAlternateIcon />}
-            color="gray-90"
-            borderColor="gray-90"
+            color="gray-56"
+            borderColor="gray"
             onClick={handleButtonClick}
           >
             {MYPAGE_TEXTS.BUTTONS.ADD_PROFILE_PHOTO}

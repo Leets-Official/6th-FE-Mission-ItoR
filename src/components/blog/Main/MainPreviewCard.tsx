@@ -37,7 +37,7 @@ const BlogPreviewCard = memo(
 
     return (
       <div className={`blog-preview-row ${className} cursor-pointer`} onClick={handleClick}>
-        <div className="flex flex-col">
+        <div className="flex flex-1 flex-col">
           <PostCard title={title} content={content} hasImage={Boolean(imageSrc)} />
           <PostDetails nickName={nickName} profileUrl={profileUrl} createdAt={createdAt} commentCount={commentCount} />
         </div>
