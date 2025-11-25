@@ -8,6 +8,7 @@ import { useState, useRef } from "react";
 import { usePostForm } from "./usePostForm";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useImageValidation } from "@/hooks/useImageValidation";
+import { useApiError } from "@/hooks/useApiError";
 
 const PostWritePage: React.FC = () => {
   const {
@@ -23,6 +24,7 @@ const PostWritePage: React.FC = () => {
 
   const { uploadImage } = useImageUpload();
   const { validateAndShowError } = useImageValidation();
+  const { handleError } = useApiError();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -44,8 +46,8 @@ const PostWritePage: React.FC = () => {
     try {
       const uploadedUrl = await uploadImage(file);
       setImages((prev: string[]) => [...prev, uploadedUrl]);
-    } catch {
-      alert("이미지 업로드에 실패했습니다.");
+    } catch (error) {
+      handleError(error, "이미지 업로드");
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
