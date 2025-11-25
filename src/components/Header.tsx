@@ -119,14 +119,13 @@ const Header: React.FC<HeaderProps> = ({
 
           {variant === "profile-edit" && (
             <div className="flex items-center gap-6">
-              <button
-                type="button"
-                className="text-[14px] text-gray-500"
-                onClick={onCancel}
-              >
-                취소하기
-              </button>
-              <button
+                          <button
+                            type="button"
+                            className="text-[14px] text-[#FF3F3F]"
+                            onClick={onCancel}
+                          >
+                            취소하기
+                          </button>              <button
                 type="button"
                 className="text-[14px] text-black"
                 onClick={onPost}

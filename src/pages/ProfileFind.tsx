@@ -144,28 +144,40 @@ const ProfileFind: React.FC = () => {
 
       {toastMessage && <Toast variant="success" message={toastMessage} />}
 
-      <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex flex-col items-center justify-center">
-        <button onClick={handleProfileClick} className="rounded-full disabled:cursor-not-allowed" disabled={!isEditing || isUploading}>
-          {form.profilePicture ? (
-            <img src={form.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
-          ) : (
-            <Profile className="w-[88px] h-[88px]" />
-          )}
-        </button>
-        {isUploading && <p className="text-sm text-gray-500 mt-2">업로드 중...</p>}
-        
-        <div className="flex flex-col gap-2 w-[568px] mt-4">
+      <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex justify-center">
+        {/* Centered Content Block */}
+        <div className="flex flex-col w-[656px] gap-4">
+          {/* Profile Picture */}
+          <button onClick={handleProfileClick} className="rounded-full disabled:cursor-not-allowed" disabled={!isEditing || isUploading}>
+            {form.profilePicture ? (
+              <img src={form.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
+            ) : (
+              <Profile className="w-[88px] h-[88px]" />
+            )}
+          </button>
+          {isUploading && <p className="text-sm text-gray-500">업로드 중...</p>}
+          
+          {/* Nickname */}
           <TextFieldSet
-            label="닉네임"
+            label=""
             value={form.nickname}
             onChange={(value) => setForm({ ...form, nickname: value })}
             disabled={!isEditing}
+            size="lg"
+            className="w-full"
           />
+          <p className="text-sm text-[#C8C8C8] -mt-3 pl-1">
+            *20글자 이내
+          </p>
+
+          {/* Introduction */}
           <TextFieldSet
-            label="한 줄 소개"
+            label=""
             value={form.introduction}
             onChange={(value) => setForm({ ...form, introduction: value })}
             disabled={!isEditing}
+            size="sm"
+            className="w-full"
           />
         </div>
       </div>
@@ -181,6 +193,9 @@ const ProfileFind: React.FC = () => {
               onChange={(value) => setForm({ ...form, [key]: value })}
               disabled={disabled}
               type={type}
+              className="w-[656px] h-[80px]"
+              inputClassName="px-4 py-3 rounded"
+              size="sm"
             />
           ))}
         </div>
