@@ -1,3 +1,4 @@
+import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import React, { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import TextFieldSet from "@/components/TextFieldSet";
@@ -141,7 +142,7 @@ const SignupKakao: React.FC = () => {
       console.log('회원가입 요청 payload:', payload);
 
       // 엔드포인트 경로 수정: /auth/register-oauth → /auth/register/oauth
-      const res = await api.post("/auth/register/oauth", payload);
+      const res = await api.post("/auth/register-oauth", payload);
       console.log('카카오 회원가입 성공:', res.data);
 
       // 응답 구조 확인 후 토큰 저장
@@ -219,6 +220,7 @@ const SignupKakao: React.FC = () => {
       {/* 프로필 업로드 */}
       <div className="relative w-full h-[180px]">
         <div className="absolute left-[430px] top-[40px] flex flex-col items-start gap-2">
+          <div className="text-[14px] text-[#909090]">프로필 사진</div>
           {form.profilePicture ? (
             <img
               src={form.profilePicture}
@@ -231,6 +233,7 @@ const SignupKakao: React.FC = () => {
           <label className="text-[12px] text-gray-600 border border-gray-300 px-3 py-1 rounded-[2px] cursor-pointer hover:bg-gray-50 transition">
             {isUploading ? "업로드 중..." : "프로필 사진 추가"}
             <input
+              
               type="file"
               accept="image/*"
               className="hidden"
@@ -243,13 +246,21 @@ const SignupKakao: React.FC = () => {
 
       {/* 입력 폼 */}
       <div className="flex flex-col mt-[60px] px-[430px]">
-        <div className="w-[688px] flex flex-col gap-4">
+        <div className="w-[656px] flex flex-col gap-4">
+          <TextFieldSet
+            label="소셜로그인"
+            value="카카오 로그인"
+            disabled={true}
+            icon={<KakaoIcon className="w-5 h-5" />}
+            inputClassName="bg-[#E6E6E6] text-[#909090] disabled:bg-[#E6E6E6]"
+            className="w-[656px] h-[80px]"
+            size="sm"
+          />
           <TextFieldSet
             label="이메일"
             value={form.email}
             placeholder="이메일"
             onChange={(v) => handleChange("email", v)}
-            disabled={true}
           />
           <TextFieldSet
             label="이름"
