@@ -6,6 +6,7 @@ import SignUpEmailPage from '@/pages/SignUpEmailPage'
 import SignUpKakaoPage from '@/pages/SignUpKakaoPage'
 import BlogDetailPage from '@/pages/BlogDetailPage'
 import BlogWritePage from '@/pages/BlogWritePage'
+import SettingsPage from '@/pages/SettingsPage'
 import AuthKakaoCallback from '@/pages/AuthKakaoCallback'
 import RootLayout from '@/layouts/RootLayout'
 
@@ -22,6 +23,7 @@ import TextFiledSetTestPage from '@/pages/test/TextFiledSetTestPage'
 import ProfileImageTestPage from '@/pages/test/ProfileImageTestPage'
 import SidebarTestPage from '@/pages/test/SidebarTestPage'
 import PaginationTestPage from '@/pages/test/PaginationTestPage'
+import ProfilePage from '@/pages/ProfilePage'
 
 const router = createBrowserRouter([
   {
@@ -38,8 +40,11 @@ const router = createBrowserRouter([
           { path: 'signup/kakao', element: <SignUpKakaoPage /> },
           { path: 'oauth/kakao/callback', element: <AuthKakaoCallback /> },
           { path: 'oauth/kakao/success', element: <AuthKakaoCallback /> },
-          { path: '/blog/:id', element: <BlogDetailPage /> },
+          { path: 'blog/:postId', element: <BlogDetailPage /> },
           { path: 'blogwrite', element: <BlogWritePage /> },
+          { path: 'blogwrite/:postId', element: <BlogWritePage /> },
+          { path: 'profile', element: <ProfilePage /> },
+          { path: 'settings', element: <SettingsPage /> },
 
           // 테스트 페이지들
           { path: 'test/button', element: <ButtonTestPage /> },

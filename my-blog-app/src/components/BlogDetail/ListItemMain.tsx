@@ -1,58 +1,134 @@
-import { useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PageHeader from '@/components/common/PageHeader'
 import Blank from '@/components/common/Blank'
 import TextCard from '@/components/common/TextCard'
 import PictureFrame from './PictureFrame'
 import CommentField from './CommentField'
 import ProfileImage from '@/components/ProfileImage/ProfileImage'
-import BlogTitleSection from './BlogTitleSection'
-import { ChatIcon, MoreIcon } from '@/assets/icons'
+import CommentItem from './CommentItem'
 import CommentCount from './CommentCount'
 import DropdownMenu from '@/components/Dropdown/DropdownMenu'
-import CommentItem from './CommentItem'
-import { useComment } from '@/hooks/useComment'
+import { ChatIcon, MoreIcon } from '@/assets/icons'
 import { useToast } from '@/context/ToastContext'
 import { useModal } from '@/context/ModalContext'
+import axiosInstance from '@/api/axiosInstance'
 import type { Post } from '@/types/post'
 
+interface CommentType {
+  commentId: number
+  content: string
+  nickName: string
+  createdAt: string
+}
+
 export default function ListItemMain({ post }: { post: Post }) {
-  const [commentState] = useState<'beforeLogin' | 'active' | 'writing'>('active')
-  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
-
-  const {
-    comments,
-    newComment,
-    commentRef,
-    setNewComment,
-    handleScrollToComments,
-    handleAddComment,
-    handleDeleteClick,
-  } = useComment()
-
+  const navigate = useNavigate()
   const { showToast } = useToast()
   const { openModal } = useModal()
 
-  // 댓글 추가 시 토스트 표시
-  const handleAddCommentWithToast = () => {
-    if (!newComment.trim()) {
-      showToast('내용을 입력해주세요.', 'negative')
-      return
-    }
-    handleAddComment()
-    showToast('댓글이 등록되었습니다.', 'positive')
+  const [comments, setComments] = useState<CommentType[]>([])
+  const [newComment, setNewComment] = useState('')
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
+
+  const commentRef = useRef<HTMLDivElement>(null)
+
+  /** 댓글 스크롤 이동 */
+  const handleScrollToComments = () => {
+    commentRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // 댓글 삭제 시 모달 → 토스트 표시
-  const handleDeleteClickWithModal = (index: number) => {
-    openModal('댓글을 삭제할까요?', () => {
-      handleDeleteClick(index)
-      showToast('댓글이 삭제되었습니다.', 'positive')
+  /** 댓글 조회 */
+  const fetchComments = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get(`/posts/token`, {
+        params: { postId: post.postId },
+      })
+
+      setComments(res.data.data.comments ?? [])
+    } catch (err) {
+      console.error('댓글 불러오기 실패:', err)
+    }
+  }, [post.postId])
+
+  useEffect(() => {
+    fetchComments()
+  }, [fetchComments])
+
+  /** 댓글 작성 */
+  const handleAddComment = async () => {
+    if (!newComment.trim()) {
+      showToast('댓글을 입력해주세요.', 'negative')
+      return
+    }
+
+    try {
+      await axiosInstance.post(`/comments/${post.postId}`, {
+        content: newComment,
+      })
+      showToast('댓글이 등록되었습니다.', 'positive')
+      setNewComment('')
+      fetchComments()
+    } catch (err) {
+      console.error(err)
+      showToast('댓글 등록 실패', 'negative')
+    }
+  }
+
+  /** 댓글 수정 */
+  const handleUpdateComment = async (commentId: number, content: string) => {
+    try {
+      await axiosInstance.patch(`/comments/${commentId}`, {
+        content,
+      })
+      showToast('댓글이 수정되었습니다.', 'positive')
+      fetchComments()
+    } catch (err) {
+      console.error('댓글 수정 실패:', err)
+      showToast('댓글 수정 실패', 'negative')
+    }
+  }
+
+  /** 댓글 삭제 */
+  const handleDeleteComment = (commentId: number) => {
+    openModal('댓글을 삭제할까요?', async () => {
+      try {
+        await axiosInstance.delete(`/comments/${commentId}`)
+        showToast('댓글이 삭제되었습니다.', 'positive')
+        fetchComments()
+      } catch (err) {
+        console.error(err)
+        showToast('댓글 삭제 실패', 'negative')
+      }
+    })
+  }
+
+  /** 게시글 수정 */
+  const handleEditPost = () => {
+    navigate(`/blogwrite/${post.postId}`)
+  }
+
+  /** 게시글 삭제 */
+  const handleDeletePost = () => {
+    openModal('게시글을 삭제할까요?', async () => {
+      try {
+        await axiosInstance.delete('/posts', {
+          params: { postId: post.postId },
+        })
+        showToast('게시글이 삭제되었습니다.', 'positive')
+        navigate('/')
+      } catch (err: any) {
+        const status = err?.response?.status
+        if (status === 401) showToast('로그인이 필요합니다.', 'negative')
+        else if (status === 403) showToast('본인 글만 삭제할 수 있습니다.', 'negative')
+        else showToast('삭제에 실패했습니다.', 'negative')
+      }
     })
   }
 
   return (
     <div className='flex flex-col w-[1366px] min-h-screen items-center bg-white'>
-      {/* 1. 상단 헤더 */}
+      {/* 상단 헤더 */}
       <PageHeader
         title='GITLOG'
         rightContent={
@@ -71,14 +147,8 @@ export default function ListItemMain({ post }: { post: Post }) {
                   <DropdownMenu
                     variant='arrow'
                     items={[
-                      { label: '수정하기', onClick: () => alert('수정 예정') },
-                      {
-                        label: '삭제하기',
-                        onClick: () =>
-                          openModal('게시글을 삭제할까요?', () =>
-                            showToast('게시글이 삭제되었습니다.', 'positive'),
-                          ),
-                      },
+                      { label: '수정하기', onClick: handleEditPost },
+                      { label: '삭제하기', onClick: handleDeletePost },
                     ]}
                   />
                 </div>
@@ -90,7 +160,7 @@ export default function ListItemMain({ post }: { post: Post }) {
 
       <Blank size='lg' />
 
-      {/* 2. 제목 / 작성자 */}
+      {/* 제목 / 작성자 */}
       <section className='w-[688px]'>
         <h1 className='text-2xl font-bold mb-2'>{post.title}</h1>
         <div className='text-gray-500 text-sm'>
@@ -100,9 +170,9 @@ export default function ListItemMain({ post }: { post: Post }) {
 
       <Blank size='md' />
 
-      {/* 3. 본문 */}
+      {/* 본문 */}
       <section className='flex flex-col w-[688px] px-4 py-3 gap-[10px] rounded-[4px]'>
-        {post.contents?.map((content, index: number) =>
+        {post.contents?.map((content, index) =>
           content.contentType === 'IMAGE' ? (
             <PictureFrame key={index} src={content.content} type='large' />
           ) : (
@@ -115,11 +185,8 @@ export default function ListItemMain({ post }: { post: Post }) {
 
       <Blank size='md' />
 
-      {/* 4. 댓글 */}
-      <section
-        ref={commentRef}
-        className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-white'
-      >
+      {/* 댓글 */}
+      <section ref={commentRef} className='flex flex-col items-center self-stretch bg-white'>
         <div className='w-[688px] flex flex-col px-4 py-3 gap-[10px]'>
           <CommentCount count={comments.length} />
 
@@ -128,31 +195,34 @@ export default function ListItemMain({ post }: { post: Post }) {
               아직 댓글이 없습니다.
             </TextCard>
           ) : (
-            comments.map((comment, index) => (
+            comments.map((comment) => (
               <CommentItem
-                key={index}
-                author='닉네임'
-                date='2025.11.05''
-                content={comment}
-                onDelete={() => handleDeleteClickWithModal(index)}
+                key={comment.commentId}
+                commentId={comment.commentId}
+                author={comment.nickName}
+                date={new Date(comment.createdAt).toLocaleString()}
+                content={comment.content}
+                onDelete={() => handleDeleteComment(comment.commentId)}
+                onEditSubmit={(value) => handleUpdateComment(comment.commentId, value)}
               />
             ))
           )}
 
           <Blank size='sm' />
+
           <CommentField
-            state={commentState}
+            state='active'
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            onSubmit={handleAddCommentWithToast}
+            onSubmit={handleAddComment}
           />
         </div>
       </section>
 
       <Blank size='lg' />
 
-      {/* 5. 작성자 정보 */}
-      <section className='flex flex-col items-center w-full border-t border-[#F5F5F5] bg-[#F5F5F5] py-[64px]'>
+      {/* 작성자 정보 */}
+      <section className='flex flex-col items-center w-full bg-[#F5F5F5] py-[64px]'>
         <div className='flex flex-col items-start gap-[12px] w-[688px] px-4 py-3'>
           <ProfileImage size='lg' src={post.profileUrl} />
           <TextCard

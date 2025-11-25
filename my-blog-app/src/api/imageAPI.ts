@@ -1,17 +1,23 @@
 import axiosInstance from './axiosInstance'
 
-/**
- * 이미지 업로드 API
- * - 파일을 multipart/form-data 로 전송
- * - 서버는 이미지 URL을 응답으로 반환
- */
-export const uploadImageAPI = async (file: File): Promise<string> => {
-  const formData = new FormData()
-  formData.append('image', file)
+/** Presigned URL 요청 */
+export const getPresignedUrl = async (fileName: string): Promise<string> => {
+  const res = await axiosInstance.get('/images/presigned-url', {
+    params: { fileName },
+  })
+  return res.data.data // presigned url
+}
 
-  const res = await axiosInstance.post('/images', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+/** presigned URL로 S3에 PUT 업로드 */
+export const uploadToS3 = async (presignedUrl: string, file: File): Promise<string> => {
+  await fetch(presignedUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type,
+    },
+    body: file,
   })
 
-  return res.data.data.imageUrl // 서버가 반환하는 이미지 URL
+  // presigned URL의 ? 이전 부분이 실제 이미지 URL
+  return presignedUrl.split('?')[0]
 }

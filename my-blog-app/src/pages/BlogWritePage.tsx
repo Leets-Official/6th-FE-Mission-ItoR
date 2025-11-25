@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import PageHeader from '@/components/common/PageHeader'
 import TextCard from '@/components/common/TextCard'
 import { AddPhotoAlternateIcon } from '@/assets/icons/AddPhotoAlternateIcon'
@@ -6,37 +8,111 @@ import { Button } from '@/components/Button/Button'
 import Blank from '@/components/common/Blank'
 import { TrashIcon } from '@/assets/icons/TrashIcon'
 import { useBlogWrite } from '@/hooks/useBlogWrite'
+import axiosInstance from '@/api/axiosInstance'
+import { useToast } from '@/context/ToastContext'
 
 export default function BlogWritePage() {
+  const { postId } = useParams()
+  const navigate = useNavigate()
+  const { showToast } = useToast()
+
   const {
     title,
     setTitle,
     content,
     setContent,
     imagePreview,
+    setImagePreview,
     handleImageUpload,
     handleDeleteImage,
     handleSubmit,
   } = useBlogWrite()
 
+  // 수정 모드: 기존 게시글 불러오기
+  useEffect(() => {
+    if (!postId) return
+    axiosInstance
+      .get('/posts/token', { params: { postId } })
+      .then((res) => {
+        const post = res.data.data
+        setTitle(post.title)
+        setContent(post.contents?.[0]?.content || '')
+        if (post.contents.some((c: { contentType: string }) => c.contentType === 'IMAGE')) {
+          const image = post.contents.find(
+            (c: { contentType: string }) => c.contentType === 'IMAGE',
+          )
+          setImagePreview(image?.content)
+        }
+      })
+      .catch(() => showToast('게시글 불러오기 실패', 'negative'))
+  }, [postId])
+
+  // 게시 or 수정
+  const handleSubmitClick = async () => {
+    if (!title.trim()) return showToast('제목을 입력해주세요.', 'negative')
+    if (!content.trim()) return showToast('본문 내용을 입력해주세요.', 'negative')
+
+    try {
+      if (postId) {
+        // 수정 모드
+        await axiosInstance.patch(
+          '/posts',
+          {
+            title,
+            contents: [
+              { contentOrder: 1, content, contentType: 'TEXT' },
+              ...(imagePreview
+                ? [{ contentOrder: 2, content: imagePreview, contentType: 'IMAGE' }]
+                : []),
+            ],
+          },
+          {
+            params: { postId },
+          },
+        )
+
+        showToast('게시글이 수정되었습니다.', 'positive')
+        navigate(`/blog/${postId}`)
+      } else {
+        // 새 작성
+        await handleSubmit()
+      }
+    } catch (error) {
+      showToast('요청에 실패했습니다.', 'negative')
+    }
+  }
+
+  // 게시물 삭제
+  const handleDeletePost = async () => {
+    if (!postId) return showToast('게시글 ID가 없습니다.', 'negative')
+
+    try {
+      await axiosInstance.delete('/posts', { params: { postId } })
+      showToast('게시글이 삭제되었습니다.', 'positive')
+      navigate('/') // 삭제 후 홈으로 이동 (또는 게시글 목록 페이지)
+    } catch (error) {
+      showToast('게시글 삭제에 실패했습니다.', 'negative')
+    }
+  }
+
   return (
     <div className='flex flex-col items-center min-h-screen bg-white'>
-      {/* 상단 헤더 */}
       <PageHeader
         title='GITLOG'
         rightContent={
           <div className='flex gap-4'>
-            <Button intent='flat' className='!text-negative'>
-              삭제하기
-            </Button>
-            <Button intent='flat' className='!text-black' onClick={handleSubmit}>
-              게시하기
+            {postId && (
+              <Button intent='flat' className='!text-negative' onClick={handleDeletePost}>
+                삭제하기
+              </Button>
+            )}
+            <Button intent='flat' className='!text-black' onClick={handleSubmitClick}>
+              {postId ? '수정하기' : '게시하기'}
             </Button>
           </div>
         }
       />
 
-      {/* 하단 subHeader */}
       <PageHeader
         title=''
         hideMenu
@@ -50,7 +126,6 @@ export default function BlogWritePage() {
         }
       />
 
-      {/* 제목 입력 */}
       <div className='mt-8 w-[688px]'>
         <Blank size='md' />
         <TextCard variant='secondary'>
@@ -67,8 +142,6 @@ export default function BlogWritePage() {
         <Blank size='md' />
       </div>
 
-      {/* 내용 입력 */}
-      <Blank size='md' />
       <div className='mt-6 w-[688px]'>
         <TextCard variant='body'>
           <textarea
@@ -83,7 +156,6 @@ export default function BlogWritePage() {
         <Blank size='md' />
       </div>
 
-      {/* 이미지 미리보기 */}
       {imagePreview && (
         <div className='relative w-[600px] mt-6 flex flex-col justify-center items-center gap-2 border border-gray-200 bg-white rounded-md shadow-sm p-3'>
           <img
