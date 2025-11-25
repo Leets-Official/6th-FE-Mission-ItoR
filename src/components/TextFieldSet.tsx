@@ -11,6 +11,7 @@ interface TextFieldSetProps {
   placeholder?: string;
   className?: string; // For the outer div
   inputClassName?: string; // For the inner TextField
+  icon?: React.ReactNode; // Add icon prop
   type?: string;
   disabled?: boolean;
 }
@@ -24,6 +25,7 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
   placeholder,
   className,
   inputClassName, // Destructure new prop
+  icon, // Destructure icon prop
   type = "text",
   disabled = false,
 }) => {
@@ -45,6 +47,7 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
         size={size} // Pass size down to TextField
         placeholder={placeholder}
         disabled={disabled}
+        icon={icon} // Pass icon down
         className={clsx(
           "placeholder-[#B0B0B0]",
           disabled ? "text-[#C8C8C8]" : "text-[#000000]",

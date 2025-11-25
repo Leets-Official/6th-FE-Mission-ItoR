@@ -8,6 +8,7 @@ interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement
   variant?: TextFieldVariant;
   size?: TextFieldSize;
   placeholder?: string;
+  icon?: React.ReactNode; // Add icon prop
 }
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -15,6 +16,7 @@ const TextField: React.FC<TextFieldProps> = ({
   size = "sm",
   placeholder = "Text field",
   className,
+  icon, // Destructure icon prop
   ...props
 }) => {
   const baseStyles = "border rounded-[4px] focus:outline-none transition-colors duration-200";
@@ -33,12 +35,25 @@ const TextField: React.FC<TextFieldProps> = ({
   };
 
   return (
-    <input
-      type={props.type || "text"}
-      placeholder={placeholder}
-      className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], className)}
-      {...props}
-    />
+    <div className="relative w-full">
+      {icon && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          {icon}
+        </div>
+      )}
+      <input
+        type={props.type || "text"}
+        placeholder={placeholder}
+        className={clsx(
+          baseStyles,
+          sizeStyles[size],
+          variantStyles[variant],
+          { "pl-10": icon }, // Add padding if icon exists
+          className
+        )}
+        {...props}
+      />
+    </div>
   );
 };
 

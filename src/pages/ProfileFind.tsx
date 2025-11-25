@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import TextFieldSet from "@/components/TextFieldSet";
 import Profile from "@/assets/svgs/Profile.svg?react";
 import Toast from "@/components/Toast";
+import KakaoIcon from "@/assets/svgs/kakao.svg?react";
 import { useUserProfile, useUpdateUserProfile } from "@/hooks/auth/useAuth";
 import { useUploadImage } from "@/hooks/usePosts";
 import { UpdateUserProfilePayload } from "@/api/auth";
@@ -30,6 +31,8 @@ const ProfileFind: React.FC = () => {
     profilePicture: "", // Add profilePicture to form state
   });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const isKakaoUser = !!userProfile?.kakaoId;
 
   useEffect(() => {
     if (userProfile) {
@@ -116,13 +119,17 @@ const ProfileFind: React.FC = () => {
   };
 
   // --- Render Data ---
-  const fields = [
+  const allFields = [
     { key: "email", label: "메일", placeholder: "이메일", disabled: !isEditing, type: "email" },
     { key: "password", label: "비밀번호", placeholder: "••••••••", type: "password", disabled: !isEditing },
     { key: "confirmPassword", label: "비밀번호 확인", placeholder: "••••••••", type: "password", disabled: !isEditing },
     { key: "name", label: "이름", placeholder: "이름", disabled: !isEditing, type: "text" },
     { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD", disabled: !isEditing, type: "text" },
   ] as const;
+
+  const fields = isKakaoUser
+    ? allFields.filter(f => f.key !== 'password' && f.key !== 'confirmPassword')
+    : allFields;
 
   if (isLoading) return <div className="flex justify-center items-center min-h-screen">프로필 정보를 불러오는 중입니다...</div>;
   if (isError) return <div className="flex justify-center items-center min-h-screen text-red-500">프로필 정보를 불러오는 데 실패했습니다.</div>;
@@ -184,6 +191,15 @@ const ProfileFind: React.FC = () => {
 
       <div className="flex flex-col mt-[60px] mx-auto w-[688px] mb-20">
         <div className="w-full flex flex-col gap-4">
+          {isKakaoUser && (
+            <TextFieldSet
+              label="소셜로그인"
+              value="카카오 로그인"
+              disabled={true}
+              icon={<KakaoIcon className="w-5 h-5" />}
+              inputClassName="bg-[#E6E6E6] text-[#909090]"
+            />
+          )}
           {fields.map(({ key, label, placeholder, disabled, type }) => (
             <TextFieldSet
               key={key}

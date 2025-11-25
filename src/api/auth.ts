@@ -92,6 +92,7 @@ export interface UserProfileResponse extends BaseUserProfile {
   name: string;
   birthDate: string;
   introduction: string;
+  kakaoId?: number; // Add optional kakaoId
 }
 
 export const getUserProfile = async (): Promise<UserProfileResponse> => {
