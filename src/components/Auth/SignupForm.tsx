@@ -12,7 +12,6 @@ import { register, registerKakao } from "@/api/auth";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useImageValidation } from "@/hooks/useImageValidation";
 import { useApiError } from "@/hooks/useApiError";
-import { useToast } from "@/contexts/ToastContext";
 
 interface SignupFormProps {
   type: "email" | "kakao";
@@ -29,7 +28,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
   const { uploadImage, uploading } = useImageUpload();
   const { validateAndShowError } = useImageValidation();
   const { handleError } = useApiError();
-  const { showToast } = useToast();
 
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
