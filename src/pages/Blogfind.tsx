@@ -63,10 +63,12 @@ const Blogfind: React.FC = () => {
           const imageBlock = post.contents?.find(
             (c) => c.contentType === "IMAGE"
           );
-          const textContents =
+          const textPreview =
             post.contents
               ?.filter((c) => c.contentType === "TEXT")
-              .map((c) => c.content) || [];
+              .map((c) => c.content)
+              .join(" ") // Join all text blocks
+              .replace(/<[^>]*>?/gm, "") || "내용이 없습니다."; // Strip HTML tags
 
           return (
             <div
@@ -78,10 +80,7 @@ const Blogfind: React.FC = () => {
                 post={{
                   id: post.postId,
                   title: post.title,
-                  content:
-                    textContents.length > 0
-                      ? textContents
-                      : ["내용이 없습니다."],
+                  content: textPreview,
                   author: post.nickName,
                   createdAt: post.createdAt,
                   commentsCount: post.commentCount,

@@ -114,7 +114,10 @@ const BlogDetail: React.FC = () => {
       {/* 본문 */}
       <div className="w-[688px] p-4 text-gray-800 text-[14px] leading-[160%] mt-4 whitespace-pre-line">
         {post.contents?.map((block: { contentOrder: React.Key; content: string }) => (
-          <p key={block.contentOrder}>{block.content}</p>
+          <React.Fragment key={block.contentOrder}>
+            {block.content.replace(/<[^>]*>?/gm, '')}
+            {"\n"}
+          </React.Fragment>
         ))}
       </div>
 
