@@ -1,11 +1,9 @@
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
 import HeaderLegacy from "@/components/Header/HeaderLegacy";
 import TextField from "@/components/Text/TextField";
 import ImagePreview from "@/components/ImagePreview/ImagePreview";
 import Modal from "@/components/Modal/Modal";
+import PageLayout from "@/layouts/PageLayout";
 import * as S from "./PostWritePage.styled";
-import { useLogout } from "@/hooks/useLogout";
 import { useState, useRef } from "react";
 import { usePostForm } from "./usePostForm";
 import { useImageUpload } from "@/hooks/useImageUpload";
@@ -23,10 +21,7 @@ const PostWritePage: React.FC = () => {
   } = usePostForm();
 
   const { uploadImage } = useImageUpload();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
-    useLogout();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleCancel = () => {
@@ -38,6 +33,22 @@ const PostWritePage: React.FC = () => {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const MAX_SIZE = 5 * 1024 * 1024;
+    const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert("JPG, PNG, GIF, WebP 형식만 업로드 가능합니다.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > MAX_SIZE) {
+      alert("파일 크기는 5MB 이하만 가능합니다.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     try {
       const uploadedUrl = await uploadImage(file);
       setImages((prev: string[]) => [...prev, uploadedUrl]);
@@ -49,27 +60,12 @@ const PostWritePage: React.FC = () => {
   };
 
   return (
-    <main className={S.layout}>
-      <div className={S.fixedHeader}>
-        <Header
-          title="GITLOG"
-          variant="action"
-          onMenuClick={() => setIsSidebarOpen(true)}
-          onDeleteClick={() => setIsDeleteModalOpen(true)}
-          onPublishClick={handlePublish}
-          onCancelClick={handleCancel}
-        />
-      </div>
-
-      {isSidebarOpen && (
-        <>
-          <div className={S.sidebarOverlay} onClick={() => setIsSidebarOpen(false)} />
-          <aside className={S.sidebar}>
-            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
-          </aside>
-        </>
-      )}
-
+    <PageLayout
+      headerVariant="action"
+      onDeleteClick={() => setIsDeleteModalOpen(true)}
+      onPublishClick={handlePublish}
+      onCancelClick={handleCancel}
+    >
       <section className={S.form}>
         <div className={S.spacer} />
         <HeaderLegacy
@@ -130,17 +126,7 @@ const PostWritePage: React.FC = () => {
         confirmColor="bg-brand-red text-white hover:opacity-90"
         onConfirm={() => (window.location.href = "/blog")}
       />
-
-      <Modal
-        open={isLogoutModalOpen}
-        title="로그아웃을 진행할게요."
-        onClose={handleCloseLogoutModal}
-        onConfirm={handleConfirmLogout}
-        confirmText="로그아웃"
-        cancelText="취소"
-        confirmColor="bg-brand-blue text-white hover:opacity-90"
-      />
-    </main>
+    </PageLayout>
   );
 };
 

@@ -1,17 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "@/components/Header/Header";
 import Avatar from "@/components/Avatar/Avatar";
 import TextFieldSet from "@/components/Text/TextFieldSet";
 import Modal from "@/components/Modal/Modal";
+import PageLayout from "@/layouts/PageLayout";
 import { PlusIcon, KakaoIcon } from "@/assets/icons";
 import * as S from "./MyPageSetting.styled";
 import TextField from "@/components/Text/TextField";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import { useLogout } from "@/hooks/useLogout";
 import { useUserStore, type User } from "@/store/useUserStore";
 import { updateUserInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
+
+type FormState = {
+  email: string;
+  name: string;
+  birth: string;
+  nickname: string;
+  intro: string;
+  profile: string;
+};
 
 export default function MyPageSetting() {
   const navigate = useNavigate();
@@ -21,20 +28,7 @@ export default function MyPageSetting() {
 
   const loginType = user?.loginType ?? "email";
 
-  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
-    useLogout();
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-
-  type FormState = {
-    email: string;
-    name: string;
-    birth: string;
-    nickname: string;
-    intro: string;
-    profile: string;
-  };
 
   const emptyForm: FormState = {
     email: "",
@@ -143,29 +137,12 @@ export default function MyPageSetting() {
   const RENDER_FIELDS = BASE_FIELDS;
 
   return (
-    <div className={S.container}>
-      <div className="fixed top-0 left-0 z-50 w-full">
-        <Header
-          title="GITLOG"
-          variant={isEditMode ? "saveCancel" : "edit"}
-          onMenuClick={() => setIsSidebarOpen(true)}
-          onEditClick={handleEditClick}
-          onCancelClick={handleCancelClick}
-          onSaveClick={handleSaveClick}
-        />
-      </div>
-
-      <div className="h-[60px]" />
-
-      {isSidebarOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
-          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
-          </aside>
-        </>
-      )}
-
+    <PageLayout
+      headerVariant={isEditMode ? "saveCancel" : "edit"}
+      onEditClick={handleEditClick}
+      onCancelClick={handleCancelClick}
+      onSaveClick={handleSaveClick}
+    >
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.avatarWrapper}>
@@ -236,15 +213,6 @@ export default function MyPageSetting() {
         confirmText="취소하기"
         cancelText="계속 수정하기"
       />
-
-      <Modal
-        open={isLogoutModalOpen}
-        title="로그아웃을 진행할게요."
-        onClose={handleCloseLogoutModal}
-        onConfirm={handleConfirmLogout}
-        confirmText="로그아웃"
-        cancelText="취소"
-      />
-    </div>
+    </PageLayout>
   );
 }

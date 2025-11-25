@@ -1,15 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Header from "@/components/Header/Header";
 import Avatar from "@/components/Avatar/Avatar";
 import CommentSection from "@/components/Blog/CommentSection/CommentSection";
-import * as S from "./PostDetail.styled";
-import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import DropdownMenuList from "@/components/DropdownMenu/DropdownMenuList";
 import Modal from "@/components/Modal/Modal";
+import PageLayout from "@/layouts/PageLayout";
+import * as S from "./PostDetail.styled";
 import { useUserStore } from "@/store/useUserStore";
-import { useLogout } from "@/hooks/useLogout";
 import { fetchPostDetail, deletePost } from "@/api/postApi";
 import { Post } from "@/types/post";
 import { useToast } from "@/contexts/ToastContext";
@@ -18,10 +16,7 @@ export default function PostDetail() {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
-    useLogout();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -90,43 +85,23 @@ export default function PostDetail() {
   ];
 
   return (
-    <div className={S.page}>
-      <div className="fixed top-0 left-0 z-50 w-full">
-        <Header
-          title="GITLOG"
-          variant="chatMenu"
-          onChatClick={handleScrollToComments}
-          onMenuClick={() => setIsSidebarOpen(true)}
-          onMoreClick={() => setIsMenuOpen((prev) => !prev)}
-          showMoreIcon={isOwner}
-        />
-        {isOwner && isMenuOpen && (
-          <div className="absolute top-[55px] right-6 z-50">
-            <DropdownMenuList
-              items={menuItems}
-              onItemClick={(item) => {
-                item.onClick?.();
-                setIsMenuOpen(false);
-              }}
-              position="right"
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="h-[70px]" />
-
-      {isSidebarOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
-          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar
-              variant={isLogin ? "user" : "guest"}
-              onLogoutClick={handleLogoutClick}
-              onLoginClick={() => setIsLoginOpen(true)}
-            />
-          </aside>
-        </>
+    <PageLayout
+      headerVariant="chatMenu"
+      onChatClick={handleScrollToComments}
+      onMoreClick={() => setIsMenuOpen((prev) => !prev)}
+      showMoreIcon={isOwner}
+    >
+      {isOwner && isMenuOpen && (
+        <div className="absolute top-[55px] right-6 z-50">
+          <DropdownMenuList
+            items={menuItems}
+            onItemClick={(item) => {
+              item.onClick?.();
+              setIsMenuOpen(false);
+            }}
+            position="right"
+          />
+        </div>
       )}
 
       <main className={S.container}>
@@ -194,16 +169,6 @@ export default function PostDetail() {
         cancelText="취소"
         confirmColor="bg-brand-red text-white hover:opacity-90"
       />
-
-      <Modal
-        open={isLogoutModalOpen}
-        title="로그아웃을 진행할게요."
-        onClose={handleCloseLogoutModal}
-        onConfirm={handleConfirmLogout}
-        confirmText="로그아웃"
-        cancelText="취소"
-        confirmColor="bg-brand-blue text-white hover:opacity-90"
-      />
-    </div>
+    </PageLayout>
   );
 }

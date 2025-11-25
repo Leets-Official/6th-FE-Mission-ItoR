@@ -1,23 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
 import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/Blog/PostItem/PostItem";
 import SmallButton from "@/components/SmallButton/SmallButton";
+import PageLayout from "@/layouts/PageLayout";
 import * as S from "./MyPage.styled";
 import { ApiPost } from "@/types/post";
 import { SettingsIcon } from "@/assets/icons";
 import Avatar from "@/components/Avatar/Avatar";
-import Modal from "@/components/Modal/Modal";
-import { useLogout } from "@/hooks/useLogout";
 import { useUserStore } from "@/store/useUserStore";
 import { fetchPosts } from "@/api/postApi";
 import { fetchMyInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
 
 export default function MyPage() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState<ApiPost[]>([]);
   const [pageMax, setPageMax] = useState(0);
@@ -27,9 +23,6 @@ export default function MyPage() {
   const location = useLocation();
   const { user, setUser } = useUserStore();
   const { showToast } = useToast();
-
-  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
-    useLogout();
 
   useEffect(() => {
     const load = async () => {
@@ -75,26 +68,7 @@ export default function MyPage() {
   }, [currentPage, showToast]);
 
   return (
-    <div className="relative">
-      <div className="fixed top-0 left-0 z-50 w-full">
-        <Header
-          title="GITLOG"
-          variant="write"
-          onMenuClick={() => setIsSidebarOpen(true)}
-          onWriteClick={() => navigate("/write")}
-        />
-      </div>
-      <div className="h-[60px]" />
-
-      {isSidebarOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
-          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar variant="user" onLogoutClick={handleLogoutClick} />
-          </aside>
-        </>
-      )}
-
+    <PageLayout headerVariant="write" onWriteClick={() => navigate("/write")}>
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
@@ -140,16 +114,6 @@ export default function MyPage() {
           </>
         )}
       </main>
-
-      <Modal
-        open={isLogoutModalOpen}
-        title="로그아웃을 진행할게요."
-        onClose={handleCloseLogoutModal}
-        onConfirm={handleConfirmLogout}
-        confirmText="로그아웃"
-        cancelText="취소"
-        confirmColor="bg-brand-blue text-white hover:opacity-90"
-      />
-    </div>
+    </PageLayout>
   );
 }
