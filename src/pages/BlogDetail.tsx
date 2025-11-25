@@ -239,16 +239,17 @@ const BlogDetail: React.FC = () => {
           description="삭제된 게시글은 복구할 수 없습니다."
           onClose={() => setIsBlogDeleteModalOpen(false)}
           onConfirm={handleBlogDeleteConfirm}
+          variant="delete"
         />
       )}
 
       {/* 댓글 삭제 모달 */}
       {isCommentDeleteModalOpen && (
         <Modal
-          titleLine1="해당 댓글을 삭제하시겠어요?"
-          description="삭제된 댓글은 복구할 수 없습니다."
+          titleLine1="댓글을 삭제할까요?"
           onClose={() => setIsCommentDeleteModalOpen(false)}
           onConfirm={handleCommentDeleteConfirm}
+          variant="delete"
         />
       )}
     </div>
