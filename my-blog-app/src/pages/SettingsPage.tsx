@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import PageHeader from '@/components/common/PageHeader'
 import Blank from '@/components/common/Blank'
-import TextCard from '@/components/common/TextCard'
-import ProfileImageUploader from '@/components/Settings/ProfileImageUploader'
-import SignUpFormFields from '@/components/SignUpFormFields'
 import TextFiledSet from '@/components/TextFiled/TextFiledSet'
-import { useNavigate } from 'react-router-dom'
+import ProfileImageUploader from '@/components/Settings/ProfileImageUploader'
 import { Button } from '@/components/Button/Button'
+import { useNavigate } from 'react-router-dom'
 import axiosInstance from '@/api/axiosInstance'
 
 export default function SettingsPage() {
@@ -31,7 +29,6 @@ export default function SettingsPage() {
     const data = res.data.data
 
     setUser(data)
-
     setProfile(data.profilePicture)
     setNickname(data.nickname)
     setIntroduction(data.introduction)
@@ -49,15 +46,19 @@ export default function SettingsPage() {
       if (nickname !== user.nickname) {
         await axiosInstance.patch('/users/nickname', { nickname })
       }
+
       if (introduction !== user.introduction) {
         await axiosInstance.patch('/users/introduction', { introduction })
       }
+
       if (password && password === passwordConfirm) {
         await axiosInstance.patch('/users/password', { password })
       }
+
       if (profile !== user.profilePicture) {
         await axiosInstance.patch('/users/picture', { profilePicture: profile })
       }
+
       if (name !== user.name || birthDate !== user.birthDate) {
         await axiosInstance.patch('/users/info', { name, birthDate })
       }
@@ -79,31 +80,30 @@ export default function SettingsPage() {
         title='GITLOG'
         rightContent={
           <div className='flex gap-4'>
-            {/* edit 모드에서만 취소 버튼 표시 */}
-            {mode === 'edit' && (
-              <Button intent='flat' className='!text-negative' onClick={() => setMode('view')}>
-                취소하기
+            {isView ? (
+              <Button intent='flat' className='!text-black' onClick={() => setMode('edit')}>
+                수정하기
               </Button>
-            )}
+            ) : (
+              <>
+                <Button intent='flat' className='!text-negative' onClick={() => setMode('view')}>
+                  취소하기
+                </Button>
 
-            {/* 수정하기 / 저장하기 동적 텍스트 */}
-            <Button
-              intent='flat'
-              className='!text-black'
-              onClick={mode === 'edit' ? handleSave : () => setMode('edit')}
-            >
-              {mode === 'edit' ? '저장하기' : '수정하기'}
-            </Button>
+                <Button intent='flat' className='!text-black' onClick={handleSave}>
+                  저장하기
+                </Button>
+              </>
+            )}
           </div>
         }
       />
 
-      {/* 상단 회색 영역 */}
+      {/* 상단 회색 배경 */}
       <div className='w-full bg-[#F5F5F5] border-b border-[#F5F5F5] flex justify-center'>
         <div className='max-w-[688px] w-full px-4 py-6 flex flex-col gap-4'>
           <ProfileImageUploader value={profile} onChange={setProfile} disabled={isView} />
 
-          {/* 프로필 아래: 닉네임 + 한 줄 소개 */}
           <TextFiledSet
             label='닉네임'
             placeholder='닉네임'
@@ -121,26 +121,17 @@ export default function SettingsPage() {
             value={introduction}
             onChange={(e) => setIntroduction(e.target.value)}
             disabled={isView}
-            showHelper={false}
           />
         </div>
       </div>
 
       <Blank size='md' />
 
-      {/* 하단 폼: 이메일 / 비밀번호 / 비밀번호 확인 / 이름 / 생년월일 */}
+      {/* 하단 폼 */}
       <div className='w-full flex justify-center'>
         <div className='w-full max-w-[688px] px-4 flex flex-col gap-4'>
-          {/* 이메일 - 항상 비활성화 */}
-          <TextFiledSet
-            label='이메일'
-            placeholder='이메일'
-            value={email}
-            disabled
-            showHelper={false}
-          />
+          <TextFiledSet label='이메일' value={email} disabled />
 
-          {/* 비밀번호 / 비밀번호 확인 - edit 모드에서만 표시 + helperText 포함 */}
           {!isView && (
             <>
               <TextFiledSet
@@ -149,7 +140,6 @@ export default function SettingsPage() {
                 placeholder='******'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                showHelper={false}
               />
 
               <TextFiledSet
@@ -169,24 +159,19 @@ export default function SettingsPage() {
             </>
           )}
 
-          {/* 이름 */}
           <TextFiledSet
             label='이름'
-            placeholder='이름'
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isView}
-            showHelper={false}
           />
 
-          {/* 생년월일 */}
           <TextFiledSet
             label='생년월일'
-            placeholder='YYYY - MM - DD'
+            placeholder='YYYY-MM-DD'
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
             disabled={isView}
-            showHelper={false}
           />
         </div>
       </div>
