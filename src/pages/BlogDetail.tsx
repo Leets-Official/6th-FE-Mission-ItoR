@@ -35,6 +35,14 @@ const BlogDetail: React.FC = () => {
     profilePicture: localStorage.getItem("profilePicture"),
   };
 
+  // Helper function to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+    const formatted = date.toLocaleDateString('en-US', options); // e.g., "Feb 17, 2015"
+    return formatted.replace(/,/, '.').replace(/\s(\d{4})/, '$1'); // "Feb 17.2015"
+  };
+
   // --- Event Handlers ---
   const handleBlogDeleteConfirm = () => {
     if (!id) return;
@@ -105,9 +113,21 @@ const BlogDetail: React.FC = () => {
       {/* 제목 및 정보 */}
       <div className="w-[688px] border-b border-gray-300 py-8">
         <h3 className="font-medium text-[18px] text-gray-900">{post.title}</h3>
-        <div className="flex flex-row justify-start text-sm text-gray-500 gap-6 mt-8">
-          <span>{post.nickName}</span>
-          <span>{new Date(post.createdAt).toLocaleString()}</span>
+        <div className="flex flex-row items-center text-sm text-gray-500 gap-2 mt-8">
+          {post.profileUrl ? (
+            <img
+              src={post.profileUrl}
+              alt={post.nickName}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          ) : (
+            <ProfileIcon className="w-6 h-6" />
+          )}
+          <span className="font-medium text-gray-900">{post.nickName}</span>
+          <span className="text-gray-300">·</span>
+          <span>{formatDate(post.createdAt)}</span>
+          <span className="text-gray-300">·</span>
+          <span>댓글 {post.comments.length}</span>
         </div>
       </div>
 
