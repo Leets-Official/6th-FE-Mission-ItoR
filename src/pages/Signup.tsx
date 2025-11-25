@@ -23,23 +23,23 @@ const Signup: React.FC = () => {
       <Header variant="none" />
 
       {/* 회원가입 타이틀 영역 */}
-      <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-gray-50 px-[430px]">
+      <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-gray-50 px-4 md:px-[430px]">
         <h1 className="text-2xl font-medium text-gray-800">회원가입</h1>
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="flex justify-center items-center flex-1 mt-[60px]">
-        <div className="flex flex-row justify-between items-center w-[782px]">
+      <div className="flex justify-center items-center flex-1 mt-[60px] px-4">
+        <div className="max-w-[800px] w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-8">
           {/* 왼쪽 영역 */}
-          <div className="flex flex-col items-start justify-center w-[344px]">
-            <Frame7 className="w-[344px] h-[160px] text-black fill-black -ml-[60px]" />
+          <div className="flex flex-col items-center justify-center">
+            <Frame7 className="w-[344px] h-[160px] text-black fill-black md:-ml-[60px]" />
             <p className="text-gray-400 text-sm font-light leading-relaxed mt-2">
               You can make anything by writing
             </p>
           </div>
 
           {/* 오른쪽 회원가입 영역 */}
-          <div className="flex flex-col items-center justify-center w-[344px]">
+          <div className="flex flex-col items-center justify-center w-full">
             {/* 이메일 회원가입 */}
             <button
               onClick={handleEmailSignup}
