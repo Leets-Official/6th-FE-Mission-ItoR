@@ -61,18 +61,18 @@ const Login: React.FC = () => {
   const handleKakaoLogin = () => startKakao();
 
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="w-full min-h-screen">
       {/* 배경으로 Blogfind 표시 */}
       <Blogfind />
 
       {/* 블러 오버레이 */}
-      <div className="absolute inset-0 backdrop-blur-[4px] bg-black/10 z-40"></div>
+      <div className="fixed inset-0 backdrop-blur-[4px] bg-black/10 z-40"></div>
 
       {/* 로그인 팝업 */}
-      <div className="absolute inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 flex items-center justify-center z-50">
         <div
-          className="w-[782px] h-[469px] bg-black rounded-[9px] 
-                     flex flex-row items-center justify-between px-[60px] py-[80px] relative text-white"
+          className="max-w-[800px] w-full max-h-[90vh] overflow-y-auto bg-black rounded-[9px] 
+                     flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 px-8 py-12 md:px-[60px] md:py-[80px] relative text-white"
         >
           {/* 오른쪽 상단 닫기 버튼 */}
           <button
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
           </button>
 
           {/* 왼쪽 영역 */}
-          <div className="items-start justify-center w-[344px] max-w-[344px]">
+          <div className="items-start justify-center flex-1 min-w-0">
             <Frame7 className="w-[344px] h-[160px] -ml-[40px] text-white fill-white" />
             <p className="text-[#909090] text-[14px] font-light px-4 leading-[160%]">
               You can make anything by writing
@@ -91,7 +91,7 @@ const Login: React.FC = () => {
           </div>
 
           {/* 오른쪽 로그인 폼 */}
-          <div className="flex flex-col items-center justify-center w-[344px] max-w-[344px]">
+          <div className="flex flex-col items-center justify-center flex-1 min-w-0 w-full">
             {/* 이메일 입력 */}
             <input
               type="email"
