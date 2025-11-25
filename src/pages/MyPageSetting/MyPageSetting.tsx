@@ -12,6 +12,7 @@ import { updateUserInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useImageValidation } from "@/hooks/useImageValidation";
+import { useApiError } from "@/hooks/useApiError";
 
 type FormState = {
   email: string;
@@ -29,46 +30,44 @@ export default function MyPageSetting() {
   const { showToast } = useToast();
   const { uploadImage } = useImageUpload();
   const { validateAndShowError } = useImageValidation();
+  const { handleError } = useApiError();
 
   const loginType = user?.loginType ?? "email";
-
   const [isEditMode, setIsEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const emptyForm: FormState = {
+  const [form, setForm] = useState<FormState>({
     email: "",
     name: "",
     birth: "",
     nickname: "",
     intro: "",
     profile: "",
-  };
+  });
 
-  const [form, setForm] = useState<FormState>(emptyForm);
-  const [tempForm, setTempForm] = useState<FormState>(emptyForm);
+  const [tempForm, setTempForm] = useState<FormState>(form);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
-    const loaded: FormState = {
-      email: user.email,
-      name: user.name,
-      birth: user.birthDate,
-      nickname: user.nickname,
-      intro: user.introduction,
-      profile: user.profilePicture,
+    const loaded = {
+      email: user.email ?? "",
+      name: user.name ?? "",
+      birth: user.birthDate ?? "",
+      nickname: user.nickname ?? "",
+      intro: user.introduction ?? "",
+      profile: user.profilePicture ?? "",
     };
 
     setForm(loaded);
     setTempForm(loaded);
+    setLoading(false);
   }, [user]);
 
-  const handleChange = (field: keyof FormState, value: string) =>
+  const handleChange = (field: keyof FormState, value: string) => {
     setTempForm((prev) => ({ ...prev, [field]: value }));
-
-  const handleEditClick = () => setIsEditMode(true);
-
-  const handleCancelClick = () => setIsCancelModalOpen(true);
+  };
 
   const handleConfirmCancel = () => {
     setTempForm(form);
@@ -100,6 +99,7 @@ export default function MyPageSetting() {
       };
 
       setUser(updatedUser);
+
       setForm({
         email: updatedUser.email,
         name: updatedUser.name,
@@ -111,8 +111,8 @@ export default function MyPageSetting() {
 
       setIsEditMode(false);
       navigate("/mypage", { state: { toastMessage: "저장되었습니다!" } });
-    } catch {
-      showToast("수정 중 오류가 발생했습니다.", "error");
+    } catch (error) {
+      handleError(error, "사용자 정보 수정");
     }
   };
 
@@ -130,97 +130,113 @@ export default function MyPageSetting() {
       reader.onload = () => setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
       reader.readAsDataURL(file);
 
-      const uploadedUrl = await uploadImage(file);
-      setTempForm((prev) => ({ ...prev, profile: uploadedUrl }));
-    } catch {
-      showToast("프로필 사진 업로드에 실패했습니다.", "error");
+      const uploaded = await uploadImage(file);
+      setTempForm((prev) => ({ ...prev, profile: uploaded }));
+    } catch (error) {
+      handleError(error, "프로필 사진 업로드");
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
-  type BaseField = {
-    title: string;
-    field: keyof FormState;
-    placeholder: string;
-    type: string;
-  };
-
-  const BASE_FIELDS: BaseField[] = [
-    { title: "이메일", field: "email", placeholder: "이메일", type: "text" },
-    { title: "이름", field: "name", placeholder: "이름", type: "text" },
-    { title: "생년월일", field: "birth", placeholder: "YYYY-MM-DD", type: "text" },
-  ];
-
-  const RENDER_FIELDS = BASE_FIELDS;
-
-  return (
-    <PageLayout
-      headerVariant={isEditMode ? "saveCancel" : "edit"}
-      onEditClick={handleEditClick}
-      onCancelClick={handleCancelClick}
-      onSaveClick={handleSaveClick}
-    >
+  const Skeleton = () => (
+    <>
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.avatarWrapper}>
-            <Avatar src={tempForm.profile} alt="프로필 이미지" size="lg" />
-            {isEditMode && (
-              <>
-                <button className={S.addIconButton} onClick={() => fileInputRef.current?.click()}>
-                  <PlusIcon width={22} height={22} />
-                </button>
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  className="hidden"
-                  onChange={handlePhotoChange}
-                />
-              </>
-            )}
+            <div className="h-[96px] w-[96px] animate-pulse rounded-full bg-gray-200" />
           </div>
 
           <main className={S.profileHeader}>
-            <TextFieldSet
-              variant="backless"
-              size="lg"
-              className={S.nickname}
-              value={tempForm.nickname}
-              helperText="20자 이내"
-              disabled={!isEditMode}
-              onChange={(e) => handleChange("nickname", e.target.value)}
-            />
-            <TextFieldSet
-              variant="backless"
-              value={tempForm.intro}
-              disabled={!isEditMode}
-              onChange={(e) => handleChange("intro", e.target.value)}
-            />
+            <div className="h-6 w-40 animate-pulse rounded bg-gray-200" />
+            <div className="mt-2 h-4 w-64 animate-pulse rounded bg-gray-200" />
           </main>
         </div>
       </section>
 
       <main className={S.formWrapper}>
-        {loginType === "kakao" && (
-          <div className={S.socialWrapper}>
-            <KakaoIcon className={S.kakaoIcon} />
-            <TextField value="카카오 로그인" disabled fullWidth className={S.kakaoTextField} />
-          </div>
-        )}
-
-        {RENDER_FIELDS.map(({ title, field, placeholder, type }) => (
-          <TextFieldSet
-            key={field}
-            title={title}
-            placeholder={placeholder}
-            type={type}
-            value={tempForm[field]}
-            disabled={!isEditMode}
-            onChange={(e) => handleChange(field, e.target.value)}
-          />
-        ))}
+        <div className="mb-4 h-10 w-full animate-pulse rounded bg-gray-200" />
+        <div className="mb-4 h-10 w-full animate-pulse rounded bg-gray-200" />
+        <div className="mb-4 h-10 w-full animate-pulse rounded bg-gray-200" />
       </main>
+    </>
+  );
+
+  return (
+    <PageLayout
+      headerVariant={isEditMode ? "saveCancel" : "edit"}
+      onEditClick={() => setIsEditMode(true)}
+      onCancelClick={() => setIsCancelModalOpen(true)}
+      onSaveClick={handleSaveClick}
+    >
+      {loading ? (
+        <Skeleton />
+      ) : (
+        <>
+          <section className={S.profileSection}>
+            <div className={S.profileSectionInner}>
+              <div className={S.avatarWrapper}>
+                <Avatar src={tempForm.profile} size="lg" />
+                {isEditMode && (
+                  <>
+                    <button
+                      className={S.addIconButton}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <PlusIcon width={22} height={22} />
+                    </button>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoChange}
+                    />
+                  </>
+                )}
+              </div>
+
+              <main className={S.profileHeader}>
+                <TextFieldSet
+                  variant="backless"
+                  size="lg"
+                  className={S.nickname}
+                  value={tempForm.nickname}
+                  helperText="20자 이내"
+                  disabled={!isEditMode}
+                  onChange={(e) => handleChange("nickname", e.target.value)}
+                />
+                <TextFieldSet
+                  variant="backless"
+                  value={tempForm.intro}
+                  disabled={!isEditMode}
+                  onChange={(e) => handleChange("intro", e.target.value)}
+                />
+              </main>
+            </div>
+          </section>
+
+          <main className={S.formWrapper}>
+            {loginType === "kakao" && (
+              <div className={S.socialWrapper}>
+                <KakaoIcon className={S.kakaoIcon} />
+                <TextField value="카카오 로그인" disabled fullWidth className={S.kakaoTextField} />
+              </div>
+            )}
+
+            {["email", "name", "birth"].map((field) => (
+              <TextFieldSet
+                key={field}
+                title={field === "email" ? "이메일" : field === "name" ? "이름" : "생년월일"}
+                placeholder={field === "birth" ? "YYYY-MM-DD" : ""}
+                value={tempForm[field as keyof FormState]}
+                disabled={!isEditMode}
+                onChange={(e) => handleChange(field as keyof FormState, e.target.value)}
+              />
+            ))}
+          </main>
+        </>
+      )}
 
       <Modal
         open={isCancelModalOpen}
