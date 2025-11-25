@@ -92,7 +92,7 @@ const BlogDetail: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full relative">
       {toastMessage && (
-        <div className="flex items-center justify-center mt-4 max-w-[688px]">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center">
           <div className="flex items-center gap-2 px-4 py-2 rounded-full border bg-white shadow-lg border-[#15DC5E] text-[#15DC5E] w-full max-w-[300px] justify-center">
             <Done className="text-[#15DC5E]" />
             <span className="text-[14px]">{toastMessage.message}</span>
