@@ -32,7 +32,7 @@ const ProfileFind: React.FC = () => {
   });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const isKakaoUser = !!userProfile?.kakaoId;
+  const isKakaoUser = !!userProfile?.profilePicture?.includes("kakaocdn.net");
 
   useEffect(() => {
     if (userProfile) {
@@ -197,7 +197,9 @@ const ProfileFind: React.FC = () => {
               value="카카오 로그인"
               disabled={true}
               icon={<KakaoIcon className="w-5 h-5" />}
-              inputClassName="bg-[#E6E6E6] text-[#909090]"
+              inputClassName="bg-[#E6E6E6] text-[#909090] disabled:bg-[#E6E6E6]"
+              className="w-[656px] h-[80px]"
+              size="sm"
             />
           )}
           {fields.map(({ key, label, placeholder, disabled, type }) => (
