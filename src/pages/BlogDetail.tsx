@@ -14,20 +14,17 @@ const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // --- Data Fetching ---
   const { data: post, isLoading, isError } = usePostDetail(id!);
   const { mutate: deletePost } = useDeletePost();
   const { mutate: createComment } = useCreateComment(id!);
   const { mutate: deleteComment } = useDeleteComment(id!);
 
-  // --- State ---
   const [commentText, setCommentText] = useState("");
   const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
   const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
   const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false);
   const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null);
 
-  // --- User & Auth Info ---
   const isLoggedIn = !!localStorage.getItem("accessToken");
   const isAuthor = post?.isOwner ?? false;
   const loggedInUser = {
@@ -35,7 +32,6 @@ const BlogDetail: React.FC = () => {
     profilePicture: localStorage.getItem("profilePicture"),
   };
 
-  // Helper function to format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
@@ -43,7 +39,6 @@ const BlogDetail: React.FC = () => {
     return formatted.replace(/,/, '.').replace(/\s(\d{4})/, '$1'); // "Feb 17.2015"
   };
 
-  // --- Event Handlers ---
   const handleBlogDeleteConfirm = () => {
     if (!id) return;
     deletePost(id, {
@@ -63,7 +58,7 @@ const BlogDetail: React.FC = () => {
     if (!commentText.trim()) return;
     createComment(commentText.trim(), {
       onSuccess: () => {
-        setCommentText(""); // 입력창 비우기
+        setCommentText(""); 
       },
     });
   };
@@ -89,7 +84,6 @@ const BlogDetail: React.FC = () => {
     setCommentToDeleteId(null);
   };
 
-  // --- Render Logic ---
   if (isLoading)
     return <div className="flex justify-center items-center min-h-screen">게시글을 불러오는 중입니다...</div>;
   if (isError || !post)
@@ -110,7 +104,6 @@ const BlogDetail: React.FC = () => {
 
       <Header variant="detail" isLoggedIn={isLoggedIn} isAuthor={isAuthor} post={post} onDelete={() => setIsBlogDeleteModalOpen(true)} />
 
-      {/* 제목 및 정보 */}
       <div className="w-[688px] border-b border-gray-300 py-8">
         <h3 className="font-medium text-[18px] text-gray-900">{post.title}</h3>
         <div className="flex flex-row items-center text-sm text-gray-500 gap-2 mt-8">
@@ -141,7 +134,6 @@ const BlogDetail: React.FC = () => {
         ))}
       </div>
 
-      {/* 이미지 */}
       {post.contents
         ?.filter((c: { contentType: string }) => c.contentType === "IMAGE")
         .map((img: { content: string }, idx: number) => (
@@ -154,10 +146,8 @@ const BlogDetail: React.FC = () => {
           </div>
         ))}
 
-      {/* 댓글 영역 */}
       <div className="w-[688px] mt-8">
-        <p className="font-medium text-gray-900 text-[16px]">댓글 {post.comments.length}</p>
-        {/* 댓글 목록 렌더링 */}
+        <p className="font-medium text-gray-900 text-[16px]">댓글 <span className="text-[#00A1FF]">{post.comments.length}</span></p>
           {post.comments.length > 0 && (
             <div className="mb-4">
               {post.comments.map((comment) => (
@@ -175,7 +165,7 @@ const BlogDetail: React.FC = () => {
                     <div>
                       <span className="font-medium text-sm">{comment.nickName}</span>
                       <p className="text-xs text-gray-500">
-                        {new Date(comment.createdAt).toLocaleString()}
+                        {formatDate(comment.createdAt)}
                       </p>
                     </div>
                   </div>
@@ -196,7 +186,6 @@ const BlogDetail: React.FC = () => {
             </div>
           )}
         <div className="border border-gray-300 rounded-md mt-3 p-4">
-          {/* 댓글 입력 섹션 */}
           {isLoggedIn ? (
             <>
               <div className="flex items-center gap-2 mb-3">
@@ -236,7 +225,6 @@ const BlogDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* 작성자 프로필 */}
       <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
         <div className="flex flex-col items-start w-[688px] py-4">
           {post.profileUrl ? (
@@ -255,7 +243,6 @@ const BlogDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* 삭제 모달 */}
       {isBlogDeleteModalOpen && (
         <Modal
           titleLine1="해당 게시글을 삭제하시겠어요?"
@@ -266,7 +253,6 @@ const BlogDetail: React.FC = () => {
         />
       )}
 
-      {/* 댓글 삭제 모달 */}
       {isCommentDeleteModalOpen && (
         <Modal
           titleLine1="댓글을 삭제할까요?"
