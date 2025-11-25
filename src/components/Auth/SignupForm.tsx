@@ -11,6 +11,8 @@ import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import { register, registerKakao } from "@/api/auth";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useImageValidation } from "@/hooks/useImageValidation";
+import { useApiError } from "@/hooks/useApiError";
+import { useToast } from "@/contexts/ToastContext";
 
 interface SignupFormProps {
   type: "email" | "kakao";
@@ -26,6 +28,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { uploadImage, uploading } = useImageUpload();
   const { validateAndShowError } = useImageValidation();
+  const { handleError } = useApiError();
+  const { showToast } = useToast();
 
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
@@ -61,9 +65,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
 
       const uploadedUrl = await uploadImage(file);
       setForm((prev) => ({ ...prev, profilePicture: uploadedUrl }));
-    } catch (err) {
-      console.error("프로필 사진 업로드 실패:", err);
-      alert("프로필 사진 업로드에 실패했습니다.");
+    } catch (error) {
+      handleError(error, "프로필 사진 업로드");
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
@@ -115,9 +118,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
         await registerKakao({ ...commonData, kakaoId: Number(form.kakaoId) });
       }
       setIsModalOpen(true);
-    } catch (err) {
-      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
-      console.error(err);
+    } catch (error) {
+      handleError(error, "회원가입");
     } finally {
       setLoading(false);
     }
