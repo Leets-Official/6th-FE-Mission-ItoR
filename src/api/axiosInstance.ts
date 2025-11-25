@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // 백엔드 서버 주소
-const BASE_URL = "https://blog.leets.land";
+import { BASE_URL } from "./constants";
 
 const api = axios.create({
   baseURL: BASE_URL,

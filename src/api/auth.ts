@@ -1,4 +1,5 @@
 // src/api/auth.ts
+import { BASE_URL } from "./constants";
 import api from "@/api/axiosInstance";
 import axios from "axios";
 
@@ -29,6 +30,7 @@ export interface OAuthSignUpBody extends BaseUserProfile {
   name: string;
   nickname: string;
   kakaoId: number;
+  birthDate: string;
 }
 
 export interface ReissueBody {
@@ -50,12 +52,14 @@ export interface LoginResponse {
 
 export const loginRequest = async (body: LoginBody): Promise<LoginResponse> => {
   const response = await api.post("/auth/login", body);
-  // API 응답이 data 객체로 한번 더 감싸져 오는 경우가 있어, 이를 처리합니다.
   return response.data?.data || response.data;
 };
 
 export const oauthRegisterRequest = async (body: OAuthSignUpBody) => {
+  console.log('oauthRegisterRequest 호출:', body);
+  // 엔드포인트 경로 수정: /auth/register-oauth → /auth/register/oauth
   const { data } = await api.post("/auth/register/oauth", body);
+  console.log('oauthRegisterRequest 응답:', data);
   return data;
 };
 
@@ -65,8 +69,15 @@ export const reissueToken = async (body: ReissueBody) => {
 };
 
 export const kakaoRedirectLogin = async (code: string) => {
+  console.log('kakaoRedirectLogin 호출 - code:', code);
   // Interceptor를 피하기 위해 clean axios 사용
-  const { data } = await axios.get("https://blog.leets.land/auth/kakao/redirect", { params: { code } });
+  const { data } = await axios.get(`${BASE_URL}/auth/kakao/redirect`, { 
+    params: { code },
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  });
+  console.log('kakaoRedirectLogin 응답:', data);
   return data;
 };
 

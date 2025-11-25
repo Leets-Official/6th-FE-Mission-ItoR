@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useUserStore } from "@/store/userStore";
+import { BASE_URL } from "@src/api/constants";
 import {
   signUpRequest,
   loginRequest,
@@ -22,6 +23,12 @@ import {
 export type KakaoTokenPayload = {
   accessToken?: string;
   refreshToken?: string;
+  kakaoId?: number;
+  email?: string;
+  name?: string;
+  nickname?: string;
+  picture?: string;
+  introduction?: string;
   [key: string]: unknown;
 };
 
@@ -39,6 +46,12 @@ export function extractKakaoPayload(res: unknown): KakaoTokenPayload {
         typeof inner.accessToken === "string" ? inner.accessToken : undefined,
       refreshToken:
         typeof inner.refreshToken === "string" ? inner.refreshToken : undefined,
+      kakaoId: typeof inner.kakaoId === "number" ? inner.kakaoId : undefined,
+      email: typeof inner.email === "string" ? inner.email : undefined,
+      name: typeof inner.name === "string" ? inner.name : undefined,
+      nickname: typeof inner.nickname === "string" ? inner.nickname : undefined,
+      picture: typeof inner.picture === "string" ? inner.picture : undefined,
+      introduction: typeof inner.introduction === "string" ? inner.introduction : undefined,
       ...inner,
     };
   }
@@ -79,26 +92,51 @@ export const useReissue = () =>
 
 export const useKakaoStart = () =>
   useMutation<void, unknown, void>({
-    mutationFn: async () => {
-      const api = (await import("@src/api/axiosInstance")).default;
-      const baseURL = api.defaults.baseURL || "";
-      window.location.href = `${baseURL}/auth/kakao`;
+    mutationFn: () => {
+      // 현재 환경에 맞는 Redirect URI 설정
+      const redirectUri = `${window.location.origin}/auth/kakao/success`;
+      console.log('카카오 로그인 시작 - Redirect URI:', redirectUri);
+      
+      // 백엔드 카카오 로그인 엔드포인트로 이동
+      window.location.href = `${BASE_URL}/auth/kakao`;
+      return Promise.resolve();
     },
   });
 
 export const useKakaoRedirectLogin = () =>
   useMutation<KakaoTokenPayload, Error, string>({
     mutationFn: async (code: string) => {
+      console.log('카카오 리다이렉트 처리 시작 - code:', code);
+      
       try {
         const raw = await kakaoRedirectLogin(code);
-        return extractKakaoPayload(raw);
+        console.log('카카오 로그인 성공 응답:', raw);
+        const payload = extractKakaoPayload(raw);
+        console.log('추출된 payload:', payload);
+        return payload;
       } catch (error) {
-        if (error instanceof AxiosError && error.response?.status === 401) {
-          // 401은 신규 유저를 의미하므로, 에러가 아닌 성공 케이스로 처리
-          // 에러 응답 본문을 payload로 사용
-          return extractKakaoPayload(error.response.data);
+        console.error('카카오 로그인 에러:', error);
+        
+        if (error instanceof AxiosError) {
+          console.log('AxiosError 상태 코드:', error.response?.status);
+          console.log('AxiosError 응답 데이터:', error.response?.data);
+          
+          if (error.response?.status === 401) {
+            // 401은 신규 유저를 의미 - 회원가입 필요
+            const payload = extractKakaoPayload(error.response.data);
+            console.log('신규 유저 payload:', payload);
+            
+            // kakaoId가 있는지 확인
+            if (!payload.kakaoId) {
+              console.error('kakaoId가 없습니다:', payload);
+              throw new Error('카카오 사용자 정보를 가져올 수 없습니다.');
+            }
+            
+            return payload;
+          }
         }
-        // 그 외 다른 에러는 그대로 던져서 onError 콜백을 트리거
+        
+        // 그 외 다른 에러는 그대로 던지기
         throw error;
       }
     },

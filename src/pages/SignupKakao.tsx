@@ -3,10 +3,10 @@ import Header from "@/components/Header";
 import TextFieldSet from "@/components/TextFieldSet";
 import Modal from "@/components/Modal";
 import Profile from "@/assets/svgs/Profile.svg?react";
-import { useLocation, useNavigate } from "react-router-dom"; // useLocation import
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "@/api/axiosInstance";
 import { AxiosError } from "axios";
-import { useUploadImage } from "@/hooks/usePosts"; // useUploadImage import
+import { useUploadImage } from "@/hooks/usePosts";
 
 type FormState = {
   email: string;
@@ -15,14 +15,14 @@ type FormState = {
   nickname: string;
   introduction: string;
   profilePicture: string;
-  kakaoId: number; // kakaoId는 number 타입
+  kakaoId: number;
 };
 
 const SignupKakao: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // useLocation 훅 사용
-  const fileInputRef = React.useRef<HTMLInputElement>(null); // 파일 입력 ref
-  const { mutate: uploadImage, isPending: isUploading } = useUploadImage(); // 이미지 업로드 훅
+  const location = useLocation();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
 
   const [form, setForm] = useState<FormState>({
     email: "",
@@ -31,14 +31,15 @@ const SignupKakao: React.FC = () => {
     nickname: "",
     introduction: "",
     profilePicture: "",
-    kakaoId: 0, // 초기값 설정
+    kakaoId: 0,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // location.state에서 데이터 가져오기
   useEffect(() => {
+    console.log('SignupKakao - location.state:', location.state);
+    
     const kakaoData = location.state as {
       kakaoId: number;
       email?: string;
@@ -49,6 +50,7 @@ const SignupKakao: React.FC = () => {
     };
 
     if (kakaoData && kakaoData.kakaoId) {
+      console.log('카카오 데이터 설정:', kakaoData);
       setForm((prev) => ({
         ...prev,
         kakaoId: kakaoData.kakaoId,
@@ -59,77 +61,138 @@ const SignupKakao: React.FC = () => {
         introduction: kakaoData.introduction || "",
       }));
     } else {
-      // 카카오 데이터가 없으면 로그인 페이지로 리다이렉트
+      console.error('카카오 데이터가 없습니다:', kakaoData);
+      alert('카카오 로그인 정보가 없습니다. 다시 로그인해주세요.');
       navigate("/login", { replace: true });
     }
   }, [location.state, navigate]);
 
-  /** 입력값 검증 */
+  const handleChange = (key: keyof FormState, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    // 에러 메시지 제거
+    if (errors[key]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[key];
+        return newErrors;
+      });
+    }
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!form.email.trim()) newErrors.email = "이메일을 입력해 주세요.";
-    if (!form.name.trim()) newErrors.name = "이름을 입력해 주세요.";
-    if (!form.birthDate.trim()) newErrors.birthDate = "생년월일을 입력해 주세요.";
-    if (!form.nickname.trim() || form.nickname.length > 20)
+    if (!form.email.trim()) {
+      newErrors.email = "이메일을 입력해 주세요.";
+    }
+    if (!form.name.trim()) {
+      newErrors.name = "이름을 입력해 주세요.";
+    }
+    if (!form.birthDate.trim()) {
+      newErrors.birthDate = "생년월일을 입력해 주세요.";
+    } else {
+      // 날짜 형식 검증 (YYYY-MM-DD 또는 YYYY.MM.DD)
+      const dateRegex = /^\d{4}[-./]\d{2}[-./]\d{2}$/;
+      if (!dateRegex.test(form.birthDate)) {
+        newErrors.birthDate = "올바른 날짜 형식으로 입력해주세요 (예: 2000-01-01)";
+      }
+    }
+    if (!form.nickname.trim()) {
+      newErrors.nickname = "닉네임을 입력해 주세요.";
+    } else if (form.nickname.length > 20) {
       newErrors.nickname = "닉네임은 최대 20글자까지 가능합니다.";
-    if (form.introduction.length > 30)
+    }
+    if (form.introduction.length > 30) {
       newErrors.introduction = "한 줄 소개는 최대 30글자까지 가능합니다.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  /** 회원가입 요청 */
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      alert('입력 정보를 확인해주세요.');
+      return;
+    }
+
+    if (!form.kakaoId || form.kakaoId === 0) {
+      alert('카카오 로그인 정보가 올바르지 않습니다. 다시 로그인해주세요.');
+      navigate("/login", { replace: true });
+      return;
+    }
 
     setIsSubmitting(true);
 
     try {
+      // 날짜 형식을 YYYY-MM-DD로 통일
+      const formattedBirthDate = form.birthDate.replace(/\./g, '-');
+      
       const payload = {
         email: form.email.trim(),
         nickname: form.nickname.trim(),
         name: form.name.trim(),
-        birthDate: form.birthDate,
-        introduction: form.introduction.trim(),
+        birthDate: formattedBirthDate,
+        introduction: form.introduction.trim() || undefined,
         profilePicture: form.profilePicture || undefined,
-        kakaoId: form.kakaoId, // kakaoId는 이미 number 타입
+        kakaoId: form.kakaoId,
       };
 
-      const res = await api.post("/auth/register-oauth", payload);
-      console.log("카카오 회원가입 성공:", res.data);
+      console.log('회원가입 요청 payload:', payload);
 
-      // 토큰 저장 (백엔드 응답에 토큰이 있다면)
-      const { accessToken, refreshToken } = res.data?.data || {};
+      // 엔드포인트 경로 수정: /auth/register-oauth → /auth/register/oauth
+      const res = await api.post("/auth/register/oauth", payload);
+      console.log('카카오 회원가입 성공:', res.data);
+
+      // 응답 구조 확인 후 토큰 저장
+      const responseData = res.data?.data || res.data;
+      const { accessToken, refreshToken } = responseData;
+
       if (accessToken) {
         localStorage.setItem("accessToken", accessToken);
-        if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+        if (refreshToken) {
+          localStorage.setItem("refreshToken", refreshToken);
+        }
+        
+        // 추가 정보 저장
+        localStorage.setItem("nickname", form.nickname);
+        if (form.profilePicture) {
+          localStorage.setItem("profilePicture", form.profilePicture);
+        }
+        if (form.introduction) {
+          localStorage.setItem("introduction", form.introduction);
+        }
       }
 
       setShowModal(true);
     } catch (error: unknown) {
-      console.error("카카오 회원가입 실패:", error);
+      console.error('카카오 회원가입 실패:', error);
+      
       if (error instanceof AxiosError) {
-        alert(error.response?.data?.message || "회원가입 중 오류가 발생했습니다.");
+        const errorMessage = error.response?.data?.message || 
+                           error.response?.data?.responseMessage ||
+                           '회원가입 중 오류가 발생했습니다.';
+        alert(errorMessage);
+        console.error('에러 상세:', error.response?.data);
       } else {
-        alert("회원가입 중 알 수 없는 오류가 발생했습니다.");
+        alert('회원가입 중 알 수 없는 오류가 발생했습니다.');
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 프로필 사진 업로드 핸들러
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     uploadImage(file, {
       onSuccess: (url) => {
+        console.log('프로필 이미지 업로드 성공:', url);
         setForm((prev) => ({ ...prev, profilePicture: url }));
       },
-      onError: () => {
+      onError: (error) => {
+        console.error('이미지 업로드 실패:', error);
         alert("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
       },
     });
@@ -181,28 +244,52 @@ const SignupKakao: React.FC = () => {
       {/* 입력 폼 */}
       <div className="flex flex-col mt-[60px] px-[430px]">
         <div className="w-[688px] flex flex-col gap-4">
-          {[
-            { key: "email", label: "이메일", placeholder: "이메일", disabled: true }, // 이메일은 카카오에서 받아오므로 수정 불가
-            { key: "name", label: "이름", placeholder: "이름" },
-            { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD" },
-            { key: "nickname", label: "닉네임", placeholder: "닉네임" },
-            { key: "introduction", label: "한 줄 소개", placeholder: "한 줄 소개" },
-          ].map(({ key, label, placeholder, disabled }) => (
-            <TextFieldSet
-              key={key}
-              label={label}
-              value={form[key as keyof FormState] as string}
-              placeholder={placeholder}
-              onChange={(v) => handleChange(key as keyof FormState, v)}
-              disabled={disabled} // disabled prop 추가
-            />
-          ))}
+          <TextFieldSet
+            label="이메일"
+            value={form.email}
+            placeholder="이메일"
+            onChange={(v) => handleChange("email", v)}
+            disabled={true}
+          />
+          <TextFieldSet
+            label="이름"
+            value={form.name}
+            placeholder="이름"
+            onChange={(v) => handleChange("name", v)}
+          />
+          <TextFieldSet
+            label="생년월일"
+            value={form.birthDate}
+            placeholder="YYYY-MM-DD"
+            onChange={(v) => handleChange("birthDate", v)}
+          />
+          <TextFieldSet
+            label="닉네임"
+            value={form.nickname}
+            placeholder="닉네임 (최대 20자)"
+            onChange={(v) => handleChange("nickname", v)}
+          />
+          <TextFieldSet
+            label="한 줄 소개"
+            value={form.introduction}
+            placeholder="한 줄 소개 (최대 30자)"
+            onChange={(v) => handleChange("introduction", v)}
+          />
+
+          {/* 에러 메시지 표시 */}
+          {Object.keys(errors).length > 0 && (
+            <div className="text-red-500 text-sm">
+              {Object.values(errors).map((error, idx) => (
+                <div key={idx}>• {error}</div>
+              ))}
+            </div>
+          )}
 
           <button
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full h-[46px] mt-6 border border-blue-400 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition disabled:opacity-50"
+            className="w-full h-[46px] mt-6 border border-blue-400 rounded-full text-blue-500 font-medium hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "가입 중..." : "회원가입 완료"}
           </button>
@@ -213,10 +300,13 @@ const SignupKakao: React.FC = () => {
         <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm bg-black/10 z-50">
           <Modal
             titleLine1="회원가입이 완료되었습니다!"
-            onClose={() => setShowModal(false)}
-            onConfirm={() => navigate("/login")}
+            onClose={() => {
+              setShowModal(false);
+              navigate("/", { replace: true });
+            }}
+            onConfirm={() => navigate("/", { replace: true })}
             cancelText="확인"
-            confirmText="로그인하기"
+            confirmText="메인으로 가기"
             variant="info"
           />
         </div>

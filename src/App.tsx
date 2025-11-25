@@ -29,8 +29,7 @@ function App() {
           <Route path="/profiledetail" element={<ProfileDetail />} />
           <Route path="/profilefind" element={<ProfileFind />} />
           <Route path="/signup/kakao" element={<SignupKakao />} />
-          <Route path="/oauth/kakao/success" element={<KakaoRedirectPage />} />
-        </Routes>
+          <Route path="/oauth/kakao/success" element={<KakaoRedirectPage />} />        </Routes>
       </Router>
     </QueryClientProvider>
   );
