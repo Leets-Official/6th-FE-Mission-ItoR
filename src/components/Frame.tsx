@@ -18,7 +18,7 @@ const USERNAME_TEXT =
 const INTRO_TEXT =
   "font-[Noto Sans KR] font-light text-[12px] leading-[160%] tracking-[-0.5%] text-gray-600";
 const LOGOUT_TEXT =
-  "font-[Noto Sans KR] font-light text-[14px] leading-[160%] tracking-[-0.5%] text-gray-800 w-[200px] h-[44px] flex items-center";
+  "font-[Noto Sans KR] font-light text-sm leading-[160%] tracking-[-0.5%] text-[#333333] w-[200px] h-[44px] flex items-center";
 
 interface FrameProps {
   onClose?: () => void;
@@ -36,7 +36,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
 
   return (
     <div
-      className={`${FRAME_WIDTH} h-screen bg-gray-50 border-r border-gray-300 flex flex-col gap-[10px] relative`}
+      className={`${FRAME_WIDTH} h-screen bg-[#F5F5F5] border-r border-gray-300 flex flex-col gap-[10px] fixed top-0 left-0`}
     >
       <button
         onClick={onClose}
