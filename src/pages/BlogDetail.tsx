@@ -1,263 +1,91 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React from "react";
 import Header from "@/components/Header";
-import LineEnd from "@/assets/svgs/LineEnd.svg?react";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react"; // Import default profile icon
-import Button from "@/components/Button";
 import Modal from "@/components/Modal";
+import { useBlogDetail } from "@/hooks/useBlogDetail";
+import { S } from "@/styles/BlogDetail.styles";
+import PostHeader from "@/components/PostHeader";
+import PostBody from "@/components/PostBody";
+import CommentSection from "@/components/CommentSection";
+import AuthorProfile from "@/components/AuthorProfile";
 import Done from "@/assets/svgs/done.svg?react";
-import DropdownMenu from "@/components/DropdownMenu";
-import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
-import { usePostDetail, useDeletePost, useCreateComment, useDeleteComment } from "@/hooks/usePosts";
 
 const BlogDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const hook = useBlogDetail();
 
-  const { data: post, isLoading, isError } = usePostDetail(id!);
-  const { mutate: deletePost } = useDeletePost();
-  const { mutate: createComment } = useCreateComment(id!);
-  const { mutate: deleteComment } = useDeleteComment(id!);
-
-  const [commentText, setCommentText] = useState("");
-  const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
-  const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
-  const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false);
-  const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null);
-
-  const isLoggedIn = !!localStorage.getItem("accessToken");
-  const isAuthor = post?.isOwner ?? false;
-  const loggedInUser = {
-    nickname: localStorage.getItem("nickname"),
-    profilePicture: localStorage.getItem("profilePicture"),
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
-    const formatted = date.toLocaleDateString('en-US', options); // e.g., "Feb 17, 2015"
-    return formatted.replace(/,/, '.').replace(/\s(\d{4})/, '$1'); // "Feb 17.2015"
-  };
-
-  const handleBlogDeleteConfirm = () => {
-    if (!id) return;
-    deletePost(id, {
-      onSuccess: () => {
-        setToastMessage({ variant: "success", message: "게시글이 삭제되었습니다!" });
-        setTimeout(() => {
-          setToastMessage(null);
-          navigate("/", { replace: true, state: { showToast: true } });
-        }, 1500);
-      },
-      onError: () => alert("게시글 삭제에 실패했습니다."),
-    });
-    setIsBlogDeleteModalOpen(false);
-  };
-
-  const handleCommentSubmit = () => {
-    if (!commentText.trim()) return;
-    createComment(commentText.trim(), {
-      onSuccess: () => {
-        setCommentText(""); 
-      },
-    });
-  };
-
-  const handleDeleteCommentClick = (commentId: string) => {
-    setCommentToDeleteId(commentId);
-    setIsCommentDeleteModalOpen(true);
-  };
-
-  const handleCommentDeleteConfirm = () => {
-    if (!commentToDeleteId) return;
-    deleteComment(commentToDeleteId, {
-      onSuccess: () => {
-        setToastMessage({ variant: "success", message: "댓글이 삭제되었습니다!" });
-        setTimeout(() => setToastMessage(null), 1500);
-      },
-      onError: () => {
-        setToastMessage({ variant: "warning", message: "댓글 삭제에 실패했습니다." });
-        setTimeout(() => setToastMessage(null), 1500);
-      },
-    });
-    setIsCommentDeleteModalOpen(false);
-    setCommentToDeleteId(null);
-  };
-
-  if (isLoading)
-    return <div className="flex justify-center items-center min-h-screen">게시글을 불러오는 중입니다...</div>;
-  if (isError || !post)
-    return <div className="flex justify-center items-center min-h-screen text-red-500">게시글을 불러오지 못했습니다.</div>;
-
-  const isCommentSubmitDisabled = !commentText.trim();
+  if (hook.isLoading) {
+    return <div className={S.loadingOrError}>게시글을 불러오는 중입니다...</div>;
+  }
+  if (hook.isError || !hook.post) {
+    return (
+      <div className={`${S.loadingOrError} text-red-500`}>
+        게시글을 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center w-full relative">
-      {toastMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border bg-white shadow-lg border-[#15DC5E] text-[#15DC5E] w-full max-w-[300px] justify-center">
-            <Done className="text-[#15DC5E]" />
-            <span className="text-[14px]">{toastMessage.message}</span>
+    <div className={S.container}>
+      {hook.toastMessage && (
+        <div className={S.toastContainer}>
+          <div className={`${S.toastInner} ${hook.toastMessage.variant === 'success' ? S.toastSuccess : S.toastWarning}`}>
+            <Done className={S.toastIcon} />
+            <span className={S.toastText}>{hook.toastMessage.message}</span>
           </div>
         </div>
       )}
 
-      <Header variant="detail" isLoggedIn={isLoggedIn} isAuthor={isAuthor} post={post} onDelete={() => setIsBlogDeleteModalOpen(true)} />
+      <Header
+        variant="detail"
+        isLoggedIn={hook.isLoggedIn}
+        isAuthor={hook.isAuthor}
+        post={hook.post}
+        onDelete={() => hook.setIsBlogDeleteModalOpen(true)}
+      />
 
-      <div className="w-[688px] border-b border-gray-300 py-8">
-        <h3 className="font-medium text-[18px] text-gray-900">{post.title}</h3>
-        <div className="flex flex-row items-center text-sm text-gray-500 gap-2 mt-8">
-          {post.profileUrl ? (
-            <img
-              src={post.profileUrl}
-              alt={post.nickName}
-              className="w-6 h-6 rounded-full object-cover"
-            />
-          ) : (
-            <ProfileIcon className="w-6 h-6" />
-          )}
-          <span className="font-medium text-gray-900">{post.nickName}</span>
-          <span className="text-gray-300">·</span>
-          <span>{formatDate(post.createdAt)}</span>
-          <span className="text-gray-300">·</span>
-          <span>댓글 {post.comments.length}</span>
-        </div>
-      </div>
+      <PostHeader
+        title={hook.post.title}
+        author={hook.post.nickName}
+        profileUrl={hook.post.profileUrl}
+        createdAt={hook.post.createdAt}
+        commentsCount={hook.post.comments.length}
+        formatDate={hook.formatDate}
+      />
 
-      {/* 본문 */}
-      <div className="w-[688px] p-4 text-gray-800 text-[14px] leading-[160%] mt-4 whitespace-pre-line">
-        {post.contents?.map((block: { contentOrder: React.Key; content: string }) => (
-          <React.Fragment key={block.contentOrder}>
-            {block.content.replace(/<[^>]*>?/gm, '')}
-            {"\n"}
-          </React.Fragment>
-        ))}
-      </div>
+      <PostBody contents={hook.post.contents || []} />
 
-      {post.contents
-        ?.filter((c: { contentType: string }) => c.contentType === "IMAGE")
-        .map((img: { content: string }, idx: number) => (
-          <div key={idx} className="w-[688px] mt-6 mb-6">
-            <img
-              src={img.content}
-              alt={`post-image-${idx}`}
-              className="rounded-md w-full object-cover"
-            />
-          </div>
-        ))}
+      <CommentSection
+        comments={hook.post.comments}
+        formatDate={hook.formatDate}
+        onDeleteClick={hook.handleDeleteCommentClick}
+        isLoggedIn={hook.isLoggedIn}
+        commentText={hook.commentText}
+        setCommentText={hook.setCommentText}
+        isSubmitDisabled={hook.isCommentSubmitDisabled}
+        onSubmit={hook.handleCommentSubmit}
+        loggedInUser={hook.loggedInUser}
+      />
 
-      <div className="w-[688px] mt-8">
-        <p className="font-medium text-gray-900 text-[16px]">댓글 <span className="text-[#00A1FF]">{post.comments.length}</span></p>
-          {post.comments.length > 0 && (
-            <div className="mb-4">
-              {post.comments.map((comment) => (
-                <div key={comment.commentId} className="rounded-md p-3 mb-2 last:mb-0 relative">
-                  <div className="flex items-center gap-2 mb-1">
-                    {comment.profileUrl ? (
-                      <img
-                        src={comment.profileUrl}
-                        alt={comment.nickName}
-                        className="w-7 h-7 rounded-full object-cover"
-                      />
-                    ) : (
-                      <ProfileIcon className="w-7 h-7" />
-                    )}
-                    <div>
-                      <span className="font-medium text-sm">{comment.nickName}</span>
-                      <p className="text-xs text-gray-500">
-                        {formatDate(comment.createdAt)}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-gray-800 text-sm ml-9">{comment.content}</p>
-                  {comment.isOwner && (
-                    <div className="absolute top-2 right-2">
-                      <DropdownMenu
-                        trigger={<MoreVertIcon className="w-5 h-5 text-gray-700 cursor-pointer" />}
-                        items={[
-                          { label: "삭제하기", onClick: () => handleDeleteCommentClick(comment.commentId) },
-                        ]}
-                        position="right"
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        <div className="border border-gray-300 rounded-md mt-3 p-4">
-          {isLoggedIn ? (
-            <>
-              <div className="flex items-center gap-2 mb-3">
-                {loggedInUser.profilePicture ? (
-                  <img
-                    src={loggedInUser.profilePicture}
-                    alt="profile"
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                ) : (
-                  <ProfileIcon className="w-8 h-8" />
-                )}
-                <span className="font-medium text-sm">{loggedInUser.nickname}</span>
-              </div>
-              <textarea
-                placeholder="댓글을 입력하세요."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                className="w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none border border-gray-300"
-              />
-              <LineEnd />
-              <div className="flex justify-end mt-2">
-                <Button
-                  variant={isCommentSubmitDisabled ? "grayBorder" : "blackWhite"}
-                  onClick={handleCommentSubmit}
-                  disabled={isCommentSubmitDisabled}
-                >
-                  등록
-                </Button>
-              </div>
-            </>
-          ) : (
-            <div className="text-center text-gray-500 py-10">
-              로그인 후 댓글을 작성할 수 있습니다.
-            </div>
-          )}
-        </div>
-      </div>
+      <AuthorProfile
+        name={hook.post.nickName}
+        introduction={hook.post.introduction}
+        profileUrl={hook.post.profileUrl}
+      />
 
-      <div className="w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4">
-        <div className="flex flex-col items-start w-[688px] py-4">
-          {post.profileUrl ? (
-            <img
-              src={post.profileUrl}
-              alt={`${post.nickName} 프로필`}
-              className="w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10"
-            />
-          ) : (
-            <ProfileIcon className="w-[64px] h-[64px] mb-4 mt-10" />
-          )}
-          <span className="text-[24px] font-medium text-gray-900">{post.nickName}</span>
-          <span className="text-[14px] text-gray-700 mt-2">
-            {post.introduction || "한 줄 소개가 없습니다."}
-          </span>
-        </div>
-      </div>
-
-      {isBlogDeleteModalOpen && (
+      {hook.isBlogDeleteModalOpen && (
         <Modal
           titleLine1="해당 게시글을 삭제하시겠어요?"
           description="삭제된 게시글은 복구할 수 없습니다."
-          onClose={() => setIsBlogDeleteModalOpen(false)}
-          onConfirm={handleBlogDeleteConfirm}
+          onClose={() => hook.setIsBlogDeleteModalOpen(false)}
+          onConfirm={hook.handleBlogDeleteConfirm}
           variant="delete"
         />
       )}
 
-      {isCommentDeleteModalOpen && (
+      {hook.isCommentDeleteModalOpen && (
         <Modal
           titleLine1="댓글을 삭제할까요?"
-          onClose={() => setIsCommentDeleteModalOpen(false)}
-          onConfirm={handleCommentDeleteConfirm}
+          onClose={() => hook.setIsCommentDeleteModalOpen(false)}
+          onConfirm={hook.handleCommentDeleteConfirm}
           variant="delete"
         />
       )}

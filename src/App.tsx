@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // ✅ 추가
 
-import Blogfind from "./pages/Blogfind";
+import Blogfind from "@/pages/Blogfind";
 import BlogDetail from "./pages/BlogDetail";
 import BlogWrite from "./pages/BlogWrite";
 import Login from "./pages/Login";
