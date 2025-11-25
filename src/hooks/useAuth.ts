@@ -29,21 +29,10 @@ export function useAuth() {
   const handleLogin = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const response = await login(email, password);
-
-      // ✅ API 응답에서 유저 정보 추출 후 스토어에 저장
-      if (response) {
-        setUser({
-          id: response.id,
-          name: response.name,
-          email: response.email,
-          profileUrl: response.profileUrl,
-        });
-      }
-
+      const user = await login(email, password);
+      setUser(user);
       return true;
-    } catch (e) {
-      console.error("로그인 실패:", e);
+    } catch {
       return false;
     } finally {
       setLoading(false);
@@ -55,8 +44,7 @@ export function useAuth() {
       setLoading(true);
       await register(data);
       return true;
-    } catch (e) {
-      console.error("회원가입 실패:", e);
+    } catch {
       return false;
     } finally {
       setLoading(false);
@@ -68,8 +56,7 @@ export function useAuth() {
       setLoading(true);
       await registerKakao(data);
       return true;
-    } catch (e) {
-      console.error("카카오 회원가입 실패:", e);
+    } catch {
       return false;
     } finally {
       setLoading(false);
@@ -79,6 +66,7 @@ export function useAuth() {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user-storage");
     clearUser();
   };
 

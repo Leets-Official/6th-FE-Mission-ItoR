@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createComment, deleteComment, updateComment } from "@/api/commentApi";
 import api from "@/api/index";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface CommentResponse {
   commentId: number;
@@ -24,16 +25,25 @@ export const useComments = (postId: string) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const accessToken = useAuthStore((state) => state.accessToken);
 
   const fetchComments = async () => {
     if (!postId) return;
     setLoading(true);
     try {
+      const endpoint = accessToken ? "/posts/token" : "/posts";
+      const config = accessToken
+        ? {
+            params: { postId },
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        : { params: { postId } };
+
       const res = await api.get<{
         code: number;
         message?: string;
         data: { comments: CommentResponse[] };
-      }>("/posts/token", { params: { postId } });
+      }>(endpoint, config);
 
       if (res.data.code === 0 || res.data.code === 200) {
         const list: Comment[] =
@@ -43,7 +53,7 @@ export const useComments = (postId: string) => {
             content: c.content,
             date: new Date(c.createdAt).toLocaleDateString("ko-KR"),
             profileUrl: c.profileUrl ?? "",
-            isOwner: c.isOwner,
+            isOwner: c.isOwner ?? false,
           })) ?? [];
         setComments(list);
       } else {
@@ -99,7 +109,7 @@ export const useComments = (postId: string) => {
 
   useEffect(() => {
     fetchComments();
-  }, [postId]);
+  }, [postId, accessToken]);
 
   return { comments, loading, error, fetchComments, addComment, editComment, removeComment };
 };

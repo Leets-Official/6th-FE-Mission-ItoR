@@ -1,21 +1,15 @@
 import axios from "axios";
 
-export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  data: T;
-}
-
-const api = axios.create({
+export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -30,27 +24,37 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && refreshToken && !originalRequest._retry) {
       originalRequest._retry = true;
+
       try {
-        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/reissue`, {
-          refreshToken,
-        });
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/auth/reissue`,
+          { refreshToken },
+          { withCredentials: true },
+        );
 
         const { accessToken, refreshToken: newRefresh } = res.data.data;
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", newRefresh);
-
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
         return api(originalRequest);
-      } catch (reissueError) {
-        console.error("토큰 재발급 실패:", reissueError);
+      } catch (e) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         window.location.href = "/login";
+        return Promise.reject(e);
       }
     }
+
     return Promise.reject(error);
   },
 );
 
 export default api;
+
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T;
+}

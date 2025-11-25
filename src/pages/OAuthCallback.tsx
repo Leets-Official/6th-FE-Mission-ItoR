@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleKakaoCallback, type User } from "@/api/auth";
-import { useUserStore } from "@/store/useUserStore";
+import { handleKakaoCallback } from "@/api/auth";
+import { useUserStore, type User } from "@/store/useUserStore";
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
@@ -12,40 +12,30 @@ export default function OAuthCallback() {
     if (hasRun.current) return;
     hasRun.current = true;
 
-    const runAuthFlow = async () => {
+    const flow = async () => {
       const code = new URLSearchParams(window.location.search).get("code");
-
       if (!code) {
-        alert("인증 코드가 없습니다.");
         navigate("/blog", { replace: true });
         return;
       }
 
       try {
-        const response = await handleKakaoCallback(code);
+        const result = await handleKakaoCallback(code);
 
-        if (!response) {
-          alert("로그인 처리 중 오류가 발생했습니다.");
-          navigate("/blog", { replace: true });
+        if ("code" in result && result.code === 401) {
+          navigate("/signup", { replace: true, state: { kakaoUser: result.data } });
           return;
         }
 
-        if ("code" in response && response.code === 401) {
-          const kakaoUser = response.data;
-          navigate("/signup", { replace: true, state: { kakaoUser } });
-          return;
-        }
-
-        setUser(response as User);
+        const user = result as User;
+        setUser(user);
         navigate("/blog", { replace: true });
-      } catch (error) {
-        console.error("카카오 로그인 오류:", error);
-        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+      } catch {
         navigate("/blog", { replace: true });
       }
     };
 
-    runAuthFlow();
+    flow();
   }, [navigate, setUser]);
 
   return (

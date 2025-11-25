@@ -33,7 +33,6 @@ export const useSignupForm = (type: "email" | "kakao") => {
       newErrors.passwordConfirm = E.validatePasswordConfirm(form.password, form.passwordConfirm);
     }
 
-    // 필수 입력값 체크
     Object.entries(form).forEach(([key, value]) => {
       if (!value.trim() && !newErrors[key]) {
         newErrors[key] = "반드시 입력해야하는 필수 사항입니다";

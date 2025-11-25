@@ -13,6 +13,7 @@ import Modal from "@/components/Modal/Modal";
 import { useLogout } from "@/hooks/useLogout";
 import { useUserStore } from "@/store/useUserStore";
 import { fetchPosts } from "@/api/postApi";
+import { fetchMyInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
 
 export default function MyPage() {
@@ -24,11 +25,28 @@ export default function MyPage() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
   const { showToast } = useToast();
 
   const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
     useLogout();
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetchMyInfo();
+        if (res.code === 200 && res.data) {
+          setUser({
+            ...res.data,
+            loginType: user?.loginType ?? res.data.loginType ?? "email",
+          });
+        }
+      } catch {
+        showToast("사용자 정보를 불러오지 못했습니다.", "error");
+      }
+    };
+    load();
+  }, [setUser, showToast, user?.loginType]);
 
   useEffect(() => {
     if (location.state?.toastMessage) {
@@ -38,25 +56,22 @@ export default function MyPage() {
   }, [location.state, showToast]);
 
   useEffect(() => {
-    const loadMyPosts = async () => {
+    const loadPosts = async () => {
       setLoading(true);
       try {
-        const res = await fetchPosts(currentPage, 5); // 페이지당 5개
+        const res = await fetchPosts(currentPage, 5);
         if (res.code === 200 && res.data?.posts) {
           setPosts(res.data.posts);
           setPageMax(res.data.pageMax);
-        } else {
-          showToast("게시글을 불러오지 못했습니다.", "error");
         }
-      } catch (err) {
-        console.error("내 게시글 조회 에러:", err);
-        showToast("서버 오류가 발생했습니다.", "error");
+      } catch {
+        showToast("게시글을 불러오지 못했습니다.", "error");
       } finally {
         setLoading(false);
       }
     };
 
-    loadMyPosts();
+    loadPosts();
   }, [currentPage, showToast]);
 
   return (
@@ -83,9 +98,9 @@ export default function MyPage() {
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
-            <Avatar src={user?.profileUrl} alt="프로필 이미지" size="lg" />
-            <h2 className={S.nickname}>{user?.nickname ?? "닉네임"}</h2>
-            <p className={S.intro}>{user?.introduction ?? "You can make anything by writing."}</p>
+            <Avatar src={user?.profilePicture} alt="프로필 이미지" size="lg" />
+            <h2 className={S.nickname}>{user?.nickname}</h2>
+            <p className={S.intro}>{user?.introduction}</p>
 
             <SmallButton
               label="내 프로필 설정"
