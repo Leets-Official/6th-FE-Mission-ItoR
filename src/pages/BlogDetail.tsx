@@ -103,9 +103,9 @@ const BlogDetail: React.FC = () => {
       <Header variant="detail" isLoggedIn={isLoggedIn} isAuthor={isAuthor} post={post} onDelete={() => setIsBlogDeleteModalOpen(true)} />
 
       {/* 제목 및 정보 */}
-      <div className="w-[688px] border-b border-gray-300 py-3">
+      <div className="w-[688px] border-b border-gray-300 py-8">
         <h3 className="font-medium text-[18px] text-gray-900">{post.title}</h3>
-        <div className="flex flex-row justify-start text-sm text-gray-500 gap-6 mt-2">
+        <div className="flex flex-row justify-start text-sm text-gray-500 gap-6 mt-8">
           <span>{post.nickName}</span>
           <span>{new Date(post.createdAt).toLocaleString()}</span>
         </div>
