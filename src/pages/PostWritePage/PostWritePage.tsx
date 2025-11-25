@@ -7,6 +7,7 @@ import * as S from "./PostWritePage.styled";
 import { useState, useRef } from "react";
 import { usePostForm } from "./usePostForm";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useImageValidation } from "@/hooks/useImageValidation";
 
 const PostWritePage: React.FC = () => {
   const {
@@ -21,6 +22,7 @@ const PostWritePage: React.FC = () => {
   } = usePostForm();
 
   const { uploadImage } = useImageUpload();
+  const { validateAndShowError } = useImageValidation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -34,17 +36,7 @@ const PostWritePage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const MAX_SIZE = 5 * 1024 * 1024;
-    const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("JPG, PNG, GIF, WebP 형식만 업로드 가능합니다.");
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    if (file.size > MAX_SIZE) {
-      alert("파일 크기는 5MB 이하만 가능합니다.");
+    if (!validateAndShowError(file)) {
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }

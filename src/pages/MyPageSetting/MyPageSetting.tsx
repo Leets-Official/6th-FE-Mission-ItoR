@@ -10,6 +10,8 @@ import TextField from "@/components/Text/TextField";
 import { useUserStore, type User } from "@/store/useUserStore";
 import { updateUserInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { useImageValidation } from "@/hooks/useImageValidation";
 
 type FormState = {
   email: string;
@@ -25,6 +27,8 @@ export default function MyPageSetting() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { user, setUser } = useUserStore();
   const { showToast } = useToast();
+  const { uploadImage } = useImageUpload();
+  const { validateAndShowError } = useImageValidation();
 
   const loginType = user?.loginType ?? "email";
 
@@ -112,13 +116,27 @@ export default function MyPageSetting() {
     }
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
-    reader.readAsDataURL(file);
+    if (!validateAndShowError(file)) {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    try {
+      const reader = new FileReader();
+      reader.onload = () => setTempForm((prev) => ({ ...prev, profile: reader.result as string }));
+      reader.readAsDataURL(file);
+
+      const uploadedUrl = await uploadImage(file);
+      setTempForm((prev) => ({ ...prev, profile: uploadedUrl }));
+    } catch {
+      showToast("프로필 사진 업로드에 실패했습니다.", "error");
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   type BaseField = {

@@ -10,6 +10,7 @@ import Modal from "@/components/Modal/Modal";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import { register, registerKakao } from "@/api/auth";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useImageValidation } from "@/hooks/useImageValidation";
 
 interface SignupFormProps {
   type: "email" | "kakao";
@@ -24,6 +25,7 @@ interface SignupFormProps {
 const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { uploadImage, uploading } = useImageUpload();
+  const { validateAndShowError } = useImageValidation();
 
   const [form, setForm] = useState({
     email: kakaoUser?.email || "",
@@ -47,18 +49,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ type, kakaoUser }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 파일 검증
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("JPG, PNG, GIF, WebP 형식의 이미지만 업로드 가능합니다.");
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      alert("파일 크기는 5MB 이하만 가능합니다.");
+    if (!validateAndShowError(file)) {
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
