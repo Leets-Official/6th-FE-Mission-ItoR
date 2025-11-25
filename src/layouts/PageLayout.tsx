@@ -20,6 +20,7 @@ interface PageLayoutProps {
   onMoreClick?: () => void;
   showMoreIcon?: boolean;
   headerTitle?: string;
+  onLoginClick?: () => void;
 }
 
 export default function PageLayout({
@@ -35,6 +36,7 @@ export default function PageLayout({
   onMoreClick,
   showMoreIcon,
   headerTitle = "GITLOG",
+  onLoginClick,
 }: PageLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user } = useUserStore();
@@ -44,8 +46,9 @@ export default function PageLayout({
   const isLogin = !!user;
 
   return (
-    <div className="relative">
-      <div className="fixed top-0 left-0 z-50 w-full">
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      {/* Header */}
+      <header className="fixed top-0 left-0 z-50 w-full">
         <Header
           title={headerTitle}
           variant={headerVariant}
@@ -60,25 +63,32 @@ export default function PageLayout({
           onMoreClick={onMoreClick}
           showMoreIcon={showMoreIcon}
         />
-      </div>
+      </header>
 
-      <div className="h-[70px]" />
+      <main className="w-full pt-[70px]">{children}</main>
 
-      {isSidebarOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
-          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar
-              variant={isLogin ? "user" : "guest"}
-              onLogoutClick={handleLogoutClick}
-              onLoginClick={() => setIsSidebarOpen(false)}
-            />
-          </aside>
-        </>
-      )}
+      {/* ---------- Sidebar (조건부 렌더링 제거, translate 방식) ---------- */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/30 transition-opacity ${
+          isSidebarOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setIsSidebarOpen(false)}
+      />
 
-      {children}
+      <aside
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-md transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} `}
+      >
+        <Sidebar
+          variant={isLogin ? "user" : "guest"}
+          onLogoutClick={handleLogoutClick}
+          onLoginClick={() => {
+            onLoginClick?.();
+            setIsSidebarOpen(false);
+          }}
+        />
+      </aside>
 
+      {/* Logout Modal */}
       <Modal
         open={isLogoutModalOpen}
         title="로그아웃을 진행할게요."
