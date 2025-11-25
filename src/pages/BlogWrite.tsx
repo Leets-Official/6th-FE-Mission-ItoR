@@ -7,41 +7,116 @@ import Toast from "@/components/Toast";
 import { useCreatePost, useUpdatePost, useUploadImage } from "@/hooks/usePosts";
 import { PostDetailResponse, PostBody, ContentBlock } from "@/api/posts";
 
+// Add a frontend-only ID for stable keys
+type EditorBlock = ContentBlock & { frontendId: string };
+
 const BlogWrite: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const postToEdit = location.state as PostDetailResponse | undefined;
 
   const [title, setTitle] = useState("");
-  const [contents, setContents] = useState<ContentBlock[]>([]);
+  const [contents, setContents] = useState<EditorBlock[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isComposing, setIsComposing] = useState(false); // For IME handling
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textInputRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
+  const [nextFocusIndex, setNextFocusIndex] = useState<number | null>(null);
 
   const { mutate: createMutate } = useCreatePost();
   const { mutate: updateMutate } = useUpdatePost();
   const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
 
+  // Helper to create a unique ID
+  const createFrontendId = () => `block-${Date.now()}-${Math.random()}`;
+
   useEffect(() => {
     if (postToEdit) {
       setTitle(postToEdit.title);
-      setContents(postToEdit.contents || []);
+      // Add frontendId to existing blocks
+      setContents(
+        postToEdit.contents?.map((block) => ({
+          ...block,
+          frontendId: createFrontendId(),
+        })) || []
+      );
     } else {
       // Ensure there's always one text block for new posts
-      setContents([{ contentOrder: 1, contentType: "TEXT", content: "" }]);
+      setContents([
+        {
+          contentOrder: 1,
+          contentType: "TEXT",
+          content: "",
+          frontendId: createFrontendId(),
+        },
+      ]);
     }
   }, [postToEdit]);
+
+  useEffect(() => {
+    if (nextFocusIndex !== null && textInputRefs.current[nextFocusIndex]) {
+      const target = textInputRefs.current[nextFocusIndex];
+      if (target) {
+        target.focus();
+        target.setSelectionRange(0, 0);
+      }
+      setNextFocusIndex(null);
+    }
+  }, [nextFocusIndex, contents]);
 
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 2000);
   };
 
-  const handleContentChange = (index: number, newText: string) => {
+  const handleContentChange = (frontendId: string, newText: string) => {
     setContents((prev) =>
-      prev.map((block, i) =>
-        i === index ? { ...block, content: newText } : block
+      prev.map((block) =>
+        block.frontendId === frontendId ? { ...block, content: newText } : block
       )
     );
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+    index: number
+  ) => {
+    if (isComposing) return; // Do not run on Enter if IME is composing
+
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+
+      const textarea = e.currentTarget;
+      const cursorPosition = textarea.selectionStart;
+      const currentContent = textarea.value;
+
+      const contentBeforeCursor = currentContent.substring(0, cursorPosition);
+      const contentAfterCursor = currentContent.substring(cursorPosition);
+
+      setContents((prevContents) => {
+        const currentBlock = prevContents[index];
+        const updatedCurrentBlock = {
+          ...currentBlock,
+          content: contentBeforeCursor,
+        };
+
+        const newBlock: EditorBlock = {
+          contentOrder: 0, // Placeholder
+          contentType: "TEXT",
+          content: contentAfterCursor,
+          frontendId: createFrontendId(),
+        };
+
+        return [
+          ...prevContents.slice(0, index),
+          updatedCurrentBlock,
+          newBlock,
+          ...prevContents.slice(index + 1),
+        ];
+      });
+
+      setNextFocusIndex(index + 1);
+    }
   };
 
   const handleAddPhotoClick = () => {
@@ -54,18 +129,20 @@ const BlogWrite: React.FC = () => {
 
     uploadImage(file, {
       onSuccess: (url) => {
-        const newImageBlock: ContentBlock = {
-          contentOrder: contents.length + 1,
+        const newImageBlock: EditorBlock = {
+          contentOrder: 0, // Placeholder
           contentType: "IMAGE",
           content: url,
+          frontendId: createFrontendId(),
         };
-        // Add a new empty text block after the image
-        const newTextBlock: ContentBlock = {
-          contentOrder: contents.length + 2,
+        const newTextBlock: EditorBlock = {
+          contentOrder: 0, // Placeholder
           contentType: "TEXT",
           content: "",
+          frontendId: createFrontendId(),
         };
         setContents((prev) => [...prev, newImageBlock, newTextBlock]);
+        setNextFocusIndex(contents.length + 1);
       },
       onError: () => {
         showToast("이미지 업로드에 실패했습니다.");
@@ -74,9 +151,17 @@ const BlogWrite: React.FC = () => {
   };
 
   const handlePost = useCallback(() => {
+    // 1. Filter and prepare blocks for backend
     const finalContents = contents
-      .filter(block => block.content.trim() !== "")
-      .map((block, index) => ({ ...block, contentOrder: index + 1 }));
+      .filter((block) => {
+        if (block.contentType === "IMAGE") return true;
+        return block.content.trim() !== "";
+      })
+      .map((block, index) => {
+        // 2. Strip frontendId and set final contentOrder
+        const { frontendId, ...backendBlock } = block;
+        return { ...backendBlock, contentOrder: index + 1 };
+      });
 
     if (!title.trim() || finalContents.length === 0) {
       showToast("제목과 내용을 입력해주세요!");
@@ -88,9 +173,12 @@ const BlogWrite: React.FC = () => {
     const options = {
       onSuccess: () => {
         showToast("저장되었습니다.");
+        setTimeout(() => navigate("/"), 1500);
       },
-      onError: () => {
-        showToast("저장에 실패했습니다.");
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message || "저장에 실패했습니다.";
+        showToast(errorMessage);
       },
     };
 
@@ -127,7 +215,14 @@ const BlogWrite: React.FC = () => {
 
       {toastMessage && (
         <div className="flex items-center justify-center mt-4 max-w-[688px]">
-          <Toast variant={toastMessage.includes("실패") ? "warning" : "success"} message={toastMessage} />
+          <Toast
+            variant={
+              toastMessage.includes("실패") || toastMessage.includes("오류")
+                ? "warning"
+                : "success"
+            }
+            message={toastMessage}
+          />
         </div>
       )}
 
@@ -144,30 +239,44 @@ const BlogWrite: React.FC = () => {
           <LineEnd />
         </div>
 
-        {contents.map((block, index) => {
-          if (block.contentType === "TEXT") {
-            return (
-              <textarea
-                key={index}
-                placeholder="어떠한 것을 깨달았나요?"
-                value={block.content}
-                onChange={(e) => handleContentChange(index, e.target.value)}
-                className="w-full min-h-[100px] px-[16px] py-[12px] rounded-md text-[#333333] placeholder-[#909090] text-[14px] focus:outline-none resize-none"
-              />
-            );
-          }
-          if (block.contentType === "IMAGE") {
-            return (
-              <img
-                key={index}
-                src={block.content}
-                alt={`post-image-${index}`}
-                className="w-full rounded-md my-4 object-cover"
-              />
-            );
-          }
-          return null;
-        })}
+        {/* Content Editor Wrapper */}
+        <div className="w-full px-[16px] py-[12px] rounded-md text-[14px] focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500">
+          {contents.map((block, index) => {
+            if (block.contentType === "TEXT") {
+              return (
+                <textarea
+                  ref={(el) => { textInputRefs.current[index] = el; }}
+                  key={block.frontendId}
+                  placeholder={
+                    index === 0 && contents.length === 1 && block.content === ""
+                      ? "어떠한 것을 깨달았나요?"
+                      : ""
+                  }
+                  value={block.content}
+                  onCompositionStart={() => setIsComposing(true)}
+                  onCompositionEnd={() => setIsComposing(false)}
+                  onChange={(e) =>
+                    handleContentChange(block.frontendId, e.target.value)
+                  }
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  className="w-full bg-transparent text-[#333333] placeholder-[#909090] focus:outline-none resize-none overflow-hidden"
+                  rows={1}
+                />
+              );
+            }
+            if (block.contentType === "IMAGE") {
+              return (
+                <img
+                  key={block.frontendId}
+                  src={block.content}
+                  alt={`post-image-${index}`}
+                  className="w-full rounded-md my-4 object-cover"
+                />
+              );
+            }
+            return null;
+          })}
+        </div>
       </div>
     </div>
   );
