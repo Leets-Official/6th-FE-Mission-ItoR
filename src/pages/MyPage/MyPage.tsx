@@ -12,6 +12,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { fetchPosts } from "@/api/postApi";
 import { fetchMyInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
+import { useApiError } from "@/hooks/useApiError";
 
 export default function MyPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,97 +24,131 @@ export default function MyPage() {
   const location = useLocation();
   const { user, setUser } = useUserStore();
   const { showToast } = useToast();
+  const { handleError } = useApiError();
 
   useEffect(() => {
-    const load = async () => {
+    const loadUser = async () => {
       try {
         const res = await fetchMyInfo();
         if (res.code === 200 && res.data) {
           setUser({
             ...res.data,
-            loginType: user?.loginType ?? res.data.loginType ?? "email",
+            loginType: res.data.loginType ?? user?.loginType ?? "email",
           });
         }
-      } catch {
-        showToast("사용자 정보를 불러오지 못했습니다.", "error");
+      } catch (error) {
+        handleError(error, "사용자 정보 불러오기");
       }
     };
-    load();
-  }, [setUser, showToast, user?.loginType]);
+
+    loadUser();
+  }, []);
 
   useEffect(() => {
     if (location.state?.toastMessage) {
       showToast(location.state.toastMessage, "success");
       window.history.replaceState({}, document.title);
     }
-  }, [location.state, showToast]);
+  }, []);
 
   useEffect(() => {
     const loadPosts = async () => {
       setLoading(true);
+
       try {
         const res = await fetchPosts(currentPage, 5);
+
         if (res.code === 200 && res.data?.posts) {
           setPosts(res.data.posts);
           setPageMax(res.data.pageMax);
         }
-      } catch {
-        showToast("게시글을 불러오지 못했습니다.", "error");
+      } catch (error) {
+        handleError(error, "게시글 불러오기");
       } finally {
         setLoading(false);
       }
     };
 
     loadPosts();
-  }, [currentPage, showToast]);
+  }, [currentPage]);
 
-  return (
-    <PageLayout headerVariant="write" onWriteClick={() => navigate("/write")}>
+  const Skeleton = () => (
+    <>
       <section className={S.profileSection}>
         <div className={S.profileSectionInner}>
           <div className={S.profileInner}>
-            <Avatar src={user?.profilePicture} alt="프로필 이미지" size="lg" />
-            <h2 className={S.nickname}>{user?.nickname}</h2>
-            <p className={S.intro}>{user?.introduction}</p>
-
-            <SmallButton
-              label="내 프로필 설정"
-              variant="secondaryOutline"
-              leftIcon={<SettingsIcon width={16} height={16} />}
-              className={S.editProfileButton}
-              onClick={() => navigate("/mypage/setting")}
-            />
+            <div className="h-[96px] w-[96px] animate-pulse rounded-full bg-gray-200" />
+            <div className="mt-4 h-6 w-32 animate-pulse rounded bg-gray-200" />
+            <div className="mt-2 h-4 w-48 animate-pulse rounded bg-gray-200" />
+            <div className="mt-4 h-8 w-36 animate-pulse rounded bg-gray-200" />
           </div>
         </div>
       </section>
 
       <main className={S.mainWrapper}>
-        {loading ? (
-          <div className="py-8 text-center text-gray-500">로딩 중...</div>
-        ) : posts.length === 0 ? (
-          <div className="py-8 text-center text-gray-500">작성한 게시글이 없습니다.</div>
-        ) : (
-          <>
-            <ul className={S.listWrapper}>
-              {posts.map((post) => (
-                <PostItem
-                  key={post.postId}
-                  post={post}
-                  onClick={() => navigate(`/blog/${post.postId}`)}
-                />
-              ))}
-            </ul>
-
-            <div className={S.paginationWrapper}>
-              <Pagination
-                currentPage={currentPage}
-                totalPages={pageMax}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          </>
-        )}
+        <ul className={S.listWrapper}>
+          {[1, 2, 3].map((i) => (
+            <li key={i} className="border-b border-gray-100 p-4">
+              <div className="mb-2 h-5 w-1/2 animate-pulse rounded bg-gray-200" />
+              <div className="h-4 w-1/3 animate-pulse rounded bg-gray-200" />
+            </li>
+          ))}
+        </ul>
       </main>
+    </>
+  );
+
+  return (
+    <PageLayout headerVariant="write" onWriteClick={() => navigate("/write")}>
+      {loading ? (
+        <Skeleton />
+      ) : (
+        <>
+          <section className={S.profileSection}>
+            <div className={S.profileSectionInner}>
+              <div className={S.profileInner}>
+                <Avatar src={user?.profilePicture} size="lg" />
+                <h2 className={S.nickname}>{user?.nickname}</h2>
+                <p className={S.intro}>{user?.introduction}</p>
+
+                <SmallButton
+                  label="내 프로필 설정"
+                  variant="secondaryOutline"
+                  leftIcon={<SettingsIcon width={16} height={16} />}
+                  className={S.editProfileButton}
+                  onClick={() => navigate("/mypage/setting")}
+                />
+              </div>
+            </div>
+          </section>
+
+          <main className={S.mainWrapper}>
+            {posts.length === 0 ? (
+              <div className="py-8 text-center text-gray-500">작성한 게시글이 없습니다.</div>
+            ) : (
+              <>
+                <ul className={S.listWrapper}>
+                  {posts.map((post) => (
+                    <PostItem
+                      key={post.postId}
+                      post={post}
+                      onClick={() => navigate(`/blog/${post.postId}`)}
+                    />
+                  ))}
+                </ul>
+
+                <div className={S.paginationWrapper}>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={pageMax}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              </>
+            )}
+          </main>
+        </>
+      )}
     </PageLayout>
   );
 }
