@@ -76,14 +76,14 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
       </div>
 
       <div
-        className={`${FRAME_WIDTH} ${SECTION_HEIGHT.button} ${FRAME_SECTION} flex-row items-center gap-2`}
+        className={`${FRAME_WIDTH} ${SECTION_HEIGHT.button} ${FRAME_SECTION} grid grid-cols-2 gap-2`}
       >
         {isLoggedIn ? (
           <>
-            <Button variant="blueBorder" onClick={() => navigate("/profiledetail")} className="flex-1">
+            <Button variant="blueBorder" onClick={() => navigate("/profiledetail")}>
               나의 깃로그
             </Button>
-            <Button variant="blueBorder" onClick={() => navigate("/write")} className="flex-1">
+            <Button variant="blueBorder" onClick={() => navigate("/write")}>
               깃로그 쓰기
             </Button>
           </>
