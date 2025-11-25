@@ -72,7 +72,7 @@ const ProfileDetail: React.FC = () => {
         hidden
       />
 
-      <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex flex-col items-center justify-center">
+      <div className="w-full bg-[#F5F5F5] border-b border-gray-300 py-[60px] flex flex-col px-[430px]">
         <button onClick={handleProfileClick} className="rounded-full" disabled={isUploading}>
           {loggedInUser.profilePicture ? (
             <img src={loggedInUser.profilePicture} alt="profile" className="w-[88px] h-[88px] rounded-full object-cover" />
@@ -88,7 +88,7 @@ const ProfileDetail: React.FC = () => {
 
         <button
           onClick={() => navigate("/profilefind")}
-          className="flex items-center gap-1 text-[12px] text-[#909090] border border-gray-300 rounded-sm px-3 py-1 mt-3 hover:bg-gray-50 transition"
+          className="flex items-center gap-1 text-[12px] text-[#909090] border border-gray-300 rounded-sm px-3 py-1 mt-3 hover:bg-gray-50 transition w-fit"
         >
           <SettingIcon className="text-[#909090]"/> 내 프로필 설정
         </button>
