@@ -6,9 +6,9 @@ export const S = {
   
   toastContainer: "fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center",
   toastInner: "flex items-center gap-2 px-4 py-2 rounded-full border bg-white shadow-lg",
-  toastSuccess: "border-[#15DC5E] text-[#15DC5E]",
-  toastWarning: "border-red-500 text-red-500",
-  toastIcon: "text-[#15DC5E]",
+  toastSuccess: "border-success text-success",
+  toastWarning: "border-danger text-danger",
+  toastIcon: "text-success",
   toastText: "text-[14px]",
 
   postHeader: "w-[688px] border-b border-gray-300 py-8",
@@ -23,7 +23,7 @@ export const S = {
 
   commentSectionContainer: "w-[688px] mt-8",
   commentCount: "font-medium text-gray-900 text-[16px]",
-  commentCountNumber: "text-[#00A1FF]",
+  commentCountNumber: "text-info",
 
   commentListContainer: "mb-4",
   commentItemWrapper: "rounded-md p-3 mb-2 last:mb-0 relative",
@@ -41,7 +41,7 @@ export const S = {
   commentFormFooter: "flex justify-end mt-2",
   commentFormLoginPrompt: "text-center text-gray-500 py-10",
 
-  authorProfileContainer: "w-full h-[354px] border-b border-gray-300 bg-[#F5F5F5] flex justify-center items-start pt-4",
+  authorProfileContainer: "w-full h-[354px] border-b border-gray-300 bg-gray-200 flex justify-center items-start pt-4",
   authorProfileInner: "flex flex-col items-start w-[688px] py-4",
   authorProfileImage: "w-[64px] h-[64px] object-cover rounded-full mb-4 mt-10",
   authorProfileName: "text-[24px] font-medium text-gray-900",

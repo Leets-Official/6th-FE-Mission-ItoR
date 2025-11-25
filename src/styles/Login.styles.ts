@@ -9,23 +9,23 @@ export const S = {
 
   graphicContainer: "items-start justify-center flex-1 min-w-0",
   graphicSvg: "w-[344px] h-[160px] -ml-[40px] text-white fill-white",
-  graphicText: "text-[#909090] text-[14px] font-light px-4 leading-[160%]",
+  graphicText: "text-gray-600 text-[14px] font-light px-4 leading-[160%]",
 
   formContainer: "flex flex-col items-center justify-center flex-1 min-w-0 w-full",
   input:
-    "w-full h-[46px] rounded-md px-[16px] py-[12px] bg-white text-black text-[14px] placeholder-[#B0B0B0] focus:outline-none",
+    "w-full h-[46px] rounded-md px-[16px] py-[12px] bg-white text-black text-[14px] placeholder-gray-500 focus:outline-none",
   emailInput: "mb-3",
   passwordInput: "mb-4",
   emailLoginButton:
-    "w-full h-[46px] rounded-md bg-[#3B82F6] text-white font-medium mb-4 hover:bg-[#2563EB] transition-colors disabled:opacity-50",
+    "w-full h-[46px] rounded-md bg-primary text-white font-medium mb-4 hover:bg-primary-dark transition-colors disabled:opacity-50",
   
   dividerContainer: "flex items-center w-full gap-2 mb-4",
-  dividerLine: "flex-1 h-[1px] bg-[#4B4B4B]",
-  dividerText: "text-[12px] text-[#B0B0B0]",
+  dividerLine: "flex-1 h-[1px] bg-gray-800",
+  dividerText: "text-[12px] text-gray-500",
 
   kakaoLoginButton:
-    "w-full h-[46px] rounded-md bg-[#FEE500] text-black font-medium flex items-center justify-center gap-2 mb-4 hover:bg-[#FDDD00] transition-colors",
+    "w-full h-[46px] rounded-md bg-kakao text-black font-medium flex items-center justify-center gap-2 mb-4 hover:bg-kakao-dark transition-colors",
   kakaoIcon: "w-[18px] h-[18px]",
   
-  signupLink: "text-[#B0B0B0] text-[12px] cursor-pointer hover:underline",
+  signupLink: "text-gray-500 text-[12px] cursor-pointer hover:underline",
 };

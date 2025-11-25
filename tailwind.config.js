@@ -5,30 +5,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 🎨 Figma & 코드 기반 사용자 정의 팔레트
+        primary: {
+          DEFAULT: '#3B82F6',
+          dark: '#2563EB',
+        },
+        success: '#15DC5E',
+        danger: '#FF3F3F',
+        info: '#00A1FF',
+        kakao: {
+          DEFAULT: '#FEE500',
+          dark: '#FDDD00',
+        },
         gray: {
-          50: "#F5F5F5",
-          100: "#B0B0B0",
-          200: "#909090",
-          300: "#606060",
-          800: "#333333",
+          900: '#333333',
+          800: '#4B4B4B',
+          700: '#606060',
+          600: '#909090',
+          500: '#B0B0B0',
+          400: '#C8C8C8',
+          300: '#E6E6E6',
+          200: '#F5F5F5',
+          100: '#FAFAFA',
         },
-        blue: {
-          400: "#00A1FF",
-          500: "#3B82F6",
-          600: "#2563EB",
-        },
-        red: {
-          400: "#FF3F3F",
-        },
-        green: {
-          400: "#15DC5E",
-        },
-        yellow: {
-          400: "#FEE500",
-          500: "#FDDD00",
-        },
-        black: "#000000",
+        black: '#000000',
+        white: '#FFFFFF',
       },
       fontSize: {
         xs: "12px",
