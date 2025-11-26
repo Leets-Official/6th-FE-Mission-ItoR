@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
+import { queryClient } from '@/App';
 
 // API용 Axios 인스턴스
 export const axiosInstance: AxiosInstance = axios.create({
@@ -109,6 +110,7 @@ const refreshAuthLogic = async (failedRequest: AxiosError) => {
   if (!refreshToken) {
     setAccessToken(null);
     setRefreshToken(null);
+    queryClient.removeQueries({ queryKey: ['userInfo'] });
     if (typeof window !== 'undefined') {
       window.location.href = '/';
     }
@@ -149,6 +151,7 @@ const refreshAuthLogic = async (failedRequest: AxiosError) => {
   } catch (error) {
     setAccessToken(null);
     setRefreshToken(null);
+    queryClient.removeQueries({ queryKey: ['userInfo'] });
     if (typeof window !== 'undefined') {
       window.location.href = '/';
     }
