@@ -6,7 +6,6 @@ import { cn } from '@/utils/cn';
 import { Spacer, Textarea } from '@/components';
 import * as UserQuery from '@/api/user/userQuery';
 import { useEditModeStore } from '@/stores/useEditModeStore';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { SIGNUP_FORM_FIELDS, MYPAGE_TEXTS } from '@/constants';
 import { profileEditSchema, ProfileEditFormData } from '@/utils/schemas';
 import { EditProfileFormProps } from '@/types/mypage';
@@ -28,7 +27,7 @@ const EXCLUDED_FIELDS = ['nickname', 'introduction', 'password', 'passwordConfir
 const EditProfileForm = ({ className }: EditProfileFormProps) => {
   const { user } = UserQuery.useAuth();
   const { isEditMode, setEditMode } = useEditModeStore();
-  const isKakaoUser = useAuthStore(state => state.isKakaoUser);
+  const isKakaoUser = sessionStorage.getItem('isKakaoSignup') === 'true';
   const { headerNickname, headerIntroduction, handleSave } = useOutletContext<{
     headerNickname: string;
     headerIntroduction: string;

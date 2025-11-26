@@ -1,12 +1,12 @@
 import Sidebar from '@/layout/Sidebar';
 import { PageHeader } from '@/components';
 import { useSidebar, usePageHeaderType, useEditProfile } from '@/hooks';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuth } from '@/api/user/userQuery';
 import { Outlet } from 'react-router-dom';
 
 export default function Layout() {
   const { isSidebarOpen, sidebarRef, toggleSidebar } = useSidebar();
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+  const { isLoggedIn } = useAuth();
 
   const pageHeaderType = usePageHeaderType();
   const { handleEdit, handleCancel } = useEditProfile();

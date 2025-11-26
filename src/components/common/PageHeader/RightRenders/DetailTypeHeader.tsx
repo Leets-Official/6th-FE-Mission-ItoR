@@ -1,6 +1,5 @@
 import { ChatIcon, MoreVertIcon } from '@/assets/icons';
 import { Icon, DropdownMenu, Modal } from '@/components';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { useDetailTypeHeader } from '@/hooks';
 import { PAGEHEADER_TEXTS } from '@/constants';
 import { useParams, useLocation } from 'react-router-dom';
@@ -8,10 +7,9 @@ import { useBlogDetailQuery } from '@/api/blog/blogQuery';
 import { useAuth } from '@/api/user/userQuery';
 
 export const DetailTypeHeader = () => {
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
   const { id } = useParams();
   const location = useLocation();
-  const { isLoading: authLoading } = useAuth();
 
   // isOwner 체크
   const isBlogDetailPage = location.pathname.includes('/blog/') && id;

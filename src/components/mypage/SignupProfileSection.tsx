@@ -35,7 +35,7 @@ const ProfileSection = ({
             showIcon
             icon={<AddPhotoAlternateIcon />}
             color="gray-56"
-            borderColor="gray"
+            borderColor="gray-56"
             onClick={handleButtonClick}
           >
             {MYPAGE_TEXTS.BUTTONS.ADD_PROFILE_PHOTO}

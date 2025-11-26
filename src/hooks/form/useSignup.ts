@@ -9,7 +9,6 @@ import { useImagePreview } from '@/hooks/common/useImagePreview';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
 import { setAccessToken, setRefreshToken } from '@/api/apiInstance';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { AUTH_TEXTS } from '@/constants';
 
 interface UseSignupReturn {
@@ -44,7 +43,6 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
   const registerMutation = useRegisterMutation();
   const registerOAuthMutation = useRegisterOAuthMutation();
   const { uploadImage } = useS3ImageUpload();
-  const setIsKakaoUser = useAuthStore(state => state.setIsKakaoUser);
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -101,7 +99,6 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
             sessionStorage.removeItem('kakaoId');
             setAccessToken(response.data.accessToken || null);
             setRefreshToken(response.data.refreshToken || null);
-            setIsKakaoUser(true); // 카카오 사용자로 설정
             await queryClient.invalidateQueries({ queryKey: ['userInfo'] });
             navigate('/');
           },

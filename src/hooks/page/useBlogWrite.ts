@@ -6,13 +6,13 @@ import { getEditorStyles } from '@/styles/editor.styles';
 import { useImageUpload } from './useImageUpload';
 import { useBlogWriteStore } from '@/stores/useBlogWriteStore';
 import { useBlogDetailQuery } from '@/api/blog/blogQuery';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuth } from '@/api/user/userQuery';
 import { parseApiContentToEditor } from '@/utils/blogContentConverter';
 
 export const useBlogWrite = () => {
   const [searchParams] = useSearchParams();
   const editPostId = searchParams.get('edit');
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+  const { isLoggedIn } = useAuth();
 
   // 에디터 상태 관리
   const {
