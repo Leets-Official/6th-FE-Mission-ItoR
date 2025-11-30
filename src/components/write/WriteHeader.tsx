@@ -16,8 +16,7 @@ export default function WriteHeader({
   onReset,
   onPublish,
 }: Props) {
-  const disabled =
-    !canPublish || isPublishing || isUploadingImage;
+  const isDisabled = !canPublish || isPublishing || isUploadingImage;
 
   return (
     <header className="w-full border-b border-[var(--Gray96)] bg-white/90 backdrop-blur-[2px]">
@@ -36,9 +35,9 @@ export default function WriteHeader({
           <button
             type="button"
             onClick={onPublish}
-            disabled={disabled}
+            disabled={isDisabled}
             className={`rounded-[25px] border px-4 py-[6px] text-[14px] font-light leading-[22.4px] ${
-              !disabled
+              !isDisabled
                 ? "border-[var(--Point,#00A1FF)] text-[var(--Point,#00A1FF)]"
                 : "cursor-not-allowed border-[var(--Gray90)] text-[var(--Gray56)] opacity-40"
             }`}

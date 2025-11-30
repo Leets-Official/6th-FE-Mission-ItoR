@@ -25,6 +25,11 @@ export default function JoinOAuthPage() {
     }
   }, [state, nav]);
 
+  // 리다이렉트 중에는 폼 렌더링 안 하도록 가드
+  if (!state || !state.email || !state.nickname) {
+    return null;
+  }
+
   return (
     <div className="flex min-h-dvh w-full flex-col bg-white">
       {/* 헤더 */}

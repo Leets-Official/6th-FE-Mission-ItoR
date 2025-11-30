@@ -10,6 +10,7 @@ import "@src/styles/auth.css";
 import { useLogin } from "@src/hooks/useAuth";
 import KakaoLoginButton from "@src/components/KakaoLoginButton";
 import { validateEmail, validatePassword } from "@src/utils/validators";
+import { saveTokens } from "@src/lib/authStorage";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -22,6 +23,7 @@ export default function LoginPage() {
     },
     validate: (v) => {
       const err: Record<string, string> = {};
+
       const emailError = validateEmail(v.email);
       if (emailError) err.email = emailError;
 
@@ -48,8 +50,8 @@ export default function LoginPage() {
         onSuccess: (res) => {
           const { accessToken, refreshToken } = res.data;
 
-          if (accessToken) localStorage.setItem("accessToken", accessToken);
-          if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+          // localStorage 직접 접근 대신 authStorage 유틸 사용
+          saveTokens(accessToken, refreshToken);
 
           nav("/");
         },

@@ -24,6 +24,8 @@ export default function AccountProfileForm({
   disabled,
   onChange,
 }: Props) {
+  const { email, nickname, intro, realname, birth } = form;
+
   return (
     <div className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-4">
@@ -32,7 +34,7 @@ export default function AccountProfileForm({
           name="email"
           type="email"
           placeholder="이메일"
-          value={form.email}
+          value={email}
           onChange={onChange}
           disabled
         />
@@ -42,7 +44,7 @@ export default function AccountProfileForm({
           name="nickname"
           type="text"
           placeholder="닉네임"
-          value={form.nickname}
+          value={nickname}
           onChange={onChange}
           disabled={disabled}
         />
@@ -57,7 +59,7 @@ export default function AccountProfileForm({
           name="realname"
           type="text"
           placeholder="이름"
-          value={form.realname}
+          value={realname}
           onChange={onChange}
           disabled={disabled}
         />
@@ -67,7 +69,7 @@ export default function AccountProfileForm({
           name="birth"
           type="text"
           placeholder="YYYY-MM-DD"
-          value={form.birth}
+          value={birth}
           onChange={onChange}
           disabled={disabled}
         />
@@ -77,7 +79,7 @@ export default function AccountProfileForm({
         <LabeledTextArea
           label="소개"
           name="intro"
-          value={form.intro}
+          value={intro}
           placeholder="한 줄 소개 또는 소개글"
           rows={2}
           onChange={onChange}
