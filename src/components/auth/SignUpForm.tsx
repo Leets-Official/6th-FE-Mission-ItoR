@@ -111,6 +111,15 @@ export default function SignUpForm({ onSuccess }: Props) {
     );
   };
 
+  const handleCancel = () => {
+    reset();
+    setPreview(null);
+    setProfileUrl(null);
+    if (fileRef.current) {
+      fileRef.current.value = "";
+    }
+  };
+
   const initial = (values.nickname?.trim()?.[0] ?? "").toUpperCase();
 
   type FieldName =
@@ -176,7 +185,7 @@ export default function SignUpForm({ onSuccess }: Props) {
 
   return (
     <form
-      className="mx-auto flex w/full max-w-[688px] flex-col gap-6 px-4 py-8"
+      className="mx-auto flex w-full max-w-[688px] flex-col gap-6 px-4 py-8"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col items-start gap-3">
@@ -264,7 +273,7 @@ export default function SignUpForm({ onSuccess }: Props) {
           type="button"
           variant="neutralOutline"
           className="flex-1"
-          onClick={reset}
+          onClick={handleCancel}
           disabled={isPending || isUploadingProfile}
         >
           취소
