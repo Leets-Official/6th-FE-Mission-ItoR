@@ -8,10 +8,14 @@ export function useLogout() {
   const queryClient = useQueryClient();
 
   const logout = () => {
+    // 1) 토큰 전부 제거
     clearTokens();
-    queryClient.invalidateQueries({ queryKey: ["me"] });
+
+    // 2) me 쿼리 캐시 자체 삭제
+    queryClient.removeQueries({ queryKey: ["me"] });
+
+    // 3) 홈으로 이동
     nav("/", { replace: true });
-    window.dispatchEvent(new StorageEvent("storage"));
   };
 
   return { logout };
