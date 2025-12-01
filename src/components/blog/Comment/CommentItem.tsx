@@ -5,13 +5,13 @@ import { MoreVertIcon } from '@/assets/icons';
 import { formatCommentDate } from '@/utils/date';
 import { CommentItemProps } from '@/components/blog/Comment/CommentTypes';
 import { profileStyles, commentItemStyles } from '@/components/blog/Comment/Comment.styles';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuth } from '@/api/user/userQuery';
 
 const CommentItem = memo(
   ({ commentId, content, nickName, profileUrl, createdAt, isOwner, onDelete }: CommentItemProps) => {
     const styles = commentItemStyles();
     const profileStyle = profileStyles();
-    const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+    const { isLoggedIn } = useAuth();
 
     const handleDelete = useCallback(() => {
       onDelete?.(commentId);

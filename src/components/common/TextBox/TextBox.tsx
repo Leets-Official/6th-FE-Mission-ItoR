@@ -10,7 +10,7 @@ interface TextBoxProps {
   showIcon?: boolean;
   icon?: ReactNode;
   color?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90' | 'gray-56';
-  borderColor?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90' | 'transparent';
+  borderColor?: 'default' | 'primary' | 'positive' | 'gray' | 'gray-90' | 'transparent' | 'gray-56';
   onClick?: () => void;
   asButton?: boolean;
 }
