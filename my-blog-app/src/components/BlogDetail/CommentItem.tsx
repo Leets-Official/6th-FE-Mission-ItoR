@@ -34,13 +34,7 @@ export default function CommentItem({
           </button>
           {open && (
             <div className='absolute right-0 mt-2 z-50'>
-              <DropdownMenu
-                variant='arrow'
-                items={[
-                  { label: '삭제하기', onClick: onDelete },
-                  // 수정 기능 필요하면 추가 가능
-                ]}
-              />
+              <DropdownMenu variant='arrow' items={[{ label: '삭제하기', onClick: onDelete }]} />
             </div>
           )}
         </div>

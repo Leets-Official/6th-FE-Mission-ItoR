@@ -8,23 +8,30 @@ export interface Comment {
   createdAt: string
 }
 
+// postId 타입을 number -> string으로 수정 (UUID 처리)
 export function useComment(postId: string) {
   const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
+
   const commentRef = useRef<HTMLDivElement>(null)
 
-  /** 댓글 영역으로 스크롤 */
-  const scrollToComments = () => {
+  /** 댓글 영역 스크롤 */
+  const handleScrollToComments = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  /** 댓글 조회 */
+  /** 1) 댓글 조회 — GET */
   const fetchComments = async () => {
     try {
-      const res = await axiosInstance.get(`/comments/post/${postId}`)
-      setComments(res.data.data || [])
+      const res = await axiosInstance.get(`/posts`, { params: { postId } })
+
+      const postData = res.data.data
+
+      const commentsData = postData?.comments || postData?.commentList || postData || []
+
+      setComments(Array.isArray(commentsData) ? commentsData : [])
     } catch (err) {
-      console.error('댓글 조회 실패:', err)
+      console.error('댓글 불러오기 실패:', err)
     }
   }
 
@@ -32,23 +39,25 @@ export function useComment(postId: string) {
     fetchComments()
   }, [postId])
 
-  /** 댓글 등록 */
-  const addComment = async () => {
+  /** 2) 댓글 등록 — POST */
+  const handleAddComment = async () => {
     if (!newComment.trim()) return
 
     try {
-      await axiosInstance.post(`/comments/${postId}`, {
+      await axiosInstance.post('/comments', {
+        postId,
         content: newComment.trim(),
       })
+
       setNewComment('')
-      fetchComments()
+      fetchComments() // 최신 댓글 다시 불러오기
     } catch (err) {
       console.error('댓글 등록 실패:', err)
     }
   }
 
-  /** 댓글 삭제 */
-  const deleteComment = async (commentId: number) => {
+  /** 3) 댓글 삭제 — DELETE */
+  const handleDeleteClick = async (commentId: number) => {
     try {
       await axiosInstance.delete(`/comments/${commentId}`)
       fetchComments()
@@ -57,11 +66,11 @@ export function useComment(postId: string) {
     }
   }
 
-  /** 댓글 수정 */
-  const updateComment = async (commentId: number, value: string) => {
+  /** 4) 댓글 수정 — PATCH */
+  const handleUpdateComment = async (commentId: number, content: string) => {
     try {
       await axiosInstance.patch(`/comments/${commentId}`, {
-        content: value,
+        content,
       })
       fetchComments()
     } catch (err) {
@@ -72,11 +81,11 @@ export function useComment(postId: string) {
   return {
     comments,
     newComment,
-    setNewComment,
     commentRef,
-    scrollToComments,
-    addComment,
-    deleteComment,
-    updateComment,
+    setNewComment,
+    handleScrollToComments,
+    handleAddComment,
+    handleDeleteClick,
+    handleUpdateComment,
   }
 }
