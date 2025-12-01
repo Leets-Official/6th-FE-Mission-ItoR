@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Avatar from "@/components/Avatar/Avatar";
 import CommentSection from "@/components/Blog/CommentSection/CommentSection";
@@ -8,76 +8,32 @@ import Modal from "@/components/Modal/Modal";
 import PageLayout from "@/layouts/PageLayout";
 import * as S from "./PostDetail.styled";
 import { useUserStore } from "@/store/useUserStore";
-import { fetchPostDetail, deletePost } from "@/api/postApi";
-import { Post } from "@/types/post";
 import { useToast } from "@/contexts/ToastContext";
-import { useApiError } from "@/hooks/useApiError";
+
 import PostDetailSkeleton from "./PostDetailSkeleton";
+import { usePostDetail } from "./usePostDetail";
 
 export default function PostDetail() {
   const { user } = useUserStore();
   const navigate = useNavigate();
-  const { showToast } = useToast();
-  const { handleError } = useApiError();
+  const { postId } = useParams<{ postId: string }>();
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const [commentCount, setCommentCount] = useState(0);
-  const [post, setPost] = useState<Post | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const commentRef = useRef<HTMLDivElement>(null);
-  const { postId } = useParams<{ postId: string }>();
-
   const isLogin = !!user;
-  const isOwner = post?.isOwner ?? false;
 
-  useEffect(() => {
-    const loadPost = async () => {
-      if (!postId) return;
-
-      try {
-        const res = await fetchPostDetail(postId);
-
-        if (res.code === 200 && res.data) {
-          setPost(res.data);
-          const comments = res.data.comments || [];
-          setCommentCount(Array.isArray(comments) ? comments.length : 0);
-        } else {
-          showToast(res.message || "게시글을 불러오지 못했습니다.", "error");
-        }
-      } catch (error) {
-        handleError(error, "게시글 상세 조회");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPost();
-  }, [postId, showToast, handleError]);
-
-  const handleScrollToComments = () => {
-    commentRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const handleDeletePost = async () => {
-    if (!postId) return;
-
-    try {
-      const res = await deletePost(postId);
-      if (res.code === 200) {
-        setIsDeleteModalOpen(false);
-        showToast("게시글이 삭제되었습니다.", "success");
-        setTimeout(() => navigate("/blog", { replace: true }), 600);
-      } else {
-        showToast(res.message || "삭제 실패", "error");
-      }
-    } catch (error) {
-      handleError(error, "게시글 삭제");
-    }
-  };
+  const {
+    post,
+    loading,
+    commentCount,
+    setCommentCount,
+    isOwner,
+    commentRef,
+    scrollToComments,
+    handleDeletePost,
+  } = usePostDetail(postId);
 
   const menuItems = [
     { label: "수정하기", onClick: () => navigate(`/edit/${postId}`) },
@@ -87,7 +43,7 @@ export default function PostDetail() {
   return (
     <PageLayout
       headerVariant="chatMenu"
-      onChatClick={handleScrollToComments}
+      onChatClick={scrollToComments}
       onMoreClick={() => setIsMenuOpen((prev) => !prev)}
       showMoreIcon={isOwner}
       onLoginClick={() => setIsLoginOpen(true)}
@@ -160,10 +116,7 @@ export default function PostDetail() {
                 postAuthorProfile={post.profileUrl}
                 postAuthorName={post.nickName}
                 onLoginClick={() => setIsLoginOpen(true)}
-                onSubmit={(comment) => {
-                  showToast(`댓글 등록: ${comment}`, "success");
-                  setCommentCount((prev) => prev + 1);
-                }}
+                onSubmit={() => setCommentCount((prev) => prev + 1)}
               />
             </section>
           </main>
