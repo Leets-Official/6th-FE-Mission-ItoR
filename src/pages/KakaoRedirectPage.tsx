@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useKakaoRedirectLogin } from "@src/hooks/useAuth";
+import { saveTokens } from "@src/lib/authStorage";
 
 export default function KakaoRedirectPage() {
   const [params] = useSearchParams();
@@ -12,7 +13,6 @@ export default function KakaoRedirectPage() {
 
   useEffect(() => {
     if (!code) {
-      // code 없으면 홈 + 로그인 모달
       navigate("/?login=1", { replace: true });
       return;
     }
@@ -22,14 +22,9 @@ export default function KakaoRedirectPage() {
         const { accessToken, refreshToken, ...rest } = payload;
 
         if (accessToken) {
-          // 기존 가입자: 토큰 저장 후 홈으로 이동
-          localStorage.setItem("accessToken", accessToken);
-          if (refreshToken) {
-            localStorage.setItem("refreshToken", refreshToken);
-          }
+          saveTokens(accessToken, refreshToken);
           navigate("/", { replace: true });
         } else {
-          // 신규 가입자: OAuth 회원가입 페이지로 state 넘기기
           navigate("/join/oauth", { state: rest, replace: true });
         }
       },

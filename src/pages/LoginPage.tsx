@@ -9,6 +9,8 @@ import clearIcon from "@icons/clear.svg";
 import "@src/styles/auth.css";
 import { useLogin } from "@src/hooks/useAuth";
 import KakaoLoginButton from "@src/components/KakaoLoginButton";
+import { validateEmail, validatePassword } from "@src/utils/validators";
+import { saveTokens } from "@src/lib/authStorage";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -20,18 +22,18 @@ export default function LoginPage() {
       password: "",
     },
     validate: (v) => {
-      const err: { [key: string]: string } = {};
-      if (!v.email.trim()) {
-        err.email = "이메일을 입력해주세요.";
-      }
-      if (!v.password.trim()) {
-        err.password = "비밀번호를 입력해주세요.";
-      }
+      const err: Record<string, string> = {};
+
+      const emailError = validateEmail(v.email);
+      if (emailError) err.email = emailError;
+
+      const passwordError = validatePassword(v.password);
+      if (passwordError) err.password = passwordError;
+
       return err;
     },
   });
 
-  // 실제로 사용하는 값만 구조분해 (unused 경고 방지)
   const { mutate: login, isPending, isError, error } = useLogin();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,8 +50,8 @@ export default function LoginPage() {
         onSuccess: (res) => {
           const { accessToken, refreshToken } = res.data;
 
-          if (accessToken) localStorage.setItem("accessToken", accessToken);
-          if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+          // localStorage 직접 접근 대신 authStorage 유틸 사용
+          saveTokens(accessToken, refreshToken);
 
           nav("/");
         },

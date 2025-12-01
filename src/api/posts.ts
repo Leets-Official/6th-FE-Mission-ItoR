@@ -1,5 +1,6 @@
 // src/api/posts.ts
 import api from "@src/api/client";
+import { hasAccessToken } from "@src/lib/authStorage";
 
 export type ContentType = "TEXT" | "IMAGE";
 
@@ -39,12 +40,10 @@ export type PostDetail = {
   mine?: boolean;
 };
 
-/* ---------- API 응답 타입 (로우 타입) ---------- */
-
 type ApiPostContent = {
   contentOrder: number;
   content: string;
-  contentType: string; // 백엔드에서 오는 raw 값 (TEXT/IMAGE 등)
+  contentType: string;
 };
 
 type ApiPostListItem = {
@@ -95,8 +94,6 @@ type ApiPostDetailResponse = {
   data: ApiPostDetailData;
 };
 
-/* ---------- 헬퍼 함수들 ---------- */
-
 function normalizeContentType(raw: string | undefined | null): ContentType | undefined {
   const upper = (raw ?? "").toUpperCase();
   if (upper === "TEXT") return "TEXT";
@@ -146,7 +143,6 @@ function mapApiContentToBlock(content: ApiPostContent): PostBlock {
       url: content.content,
     };
   }
-  // 디폴트: TEXT 처리
   return {
     type: "TEXT",
     order: content.contentOrder,
@@ -167,14 +163,7 @@ function mapApiCommentToComment(c: ApiPostDetailComment) {
   };
 }
 
-/* ---------- 실제 API 함수들 ---------- */
-
-// 게시글 리스트 조회 (스웨거: GET /posts/all, /posts/all/token)
 export async function getPosts(page: number, size: number): Promise<PageResult<PostSummary>> {
-  // 🔥 지금은 토큰 유무 상관없이 공용 리스트 API만 사용
-  // const hasToken = !!localStorage.getItem("accessToken");
-  // const url = hasToken ? "/posts/all/token" : "/posts/all";
-
   const url = "/posts/all";
 
   const { data } = await api.get<ApiPostListResponse>(url, {
@@ -187,10 +176,8 @@ export async function getPosts(page: number, size: number): Promise<PageResult<P
   return mapPageResult(items, page, totalPages);
 }
 
-// 게시글 상세 조회 (스웨거: GET /posts, /posts/token)
 export async function getPostDetail(id: string): Promise<PostDetail> {
-  const hasToken = !!localStorage.getItem("accessToken");
-  const url = hasToken ? "/posts/token" : "/posts";
+  const url = hasAccessToken() ? "/posts/token" : "/posts";
 
   const { data } = await api.get<ApiPostDetailResponse>(url, {
     params: { postId: id },
