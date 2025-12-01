@@ -12,6 +12,7 @@ import { fetchPostDetail, deletePost } from "@/api/postApi";
 import { Post } from "@/types/post";
 import { useToast } from "@/contexts/ToastContext";
 import { useApiError } from "@/hooks/useApiError";
+import PostDetailSkeleton from "./PostDetailSkeleton";
 
 export default function PostDetail() {
   const { user } = useUserStore();
@@ -63,6 +64,7 @@ export default function PostDetail() {
 
   const handleDeletePost = async () => {
     if (!postId) return;
+
     try {
       const res = await deletePost(postId);
       if (res.code === 200) {
@@ -81,33 +83,6 @@ export default function PostDetail() {
     { label: "수정하기", onClick: () => navigate(`/edit/${postId}`) },
     { label: "삭제하기", onClick: () => setIsDeleteModalOpen(true) },
   ];
-
-  const Skeleton = () => (
-    <main className={S.container}>
-      <section className={S.group}>
-        <div className="h-8 w-2/3 animate-pulse rounded-md bg-gray-200" />
-        <div className="mt-3 flex items-center gap-2">
-          <div className="h-6 w-6 animate-pulse rounded-full bg-gray-200" />
-          <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
-          <div className="h-4 w-16 animate-pulse rounded bg-gray-200" />
-        </div>
-      </section>
-
-      <div className={S.divider} />
-
-      <section className={S.group}>
-        <div className="h-6 w-full animate-pulse rounded bg-gray-200" />
-        <div className="mt-2 h-6 w-full animate-pulse rounded bg-gray-200" />
-        <div className="mt-2 h-6 w-3/4 animate-pulse rounded bg-gray-200" />
-      </section>
-
-      <div className={S.divider} />
-
-      <section className={S.group}>
-        <div className="h-10 w-32 animate-pulse rounded bg-gray-200" />
-      </section>
-    </main>
-  );
 
   return (
     <PageLayout
@@ -137,7 +112,7 @@ export default function PostDetail() {
       )}
 
       {loading ? (
-        <Skeleton />
+        <PostDetailSkeleton />
       ) : (
         post && (
           <main className={S.container}>

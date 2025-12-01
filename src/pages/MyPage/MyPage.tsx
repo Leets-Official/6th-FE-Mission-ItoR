@@ -13,6 +13,7 @@ import { fetchPosts } from "@/api/postApi";
 import { fetchMyInfo } from "@/api/userApi";
 import { useToast } from "@/contexts/ToastContext";
 import { useApiError } from "@/hooks/useApiError";
+import MyPageSkeleton from "./MyPageSkeleton";
 
 export default function MyPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +41,6 @@ export default function MyPage() {
         handleError(error, "사용자 정보 불러오기");
       }
     };
-
     loadUser();
   }, []);
 
@@ -54,7 +54,6 @@ export default function MyPage() {
   useEffect(() => {
     const loadPosts = async () => {
       setLoading(true);
-
       try {
         const res = await fetchPosts(currentPage, 5);
 
@@ -72,36 +71,10 @@ export default function MyPage() {
     loadPosts();
   }, [currentPage]);
 
-  const Skeleton = () => (
-    <>
-      <section className={S.profileSection}>
-        <div className={S.profileSectionInner}>
-          <div className={S.profileInner}>
-            <div className="h-[96px] w-[96px] animate-pulse rounded-full bg-gray-200" />
-            <div className="mt-4 h-6 w-32 animate-pulse rounded bg-gray-200" />
-            <div className="mt-2 h-4 w-48 animate-pulse rounded bg-gray-200" />
-            <div className="mt-4 h-8 w-36 animate-pulse rounded bg-gray-200" />
-          </div>
-        </div>
-      </section>
-
-      <main className={S.mainWrapper}>
-        <ul className={S.listWrapper}>
-          {[1, 2, 3].map((i) => (
-            <li key={i} className="border-b border-gray-100 p-4">
-              <div className="mb-2 h-5 w-1/2 animate-pulse rounded bg-gray-200" />
-              <div className="h-4 w-1/3 animate-pulse rounded bg-gray-200" />
-            </li>
-          ))}
-        </ul>
-      </main>
-    </>
-  );
-
   return (
     <PageLayout headerVariant="write" onWriteClick={() => navigate("/write")}>
       {loading ? (
-        <Skeleton />
+        <MyPageSkeleton />
       ) : (
         <>
           <section className={S.profileSection}>
