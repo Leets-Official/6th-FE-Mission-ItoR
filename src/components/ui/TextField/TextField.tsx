@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import type { TextFieldProps } from "@ui/TextField.types";
+import type { TextFieldProps } from "./TextField.types";
 import {
   wrapperBase,
   labelClass,
