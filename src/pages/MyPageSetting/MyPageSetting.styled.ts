@@ -2,7 +2,7 @@ export const container = "flex flex-col items-center w-full bg-white min-h-scree
 
 export const profileSection = "w-full bg-brand-borderGray flex justify-center py-10";
 
-export const profileSectionInner = "w-[900px] flex flex-col items-start gap-4 relative";
+export const profileSectionInner = "w-[900px] flex flex-col items-center gap-4 relative";
 
 export const profileHeader = "w-full max-w-[900px] flex flex-col gap-5";
 
@@ -14,7 +14,7 @@ export const addIconButton =
 export const nickname = "text-lg font-medium flex items-start gap-2";
 export const intro = "text-sm text-brand-darkGray";
 
-export const formWrapper = "w-full max-w-[900px] flex flex-col gap-8 py-10";
+export const formWrapper = "w-full max-w-[900px] mx-auto flex flex-col gap-8 py-10";
 
 export const socialWrapper = "relative";
 

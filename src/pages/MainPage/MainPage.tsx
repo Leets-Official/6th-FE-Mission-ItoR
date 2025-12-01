@@ -1,24 +1,18 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Header from "@/components/Header/Header";
 import Pagination from "@/components/Pagination/Pagination";
 import PostItem from "@/components/Blog/PostItem/PostItem";
-import Sidebar from "@/components/Sidebar/Sidebar";
 import LoginModal from "@/components/Blog/LoginModal/LoginModal";
 import Modal from "@/components/Modal/Modal";
+import PageLayout from "@/layouts/PageLayout";
 import { usePosts } from "@/hooks/usePosts";
 import { useUserStore } from "@/store/useUserStore";
-import { useLogout } from "@/hooks/useLogout";
 import * as styles from "./MainPage.styled";
 
 export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupPromptOpen, setIsSignupPromptOpen] = useState(false);
-
-  const { isLogoutModalOpen, handleLogoutClick, handleConfirmLogout, handleCloseLogoutModal } =
-    useLogout();
 
   const { user } = useUserStore();
   const isLogin = !!user;
@@ -36,34 +30,11 @@ export default function MainPage() {
   if (loading) return <div className="p-6">로딩 중...</div>;
 
   return (
-    <div className="relative">
-      <div className="fixed top-0 left-0 z-50 w-full">
-        <Header
-          title="GITLOG"
-          variant="write"
-          onMenuClick={() => setIsSidebarOpen(true)}
-          onWriteClick={() => (isLogin ? navigate("/write") : setIsLoginOpen(true))}
-        />
-      </div>
-
-      <div className="h-[70px]" />
-
-      {isSidebarOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsSidebarOpen(false)} />
-          <aside className="animate-slideIn fixed top-0 left-0 z-50 h-full w-64">
-            <Sidebar
-              variant={isLogin ? "user" : "guest"}
-              onLoginClick={() => {
-                setIsLoginOpen(true);
-                setIsSidebarOpen(false);
-              }}
-              onLogoutClick={handleLogoutClick}
-            />
-          </aside>
-        </>
-      )}
-
+    <PageLayout
+      headerVariant="write"
+      onWriteClick={() => (isLogin ? navigate("/write") : setIsLoginOpen(true))}
+      onLoginClick={() => setIsLoginOpen(true)}
+    >
       <main className={styles.mainWrapper}>
         {posts.length === 0 ? (
           <div className="py-10 text-center text-gray-500">게시글이 없습니다.</div>
@@ -112,16 +83,6 @@ export default function MainPage() {
         confirmText="네"
         confirmColor="bg-brand-blue text-white hover:bg-brand-blue/90"
       />
-
-      <Modal
-        open={isLogoutModalOpen}
-        title="로그아웃을 진행할게요."
-        onClose={handleCloseLogoutModal}
-        onConfirm={handleConfirmLogout}
-        confirmText="로그아웃"
-        cancelText="취소"
-        confirmColor="bg-brand-blue text-white hover:opacity-90"
-      />
-    </div>
+    </PageLayout>
   );
 }

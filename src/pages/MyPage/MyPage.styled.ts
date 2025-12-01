@@ -1,6 +1,7 @@
-export const mainWrapper = "mx-auto mt-8 max-w-[900px] px-4 pb-20 flex flex-col";
+export const mainWrapper = "mx-auto mt-8 max-w-[900px] px-4 pb-20 flex flex-col min-h-[400px]";
 
-export const profileSection = "w-full bg-brand-borderGray py-8 flex mb-12 justify-center";
+export const profileSection =
+  "w-full bg-brand-borderGray py-8 flex mb-12 justify-center min-h-[260px]";
 
 export const profileSectionInner = "w-[900px] flex justify-start";
 
