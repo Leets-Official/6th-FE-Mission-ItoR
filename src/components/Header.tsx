@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import ReorderIcon from "@icons/reorder.svg?react";
-import UserIcon from "@icons/user.svg?react";
+import Profile from "@ui/Profile";
 
 import { useAuthStatus } from "@src/hooks/useAuthStatus";
 import { useMyInfo } from "@src/hooks/useUser";
@@ -39,14 +39,17 @@ export default function Header() {
         <div className="flex items-center gap-4">
           {isLoggedIn && myInfo ? (
             <button
+              type="button"
               onClick={goMyPage}
               className="flex items-center gap-2 text-[14px] text-[var(--Black)]"
             >
-              <UserIcon className="w-5 h-5" />
+              {/* 기존 user.svg 아이콘 대신 Profile 컴포넌트 사용 */}
+              <Profile />
               <span>{myInfo.nickname}</span>
             </button>
           ) : (
             <button
+              type="button"
               onClick={goLogin}
               className="text-[14px] text-[var(--Black)]"
             >
