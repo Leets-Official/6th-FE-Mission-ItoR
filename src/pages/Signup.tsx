@@ -23,7 +23,7 @@ const Signup: React.FC = () => {
       <Header variant="none" />
 
       {/* 회원가입 타이틀 영역 */}
-      <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-gray-50 px-4 md:px-[430px]">
+      <div className="w-full h-[114px] flex items-center justify-start border-b border-gray-300 bg-gray-200 px-4 md:px-[430px]">
         <h1 className="text-2xl font-medium text-gray-800">회원가입</h1>
       </div>
 
