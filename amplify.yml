@@ -4,12 +4,10 @@ frontend:
     preBuild:
       commands:
         - npm install -g pnpm
-        - cd my-blog-app
-        - pnpm install
+        - pnpm install --prefix my-blog-app
     build:
       commands:
-        - cd my-blog-app
-        - pnpm run build
+        - pnpm run build --prefix my-blog-app
   artifacts:
     baseDirectory: my-blog-app/dist
     files:
