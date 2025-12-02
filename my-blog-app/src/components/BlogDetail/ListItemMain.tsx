@@ -14,6 +14,7 @@ import { useToast } from '@/context/ToastContext'
 import { useModal } from '@/context/ModalContext'
 import axiosInstance from '@/api/axiosInstance'
 import type { Post } from '@/types/post'
+import type { AxiosError } from 'axios'
 
 interface CommentType {
   commentId: number
@@ -117,8 +118,8 @@ export default function ListItemMain({ post }: { post: Post }) {
         })
         showToast('게시글이 삭제되었습니다.', 'positive')
         navigate('/')
-      } catch (err: any) {
-        const status = err?.response?.status
+      } catch (err) {
+        const status = (err as AxiosError)?.response?.status
         if (status === 401) showToast('로그인이 필요합니다.', 'negative')
         else if (status === 403) showToast('본인 글만 삭제할 수 있습니다.', 'negative')
         else showToast('삭제에 실패했습니다.', 'negative')

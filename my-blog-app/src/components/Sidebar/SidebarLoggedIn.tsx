@@ -7,10 +7,11 @@ import { logout } from '@/hooks/useAuthStatus'
 import type { SidebarProps } from '@/components/Sidebar/Sidebar.types'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '@/api/axiosInstance'
+import type { UserType } from '@/types/user'
 
 export default function SidebarLoggedIn({ onWriteClick }: Pick<SidebarProps, 'onWriteClick'>) {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<UserType | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function SidebarLoggedIn({ onWriteClick }: Pick<SidebarProps, 'on
       {/* 상단 프로필 정보 */}
       <div className='flex flex-col gap-4 w-full'>
         <div className='flex flex-col items-start w-full gap-4'>
-          <ProfileImage size='lg' src={user?.profilePicture} />
+          <ProfileImage size='lg' src={user?.profilePictureUrl} />
 
           <TextCard
             variant='primary'

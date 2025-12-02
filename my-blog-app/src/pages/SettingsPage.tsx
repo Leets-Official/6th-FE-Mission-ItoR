@@ -6,15 +6,16 @@ import ProfileImageUploader from '@/components/Settings/ProfileImageUploader'
 import { Button } from '@/components/Button/Button'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '@/api/axiosInstance'
+import type { User } from '@/api/userAPI'
 
 export default function SettingsPage() {
   const [mode, setMode] = useState<'view' | 'edit'>('view')
   const isView = mode === 'view'
 
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
+
   const navigate = useNavigate()
 
-  // 상태들
   const [profile, setProfile] = useState('')
   const [nickname, setNickname] = useState('')
   const [introduction, setIntroduction] = useState('')
@@ -26,7 +27,7 @@ export default function SettingsPage() {
 
   const fetchUser = async () => {
     const res = await axiosInstance.get('/users/me')
-    const data = res.data.data
+    const data = res.data.data as User
 
     setUser(data)
     setProfile(data.profilePicture)
@@ -40,6 +41,8 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchUser()
   }, [])
+
+  if (!user) return <div className='mt-20'>로딩 중...</div>
 
   const handleSave = async () => {
     try {
@@ -71,8 +74,6 @@ export default function SettingsPage() {
       alert('저장 중 오류가 발생했습니다.')
     }
   }
-
-  if (!user) return <div className='mt-20'>로딩 중...</div>
 
   return (
     <div className='min-h-screen bg-white flex flex-col items-center'>

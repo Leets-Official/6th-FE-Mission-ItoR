@@ -1,9 +1,8 @@
 import axiosInstance from './axiosInstance'
 
-// 기존 개별 API들
-export const getMyInfoAPI = async () => {
+export const getMyInfoAPI = async (): Promise<User> => {
   const res = await axiosInstance.get('/users/me')
-  return res.data.data
+  return res.data.data as User
 }
 
 export const updateNicknameAPI = async (nickname: string) => {
@@ -40,8 +39,25 @@ export interface UpdateUserPayload {
   birthDate?: string
 }
 
-export const updateUserAPI = async (payload: UpdateUserPayload) => {
-  const results: any = {}
+export interface UpdateUserResult {
+  nickname?: unknown
+  introduction?: unknown
+  password?: unknown
+  profilePicture?: unknown
+  info?: unknown
+}
+
+export interface User {
+  profilePicture: string
+  nickname: string
+  introduction: string
+  email: string
+  name: string
+  birthDate: string
+}
+
+export const updateUserAPI = async (payload: UpdateUserPayload): Promise<UpdateUserResult> => {
+  const results: Partial<UpdateUserResult> = {}
 
   if (payload.nickname) {
     results.nickname = await updateNicknameAPI(payload.nickname)
@@ -57,8 +73,8 @@ export const updateUserAPI = async (payload: UpdateUserPayload) => {
   }
   if (payload.name || payload.birthDate) {
     results.info = await updateUserInfoAPI({
-      name: payload.name!,
-      birthDate: payload.birthDate!,
+      name: payload.name ?? '',
+      birthDate: payload.birthDate ?? '',
     })
   }
 
