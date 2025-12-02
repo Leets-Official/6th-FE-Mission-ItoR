@@ -102,7 +102,7 @@ export default function SettingsPage() {
       {/* 상단 회색 배경 */}
       <div className='w-full bg-[#F5F5F5] border-b border-[#F5F5F5] flex justify-center'>
         <div className='max-w-[688px] w-full px-4 py-6 flex flex-col gap-4'>
-          <ProfileImageUploader value={profile} onChange={setProfile} disabled={isView} />
+          <ProfileImageUploader initialUrl={profile} onChange={setProfile} disabled={isView} />
 
           <TextFiledSet
             label='닉네임'
@@ -154,7 +154,7 @@ export default function SettingsPage() {
                     ? '* 비밀번호가 일치하지 않습니다.'
                     : '* 동일하게 입력해주세요.'
                 }
-                hasError={passwordConfirm && passwordConfirm !== password}
+                hasError={!!(passwordConfirm && passwordConfirm !== password)}
               />
             </>
           )}

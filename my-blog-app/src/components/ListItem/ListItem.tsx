@@ -1,4 +1,3 @@
-import TextCard from '@/components/common/TextCard'
 import ListItemMeta from './ListItemMeta'
 import PictureFrame from './PictureFrame'
 

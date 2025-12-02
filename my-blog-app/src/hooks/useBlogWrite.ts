@@ -70,6 +70,7 @@ export function useBlogWrite() {
     content,
     setContent,
     imagePreview,
+    setImagePreview,
     handleImageUpload,
     handleDeleteImage,
     handleSubmit,

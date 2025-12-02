@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import GitlogLogo from '@/components/common/GitlogLogo'
 import { KakaoIcon } from '@/assets/icons/KakaoIcon'
@@ -40,12 +40,6 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
     }
 
     login({ email, password })
-  }
-
-  // 이동 핸들러
-  const goToEmailSignUp = () => {
-    onClose()
-    navigate('/signup/email')
   }
 
   const goToKakaoSignUp = () => {

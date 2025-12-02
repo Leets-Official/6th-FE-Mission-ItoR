@@ -14,7 +14,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import type { Post } from '@/types/post'
 
 export default function ProfilePage() {
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [, setIsLoginOpen] = useState(false)
   const { isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
   const { data: user, isLoading, isError } = useUserInfo()

@@ -7,7 +7,7 @@ import type { AxiosError } from 'axios'
 export default function AuthKakaoCallback() {
   const navigate = useNavigate()
   const { setIsLoggedIn } = useAuthStatus()
-  const [isLoading, setIsLoading] = useState(true)
+  const [, setIsLoading] = useState(true)
 
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get('code')
@@ -23,7 +23,7 @@ export default function AuthKakaoCallback() {
         const res = await handleKakaoCallback(code)
         console.log('✅ 로그인 성공 응답:', res)
 
-        // ✅ 로그인 성공한 경우
+        // 로그인 성공한 경우
         if (res?.data?.httpStatus === '100 CONTINUE') {
           // 1. 임시 로그인 플래그 저장
           localStorage.setItem('isLoggedIn', 'true')
