@@ -90,7 +90,6 @@ export const useKakaoStart = () =>
     mutationFn: () => {
       // 현재 환경에 맞는 Redirect URI 설정
       const redirectUri = `${window.location.origin}/auth/kakao/success`;
-      console.log('카카오 로그인 시작 - Redirect URI:', redirectUri);
 
       // 백엔드 카카오 로그인 엔드포인트로 이동
       window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao`;
@@ -101,25 +100,17 @@ export const useKakaoStart = () =>
 export const useKakaoRedirectLogin = () =>
   useMutation<KakaoTokenPayload, Error, string>({
     mutationFn: async (code: string) => {
-      console.log('카카오 리다이렉트 처리 시작 - code:', code);
-
       try {
         const raw = await kakaoRedirectLogin(code);
-        console.log('카카오 로그인 성공 응답:', raw);
         const payload = extractKakaoPayload(raw);
-        console.log('추출된 payload:', payload);
         return payload;
       } catch (error) {
         console.error('카카오 로그인 에러:', error);
 
         if (error instanceof AxiosError) {
-          console.log('AxiosError 상태 코드:', error.response?.status);
-          console.log('AxiosError 응답 데이터:', error.response?.data);
-
           if (error.response?.status === 401) {
             // 401은 신규 유저를 의미 - 회원가입 필요
             const payload = extractKakaoPayload(error.response.data);
-            console.log('신규 유저 payload:', payload);
 
             // kakaoId가 있는지 확인
             if (!payload.kakaoId) {
