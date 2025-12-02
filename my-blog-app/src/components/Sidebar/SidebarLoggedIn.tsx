@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/Button/Button'
 import ProfileImage from '@/components/ProfileImage/ProfileImage'
 import TextCard from '@/components/common/TextCard'
@@ -6,10 +6,24 @@ import ConfirmModal from '@/components/common/ConfirmModal/ConfirmModal'
 import { logout } from '@/hooks/useAuthStatus'
 import type { SidebarProps } from '@/components/Sidebar/Sidebar.types'
 import { useNavigate } from 'react-router-dom'
+import axiosInstance from '@/api/axiosInstance'
 
-export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
+export default function SidebarLoggedIn({ onWriteClick }: Pick<SidebarProps, 'onWriteClick'>) {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosInstance.get('/users/me')
+        setUser(res.data.data)
+      } catch (error) {
+        console.error('사용자 정보 불러오기 실패:', error)
+      }
+    }
+    fetchUser()
+  }, [])
 
   const handleLogoutClick = () => setIsLogoutModalOpen(true)
   const handleCancel = () => setIsLogoutModalOpen(false)
@@ -24,11 +38,12 @@ export default function SidebarLoggedIn({ user, onWriteClick }: SidebarProps) {
       {/* 상단 프로필 정보 */}
       <div className='flex flex-col gap-4 w-full'>
         <div className='flex flex-col items-start w-full gap-4'>
-          <ProfileImage size='lg' />
+          <ProfileImage size='lg' src={user?.profilePicture} />
+
           <TextCard
             variant='primary'
             title={user?.nickname || '닉네임'}
-            subtitle={user?.bio || '한 줄 소개'}
+            subtitle={user?.introduction || '한 줄 소개'}
           />
         </div>
 
