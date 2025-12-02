@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '@/components/Header';
-import Frame7 from '@/assets/svgs/Frame7.svg?react';
+import GitLogo from '@/assets/svgs/GitLogo.svg?react';
 import KakaoIcon from '@/assets/svgs/kakao.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useKakaoStart } from '@src/hooks/auth/useAuth';
@@ -32,7 +32,7 @@ const Signup: React.FC = () => {
         <div className="max-w-[800px] w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-8">
           {/* 왼쪽 영역 */}
           <div className="flex flex-col items-center justify-center">
-            <Frame7 className="w-[344px] h-[160px] text-black fill-black md:-ml-[60px]" />
+            <GitLogo className="w-[344px] h-[160px] text-black fill-black md:-ml-[60px]" />
             <p className="text-gray-400 text-sm font-light leading-relaxed mt-2">
               You can make anything by writing
             </p>

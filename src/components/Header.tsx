@@ -5,7 +5,7 @@ import CreateIcon from '@/assets/svgs/create.svg?react';
 import ChatIcon from '@/assets/svgs/chat.svg?react';
 import MoreVertIcon from '@/assets/svgs/more_vert.svg?react';
 import ReorderIcon from '@/assets/svgs/reorder.svg?react';
-import GitLog from '@/assets/svgs/Frame7.svg?react';
+import GitLog from '@/assets/svgs/GitLogo.svg?react';
 import DropdownMenu from './DropdownMenu';
 import { type PostDetailResponse } from '@/api/posts';
 import Frame from './Frame';
