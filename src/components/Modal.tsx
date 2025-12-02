@@ -51,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({
         <div className="flex justify-between w-full gap-2">
           <button
             onClick={onClose}
-            className={`w-[141px] h-[38px] rounded-sm font-medium text-[14px] py-2 px-3 border ${cancelButtonStyle}`}
+            className={`w-[141px] h-[38px] rounded-sm font-medium text-[14px] py-2 px-3 ${cancelButtonStyle}`}
           >
             {cancelText}
           </button>

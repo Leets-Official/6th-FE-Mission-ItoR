@@ -7,7 +7,7 @@ import PostHeader from '@/components/PostHeader';
 import PostBody from '@/components/PostBody';
 import CommentSection from '@/components/CommentSection';
 import AuthorProfile from '@/components/AuthorProfile';
-import Done from '@/assets/svgs/done.svg?react';
+import Toast from '@/components/Toast';
 
 const BlogDetail: React.FC = () => {
   const hook = useBlogDetail();
@@ -27,12 +27,7 @@ const BlogDetail: React.FC = () => {
     <div className={S.container}>
       {hook.toastMessage && (
         <div className={S.toastContainer}>
-          <div
-            className={`${S.toastInner} ${hook.toastMessage.variant === 'success' ? S.toastSuccess : S.toastWarning}`}
-          >
-            <Done className={S.toastIcon} />
-            <span className={S.toastText}>{hook.toastMessage.message}</span>
-          </div>
+          <Toast variant={hook.toastMessage.variant} message={hook.toastMessage.message} />
         </div>
       )}
 
