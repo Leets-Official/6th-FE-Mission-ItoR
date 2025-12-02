@@ -20,7 +20,7 @@ const UserPostList: React.FC<UserPostListProps> = ({ posts }) => {
       {posts.map((post) => (
         <div
           key={post.postId}
-          onClick={() => navigate(`/blog/${post.postId}`)}
+          onClick={() => navigate(`/post/${post.postId}`)}
           className={S.postItemContainer}
         >
           <div className={S.postItemTextWrapper}>
