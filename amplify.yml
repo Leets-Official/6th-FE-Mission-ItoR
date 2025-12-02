@@ -7,7 +7,7 @@ frontend:
         - pnpm install --prefix my-blog-app
     build:
       commands:
-        - pnpm run build --prefix my-blog-app
+        - pnpm --prefix my-blog-app run build 
   artifacts:
     baseDirectory: my-blog-app/dist
     files:
