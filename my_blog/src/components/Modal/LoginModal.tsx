@@ -1,31 +1,19 @@
 import { useState, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
 
-import { login } from '@/api/authAPI';
-
-import type { AxiosError } from 'axios';
+import { useLoginMutation } from '@/hooks/useLoginMutation';
+import { ROUTES } from '@/const/routes';
 
 import LoginButton from '../Button/LoginButton';
 import LoginInput from '../Input/LoginInput';
 
-import ClearIcon from '../../assets/icons/clear.svg?react';
+import ClearIcon from '@/assets/icons/clear.svg?react';
 
-interface loginModalProps {
+interface LoginModalProps {
   onClose: () => void;
 }
 
-type LoginSuccessData = {
-  accessToken: string;
-  refreshToken: string;
-};
-type ApiErrorResponse = {
-  code?: number;
-  message?: string;
-  error?: string;
-};
-
-const LoginModal = ({ onClose }: loginModalProps) => {
+const LoginModal = ({ onClose }: LoginModalProps) => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -37,27 +25,7 @@ const LoginModal = ({ onClose }: loginModalProps) => {
 
   const isEmailValid = EMAIL_REGEX.test(email);
 
-  const loginMutation = useMutation<
-    LoginSuccessData,
-    AxiosError<ApiErrorResponse>,
-    { email: string; password: string }
-  >({
-    mutationFn: ({ email, password }) => login(email, password),
-    onSuccess: ({ accessToken, refreshToken }) => {
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      navigate('/');
-    },
-    onError: (error) => {
-      const apiMessage =
-        error.response?.data?.message ??
-        error.response?.data?.error ??
-        error.message ??
-        '로그인 실패';
-      setErrorMessage(apiMessage);
-      setIsErrorVisible(true);
-    },
-  });
+  const loginMutation = useLoginMutation();
 
   const handleSubmit = () => {
     if (!isEmailValid) {
@@ -65,7 +33,20 @@ const LoginModal = ({ onClose }: loginModalProps) => {
       setErrorMessage('*이메일 형식이 적합하지 않습니다.');
       return;
     }
-    loginMutation.mutate({ email, password });
+    loginMutation.mutate(
+      { email, password },
+      {
+        onError: (error) => {
+          const apiMessage =
+            error.response?.data?.message ??
+            error.response?.data?.error ??
+            error.message ??
+            '로그인 실패';
+          setErrorMessage(apiMessage);
+          setIsErrorVisible(true);
+        },
+      },
+    );
   };
 
   const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -124,20 +105,20 @@ const LoginModal = ({ onClose }: loginModalProps) => {
         </div>
         <div className="flex flex-col px-4">
           <LoginButton
-            type="EMAILOGIN"
+            type="EMAILLOGIN"
             text="이메일로 로그인"
             onClick={handleSubmit}
           />
-          <div className="w-full  flex justify-center items-center">
-            <div className="w-[123px] -ml-4 border border-gray-20"></div>
+          <div className="w-full flex justify-center items-center">
+            <div className="w-[123px] border border-gray-20 -ml-4"></div>
             <span className="px-2 pt-0.5 pb-1 text-xs text-gray-56 font-normal">
               SNS
             </span>
-            <div className="w-[123px] -mr-4 h-0 border border-gray-20"></div>
+            <div className="w-[123px] border border-gray-20 -mr-4"></div>
           </div>
           <LoginButton type="KAKAOLOGIN" text="카카오로 로그인" />
           <button
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate(ROUTES.AUTH.SIGNUP)}
             className="mt-1 px-2 pt-0.5 pb-1 text-xs font-normal text-gray-56"
           >
             또는 회원가입

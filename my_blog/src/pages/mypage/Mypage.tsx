@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import Header from '@/components/Header';
+import { MainHeader } from '@/components/Header';
 import { PostList } from '../main/components/PostList';
 import ProfileSection from '@/components/ProfileSection';
 import Toast from '@/components/Toast';
@@ -25,12 +25,12 @@ const Mypage = () => {
       const timer = setTimeout(() => setShowToast(false), 2500);
       return () => clearTimeout(timer);
     }
-  }, [toastState, navigate]);
+  }, [toastState]);
 
   return (
     <>
       {showToast && toastState && (
-        <div className="fixed top-20 left-1/2 w-full flex  justify-center  -translate-x-1/2 z-9999">
+        <div className="fixed top-20 left-1/2 w-full flex justify-center -translate-x-1/2 z-[60]">
           <Toast
             variant={toastState.variant}
             message={toastState.message}
@@ -38,8 +38,8 @@ const Mypage = () => {
           />
         </div>
       )}
-      <Header type="main" onLogout={() => setShowLogoutModal(true)} />
-      <div style={{ top: 74 }}>
+      <MainHeader onLogout={() => setShowLogoutModal(true)} />
+      <div className="top-[74px]">
         <ProfileSection showEdit={true} />
       </div>
       <main className="mt-3 w-full h-full flex flex-col justify-start items-center min-w-mobile mobile:overflow-x-auto">

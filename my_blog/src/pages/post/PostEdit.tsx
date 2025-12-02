@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPostById, updatePost } from '@/api/postAPI';
+import { uploadImageToS3 } from '@/api/imageAPI';
+import { useToast } from '@/context/ToastContext';
 
 import Blank from '@/components/Blank';
 import Devider from '@/components/Devider';
-import Header from '@/components/Header';
+import { WriteHeader, FileHeader } from '@/components/Header';
 import Menu from '@/components/Menu';
-import Toast from '@/components/Toast';
 
 import type { PostContent } from '@/types/post';
 
@@ -19,6 +20,7 @@ type ContentBlock = {
 const PostEdit = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState<ContentBlock[]>([]);
@@ -30,18 +32,14 @@ const PostEdit = () => {
     left: number;
   } | null>(null);
 
-  const [toast, setToast] = useState<{
-    show: boolean;
-    message: string;
-    variant: 'success' | 'error';
-  }>({
-    show: false,
-    message: '',
-    variant: 'success',
-  });
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const contentsRef = useRef<ContentBlock[]>(contents);
+  const menuRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    contentsRef.current = contents;
+  }, [contents]);
 
   const setImageRef = useCallback((id: string, el: HTMLDivElement | null) => {
     imageRefs.current[id] = el;
@@ -62,25 +60,23 @@ const PostEdit = () => {
         );
       } catch (error) {
         console.error('게시물 불러오기 실패:', error);
-        setToast({
-          show: true,
-          message: '게시물을 불러오지 못했습니다.',
+        showToast({
           variant: 'error',
+          message: '게시물을 불러오지 못했습니다.',
         });
       }
     };
     fetchPost();
-  }, [postId]);
+  }, [postId, showToast]);
 
   const handleUpdateClick = async () => {
     const hasContent = contents.some((c) => c.value.trim());
     const hasTitle = title.trim().length > 0;
 
     if (!hasTitle || !hasContent) {
-      setToast({
-        show: true,
-        message: '제목과 내용을 입력해주세요.',
+      showToast({
         variant: 'error',
+        message: '제목과 내용을 입력해주세요.',
       });
       return;
     }
@@ -97,18 +93,16 @@ const PostEdit = () => {
     try {
       if (!postId) throw new Error('postId is missing');
       await updatePost(postId, payload);
-      setToast({
-        show: true,
-        message: '수정되었습니다!',
+      showToast({
         variant: 'success',
+        message: '수정되었습니다!',
       });
       navigate(`/post/${postId}`);
     } catch (error) {
       console.error('게시물 수정 실패:', error);
-      setToast({
-        show: true,
-        message: '수정에 실패했습니다.',
+      showToast({
         variant: 'error',
+        message: '수정에 실패했습니다.',
       });
     }
   };
@@ -123,34 +117,47 @@ const PostEdit = () => {
     fileInputRef.current?.click();
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    const newBlocks = Array.from(files).map((file) => ({
-      id: crypto.randomUUID(),
-      type: 'IMAGE' as const,
-      value: URL.createObjectURL(file),
-    }));
+    try {
+      const uploadedBlocks = await Promise.all(
+        Array.from(files).map(async (file) => {
+          const s3Url = await uploadImageToS3(file);
+          return {
+            id: crypto.randomUUID(),
+            type: 'IMAGE' as const,
+            value: s3Url,
+          };
+        }),
+      );
 
-    setContents((prev) => {
-      if (focusedIndex === null)
+      setContents((prev) => {
+        if (focusedIndex === null)
+          return [
+            ...prev,
+            ...uploadedBlocks,
+            { id: crypto.randomUUID(), type: 'TEXT', value: '' },
+          ];
+        const before = prev.slice(0, focusedIndex + 1);
+        const after = prev.slice(focusedIndex + 1);
         return [
-          ...prev,
-          ...newBlocks,
+          ...before,
+          ...uploadedBlocks,
           { id: crypto.randomUUID(), type: 'TEXT', value: '' },
+          ...after,
         ];
-      const before = prev.slice(0, focusedIndex + 1);
-      const after = prev.slice(focusedIndex + 1);
-      return [
-        ...before,
-        ...newBlocks,
-        { id: crypto.randomUUID(), type: 'TEXT', value: '' },
-        ...after,
-      ];
-    });
+      });
 
-    e.target.value = '';
+      e.target.value = '';
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      showToast({
+        variant: 'error',
+        message: '이미지 업로드에 실패했습니다.',
+      });
+    }
   };
 
   const handleTextChange = (id: string, value: string) => {
@@ -188,8 +195,7 @@ const PostEdit = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      const menuEl = document.querySelector('.menu-popup');
-      if (menuEl && !(menuEl as HTMLElement).contains(e.target as Node)) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsMenuOpen(false);
       }
     };
@@ -199,17 +205,18 @@ const PostEdit = () => {
 
   useEffect(() => {
     return () => {
-      contents.forEach((block) => {
-        if (block.type === 'IMAGE') URL.revokeObjectURL(block.value);
+      contentsRef.current.forEach((block) => {
+        if (block.type === 'IMAGE' && block.value.startsWith('blob:')) {
+          URL.revokeObjectURL(block.value);
+        }
       });
     };
-  }, [contents]);
+  }, []);
 
   return (
     <>
-      <Header type="write" onPost={handleUpdateClick} offsetTop={0} />
-      <Header
-        type="file"
+      <WriteHeader onPost={handleUpdateClick} offsetTop={0} />
+      <FileHeader
         addImg={true}
         onAddImage={handleAddImageClick}
         offsetTop={73}
@@ -222,7 +229,7 @@ const PostEdit = () => {
           onChange={handleImageChange}
           className="hidden"
         />
-      </Header>
+      </FileHeader>
 
       <main className="mt-32 w-full flex flex-col items-center relative">
         {/* 제목 */}
@@ -282,22 +289,12 @@ const PostEdit = () => {
 
       {isMenuOpen && menuPosition && (
         <Menu
+          ref={menuRef}
           top={menuPosition.top}
           left={menuPosition.left}
           onDelete={handleDeleteImage}
           onClose={() => setIsMenuOpen(false)}
         />
-      )}
-
-      {toast.show && (
-        <div className="fixed top-1/12 left-1/2 -translate-x-1/2 z-50">
-          <Toast
-            size="lg"
-            variant={toast.variant}
-            message={toast.message}
-            onClose={() => setToast((prev) => ({ ...prev, show: false }))}
-          />
-        </div>
       )}
     </>
   );
