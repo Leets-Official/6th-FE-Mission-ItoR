@@ -2,10 +2,12 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePostDetail, useDeletePost, useCreateComment, useDeleteComment } from '@/hooks/usePosts';
+import { useUserStore } from '@/store/userStore';
 
 export const useBlogDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isLoggedIn, user: loggedInUser } = useUserStore();
 
   // --- Data Fetching ---
   const { data: post, isLoading, isError, refetch } = usePostDetail(id!);
@@ -24,12 +26,7 @@ export const useBlogDetail = () => {
   const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null);
 
   // --- User & Auth Info ---
-  const isLoggedIn = !!localStorage.getItem('accessToken');
   const isAuthor = post?.isOwner ?? false;
-  const loggedInUser = {
-    nickname: localStorage.getItem('nickname'),
-    profilePicture: localStorage.getItem('profilePicture'),
-  };
 
   // --- Derived State ---
   const isCommentSubmitDisabled = !commentText.trim();
