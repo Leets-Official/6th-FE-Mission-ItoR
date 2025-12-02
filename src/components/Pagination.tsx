@@ -1,7 +1,7 @@
 import React from 'react';
 import PaginationButton from './PaginationButton';
 import LeftIcon from '@/assets/svgs/Left.svg?react';
-import RightIcon from '@/assets/svgs/right.svg?react';
+import RightIcon from '@/assets/svgs/Right.svg?react';
 
 type PaginationVariant = 'grayBlack' | 'blueBlue' | 'grayGray';
 

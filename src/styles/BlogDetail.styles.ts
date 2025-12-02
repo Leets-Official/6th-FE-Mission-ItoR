@@ -3,6 +3,7 @@
 export const S = {
   loadingOrError: 'flex justify-center items-center min-h-screen',
   container: 'flex flex-col items-center w-full relative',
+  toastContainer: 'fixed top-20 left-1/2 -translate-x-1/2 z-50',
 
   postHeader: 'w-[688px] border-b border-gray-300 py-8',
   postTitle: 'font-medium text-[18px] text-gray-900',

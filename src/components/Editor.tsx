@@ -9,6 +9,7 @@ interface EditorProps {
   setTitle: (title: string) => void;
   contents: EditorBlock[];
   textInputRefs: React.MutableRefObject<(HTMLTextAreaElement | null)[]>;
+  isComposing: boolean;
   setIsComposing: (isComposing: boolean) => void;
   handleContentChange: (frontendId: string, newText: string) => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => void;
@@ -19,6 +20,7 @@ const Editor: React.FC<EditorProps> = ({
   setTitle,
   contents,
   textInputRefs,
+  isComposing,
   setIsComposing,
   handleContentChange,
   handleKeyDown,

@@ -26,9 +26,7 @@ const BlogDetail: React.FC = () => {
   return (
     <div className={S.container}>
       {hook.toastMessage && (
-        <div className={S.toastContainer}>
-          <Toast variant={hook.toastMessage.variant} message={hook.toastMessage.message} />
-        </div>
+        <Toast variant={hook.toastMessage.variant} message={hook.toastMessage.message} />
       )}
 
       <Header
@@ -59,7 +57,7 @@ const BlogDetail: React.FC = () => {
         setCommentText={hook.setCommentText}
         isSubmitDisabled={hook.isCommentSubmitDisabled}
         onSubmit={hook.handleCommentSubmit}
-        loggedInUser={hook.loggedInUser}
+        loggedInUser={hook.loggedInUser || { nickname: null, profilePicture: null }}
       />
 
       <div className="w-[688px] h-[64px]" />
