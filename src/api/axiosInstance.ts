@@ -1,11 +1,8 @@
 // src/api/axiosInstance.ts
 import axios from "axios";
 
-// 백엔드 서버 주소
-import { BASE_URL } from "./constants";
-
 const api = axios.create({
-  baseURL: import.meta.env.DEV ? '' : BASE_URL,
+  baseURL: import.meta.env.DEV ? '' : import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -49,7 +46,7 @@ api.interceptors.response.use(
         }
 
         const reissueRes = await axios.post(
-          `${BASE_URL}/auth/reissue`,
+          `${import.meta.env.VITE_API_URL}/auth/reissue`,
           { refreshToken },
           { withCredentials: true }
         );

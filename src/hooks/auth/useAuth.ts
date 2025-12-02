@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useUserStore } from "@/store/userStore";
-import { BASE_URL } from "@src/api/constants";
 import {
   signUpRequest,
   loginRequest,
@@ -98,7 +97,7 @@ export const useKakaoStart = () =>
       console.log('카카오 로그인 시작 - Redirect URI:', redirectUri);
       
       // 백엔드 카카오 로그인 엔드포인트로 이동
-      window.location.href = `${BASE_URL}/auth/kakao`;
+      window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao`;
       return Promise.resolve();
     },
   });

@@ -1,5 +1,4 @@
 // src/api/auth.ts
-import { BASE_URL } from "./constants";
 import api from "@/api/axiosInstance";
 import axios from "axios";
 
@@ -71,7 +70,7 @@ export const reissueToken = async (body: ReissueBody) => {
 export const kakaoRedirectLogin = async (code: string) => {
   console.log('kakaoRedirectLogin 호출 - code:', code);
   // Interceptor를 피하기 위해 clean axios 사용
-  const { data } = await axios.get(`${BASE_URL}/auth/kakao/redirect`, { 
+  const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/auth/kakao/redirect`, { 
     params: { code },
     headers: {
       'Content-Type': 'application/json',

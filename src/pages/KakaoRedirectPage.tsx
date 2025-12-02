@@ -9,8 +9,6 @@ const KakaoRedirectPage: React.FC = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'signup_needed'>('loading');
   const hasProcessed = useRef(false);
 
-  const BASE_URL = 'https://blog.leets.land';
-
   useEffect(() => {
     // 중복 실행 방지
     if (hasProcessed.current) return;
@@ -27,7 +25,7 @@ const KakaoRedirectPage: React.FC = () => {
         console.log("백엔드로 코드 전송:", code);
         
         // 순수 axios 사용 (인터셉터 없이)
-        const response = await axios.get(`${BASE_URL}/auth/kakao/redirect`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/kakao/redirect`, {
           params: { code: code }
         });
 
