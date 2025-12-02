@@ -72,7 +72,9 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
       </div>
 
       <div
-        className={`${FRAME_WIDTH} ${SECTION_HEIGHT.button} ${FRAME_SECTION} grid grid-cols-2 gap-2`}
+        className={`${FRAME_WIDTH} ${SECTION_HEIGHT.button} ${FRAME_SECTION} ${
+          isLoggedIn ? 'grid grid-cols-2 gap-2' : 'flex justify-start'
+        }`}
       >
         {isLoggedIn ? (
           <>
@@ -84,7 +86,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
             </Button>
           </>
         ) : (
-          <Button variant="blueBorder" onClick={() => navigate('/login')} className="w-full">
+          <Button variant="blueBorder" onClick={() => navigate('/login')}>
             깃로그 시작하기
           </Button>
         )}
