@@ -47,7 +47,6 @@ const BlogWrite: React.FC = () => {
         setTitle={setTitle}
         contents={contents}
         textInputRefs={textInputRefs}
-        isComposing={isComposing}
         setIsComposing={setIsComposing}
         handleContentChange={handleContentChange}
         handleKeyDown={handleKeyDown}
