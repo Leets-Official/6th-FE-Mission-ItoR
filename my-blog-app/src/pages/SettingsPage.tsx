@@ -6,15 +6,16 @@ import ProfileImageUploader from '@/components/Settings/ProfileImageUploader'
 import { Button } from '@/components/Button/Button'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '@/api/axiosInstance'
+import type { User } from '@/api/userAPI'
 
 export default function SettingsPage() {
   const [mode, setMode] = useState<'view' | 'edit'>('view')
   const isView = mode === 'view'
 
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
+
   const navigate = useNavigate()
 
-  // 상태들
   const [profile, setProfile] = useState('')
   const [nickname, setNickname] = useState('')
   const [introduction, setIntroduction] = useState('')
@@ -26,7 +27,7 @@ export default function SettingsPage() {
 
   const fetchUser = async () => {
     const res = await axiosInstance.get('/users/me')
-    const data = res.data.data
+    const data = res.data.data as User
 
     setUser(data)
     setProfile(data.profilePicture)
@@ -40,6 +41,8 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchUser()
   }, [])
+
+  if (!user) return <div className='mt-20'>로딩 중...</div>
 
   const handleSave = async () => {
     try {
@@ -72,8 +75,6 @@ export default function SettingsPage() {
     }
   }
 
-  if (!user) return <div className='mt-20'>로딩 중...</div>
-
   return (
     <div className='min-h-screen bg-white flex flex-col items-center'>
       <PageHeader
@@ -102,7 +103,7 @@ export default function SettingsPage() {
       {/* 상단 회색 배경 */}
       <div className='w-full bg-[#F5F5F5] border-b border-[#F5F5F5] flex justify-center'>
         <div className='max-w-[688px] w-full px-4 py-6 flex flex-col gap-4'>
-          <ProfileImageUploader value={profile} onChange={setProfile} disabled={isView} />
+          <ProfileImageUploader initialUrl={profile} onChange={setProfile} disabled={isView} />
 
           <TextFiledSet
             label='닉네임'
@@ -154,7 +155,7 @@ export default function SettingsPage() {
                     ? '* 비밀번호가 일치하지 않습니다.'
                     : '* 동일하게 입력해주세요.'
                 }
-                hasError={passwordConfirm && passwordConfirm !== password}
+                hasError={!!(passwordConfirm && passwordConfirm !== password)}
               />
             </>
           )}

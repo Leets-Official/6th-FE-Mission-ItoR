@@ -1,5 +1,3 @@
-import pictureframe from '@/assets/images/pictureframe.png'
-
 type PictureFrameProps = {
   src?: string
   alt?: string

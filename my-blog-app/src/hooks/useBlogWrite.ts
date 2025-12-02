@@ -58,8 +58,8 @@ export function useBlogWrite() {
       await createPostAPI({ title, contents })
       showToast('게시물이 성공적으로 등록되었습니다!', 'positive')
       navigate('/')
-    } catch (error: any) {
-      console.log('🔥 서버 응답:', error.response?.data)
+    } catch (error: unknown) {
+      console.log('🔥 서버 응답:', (error as { response?: { data?: unknown } }).response?.data)
       showToast('게시물 등록 중 오류가 발생했습니다.', 'negative')
     }
   }
@@ -70,6 +70,7 @@ export function useBlogWrite() {
     content,
     setContent,
     imagePreview,
+    setImagePreview,
     handleImageUpload,
     handleDeleteImage,
     handleSubmit,

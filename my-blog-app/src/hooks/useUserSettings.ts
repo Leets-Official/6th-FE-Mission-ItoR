@@ -7,7 +7,11 @@ export const useUserSettings = () => {
   const { showToast } = useToast()
   const queryClient = useQueryClient()
 
-  const { data: user, isLoading } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    refetch: fetchUser,
+  } = useQuery({
     queryKey: ['user'],
     queryFn: userAPI.getMyInfoAPI,
   })
@@ -59,5 +63,6 @@ export const useUserSettings = () => {
     setNewProfile: setNewProfilePicture,
     setNewName,
     setNewBirthDate,
+    fetchUser,
   }
 }

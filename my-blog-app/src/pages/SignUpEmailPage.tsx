@@ -9,19 +9,20 @@ import { useUserSettings } from '@/hooks/useUserSettings'
 import { useEffect } from 'react'
 
 export default function SettingsPage() {
-  const { user, fetchUser, handleSaveAll, isLoading } = useUserSettings()
+  const { user, fetchUser, handleSaveAll, isLoading, setNewProfile } = useUserSettings()
 
   useEffect(() => {
     fetchUser()
   }, [])
+  const handleProfileChange = (newUrl: string) => {
+    setNewProfile(newUrl)
+  }
 
   if (isLoading || !user) return <div className='text-center mt-20'>불러오는 중...</div>
 
   return (
     <div className='min-h-screen flex flex-col items-center bg-white'>
       <PageHeader title='GITLOG' />
-
-      {/* 상단 회색 영역 + 제목 */}
       <div className='flex flex-col items-center self-stretch border-b border-[#F5F5F5] bg-[#F5F5F5]'>
         <Blank size='md' />
         <TextCard
@@ -32,27 +33,21 @@ export default function SettingsPage() {
         />
         <Blank size='sm' />
       </div>
-
       <Blank size='md' />
-
-      {/* 프로필 이미지 */}
-      <ProfileImageUploader initialUrl={user.profilePicture} />
-
-      {/* 중앙 영역 */}
+      <ProfileImageUploader
+        initialUrl={user.profilePicture}
+        onChange={handleProfileChange}
+        disabled={isLoading}
+      />
       <div className='flex flex-col items-center w-full max-w-[688px] px-4 py-8'>
         <NicknameEdit initialValue={user.nickname} />
-
         <Blank size='md' />
-
         <PasswordEdit />
-
         <Blank size='lg' />
-
         <Button intent='primary' className='w-full max-w-[300px]' onClick={handleSaveAll}>
           모든 변경 저장
         </Button>
       </div>
-
       <Blank size='lg' />
     </div>
   )

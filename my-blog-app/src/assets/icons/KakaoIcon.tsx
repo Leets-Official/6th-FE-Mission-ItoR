@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const KakaoIcon = ({
   width = 18,
   height = 17,

@@ -4,6 +4,13 @@ import axiosInstance from '@/api/axiosInstance'
 import ListItemMain from '@/components/BlogDetail/ListItemMain'
 import type { Post } from '@/types/post'
 
+type AxiosErrorLike = {
+  response?: {
+    status?: number
+    data?: unknown
+  }
+}
+
 export default function BlogDetailPage() {
   const { postId } = useParams()
   const [post, setPost] = useState<Post | null>(null)
@@ -17,13 +24,16 @@ export default function BlogDetailPage() {
         // 1차: 로그인 사용자용
         const res = await axiosInstance.get('/posts/token', { params: { postId } })
         setPost(res.data.data)
-      } catch (e: any) {
-        // 2차: 비로그인용으로 폴백
-        if (e?.response?.status === 401 || e?.response?.status === 404) {
+      } catch (e: unknown) {
+        const err = e as AxiosErrorLike
+        const status = err.response?.status
+
+        // 2차: 비로그인 사용자용 폴백
+        if (status === 401 || status === 404) {
           try {
             const res2 = await axiosInstance.get('/posts', { params: { postId } })
             setPost(res2.data.data)
-          } catch (e2) {
+          } catch (e2: unknown) {
             console.error('게시글 불러오기 실패(폴백):', e2)
           }
         } else {

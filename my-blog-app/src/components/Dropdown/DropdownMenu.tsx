@@ -12,7 +12,7 @@ interface DropdownMenuProps {
 }
 
 export default function DropdownMenu({ items, variant = 'material' }: DropdownMenuProps) {
-  const [open, setOpen] = useState(true) // 외부에서 제어하지 않는 한 항상 보이게(테스트용)
+  const [open] = useState(true) // 외부에서 제어하지 않는 한 항상 보이게(테스트용)
   const isArrow = variant === 'arrow'
 
   return (

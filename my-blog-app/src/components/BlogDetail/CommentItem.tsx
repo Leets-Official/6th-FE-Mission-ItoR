@@ -6,6 +6,7 @@ import Blank from '@/components/common/Blank'
 import { MoreIcon } from '@/assets/icons/MoreIcon'
 
 interface CommentItemProps {
+  commentId?: number
   author: string
   date: string
   content: string
@@ -13,13 +14,7 @@ interface CommentItemProps {
   onEditSubmit: (value: string) => void
 }
 
-export default function CommentItem({
-  author,
-  date,
-  content,
-  onDelete,
-  onEditSubmit,
-}: CommentItemProps) {
+export default function CommentItem({ author, date, content, onDelete }: CommentItemProps) {
   const [open, setOpen] = useState(false)
 
   return (
