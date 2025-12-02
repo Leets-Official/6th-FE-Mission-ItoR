@@ -64,7 +64,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-black/60 z-50'>
-      <div className='relative flex flex-row justify-center items-center w-[782px] max-w-[782px] py-[80px] bg-[#111112] rounded-[9px]'>
+      <div className='relative flex flex-row justify-start items-center w-[782px] max-w-[782px] py-[80px] bg-[#111112] rounded-[9px]'>
         <button onClick={onClose} className='absolute top-4 right-4 hover:opacity-80 transition'>
           <ClearIcon variant='modal' />
         </button>
@@ -78,18 +78,18 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* 오른쪽 로그인 섹션 */}
-        <div className='flex flex-col items-start gap-[8px] ml-[32px] min-w-[240px] max-w-[344px] px-[16px] py-[4px]'>
+        <div className='flex flex-col items-start gap-[8px] ml-[32px] w-[344px] shrink-0 px-[16px] py-[4px]'>
           <TextFiledSet
             label=''
             placeholder='이메일'
-            inputClassName='bg-white text-gray-400 border border-[#E6E6E6] rounded-[4px] h-[46px] px-[16px] py-[12px] text-[14px] font-light leading-[160%]'
+            inputClassName='bg-white text-gray-400 border border-[#E6E6E6] rounded-[4px] h-[46px] px-[16px] py-[12px] text-[14px] font-light leading-[160%] w-full'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextFiledSet
             label=''
             placeholder='비밀번호'
-            inputClassName='bg-white text-gray-400 border border-[#E6E6E6] rounded-[4px] h-[46px] px-[16px] py-[12px] text-[14px] font-light leading-[160%]'
+            inputClassName='bg-white text-gray-400 border border-[#E6E6E6] rounded-[4px] h-[46px] px-[16px] py-[12px] text-[14px] font-light leading-[160%] w-full'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

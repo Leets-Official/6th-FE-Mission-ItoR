@@ -8,7 +8,8 @@ export interface Comment {
   createdAt: string
 }
 
-export function useComment(postId: number) {
+// postId 타입을 number -> string으로 수정 (UUID 처리)
+export function useComment(postId: string) {
   const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
 
@@ -22,8 +23,13 @@ export function useComment(postId: number) {
   /** 1) 댓글 조회 — GET */
   const fetchComments = async () => {
     try {
-      const res = await axiosInstance.get(`/comments/post/${postId}`)
-      setComments(res.data.data || [])
+      const res = await axiosInstance.get(`/posts`, { params: { postId } })
+
+      const postData = res.data.data
+
+      const commentsData = postData?.comments || postData?.commentList || postData || []
+
+      setComments(Array.isArray(commentsData) ? commentsData : [])
     } catch (err) {
       console.error('댓글 불러오기 실패:', err)
     }

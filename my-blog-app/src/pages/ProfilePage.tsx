@@ -9,9 +9,13 @@ import axiosInstance from '@/api/axiosInstance'
 import ListItem from '@/components/ListItem/ListItem'
 import { SettingsIcon } from '@/assets/icons/SettingsIcon'
 import Pagination from '@/components/Pagination/Pagination'
+import { EditIcon } from '@/assets/icons/EditIcon'
+import { useAuthStore } from '@/stores/useAuthStore'
 import type { Post } from '@/types/post'
 
 export default function ProfilePage() {
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const { isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
   const { data: user, isLoading, isError } = useUserInfo()
   const [posts, setPosts] = useState<Post[]>([])
@@ -46,7 +50,25 @@ export default function ProfilePage() {
 
   return (
     <div className='min-h-screen bg-white flex flex-col items-center'>
-      <PageHeader title='GITLOG' />
+      <PageHeader
+        title='GITLOG'
+        rightContent={
+          <Button
+            intent='flat'
+            className='text-gray-300'
+            icon={<EditIcon color='#909090' />}
+            onClick={() => {
+              if (isLoggedIn) {
+                navigate('/blogwrite')
+              } else {
+                setIsLoginOpen(true)
+              }
+            }}
+          >
+            깃로그 쓰기
+          </Button>
+        }
+      />
 
       {/* 상단 회색 영역(전체 폭) */}
       <div className='w-full bg-[#F5F5F5] border-b border-[#F5F5F5] flex justify-center'>

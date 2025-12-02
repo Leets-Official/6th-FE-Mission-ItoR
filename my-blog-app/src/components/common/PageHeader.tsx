@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { MenuIcon } from '@/assets/icons/MenuIcon'
 import { useSidebar } from '@/context/useSidebar'
+import { Link } from 'react-router-dom'
 
 type PageHeaderProps = {
   title: string
@@ -29,7 +30,9 @@ export default function PageHeader({
             </button>
           )}
 
-          <h1 className='text-[20px] leading-[28px] font-normal font-smooch text-black'>{title}</h1>
+          <Link to='/' className='text-[20px] leading-[28px] font-normal font-smooch text-black'>
+            {title}
+          </Link>
         </div>
 
         {rightContent && <div className='flex items-center gap-2'>{rightContent}</div>}

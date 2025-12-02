@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axiosInstance from '@/api/axiosInstance'
+import { getPresignedUrl, uploadToS3 } from '@/api/imageAPI'
 import { useUserSettings } from '@/hooks/useUserSettings'
 
 export default function ProfileImageUploader({ initialUrl }: { initialUrl: string }) {
@@ -10,33 +10,28 @@ export default function ProfileImageUploader({ initialUrl }: { initialUrl: strin
     const file = e.target.files?.[0]
     if (!file) return
 
-    // 화면 미리보기
+    // 미리보기 업데이트
     setPreview(URL.createObjectURL(file))
 
-    // presigned URL 요청
-    const res = await axiosInstance.get('/images/presigned-url', {
-      params: { fileName: file.name },
-    })
+    try {
+      // 1) Presigned URL 요청
+      const presignedUrl = await getPresignedUrl(file.name)
 
-    const presignedUrl = res.data.data
+      // 2) S3 업로드
+      const finalUrl = await uploadToS3(presignedUrl, file)
 
-    // S3 업로드
-    await fetch(presignedUrl, {
-      method: 'PUT',
-      body: file,
-    })
-
-    // 업로드된 실제 URL
-    const finalUrl = presignedUrl.split('?')[0]
-
-    setNewProfile(finalUrl)
+      // 3) settings form에 반영
+      setNewProfile(finalUrl)
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err)
+    }
   }
 
   return (
     <div className='flex flex-col items-center'>
       <label className='cursor-pointer'>
         <img src={preview} className='w-[96px] h-[96px] rounded-full object-cover border' />
-        <input type='file' className='hidden' onChange={handleUpload} />
+        <input type='file' className='hidden' accept='image/*' onChange={handleUpload} />
       </label>
     </div>
   )

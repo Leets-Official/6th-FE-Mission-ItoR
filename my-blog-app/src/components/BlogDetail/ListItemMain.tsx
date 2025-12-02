@@ -44,7 +44,6 @@ export default function ListItemMain({ post }: { post: Post }) {
       const res = await axiosInstance.get(`/posts/token`, {
         params: { postId: post.postId },
       })
-
       setComments(res.data.data.comments ?? [])
     } catch (err) {
       console.error('댓글 불러오기 실패:', err)
@@ -63,6 +62,7 @@ export default function ListItemMain({ post }: { post: Post }) {
     }
 
     try {
+      // 💡 댓글 등록 로직 복구
       await axiosInstance.post(`/comments/${post.postId}`, {
         content: newComment,
       })

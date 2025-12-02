@@ -11,6 +11,7 @@ type TextFiledProps = {
   required?: boolean
   maxLength?: number
   autoComplete?: string
+  disabled?: boolean
 }
 
 export default function TextFiled({
@@ -23,6 +24,7 @@ export default function TextFiled({
   required = false,
   maxLength,
   autoComplete,
+  disabled = false,
 }: TextFiledProps) {
   const baseStyle =
     'flex items-center gap-[10px] w-[656px] px-4 py-3 rounded border font-sans bg-transparent'
@@ -46,7 +48,7 @@ export default function TextFiled({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      disabled={state === 'disabled'}
+      disabled={disabled}
       required={required}
       maxLength={maxLength}
       autoComplete={autoComplete}

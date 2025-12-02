@@ -1,55 +1,63 @@
 import { useState } from 'react'
-import axiosInstance from '@/api/axiosInstance'
 import { useToast } from '@/context/ToastContext'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import * as userAPI from '@/api/userAPI'
 
 export const useUserSettings = () => {
   const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
-  const [user, setUser] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { data: user, isLoading } = useQuery({
+    queryKey: ['user'],
+    queryFn: userAPI.getMyInfoAPI,
+  })
 
-  // 개별 업데이트 상태
   const [newNickname, setNewNickname] = useState<string | null>(null)
+  const [newIntroduction, setNewIntroduction] = useState<string | null>(null)
   const [newPassword, setNewPassword] = useState<string | null>(null)
-  const [newProfile, setNewProfile] = useState<string | null>(null)
+  const [newProfilePicture, setNewProfilePicture] = useState<string | null>(null)
+  const [newName, setNewName] = useState<string | null>(null)
+  const [newBirthDate, setNewBirthDate] = useState<string | null>(null)
 
-  /** 유저 정보 조회 */
-  const fetchUser = async () => {
-    try {
-      setIsLoading(true)
-      const res = await axiosInstance.get('/users/me')
-      setUser(res.data.data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  /** 저장 버튼 클릭 시 */
-  const handleSaveAll = async () => {
-    try {
-      if (newNickname) await axiosInstance.patch('/users/nickname', { nickname: newNickname })
-
-      if (newPassword) await axiosInstance.patch('/users/password', { password: newPassword })
-
-      if (newProfile) await axiosInstance.patch('/users/picture', { profilePicture: newProfile })
-
+  /** 통합 Mutation */
+  const updateAllMutation = useMutation({
+    mutationFn: (payload: userAPI.UpdateUserPayload) => userAPI.updateUserAPI(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] })
       showToast('변경사항이 저장되었습니다!', 'positive')
-      fetchUser()
-    } catch (e) {
-      console.error(e)
+    },
+    onError: () => {
       showToast('변경 저장 실패', 'negative')
+    },
+  })
+
+  const handleSaveAll = () => {
+    if (!user) return
+
+    const payload: userAPI.UpdateUserPayload = {}
+
+    if (newNickname) payload.nickname = newNickname
+    if (newIntroduction) payload.introduction = newIntroduction
+    if (newPassword) payload.password = newPassword
+    if (newProfilePicture) payload.profilePicture = newProfilePicture
+
+    if (newName || newBirthDate) {
+      payload.name = newName ?? user.name
+      payload.birthDate = newBirthDate ?? user.birthDate
     }
+
+    updateAllMutation.mutate(payload)
   }
 
   return {
     user,
     isLoading,
-    fetchUser,
     handleSaveAll,
     setNewNickname,
+    setNewIntroduction,
     setNewPassword,
-    setNewProfile,
+    setNewProfile: setNewProfilePicture,
+    setNewName,
+    setNewBirthDate,
   }
 }
