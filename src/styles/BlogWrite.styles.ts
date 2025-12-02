@@ -20,6 +20,6 @@ export const S = {
     'w-full px-[16px] py-[12px] rounded-md text-[14px] focus-within:outline-none focus-within:ring-2 focus-within:ring-primary',
 
   textBlock:
-    'w-full bg-transparent text-gray-900 placeholder-gray-600 focus:outline-none resize-none overflow-hidden',
+    'w-full bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none resize-none overflow-hidden',
   imageBlock: 'w-full rounded-md my-4 object-cover',
 };

@@ -36,6 +36,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+      '/images': {
+        target: 'https://blog.leets.land',
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
 });

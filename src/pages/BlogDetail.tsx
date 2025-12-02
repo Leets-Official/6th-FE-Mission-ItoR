@@ -67,6 +67,8 @@ const BlogDetail: React.FC = () => {
         loggedInUser={hook.loggedInUser}
       />
 
+      <div className="w-[688px] h-[64px]" />
+
       <AuthorProfile
         name={hook.post.nickName}
         introduction={hook.post.introduction}

@@ -38,7 +38,7 @@ export const S = {
   commentFormHeader: 'flex items-center gap-2 mb-3',
   commentFormAuthor: 'font-medium text-sm',
   commentFormTextarea:
-    'w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none border border-gray-300',
+    'w-full h-[100px] rounded-md px-3 py-2 text-[14px] leading-[160%] placeholder:text-gray-400 focus:outline-none resize-none',
   commentFormFooter: 'flex justify-end mt-2',
   commentFormLoginPrompt: 'text-center text-gray-500 py-10',
 
