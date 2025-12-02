@@ -1,4 +1,4 @@
-import type { ConfirmVariant } from "./Modal.types";
+import type { ConfirmVariant } from "@ui/Modal.types";
 
 export const overlayBase =
   "fixed inset-0 z-50 flex items-center justify-center bg-black/50";
