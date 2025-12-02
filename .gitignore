@@ -27,3 +27,6 @@ dist-ssr
 src/**/*.js
 vite.config.js
 tsconfig.app.tsbuildinfo
+
+# Environment variables
+.env

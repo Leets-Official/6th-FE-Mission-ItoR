@@ -1,5 +1,5 @@
-import api from "@/api/axiosInstance";
-import axios from "axios";
+import api from '@/api/axiosInstance';
+import axios from 'axios';
 
 export interface PostBody {
   title: string;
@@ -18,7 +18,7 @@ export interface Comment {
 export interface ContentBlock {
   contentOrder: number;
   content: string;
-  contentType: "TEXT" | "IMAGE";
+  contentType: 'TEXT' | 'IMAGE';
 }
 
 export interface PostDetailResponse {
@@ -45,16 +45,13 @@ export interface PostListItem {
 
 // 게시글 생성
 export const createPost = async (body: PostBody): Promise<PostDetailResponse> => {
-  const { data } = await api.post("/posts", body);
+  const { data } = await api.post('/posts', body);
   return data.data;
 };
 
 // 게시글 수정
-export const updatePost = async (
-  id: string,
-  body: PostBody
-): Promise<PostDetailResponse> => {
-  const { data } = await api.patch("/posts", body, {
+export const updatePost = async (id: string, body: PostBody): Promise<PostDetailResponse> => {
+  const { data } = await api.patch('/posts', body, {
     params: { postId: id },
   });
   return data.data;
@@ -63,9 +60,7 @@ export const updatePost = async (
 /** 게시글 삭제 */
 
 export const deletePost = async (id: string): Promise<void> => {
-
-  await api.delete("/posts", { params: { postId: id } });
-
+  await api.delete('/posts', { params: { postId: id } });
 };
 
 export interface PostListResponse {
@@ -75,7 +70,7 @@ export interface PostListResponse {
 
 // 게시글 전체 조회
 export const getAllPosts = async (page: number): Promise<PostListResponse> => {
-  const { data } = await api.get("/posts/all", {
+  const { data } = await api.get('/posts/all', {
     params: { size: 10, page },
   });
   return data.data;
@@ -83,10 +78,10 @@ export const getAllPosts = async (page: number): Promise<PostListResponse> => {
 
 //게시글 단일 조회
 export const getPostById = async (postId: string): Promise<PostDetailResponse> => {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem('accessToken');
   const isLoggedIn = !!token;
 
-  const endpoint = isLoggedIn ? "/posts/token" : "/posts";
+  const endpoint = isLoggedIn ? '/posts/token' : '/posts';
   const config = {
     params: { postId },
   };
@@ -114,31 +109,23 @@ export const createComment = async ({
 // 댓글 삭제
 
 export const deleteComment = async (commentId: string): Promise<void> => {
-
   await api.delete(`/comments/${commentId}`);
-
 };
-
-
 
 // 내 게시글 조회
 
 export const getMyPosts = async (page: number, size: number): Promise<PostListResponse> => {
-
-  const { data } = await api.get("/posts/all/token", {
-
+  const { data } = await api.get('/posts/all/token', {
     params: { size, page },
-
   });
 
   return data.data;
-
 };
 
 // --- Image Upload Functions ---
 
 export const getPreSignedUrl = async (fileName: string): Promise<string> => {
-  const response = await api.get("/images/presigned-url", {
+  const response = await api.get('/images/presigned-url', {
     params: { fileName },
   });
   return response.data.data;
@@ -150,7 +137,7 @@ export const uploadImageToPreSignedUrl = async (
 ): Promise<void> => {
   await axios.put(preSignedUrl, file, {
     headers: {
-      "Content-Type": file.type,
+      'Content-Type': file.type,
     },
   });
 };
