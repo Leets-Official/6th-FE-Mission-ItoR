@@ -27,6 +27,8 @@ const ProfileDetail: React.FC = () => {
       <Header variant="write" />
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" hidden />
 
+      <div className="w-full h-[64px] bg-gray-200"></div>
+
       <ProfileHeader
         loggedInUser={loggedInUser}
         isUploading={isUploading}

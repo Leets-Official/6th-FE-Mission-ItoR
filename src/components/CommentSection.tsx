@@ -24,7 +24,7 @@ const CommentSection: React.FC<CommentSectionProps> = (props) => {
   return (
     <div className={S.commentSectionContainer}>
       <p className={S.commentCount}>
-        댓글 <span className={S.commentCountNumber}>{props.comments.length}</span>
+        댓글 <span className="text-[#00A1FF]">{props.comments.length}</span>
       </p>
       <CommentList
         comments={props.comments}

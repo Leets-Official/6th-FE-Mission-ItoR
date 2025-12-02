@@ -16,7 +16,7 @@ export const S = {
 
   commentSectionContainer: 'w-[688px] mt-8',
   commentCount: 'font-medium text-gray-900 text-[16px]',
-  commentCountNumber: 'text-info',
+  commentCountNumber: '',
 
   commentListContainer: 'mb-4',
   commentItemWrapper: 'rounded-md p-3 mb-2 last:mb-0 relative',

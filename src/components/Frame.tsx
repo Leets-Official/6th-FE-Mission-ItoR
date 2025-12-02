@@ -94,7 +94,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
 
       {isLoggedIn && (
         <div className={`${FRAME_WIDTH} ${FRAME_SECTION} flex-row gap-2 mt-auto mb-4`}>
-          <Button variant="grayBorder" onClick={() => navigate('/settings')} className="flex-1">
+          <Button variant="grayBorder" onClick={() => navigate('/profilefind')} className="flex-1">
             설정
           </Button>
           <Button variant="grayBorder" onClick={handleLogout} className="flex-1">
