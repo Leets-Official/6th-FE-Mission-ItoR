@@ -6,7 +6,9 @@ const KakaoRedirectPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const code = searchParams.get('code');
-  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'signup_needed'>('loading');
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'signup_needed'>(
+    'loading'
+  );
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -22,18 +24,18 @@ const KakaoRedirectPage: React.FC = () => {
       }
 
       try {
-        console.log("백엔드로 코드 전송:", code);
-        
+        console.log('백엔드로 코드 전송:', code);
+
         // 순수 axios 사용 (인터셉터 없이)
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/kakao/redirect`, {
-          params: { code: code }
+          params: { code: code },
         });
 
-        console.log("백엔드 응답:", response);
+        console.log('백엔드 응답:', response);
 
         // 응답 데이터 구조 확인
         const responseData = response.data;
-        
+
         // 토큰이 있는 경우 (로그인 성공)
         let accessToken: string | null = null;
         let refreshToken: string | null = null;
@@ -65,7 +67,7 @@ const KakaoRedirectPage: React.FC = () => {
             localStorage.setItem('introduction', responseData.data.introduction);
           }
 
-          console.log("로그인 성공 - 토큰 저장 완료");
+          console.log('로그인 성공 - 토큰 저장 완료');
           setStatus('success');
 
           // 짧은 지연 후 메인 페이지로 이동
@@ -74,35 +76,34 @@ const KakaoRedirectPage: React.FC = () => {
           }, 500);
         } else {
           // 토큰이 없으면 회원가입 필요
-          console.log("회원가입이 필요합니다.");
+          console.log('회원가입이 필요합니다.');
           setStatus('signup_needed');
           setTimeout(() => {
-            navigate('/signup/kakao', { 
-              state: { 
+            navigate('/signup/kakao', {
+              state: {
                 ...responseData.data,
-                ...responseData
-              } 
+                ...responseData,
+              },
             });
           }, 1500);
         }
-
       } catch (error: any) {
-        console.error("카카오 로그인 처리 중 에러:", error);
-        
+        console.error('카카오 로그인 처리 중 에러:', error);
+
         // 401 에러는 회원가입 필요
         if (error.response?.status === 401) {
-          console.log("401 에러 - 회원가입 필요");
-          console.log("에러 응답 데이터:", error.response?.data);
-          
+          console.log('401 에러 - 회원가입 필요');
+          console.log('에러 응답 데이터:', error.response?.data);
+
           setStatus('signup_needed');
           setTimeout(() => {
-            navigate('/signup/kakao', { 
-              state: error.response?.data?.data || error.response?.data
+            navigate('/signup/kakao', {
+              state: error.response?.data?.data || error.response?.data,
             });
           }, 1500);
         } else {
           setStatus('error');
-          console.error("에러 상세:", error.response?.data || error.message);
+          console.error('에러 상세:', error.response?.data || error.message);
         }
       }
     };

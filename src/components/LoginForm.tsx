@@ -1,6 +1,6 @@
-import React from "react";
-import KakaoIcon from "@/assets/svgs/kakao.svg?react";
-import { S } from "@/styles/Login.styles";
+import React from 'react';
+import KakaoIcon from '@/assets/svgs/kakao.svg?react';
+import { S } from '@/styles/Login.styles';
 
 interface LoginFormProps {
   form: { email: string; password: string };
@@ -37,12 +37,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
         className={`${S.input} ${S.passwordInput}`}
       />
 
-      <button
-        onClick={onEmailLogin}
-        disabled={isLoading}
-        className={S.emailLoginButton}
-      >
-        {isLoading ? "로그인 중..." : "이메일로 로그인"}
+      <button onClick={onEmailLogin} disabled={isLoading} className={S.emailLoginButton}>
+        {isLoading ? '로그인 중...' : '이메일로 로그인'}
       </button>
 
       <div className={S.dividerContainer}>

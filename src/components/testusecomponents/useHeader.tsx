@@ -9,7 +9,7 @@ const TestHeader = () => {
         <Header variant="edit" />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default TestHeader;

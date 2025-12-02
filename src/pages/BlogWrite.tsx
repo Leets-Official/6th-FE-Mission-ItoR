@@ -1,10 +1,10 @@
-import React from "react";
-import Header from "@/components/Header";
-import Toast from "@/components/Toast";
-import Editor from "@/components/Editor";
-import WriteToolbar from "@/components/WriteToolbar";
-import { useBlogWrite } from "@/hooks/useBlogWrite";
-import { S } from "@/styles/BlogWrite.styles";
+import React from 'react';
+import Header from '@/components/Header';
+import Toast from '@/components/Toast';
+import Editor from '@/components/Editor';
+import WriteToolbar from '@/components/WriteToolbar';
+import { useBlogWrite } from '@/hooks/useBlogWrite';
+import { S } from '@/styles/BlogWrite.styles';
 
 const BlogWrite: React.FC = () => {
   const {
@@ -27,13 +27,7 @@ const BlogWrite: React.FC = () => {
   return (
     <div className={S.container}>
       <Header variant="edit" onPost={handlePost} />
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleImageUpload}
-        accept="image/*"
-        hidden
-      />
+      <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" hidden />
 
       <WriteToolbar onAddPhotoClick={handleAddPhotoClick} isUploading={isUploading} />
 
@@ -41,9 +35,7 @@ const BlogWrite: React.FC = () => {
         <div className={S.toastWrapper}>
           <Toast
             variant={
-              toastMessage.includes("실패") || toastMessage.includes("오류")
-                ? "warning"
-                : "success"
+              toastMessage.includes('실패') || toastMessage.includes('오류') ? 'warning' : 'success'
             }
             message={toastMessage}
           />

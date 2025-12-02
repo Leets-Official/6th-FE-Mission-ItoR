@@ -1,7 +1,7 @@
 // src/components/PostHeader.tsx
-import React from "react";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
-import { S } from "@/styles/BlogDetail.styles";
+import React from 'react';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
+import { S } from '@/styles/BlogDetail.styles';
 
 interface PostHeaderProps {
   title: string;

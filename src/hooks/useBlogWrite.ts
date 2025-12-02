@@ -1,8 +1,8 @@
 // src/hooks/useBlogWrite.ts
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useCreatePost, useUpdatePost, useUploadImage } from "@/hooks/usePosts";
-import { PostDetailResponse, PostBody, ContentBlock } from "@/api/posts";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCreatePost, useUpdatePost, useUploadImage } from '@/hooks/usePosts';
+import { PostDetailResponse, PostBody, ContentBlock } from '@/api/posts';
 
 // Add a frontend-only ID for stable keys
 export type EditorBlock = ContentBlock & { frontendId: string };
@@ -12,7 +12,7 @@ export const useBlogWrite = () => {
   const navigate = useNavigate();
   const postToEdit = location.state as PostDetailResponse | undefined;
 
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('');
   const [contents, setContents] = useState<EditorBlock[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false); // For IME handling
@@ -39,8 +39,8 @@ export const useBlogWrite = () => {
       setContents([
         {
           contentOrder: 1,
-          contentType: "TEXT",
-          content: "",
+          contentType: 'TEXT',
+          content: '',
           frontendId: createFrontendId(),
         },
       ]);
@@ -71,13 +71,10 @@ export const useBlogWrite = () => {
     );
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-    index: number
-  ) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
     if (isComposing) return;
 
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       const textarea = e.currentTarget;
       const cursorPosition = textarea.selectionStart;
@@ -89,7 +86,7 @@ export const useBlogWrite = () => {
         const updatedCurrentBlock = { ...currentBlock, content: contentBeforeCursor };
         const newBlock: EditorBlock = {
           contentOrder: 0,
-          contentType: "TEXT",
+          contentType: 'TEXT',
           content: contentAfterCursor,
           frontendId: createFrontendId(),
         };
@@ -116,44 +113,44 @@ export const useBlogWrite = () => {
       onSuccess: (url) => {
         const newImageBlock: EditorBlock = {
           contentOrder: 0,
-          contentType: "IMAGE",
+          contentType: 'IMAGE',
           content: url,
           frontendId: createFrontendId(),
         };
         const newTextBlock: EditorBlock = {
           contentOrder: 0,
-          contentType: "TEXT",
-          content: "",
+          contentType: 'TEXT',
+          content: '',
           frontendId: createFrontendId(),
         };
         setContents((prev) => [...prev, newImageBlock, newTextBlock]);
         setNextFocusIndex(contents.length + 1);
       },
-      onError: () => showToast("이미지 업로드에 실패했습니다."),
+      onError: () => showToast('이미지 업로드에 실패했습니다.'),
     });
   };
 
   const handlePost = useCallback(() => {
     const finalContents = contents
-      .filter((block) => block.contentType === "IMAGE" || block.content.trim() !== "")
+      .filter((block) => block.contentType === 'IMAGE' || block.content.trim() !== '')
       .map((block, index) => {
-        const { frontendId, ...backendBlock } = block;
+        const { frontendId: _frontendId, ...backendBlock } = block;
         return { ...backendBlock, contentOrder: index + 1 };
       });
 
     if (!title.trim() || finalContents.length === 0) {
-      showToast("제목과 내용을 입력해주세요!");
+      showToast('제목과 내용을 입력해주세요!');
       return;
     }
 
     const payload: PostBody = { title, contents: finalContents };
     const options = {
       onSuccess: () => {
-        showToast("저장되었습니다.");
-        setTimeout(() => navigate("/"), 1500);
+        showToast('저장되었습니다.');
+        setTimeout(() => navigate('/'), 1500);
       },
       onError: (error: any) => {
-        const errorMessage = error.response?.data?.message || "저장에 실패했습니다.";
+        const errorMessage = error.response?.data?.message || '저장에 실패했습니다.';
         showToast(errorMessage);
       },
     };

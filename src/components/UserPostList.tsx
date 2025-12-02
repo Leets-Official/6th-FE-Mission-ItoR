@@ -1,8 +1,8 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
-import { PostListItem } from "@/api/posts";
-import { S } from "@/styles/ProfileDetail.styles";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
+import { PostListItem } from '@/api/posts';
+import { S } from '@/styles/ProfileDetail.styles';
 
 interface UserPostListProps {
   posts: PostListItem[];
@@ -25,16 +25,10 @@ const UserPostList: React.FC<UserPostListProps> = ({ posts }) => {
         >
           <div className={S.postItemTextWrapper}>
             <h2 className={S.postItemTitle}>{post.title}</h2>
-            <p className={S.postItemContent}>
-              {post.contents?.[0]?.content || ""}
-            </p>
+            <p className={S.postItemContent}>{post.contents?.[0]?.content || ''}</p>
             <div className={S.postItemMeta}>
               {post.profileUrl ? (
-                <img
-                  src={post.profileUrl}
-                  alt={post.nickName}
-                  className={S.postItemProfileIcon}
-                />
+                <img src={post.profileUrl} alt={post.nickName} className={S.postItemProfileIcon} />
               ) : (
                 <ProfileIcon className={S.postItemProfileIcon} />
               )}
@@ -43,11 +37,9 @@ const UserPostList: React.FC<UserPostListProps> = ({ posts }) => {
               <span>· 댓글 {post.commentCount}</span>
             </div>
           </div>
-          {post.contents?.find((c) => c.contentType === "IMAGE")?.content && (
+          {post.contents?.find((c) => c.contentType === 'IMAGE')?.content && (
             <img
-              src={
-                post.contents.find((c) => c.contentType === "IMAGE")?.content
-              }
+              src={post.contents.find((c) => c.contentType === 'IMAGE')?.content}
               alt="thumbnail"
               className={S.postItemThumbnail}
             />

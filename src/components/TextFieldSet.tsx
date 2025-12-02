@@ -1,13 +1,13 @@
-import React from "react";
-import TextField from "./TextField";
-import clsx from "clsx";
+import React from 'react';
+import TextField from './TextField';
+import clsx from 'clsx';
 
 interface TextFieldSetProps {
   label: string;
   value?: string;
   onChange?: (value: string) => void;
-  variant?: "gray" | "blue" | "black" | "filled" | "outlineblack";
-  size?: "sm" | "lg"; // Add size prop
+  variant?: 'gray' | 'blue' | 'black' | 'filled' | 'outlineblack';
+  size?: 'sm' | 'lg'; // Add size prop
   placeholder?: string;
   className?: string; // For the outer div
   inputClassName?: string; // For the inner TextField
@@ -20,13 +20,13 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
   label,
   value,
   onChange,
-  variant = "outlineblack",
-  size = "sm",
+  variant = 'outlineblack',
+  size = 'sm',
   placeholder,
   className,
   inputClassName, // Destructure new prop
   icon, // Destructure icon prop
-  type = "text",
+  type = 'text',
   disabled = false,
 }) => {
   return (
@@ -49,8 +49,8 @@ const TextFieldSet: React.FC<TextFieldSetProps> = ({
         disabled={disabled}
         icon={icon} // Pass icon down
         className={clsx(
-          "placeholder-[#B0B0B0]",
-          disabled ? "text-[#C8C8C8]" : "text-[#000000]",
+          'placeholder-[#B0B0B0]',
+          disabled ? 'text-[#C8C8C8]' : 'text-[#000000]',
           inputClassName // Pass new prop to TextField
         )}
       />

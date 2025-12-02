@@ -1,24 +1,24 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "./Button";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
-import ClearIcon from "@/assets/svgs/clear.svg?react";
-import { useUserStore } from "@/store/userStore";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from './Button';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
+import ClearIcon from '@/assets/svgs/clear.svg?react';
+import { useUserStore } from '@/store/userStore';
 
 // 공통 스타일 상수 정의
-const FRAME_WIDTH = "w-[240px]";
-const FRAME_SECTION = "flex items-center gap-[10px] px-[16px]";
+const FRAME_WIDTH = 'w-[240px]';
+const FRAME_SECTION = 'flex items-center gap-[10px] px-[16px]';
 const SECTION_HEIGHT = {
-  header: "h-[64px] mt-[20px]",
-  content: "h-auto", // Adjusted for dynamic content
-  button: "h-auto", // Adjusted for dynamic content
+  header: 'h-[64px] mt-[20px]',
+  content: 'h-auto', // Adjusted for dynamic content
+  button: 'h-auto', // Adjusted for dynamic content
 };
 const USERNAME_TEXT =
-  "font-[Noto Sans KR] font-bold text-[16px] leading-[160%] tracking-[-0.5%] text-gray-800";
+  'font-[Noto Sans KR] font-bold text-[16px] leading-[160%] tracking-[-0.5%] text-gray-800';
 const INTRO_TEXT =
-  "font-[Noto Sans KR] font-light text-[12px] leading-[160%] tracking-[-0.5%] text-gray-600";
+  'font-[Noto Sans KR] font-light text-[12px] leading-[160%] tracking-[-0.5%] text-gray-600';
 const LOGOUT_TEXT =
-  "font-[Noto Sans KR] font-light text-sm leading-[160%] tracking-[-0.5%] text-[#333333] w-[200px] h-[44px] flex items-center";
+  'font-[Noto Sans KR] font-light text-sm leading-[160%] tracking-[-0.5%] text-[#333333] w-[200px] h-[44px] flex items-center';
 
 interface FrameProps {
   onClose?: () => void;
@@ -30,7 +30,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login", { replace: true });
+    navigate('/login', { replace: true });
     onClose?.();
   };
 
@@ -46,9 +46,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
         <ClearIcon className="w-6 h-6" />
       </button>
 
-      <div
-        className={`${FRAME_WIDTH} ${SECTION_HEIGHT.header} ${FRAME_SECTION}`}
-      >
+      <div className={`${FRAME_WIDTH} ${SECTION_HEIGHT.header} ${FRAME_SECTION}`}>
         {isLoggedIn && user?.profilePicture ? (
           <img
             src={user.profilePicture}
@@ -69,9 +67,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
             <span className={INTRO_TEXT}>{user.introduction}</span>
           </>
         ) : (
-          <span className={LOGOUT_TEXT}>
-            You can make anything by writing
-          </span>
+          <span className={LOGOUT_TEXT}>You can make anything by writing</span>
         )}
       </div>
 
@@ -80,15 +76,15 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
       >
         {isLoggedIn ? (
           <>
-            <Button variant="blueBorder" onClick={() => navigate("/profiledetail")}>
+            <Button variant="blueBorder" onClick={() => navigate('/profiledetail')}>
               나의 깃로그
             </Button>
-            <Button variant="blueBorder" onClick={() => navigate("/write")}>
+            <Button variant="blueBorder" onClick={() => navigate('/write')}>
               깃로그 쓰기
             </Button>
           </>
         ) : (
-          <Button variant="blueBorder" onClick={() => navigate("/login")} className="w-full">
+          <Button variant="blueBorder" onClick={() => navigate('/login')} className="w-full">
             깃로그 시작하기
           </Button>
         )}
@@ -96,7 +92,7 @@ const Frame: React.FC<FrameProps> = ({ onClose }) => {
 
       {isLoggedIn && (
         <div className={`${FRAME_WIDTH} ${FRAME_SECTION} flex-row gap-2 mt-auto mb-4`}>
-          <Button variant="grayBorder" onClick={() => navigate("/settings")} className="flex-1">
+          <Button variant="grayBorder" onClick={() => navigate('/settings')} className="flex-1">
             설정
           </Button>
           <Button variant="grayBorder" onClick={handleLogout} className="flex-1">

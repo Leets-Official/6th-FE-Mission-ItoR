@@ -1,7 +1,7 @@
-import React from "react";
-import TextFieldSet from "./TextFieldSet";
-import Profile from "@/assets/svgs/Profile.svg?react";
-import { S } from "@/styles/SignupEmail.styles";
+import React from 'react';
+import TextFieldSet from './TextFieldSet';
+import Profile from '@/assets/svgs/Profile.svg?react';
+import { S } from '@/styles/SignupEmail.styles';
 
 type Field = {
   key: string;
@@ -35,16 +35,12 @@ const SignupEmailForm: React.FC<SignupEmailFormProps> = ({
       <div className={S.profileUploadContainer}>
         <div className={S.profileUploadInner}>
           {form.profilePicture ? (
-            <img
-              src={form.profilePicture}
-              alt="프로필"
-              className={S.profileImage}
-            />
+            <img src={form.profilePicture} alt="프로필" className={S.profileImage} />
           ) : (
             <Profile className={S.profileImage} />
           )}
           <label className={S.profileUploadLabel}>
-            {isUploading ? "업로드 중..." : "프로필 사진 추가"}
+            {isUploading ? '업로드 중...' : '프로필 사진 추가'}
             <input
               type="file"
               accept="image/*"
@@ -65,18 +61,14 @@ const SignupEmailForm: React.FC<SignupEmailFormProps> = ({
                 value={form[key as keyof typeof form]}
                 placeholder={placeholder}
                 onChange={(v) => setForm({ ...form, [key]: v })}
-                type={key.includes("password") ? "password" : "text"}
+                type={key.includes('password') ? 'password' : 'text'}
               />
               {errors[key] && <p className={S.errorText}>{errors[key]}</p>}
             </div>
           ))}
 
-          <button
-            onClick={onSubmit}
-            disabled={isSubmitting}
-            className={S.submitButton}
-          >
-            {isSubmitting ? "가입 중..." : "회원가입 완료"}
+          <button onClick={onSubmit} disabled={isSubmitting} className={S.submitButton}>
+            {isSubmitting ? '가입 중...' : '회원가입 완료'}
           </button>
         </div>
       </div>

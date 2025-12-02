@@ -1,9 +1,9 @@
-import React from "react";
-import Header from "@/components/Header";
-import Modal from "@/components/Modal";
-import SignupEmailForm from "@/components/SignupEmailForm";
-import { useSignupEmail } from "@/hooks/useSignupEmail";
-import { S } from "@/styles/SignupEmail.styles";
+import React from 'react';
+import Header from '@/components/Header';
+import Modal from '@/components/Modal';
+import SignupEmailForm from '@/components/SignupEmailForm';
+import { useSignupEmail } from '@/hooks/useSignupEmail';
+import { S } from '@/styles/SignupEmail.styles';
 
 const SignupEmail: React.FC = () => {
   const {
@@ -26,9 +26,7 @@ const SignupEmail: React.FC = () => {
 
       <div className={S.titleContainer}>
         <h1 className={S.titleHeader}>회원가입</h1>
-        <p className={S.titleSubtext}>
-          가입을 위해 회원님의 정보를 입력해주세요.
-        </p>
+        <p className={S.titleSubtext}>가입을 위해 회원님의 정보를 입력해주세요.</p>
       </div>
 
       <SignupEmailForm
@@ -47,7 +45,7 @@ const SignupEmail: React.FC = () => {
           <Modal
             titleLine1="회원가입이 완료되었습니다!"
             onClose={() => setShowModal(false)}
-            onConfirm={() => navigate("/login")}
+            onConfirm={() => navigate('/login')}
             cancelText="확인"
             confirmText="로그인하기"
             variant="info"

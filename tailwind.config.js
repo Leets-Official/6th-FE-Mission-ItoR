@@ -1,11 +1,7 @@
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./src/styles/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './src/styles/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -35,12 +31,12 @@ export default {
         white: '#FFFFFF',
       },
       fontSize: {
-        xs: "12px",
-        sm: "14px",
-        base: "16px",
-        lg: "20px",
-        xl: "24px",
-        "2xl": "32px",
+        xs: '12px',
+        sm: '14px',
+        base: '16px',
+        lg: '20px',
+        xl: '24px',
+        '2xl': '32px',
       },
     },
   },

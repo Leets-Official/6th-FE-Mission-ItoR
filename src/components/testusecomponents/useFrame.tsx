@@ -1,5 +1,5 @@
-import React from "react";
-import Frame from "../Frame";
+import React from 'react';
+import Frame from '../Frame';
 
 const TestFrame: React.FC = () => {
   return (

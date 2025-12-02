@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { useUserProfile, useUpdateUserProfile } from "@/hooks/auth/useAuth";
-import { useUploadImage } from "@/hooks/usePosts";
-import { UpdateUserProfilePayload } from "@/api/auth";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { useUserProfile, useUpdateUserProfile } from '@/hooks/auth/useAuth';
+import { useUploadImage } from '@/hooks/usePosts';
+import { UpdateUserProfilePayload } from '@/api/auth';
 
 export const useProfileFind = () => {
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: userProfile, isLoading, isError } = useUserProfile();
@@ -14,30 +12,30 @@ export const useProfileFind = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    name: "",
-    birthDate: "",
-    nickname: "",
-    introduction: "",
-    profilePicture: "",
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    birthDate: '',
+    nickname: '',
+    introduction: '',
+    profilePicture: '',
   });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const isKakaoUser = !!userProfile?.profilePicture?.includes("kakaocdn.net");
+  const isKakaoUser = !!userProfile?.profilePicture?.includes('kakaocdn.net');
 
   useEffect(() => {
     if (userProfile) {
       setForm({
-        email: userProfile.email || "",
-        password: "",
-        confirmPassword: "",
-        name: userProfile.name || "",
-        birthDate: userProfile.birthDate || "",
-        nickname: userProfile.nickname || "",
-        introduction: userProfile.introduction || "",
-        profilePicture: userProfile.profilePicture || "",
+        email: userProfile.email || '',
+        password: '',
+        confirmPassword: '',
+        name: userProfile.name || '',
+        birthDate: userProfile.birthDate || '',
+        nickname: userProfile.nickname || '',
+        introduction: userProfile.introduction || '',
+        profilePicture: userProfile.profilePicture || '',
       });
     }
   }, [userProfile]);
@@ -49,13 +47,13 @@ export const useProfileFind = () => {
     if (userProfile) {
       setForm({
         ...form,
-        name: userProfile.name || "",
-        birthDate: userProfile.birthDate || "",
-        nickname: userProfile.nickname || "",
-        introduction: userProfile.introduction || "",
-        profilePicture: userProfile.profilePicture || "",
-        password: "",
-        confirmPassword: "",
+        name: userProfile.name || '',
+        birthDate: userProfile.birthDate || '',
+        nickname: userProfile.nickname || '',
+        introduction: userProfile.introduction || '',
+        profilePicture: userProfile.profilePicture || '',
+        password: '',
+        confirmPassword: '',
       });
     }
   };
@@ -72,17 +70,17 @@ export const useProfileFind = () => {
 
     updateUser(payload, {
       onSuccess: () => {
-        localStorage.setItem("nickname", form.nickname);
-        localStorage.setItem("introduction", form.introduction);
-        localStorage.setItem("profilePicture", form.profilePicture);
+        localStorage.setItem('nickname', form.nickname);
+        localStorage.setItem('introduction', form.introduction);
+        localStorage.setItem('profilePicture', form.profilePicture);
 
-        setToastMessage("저장되었습니다.");
+        setToastMessage('저장되었습니다.');
         setTimeout(() => {
-          window.location.href = "/profiledetail";
+          window.location.href = '/profiledetail';
         }, 1500);
       },
       onError: (error: any) => {
-        alert(error.message || "프로필 업데이트에 실패했습니다.");
+        alert(error.message || '프로필 업데이트에 실패했습니다.');
       },
     });
   };
@@ -102,21 +100,21 @@ export const useProfileFind = () => {
         setForm((prev) => ({ ...prev, profilePicture: url }));
       },
       onError: () => {
-        alert("이미지 업로드에 실패했습니다.");
+        alert('이미지 업로드에 실패했습니다.');
       },
     });
   };
 
   const allFields = [
-    { key: "email", label: "메일", placeholder: "이메일", type: "email" },
-    { key: "password", label: "비밀번호", placeholder: "••••••••", type: "password" },
-    { key: "confirmPassword", label: "비밀번호 확인", placeholder: "••••••••", type: "password" },
-    { key: "name", label: "이름", placeholder: "이름", type: "text" },
-    { key: "birthDate", label: "생년월일", placeholder: "YYYY.MM.DD", type: "text" },
+    { key: 'email', label: '메일', placeholder: '이메일', type: 'email' },
+    { key: 'password', label: '비밀번호', placeholder: '••••••••', type: 'password' },
+    { key: 'confirmPassword', label: '비밀번호 확인', placeholder: '••••••••', type: 'password' },
+    { key: 'name', label: '이름', placeholder: '이름', type: 'text' },
+    { key: 'birthDate', label: '생년월일', placeholder: 'YYYY.MM.DD', type: 'text' },
   ] as const;
 
   const fields = isKakaoUser
-    ? allFields.filter((f) => f.key !== "password" && f.key !== "confirmPassword")
+    ? allFields.filter((f) => f.key !== 'password' && f.key !== 'confirmPassword')
     : allFields;
 
   return {

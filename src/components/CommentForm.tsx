@@ -1,9 +1,9 @@
 // src/components/CommentForm.tsx
-import React from "react";
-import Button from "./Button";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
-import LineEnd from "@/assets/svgs/LineEnd.svg?react";
-import { S } from "@/styles/BlogDetail.styles";
+import React from 'react';
+import Button from './Button';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
+import LineEnd from '@/assets/svgs/LineEnd.svg?react';
+import { S } from '@/styles/BlogDetail.styles';
 
 interface CommentFormProps {
   isLoggedIn: boolean;
@@ -50,7 +50,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
           <LineEnd />
           <div className={S.commentFormFooter}>
             <Button
-              variant={isSubmitDisabled ? "grayBorder" : "blackWhite"}
+              variant={isSubmitDisabled ? 'grayBorder' : 'blackWhite'}
               onClick={onSubmit}
               disabled={isSubmitDisabled}
             >
@@ -59,9 +59,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
           </div>
         </>
       ) : (
-        <div className={S.commentFormLoginPrompt}>
-          로그인 후 댓글을 작성할 수 있습니다.
-        </div>
+        <div className={S.commentFormLoginPrompt}>로그인 후 댓글을 작성할 수 있습니다.</div>
       )}
     </div>
   );

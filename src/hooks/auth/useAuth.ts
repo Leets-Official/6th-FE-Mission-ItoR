@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { useUserStore } from "@/store/userStore";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { useUserStore } from '@/store/userStore';
 import {
   signUpRequest,
   loginRequest,
@@ -16,7 +16,7 @@ import {
   type ReissueBody,
   type UserProfileResponse,
   type UpdateUserProfilePayload,
-} from "@src/api/auth";
+} from '@src/api/auth';
 
 /** 카카오 리다이렉트 응답에서 토큰을 표준화한 타입 */
 export type KakaoTokenPayload = {
@@ -33,24 +33,20 @@ export type KakaoTokenPayload = {
 
 /** 응답에서 안전하게 토큰 페이로드만 추출 */
 export function extractKakaoPayload(res: unknown): KakaoTokenPayload {
-  if (res && typeof res === "object") {
+  if (res && typeof res === 'object') {
     const obj = res as Record<string, unknown>;
     const inner =
-      obj.data && typeof obj.data === "object"
-        ? (obj.data as Record<string, unknown>)
-        : obj;
+      obj.data && typeof obj.data === 'object' ? (obj.data as Record<string, unknown>) : obj;
 
     return {
-      accessToken:
-        typeof inner.accessToken === "string" ? inner.accessToken : undefined,
-      refreshToken:
-        typeof inner.refreshToken === "string" ? inner.refreshToken : undefined,
-      kakaoId: typeof inner.kakaoId === "number" ? inner.kakaoId : undefined,
-      email: typeof inner.email === "string" ? inner.email : undefined,
-      name: typeof inner.name === "string" ? inner.name : undefined,
-      nickname: typeof inner.nickname === "string" ? inner.nickname : undefined,
-      picture: typeof inner.picture === "string" ? inner.picture : undefined,
-      introduction: typeof inner.introduction === "string" ? inner.introduction : undefined,
+      accessToken: typeof inner.accessToken === 'string' ? inner.accessToken : undefined,
+      refreshToken: typeof inner.refreshToken === 'string' ? inner.refreshToken : undefined,
+      kakaoId: typeof inner.kakaoId === 'number' ? inner.kakaoId : undefined,
+      email: typeof inner.email === 'string' ? inner.email : undefined,
+      name: typeof inner.name === 'string' ? inner.name : undefined,
+      nickname: typeof inner.nickname === 'string' ? inner.nickname : undefined,
+      picture: typeof inner.picture === 'string' ? inner.picture : undefined,
+      introduction: typeof inner.introduction === 'string' ? inner.introduction : undefined,
       ...inner,
     };
   }
@@ -70,9 +66,9 @@ export const useLogin = () => {
       login({
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
-        nickname: data.nickname || "",
-        introduction: data.introduction || "",
-        profilePicture: data.profilePicture || "",
+        nickname: data.nickname || '',
+        introduction: data.introduction || '',
+        profilePicture: data.profilePicture || '',
       });
     },
   });
@@ -95,7 +91,7 @@ export const useKakaoStart = () =>
       // 현재 환경에 맞는 Redirect URI 설정
       const redirectUri = `${window.location.origin}/auth/kakao/success`;
       console.log('카카오 로그인 시작 - Redirect URI:', redirectUri);
-      
+
       // 백엔드 카카오 로그인 엔드포인트로 이동
       window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao`;
       return Promise.resolve();
@@ -106,7 +102,7 @@ export const useKakaoRedirectLogin = () =>
   useMutation<KakaoTokenPayload, Error, string>({
     mutationFn: async (code: string) => {
       console.log('카카오 리다이렉트 처리 시작 - code:', code);
-      
+
       try {
         const raw = await kakaoRedirectLogin(code);
         console.log('카카오 로그인 성공 응답:', raw);
@@ -115,26 +111,26 @@ export const useKakaoRedirectLogin = () =>
         return payload;
       } catch (error) {
         console.error('카카오 로그인 에러:', error);
-        
+
         if (error instanceof AxiosError) {
           console.log('AxiosError 상태 코드:', error.response?.status);
           console.log('AxiosError 응답 데이터:', error.response?.data);
-          
+
           if (error.response?.status === 401) {
             // 401은 신규 유저를 의미 - 회원가입 필요
             const payload = extractKakaoPayload(error.response.data);
             console.log('신규 유저 payload:', payload);
-            
+
             // kakaoId가 있는지 확인
             if (!payload.kakaoId) {
               console.error('kakaoId가 없습니다:', payload);
               throw new Error('카카오 사용자 정보를 가져올 수 없습니다.');
             }
-            
+
             return payload;
           }
         }
-        
+
         // 그 외 다른 에러는 그대로 던지기
         throw error;
       }
@@ -143,7 +139,7 @@ export const useKakaoRedirectLogin = () =>
 
 export const useUserProfile = () =>
   useQuery<UserProfileResponse>({
-    queryKey: ["userProfile"],
+    queryKey: ['userProfile'],
     queryFn: () => getUserProfile(),
   });
 
@@ -152,7 +148,7 @@ export const useUpdateUserProfile = () => {
   return useMutation({
     mutationFn: (payload: UpdateUserProfilePayload) => updateUserProfile(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     },
   });
 };
@@ -161,11 +157,10 @@ export const useUpdateProfilePicture = () => {
   const queryClient = useQueryClient();
   const { setProfilePicture } = useUserStore();
   return useMutation({
-    mutationFn: (payload: { profilePicture: string }) =>
-      updateProfilePicture(payload),
+    mutationFn: (payload: { profilePicture: string }) => updateProfilePicture(payload),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
-      localStorage.setItem("profilePicture", variables.profilePicture);
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      localStorage.setItem('profilePicture', variables.profilePicture);
       setProfilePicture(variables.profilePicture);
     },
   });

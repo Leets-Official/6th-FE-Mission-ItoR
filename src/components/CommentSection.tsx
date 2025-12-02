@@ -1,9 +1,9 @@
 // src/components/CommentSection.tsx
-import React from "react";
-import CommentList from "./CommentList";
-import CommentForm from "./CommentForm";
-import { S } from "@/styles/BlogDetail.styles";
-import { Comment } from "@/api/posts";
+import React from 'react';
+import CommentList from './CommentList';
+import CommentForm from './CommentForm';
+import { S } from '@/styles/BlogDetail.styles';
+import { Comment } from '@/api/posts';
 
 interface CommentSectionProps {
   comments: Comment[];

@@ -1,5 +1,5 @@
-import React, { type FC, useEffect, useRef, useState } from "react";
-import clsx from "clsx";
+import React, { type FC, useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 
 export type DropdownMenuItem = {
   label: string;
@@ -12,7 +12,7 @@ export type DropdownMenuProps = {
   items: DropdownMenuItem[];
   className?: string;
   menuClassName?: string;
-  position?: "left" | "right";
+  position?: 'left' | 'right';
 };
 
 const DropdownMenu: FC<DropdownMenuProps> = ({
@@ -20,7 +20,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   items,
   className,
   menuClassName,
-  position = "right",
+  position = 'right',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -31,8 +31,8 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleItemClick = (item: DropdownMenuItem) => {
@@ -41,7 +41,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   };
 
   return (
-    <div ref={dropdownRef} className={clsx("relative inline-block", className)}>
+    <div ref={dropdownRef} className={clsx('relative inline-block', className)}>
       <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
         {trigger}
       </div>
@@ -49,8 +49,8 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
       {isOpen && (
         <div
           className={clsx(
-            "absolute mt-2 min-w-[160px] rounded-md shadow-lg z-50 bg-white p-2",
-            position === "right" ? "right-0" : "left-0",
+            'absolute mt-2 min-w-[160px] rounded-md shadow-lg z-50 bg-white p-2',
+            position === 'right' ? 'right-0' : 'left-0',
             menuClassName
           )}
         >
@@ -61,9 +61,9 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                 key={idx}
                 onClick={() => !item.disabled && handleItemClick(item)}
                 className={clsx(
-                  "px-4 py-2 cursor-pointer bg-white hover:bg-gray-100 rounded-md transition-colors",
-                  item.disabled && "cursor-not-allowed opacity-50",
-                  item.label.includes("삭제") && "text-red-500 font-medium"
+                  'px-4 py-2 cursor-pointer bg-white hover:bg-gray-100 rounded-md transition-colors',
+                  item.disabled && 'cursor-not-allowed opacity-50',
+                  item.label.includes('삭제') && 'text-red-500 font-medium'
                 )}
               >
                 {item.label}

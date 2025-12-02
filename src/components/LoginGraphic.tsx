@@ -1,6 +1,6 @@
-import React from "react";
-import Frame7 from "@/assets/svgs/Frame7.svg?react";
-import { S } from "@/styles/Login.styles";
+import React from 'react';
+import Frame7 from '@/assets/svgs/Frame7.svg?react';
+import { S } from '@/styles/Login.styles';
 
 const LoginGraphic: React.FC = () => {
   return (

@@ -1,9 +1,9 @@
-import React from "react";
-import TextFieldSet from "./TextFieldSet";
-import Profile from "@/assets/svgs/Profile.svg?react";
-import KakaoIcon from "@/assets/svgs/kakao.svg?react";
-import { S } from "@/styles/SignupKakao.styles";
-import { FormState } from "@/hooks/useSignupKakao";
+import React from 'react';
+import TextFieldSet from './TextFieldSet';
+import Profile from '@/assets/svgs/Profile.svg?react';
+import KakaoIcon from '@/assets/svgs/kakao.svg?react';
+import { S } from '@/styles/SignupKakao.styles';
+import { FormState } from '@/hooks/useSignupKakao';
 
 interface SignupKakaoFormProps {
   form: FormState;
@@ -30,16 +30,12 @@ const SignupKakaoForm: React.FC<SignupKakaoFormProps> = ({
         <div className={S.profileUploadInner}>
           <div className={S.profileUploadTitle}>프로필 사진</div>
           {form.profilePicture ? (
-            <img
-              src={form.profilePicture}
-              alt="프로필"
-              className={S.profileImage}
-            />
+            <img src={form.profilePicture} alt="프로필" className={S.profileImage} />
           ) : (
             <Profile className={S.profileImage} />
           )}
           <label className={S.profileUploadLabel}>
-            {isUploading ? "업로드 중..." : "프로필 사진 추가"}
+            {isUploading ? '업로드 중...' : '프로필 사진 추가'}
             <input
               type="file"
               accept="image/*"
@@ -66,31 +62,31 @@ const SignupKakaoForm: React.FC<SignupKakaoFormProps> = ({
             label="이메일"
             value={form.email}
             placeholder="이메일"
-            onChange={(v) => onChange("email", v)}
+            onChange={(v) => onChange('email', v)}
           />
           <TextFieldSet
             label="이름"
             value={form.name}
             placeholder="이름"
-            onChange={(v) => onChange("name", v)}
+            onChange={(v) => onChange('name', v)}
           />
           <TextFieldSet
             label="생년월일"
             value={form.birthDate}
             placeholder="YYYY-MM-DD"
-            onChange={(v) => onChange("birthDate", v)}
+            onChange={(v) => onChange('birthDate', v)}
           />
           <TextFieldSet
             label="닉네임"
             value={form.nickname}
             placeholder="닉네임 (최대 20자)"
-            onChange={(v) => onChange("nickname", v)}
+            onChange={(v) => onChange('nickname', v)}
           />
           <TextFieldSet
             label="한 줄 소개"
             value={form.introduction}
             placeholder="한 줄 소개 (최대 30자)"
-            onChange={(v) => onChange("introduction", v)}
+            onChange={(v) => onChange('introduction', v)}
           />
 
           {Object.keys(errors).length > 0 && (
@@ -107,7 +103,7 @@ const SignupKakaoForm: React.FC<SignupKakaoFormProps> = ({
             disabled={isSubmitting}
             className={S.submitButton}
           >
-            {isSubmitting ? "가입 중..." : "회원가입 완료"}
+            {isSubmitting ? '가입 중...' : '회원가입 완료'}
           </button>
         </div>
       </div>

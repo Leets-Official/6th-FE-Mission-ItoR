@@ -1,27 +1,16 @@
-import React from "react";
-import Header from "@/components/Header";
-import Pagination from "@/components/Pagination";
-import Toast from "@/components/Toast";
-import PostList from "@/components/PostList";
-import { useBlogfind } from "@/hooks/useBlogfind";
-import { S } from "@/styles/Blogfind.styles";
+import React from 'react';
+import Header from '@/components/Header';
+import Pagination from '@/components/Pagination';
+import Toast from '@/components/Toast';
+import PostList from '@/components/PostList';
+import { useBlogfind } from '@/hooks/useBlogfind';
+import { S } from '@/styles/Blogfind.styles';
 
 const Blogfind: React.FC = () => {
-  const {
-    showToast,
-    currentPage,
-    data,
-    isLoading,
-    isError,
-    handlePageChange,
-  } = useBlogfind();
+  const { showToast, currentPage, data, isLoading, isError, handlePageChange } = useBlogfind();
 
   if (isLoading) {
-    return (
-      <div className={`${S.loadingOrError} text-gray-600`}>
-        게시글을 불러오는 중입니다...
-      </div>
-    );
+    return <div className={`${S.loadingOrError} text-gray-600`}>게시글을 불러오는 중입니다...</div>;
   }
 
   if (isError) {
@@ -36,9 +25,7 @@ const Blogfind: React.FC = () => {
     <div className={S.container}>
       <Header variant="write" />
 
-      {showToast && (
-        <Toast variant="success" message="삭제가 완료되었습니다!" />
-      )}
+      {showToast && <Toast variant="success" message="삭제가 완료되었습니다!" />}
 
       <PostList posts={data?.posts || []} />
 
@@ -54,4 +41,3 @@ const Blogfind: React.FC = () => {
 };
 
 export default Blogfind;
-

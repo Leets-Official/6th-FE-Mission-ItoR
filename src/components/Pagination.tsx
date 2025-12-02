@@ -1,10 +1,9 @@
-import React from "react";
-import PaginationButton from "./PaginationButton";
-import LeftIcon from "@/assets/svgs/Left.svg?react";
-import RightIcon from "@/assets/svgs/right.svg?react";
+import React from 'react';
+import PaginationButton from './PaginationButton';
+import LeftIcon from '@/assets/svgs/Left.svg?react';
+import RightIcon from '@/assets/svgs/right.svg?react';
 
-
-type PaginationVariant = "grayBlack" | "blueBlue" | "grayGray";
+type PaginationVariant = 'grayBlack' | 'blueBlue' | 'grayGray';
 
 type PaginationProps = {
   variant?: PaginationVariant;
@@ -14,7 +13,7 @@ type PaginationProps = {
 };
 
 const Pagination: React.FC<PaginationProps> = ({
-  variant = "grayBlack",
+  variant = 'grayBlack',
   totalPages = 5,
   currentPage = 1,
   onPageChange,
@@ -26,8 +25,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   const handleNext = () => {
-    if (currentPage && currentPage < totalPages)
-      onPageChange?.(currentPage + 1);
+    if (currentPage && currentPage < totalPages) onPageChange?.(currentPage + 1);
   };
 
   return (
@@ -39,7 +37,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {pages.map((page) => (
         <PaginationButton
           key={page}
-          variant={page === currentPage ? "blueBlue" : variant}
+          variant={page === currentPage ? 'blueBlue' : variant}
           onClick={() => onPageChange?.(page)}
         >
           {page}

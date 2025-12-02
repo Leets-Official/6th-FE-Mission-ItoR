@@ -1,7 +1,7 @@
-import React from "react";
-import TextFieldSet from "./TextFieldSet";
-import Profile from "@/assets/svgs/Profile.svg?react";
-import { S } from "@/styles/ProfileFind.styles";
+import React from 'react';
+import TextFieldSet from './TextFieldSet';
+import Profile from '@/assets/svgs/Profile.svg?react';
+import { S } from '@/styles/ProfileFind.styles';
 
 interface ProfileFormHeaderProps {
   form: {
@@ -31,11 +31,7 @@ const ProfileFormHeader: React.FC<ProfileFormHeaderProps> = ({
           disabled={!isEditing || isUploading}
         >
           {form.profilePicture ? (
-            <img
-              src={form.profilePicture}
-              alt="profile"
-              className={S.profileImage}
-            />
+            <img src={form.profilePicture} alt="profile" className={S.profileImage} />
           ) : (
             <Profile className={S.profileImage} />
           )}

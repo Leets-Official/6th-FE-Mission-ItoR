@@ -1,4 +1,4 @@
-import PaginationButton from '../PaginationButton'
+import PaginationButton from '../PaginationButton';
 import LeftIcon from '@/assets/svgs/navigate_before.svg?react';
 import RightIcon from '@/assets/svgs/Right.svg?react';
 
@@ -16,7 +16,7 @@ const TestPagination = () => {
         <PaginationButton children={<RightIcon className="w-4 h-4" />} variant="grayGray" />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default TestPagination;

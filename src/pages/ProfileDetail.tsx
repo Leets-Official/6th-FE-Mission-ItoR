@@ -1,10 +1,10 @@
-import React from "react";
-import Header from "@/components/Header";
-import Pagination from "@/components/Pagination";
-import ProfileHeader from "@/components/ProfileHeader";
-import UserPostList from "@/components/UserPostList";
-import { useProfileDetail } from "@/hooks/useProfileDetail";
-import { S } from "@/styles/ProfileDetail.styles";
+import React from 'react';
+import Header from '@/components/Header';
+import Pagination from '@/components/Pagination';
+import ProfileHeader from '@/components/ProfileHeader';
+import UserPostList from '@/components/UserPostList';
+import { useProfileDetail } from '@/hooks/useProfileDetail';
+import { S } from '@/styles/ProfileDetail.styles';
 
 const ProfileDetail: React.FC = () => {
   const {
@@ -25,19 +25,13 @@ const ProfileDetail: React.FC = () => {
   return (
     <div className={S.pageContainer}>
       <Header variant="write" />
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept="image/*"
-        hidden
-      />
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" hidden />
 
       <ProfileHeader
         loggedInUser={loggedInUser}
         isUploading={isUploading}
         onProfileClick={handleProfileClick}
-        onSettingsClick={() => navigate("/profilefind")}
+        onSettingsClick={() => navigate('/profilefind')}
       />
 
       <div className={S.contentContainer}>
@@ -50,11 +44,7 @@ const ProfileDetail: React.FC = () => {
         )}
 
         <div className={S.paginationContainer}>
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>
     </div>

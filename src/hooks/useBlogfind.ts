@@ -1,12 +1,12 @@
 // src/hooks/useBlogfind.ts
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAllPosts } from "@/hooks/usePosts";
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAllPosts } from '@/hooks/usePosts';
 
 export const useBlogfind = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [showToast, setShowToast] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 

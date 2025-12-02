@@ -1,7 +1,7 @@
-import React from "react";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
-import SettingIcon from "@/assets/svgs/settings.svg?react";
-import { S } from "@/styles/ProfileDetail.styles";
+import React from 'react';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
+import SettingIcon from '@/assets/svgs/settings.svg?react';
+import { S } from '@/styles/ProfileDetail.styles';
 
 interface ProfileHeaderProps {
   loggedInUser: {
@@ -22,17 +22,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 }) => {
   return (
     <div className={S.profileHeaderContainer}>
-      <button
-        onClick={onProfileClick}
-        className={S.profileImageButton}
-        disabled={isUploading}
-      >
+      <button onClick={onProfileClick} className={S.profileImageButton} disabled={isUploading}>
         {loggedInUser.profilePicture ? (
-          <img
-            src={loggedInUser.profilePicture}
-            alt="profile"
-            className={S.profileImage}
-          />
+          <img src={loggedInUser.profilePicture} alt="profile" className={S.profileImage} />
         ) : (
           <ProfileIcon className={S.profileImage} />
         )}

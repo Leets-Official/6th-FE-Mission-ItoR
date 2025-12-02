@@ -1,6 +1,6 @@
-import React from "react";
-import clsx from "clsx";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
+import React from 'react';
+import clsx from 'clsx';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
 
 // Define the shape of the post object expected by this component
 interface Post {
@@ -25,16 +25,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <div className="w-[688px] border-b border-gray-200 pb-6">
       <div
         className={clsx(
-          "flex justify-between items-start w-full gap-4",
-          hasPhoto ? "flex-row" : "flex-col"
+          'flex justify-between items-start w-full gap-4',
+          hasPhoto ? 'flex-row' : 'flex-col'
         )}
       >
-        <div
-          className={clsx(
-            "flex flex-col justify-between",
-            hasPhoto ? "w-[540px]" : "w-full"
-          )}
-        >
+        <div className={clsx('flex flex-col justify-between', hasPhoto ? 'w-[540px]' : 'w-full')}>
           <h3 className="font-[Noto Sans KR] font-medium text-[16px] leading-[160%] text-gray-900 line-clamp-1">
             {post.title}
           </h3>

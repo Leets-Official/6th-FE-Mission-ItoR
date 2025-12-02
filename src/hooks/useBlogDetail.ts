@@ -1,7 +1,7 @@
 // src/hooks/useBlogDetail.ts
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { usePostDetail, useDeletePost, useCreateComment, useDeleteComment } from "@/hooks/usePosts";
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { usePostDetail, useDeletePost, useCreateComment, useDeleteComment } from '@/hooks/usePosts';
 
 export const useBlogDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,18 +14,21 @@ export const useBlogDetail = () => {
   const { mutate: deleteComment } = useDeleteComment(id!);
 
   // --- State ---
-  const [commentText, setCommentText] = useState("");
-  const [toastMessage, setToastMessage] = useState<{ variant: "success" | "warning"; message: string } | null>(null);
+  const [commentText, setCommentText] = useState('');
+  const [toastMessage, setToastMessage] = useState<{
+    variant: 'success' | 'warning';
+    message: string;
+  } | null>(null);
   const [isBlogDeleteModalOpen, setIsBlogDeleteModalOpen] = useState(false);
   const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] = useState(false);
   const [commentToDeleteId, setCommentToDeleteId] = useState<string | null>(null);
 
   // --- User & Auth Info ---
-  const isLoggedIn = !!localStorage.getItem("accessToken");
+  const isLoggedIn = !!localStorage.getItem('accessToken');
   const isAuthor = post?.isOwner ?? false;
   const loggedInUser = {
-    nickname: localStorage.getItem("nickname"),
-    profilePicture: localStorage.getItem("profilePicture"),
+    nickname: localStorage.getItem('nickname'),
+    profilePicture: localStorage.getItem('profilePicture'),
   };
 
   // --- Derived State ---
@@ -33,7 +36,7 @@ export const useBlogDetail = () => {
 
   // --- Helper Functions ---
   const formatDate = (dateString: string) => {
-    if (!dateString) return "";
+    if (!dateString) return '';
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
     const formatted = date.toLocaleDateString('en-US', options);
@@ -45,13 +48,13 @@ export const useBlogDetail = () => {
     if (!id) return;
     deletePost(id, {
       onSuccess: () => {
-        setToastMessage({ variant: "success", message: "게시글이 삭제되었습니다!" });
+        setToastMessage({ variant: 'success', message: '게시글이 삭제되었습니다!' });
         setTimeout(() => {
           setToastMessage(null);
-          navigate("/", { replace: true, state: { showToast: true } });
+          navigate('/', { replace: true, state: { showToast: true } });
         }, 1500);
       },
-      onError: () => alert("게시글 삭제에 실패했습니다."),
+      onError: () => alert('게시글 삭제에 실패했습니다.'),
     });
     setIsBlogDeleteModalOpen(false);
   };
@@ -60,7 +63,7 @@ export const useBlogDetail = () => {
     if (isCommentSubmitDisabled) return;
     createComment(commentText.trim(), {
       onSuccess: () => {
-        setCommentText("");
+        setCommentText('');
         refetch(); // Re-fetch post data to show new comment
       },
     });
@@ -75,12 +78,12 @@ export const useBlogDetail = () => {
     if (!commentToDeleteId) return;
     deleteComment(commentToDeleteId, {
       onSuccess: () => {
-        setToastMessage({ variant: "success", message: "댓글이 삭제되었습니다!" });
+        setToastMessage({ variant: 'success', message: '댓글이 삭제되었습니다!' });
         setTimeout(() => setToastMessage(null), 1500);
         refetch(); // Re-fetch post data to show updated comment list
       },
       onError: () => {
-        setToastMessage({ variant: "warning", message: "댓글 삭제에 실패했습니다." });
+        setToastMessage({ variant: 'warning', message: '댓글 삭제에 실패했습니다.' });
         setTimeout(() => setToastMessage(null), 1500);
       },
     });

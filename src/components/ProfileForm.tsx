@@ -1,7 +1,7 @@
-import React from "react";
-import TextFieldSet from "./TextFieldSet";
-import KakaoIcon from "@/assets/svgs/kakao.svg?react";
-import { S } from "@/styles/ProfileFind.styles";
+import React from 'react';
+import TextFieldSet from './TextFieldSet';
+import KakaoIcon from '@/assets/svgs/kakao.svg?react';
+import { S } from '@/styles/ProfileFind.styles';
 
 type Field = {
   key: string;

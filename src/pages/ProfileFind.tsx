@@ -1,10 +1,10 @@
-import React from "react";
-import Header from "@/components/Header";
-import Toast from "@/components/Toast";
-import ProfileFormHeader from "@/components/ProfileFormHeader";
-import ProfileForm from "@/components/ProfileForm";
-import { useProfileFind } from "@/hooks/useProfileFind";
-import { S } from "@/styles/ProfileFind.styles";
+import React from 'react';
+import Header from '@/components/Header';
+import Toast from '@/components/Toast';
+import ProfileFormHeader from '@/components/ProfileFormHeader';
+import ProfileForm from '@/components/ProfileForm';
+import { useProfileFind } from '@/hooks/useProfileFind';
+import { S } from '@/styles/ProfileFind.styles';
 
 const ProfileFind: React.FC = () => {
   const {
@@ -39,21 +39,11 @@ const ProfileFind: React.FC = () => {
   return (
     <div className={S.pageContainer}>
       {isEditing ? (
-        <Header
-          variant="profile-edit"
-          onPost={handleSaveClick}
-          onCancel={handleCancelClick}
-        />
+        <Header variant="profile-edit" onPost={handleSaveClick} onCancel={handleCancelClick} />
       ) : (
         <Header variant="profile" onPost={handleEditClick} />
       )}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept="image/*"
-        hidden
-      />
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" hidden />
 
       {toastMessage && <Toast variant="success" message={toastMessage} />}
 

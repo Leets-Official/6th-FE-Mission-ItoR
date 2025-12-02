@@ -1,9 +1,9 @@
-import React from "react";
-import Header from "@/components/Header";
-import Frame7 from "@/assets/svgs/Frame7.svg?react";
-import KakaoIcon from "@/assets/svgs/kakao.svg?react";
-import { useNavigate } from "react-router-dom";
-import { useKakaoStart } from "@src/hooks/auth/useAuth";
+import React from 'react';
+import Header from '@/components/Header';
+import Frame7 from '@/assets/svgs/Frame7.svg?react';
+import KakaoIcon from '@/assets/svgs/kakao.svg?react';
+import { useNavigate } from 'react-router-dom';
+import { useKakaoStart } from '@src/hooks/auth/useAuth';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Signup: React.FC = () => {
 
   // 이메일 회원가입 클릭 핸들러
   const handleEmailSignup = () => {
-    navigate("/signup/email");
+    navigate('/signup/email');
   };
 
   // 카카오 회원가입 클릭 핸들러 — 백엔드가 전부 처리

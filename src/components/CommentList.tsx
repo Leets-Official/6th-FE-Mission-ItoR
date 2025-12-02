@@ -1,10 +1,10 @@
 // src/components/CommentList.tsx
-import React from "react";
-import ProfileIcon from "@/assets/svgs/Profile.svg?react";
-import DropdownMenu from "./DropdownMenu";
-import MoreVertIcon from "@/assets/svgs/more_vert.svg?react";
-import { S } from "@/styles/BlogDetail.styles";
-import { Comment } from "@/api/posts";
+import React from 'react';
+import ProfileIcon from '@/assets/svgs/Profile.svg?react';
+import DropdownMenu from './DropdownMenu';
+import MoreVertIcon from '@/assets/svgs/more_vert.svg?react';
+import { S } from '@/styles/BlogDetail.styles';
+import { Comment } from '@/api/posts';
 
 interface CommentListProps {
   comments: Comment[];
@@ -12,11 +12,7 @@ interface CommentListProps {
   onDeleteClick: (commentId: string) => void;
 }
 
-const CommentList: React.FC<CommentListProps> = ({
-  comments,
-  formatDate,
-  onDeleteClick,
-}) => {
+const CommentList: React.FC<CommentListProps> = ({ comments, formatDate, onDeleteClick }) => {
   if (comments.length === 0) {
     return null;
   }
@@ -45,7 +41,7 @@ const CommentList: React.FC<CommentListProps> = ({
             <div className={S.commentItemMenu}>
               <DropdownMenu
                 trigger={<MoreVertIcon className={S.commentItemMenuIcon} />}
-                items={[{ label: "삭제하기", onClick: () => onDeleteClick(comment.commentId) }]}
+                items={[{ label: '삭제하기', onClick: () => onDeleteClick(comment.commentId) }]}
                 position="right"
               />
             </div>
