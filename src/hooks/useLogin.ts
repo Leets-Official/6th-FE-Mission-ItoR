@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useKakaoStart } from '@src/hooks/auth/useAuth';
 import { loginRequest } from '@/api/auth';
 import { AxiosError } from 'axios';
+import { useUserStore } from '@/store/userStore';
 
 export const useLogin = () => {
   const navigate = useNavigate();
   const { mutate: startKakao } = useKakaoStart();
+  const { login } = useUserStore();
 
   const [form, setForm] = useState({
     email: '',
@@ -27,11 +29,13 @@ export const useLogin = () => {
         password: form.password,
       });
 
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      localStorage.setItem('nickname', data.nickname || '');
-      localStorage.setItem('profilePicture', data.profilePicture || '');
-      localStorage.setItem('introduction', data.introduction || '');
+      login({
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+        nickname: data.nickname || '',
+        profilePicture: data.profilePicture || '',
+        introduction: data.introduction || '',
+      });
 
       alert('로그인 성공!');
       navigate('/', { replace: true });
