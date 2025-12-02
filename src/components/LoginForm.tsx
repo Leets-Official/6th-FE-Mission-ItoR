@@ -37,7 +37,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         className={`${S.input} ${S.passwordInput}`}
       />
 
-      <button onClick={onEmailLogin} disabled={isLoading} className={S.emailLoginButton}>
+      <button onClick={onEmailLogin} disabled={isLoading} className={`${S.emailLoginButton} bg-blue-500`}>
         {isLoading ? '로그인 중...' : '이메일로 로그인'}
       </button>
 
@@ -47,7 +47,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <div className={S.dividerLine} />
       </div>
 
-      <button onClick={onKakaoLogin} className={S.kakaoLoginButton}>
+      <button onClick={onKakaoLogin} className={`${S.kakaoLoginButton} bg-yellow-400`}>
         <KakaoIcon className={S.kakaoIcon} />
         카카오로 로그인
       </button>
