@@ -62,12 +62,18 @@ export const useSidebar = () => {
     dispatchClose();
   };
 
+  const handleProfileClick = () => {
+    navigate(ROUTES.MYPAGE.MY_PROFILE);
+    dispatchClose();
+  };
+
   const handleWriteGitlog = () => {
     navigate(ROUTES.BLOG.WRITE);
     dispatchClose();
   };
 
   const handleSettings = () => {
+    navigate(ROUTES.MYPAGE.EDIT_PROFILE);
     dispatchClose();
   };
 
@@ -99,5 +105,6 @@ export const useSidebar = () => {
     handleWriteGitlog,
     handleSettings,
     handleLogout,
+    handleProfileClick,
   };
 };

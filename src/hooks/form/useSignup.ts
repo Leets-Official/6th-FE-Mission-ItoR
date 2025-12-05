@@ -134,9 +134,7 @@ export const useSignup = (defaultImage: string): UseSignupReturn => {
 
   const handleLoginRedirect = () => {
     setIsCompleteModalOpen(false);
-    setTimeout(() => {
-      setIsLoginModalOpen(true);
-    }, 0);
+    navigate('/');
   };
 
   return {
