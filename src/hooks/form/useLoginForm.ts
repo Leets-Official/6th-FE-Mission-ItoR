@@ -1,6 +1,5 @@
 import { useState, KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';
 import { useLoginMutation } from '@/api/auth/authQuery';
 import { setAccessToken, setRefreshToken } from '@/api/apiInstance';
 
@@ -24,12 +23,8 @@ export const useLoginForm = (onClose?: () => void) => {
           onClose?.();
           navigate('/');
         },
-        onError: error => {
-          if (error instanceof AxiosError) {
-            setErrorMessage(error.response?.data?.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
-          } else {
-            setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.');
-          }
+        onError: () => {
+          setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.');
         },
       }
     );

@@ -16,35 +16,48 @@ interface SidebarProps {
 const Sidebar = ({ className = '', isLoggedIn = false }: SidebarProps) => {
   const { user } = useAuth();
   const { modalType, modalMessage, confirmButtonText, onModalConfirm, closeModal } = useModalStore();
-  const { handleStartGitlog, handleMyGitlog, handleWriteGitlog, handleSettings, handleLogout } = useSidebar();
+  const { handleStartGitlog, handleMyGitlog, handleWriteGitlog, handleSettings, handleLogout, handleProfileClick } =
+    useSidebar();
 
   return (
     <>
       <aside className={cn(sidebarStyles.container, className)} role="complementary" aria-label="Sidebar">
         <div className={sidebarStyles.mainContent}>
-          <div className={sidebarStyles.profileSection}>
-            <div className={sidebarStyles.profileIconWrapper}>
-              {isLoggedIn && user?.profilePicture ? (
-                <img
-                  src={user.profilePicture}
-                  alt={`${user.nickname}의 프로필`}
-                  className={sidebarStyles.profileImage}
-                />
-              ) : (
-                <Profile1Icon />
-              )}
-            </div>
-            {isLoggedIn ? (
+          {isLoggedIn ? (
+            <div
+              className={sidebarStyles.profileSection}
+              onClick={handleProfileClick}
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => e.key === 'Enter' && handleProfileClick()}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className={sidebarStyles.profileIconWrapper}>
+                {user?.profilePicture ? (
+                  <img
+                    src={user.profilePicture}
+                    alt={`${user.nickname}의 프로필`}
+                    className={sidebarStyles.profileImage}
+                  />
+                ) : (
+                  <Profile1Icon />
+                )}
+              </div>
               <div className={sidebarStyles.userInfoContainer}>
                 <h2 className={sidebarStyles.userName}>{user?.nickname || MYPAGE_TEXTS.PROFILE.DEFAULT_USER_NAME}</h2>
                 <p className={sidebarStyles.userBio}>{user?.introduction || MYPAGE_TEXTS.PROFILE.DEFAULT_BIO}</p>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className={sidebarStyles.profileSection}>
+              <div className={sidebarStyles.profileIconWrapper}>
+                <Profile1Icon />
+              </div>
               <div className={sidebarStyles.quoteContainer}>
                 <span className={sidebarStyles.quoteText}>{SIDEBAR_TEXTS.NOT_LOGGED_IN.QUOTE}</span>
               </div>
-            )}
-          </div>
+            </div>
+          )}
           <Spacer />
           <div className={sidebarStyles.buttonContainer}>
             {isLoggedIn ? (

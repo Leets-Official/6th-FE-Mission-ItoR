@@ -4,13 +4,8 @@ import type { ApiResponse } from '../apiTypes';
 import type * as AuthTypes from './authTypes';
 
 export const useRegisterMutation = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: register,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-    },
   });
 };
 
