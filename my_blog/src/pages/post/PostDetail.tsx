@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
 import { usePostDetail } from './hooks/usePostDetail';
+import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 import { DetailHeader } from '@/components/Header';
 import Devider from '@/components/Devider';
 import CommentSection from './components/CommentSection';
@@ -12,6 +16,7 @@ const PostDetail = () => {
     post,
     comments,
     loading,
+    refresh,
     showDeletePostModal,
     showDeleteCommentModal,
     targetCommentId,
@@ -23,6 +28,23 @@ const PostDetail = () => {
     closeDeleteCommentModal,
   } = usePostDetail();
 
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Request login modal and remember redirect target
+      try {
+        const redirectTo = window.location.pathname + window.location.search;
+        sessionStorage.setItem('auth_redirect', redirectTo);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        /* ignore */
+      }
+      window.dispatchEvent(new Event('open-login-modal'));
+    }
+  }, [isAuthenticated, navigate]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -31,9 +53,14 @@ const PostDetail = () => {
     );
   }
 
+  const handleEdit = () => {
+    if (!post) return;
+    navigate(`/post/${post.postId}/edit`);
+  };
+
   return (
     <>
-      <DetailHeader onDeleteClick={openDeletePostModal} />
+      <DetailHeader onDeleteClick={openDeletePostModal} onEdit={handleEdit} />
       <div className="mt-16 h-fit flex flex-col justify-center">
         <main className="w-full h-full flex justify-center">
           {!post ? (
@@ -50,6 +77,7 @@ const PostDetail = () => {
               comments={comments}
               commentCount={comments.length}
               onDeleteComment={openDeleteCommentModal}
+              onRefreshComments={refresh}
             />
           )}
           <ProfileSection />

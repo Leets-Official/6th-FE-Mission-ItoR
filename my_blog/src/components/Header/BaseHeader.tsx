@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import ModalWrapper from '@/components/Modal/ModalWrapper';
+import LoginModal from '@/components/Modal/LoginModal';
 
 import MenuIcon from '../../assets/icons/reorder.svg?react';
 import ProfileSidebar from '../ProfileSidebar';
@@ -14,7 +17,9 @@ interface BaseHeaderProps {
 const BaseHeader = ({ children, offsetTop = 0, onLogout }: BaseHeaderProps) => {
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -30,6 +35,30 @@ const BaseHeader = ({ children, offsetTop = 0, onLogout }: BaseHeaderProps) => {
     window.addEventListener('click', handleClickOutside);
     return () => window.removeEventListener('click', handleClickOutside);
   }, [showSidebar]);
+
+  // listen for global requests to open the login modal
+  useEffect(() => {
+    const openHandler = () => {
+      if (!isAuthenticated) setShowLoginModal(true);
+    };
+    window.addEventListener('open-login-modal', openHandler as EventListener);
+    return () =>
+      window.removeEventListener(
+        'open-login-modal',
+        openHandler as EventListener,
+      );
+  }, [isAuthenticated]);
+
+  // listen for global requests to close the login modal
+  useEffect(() => {
+    const closeHandler = () => setShowLoginModal(false);
+    window.addEventListener('close-login-modal', closeHandler as EventListener);
+    return () =>
+      window.removeEventListener(
+        'close-login-modal',
+        closeHandler as EventListener,
+      );
+  }, []);
 
   return (
     <div className="relative">
@@ -60,8 +89,23 @@ const BaseHeader = ({ children, offsetTop = 0, onLogout }: BaseHeaderProps) => {
 
       {showSidebar && (
         <aside ref={sidebarRef} className="fixed top-0 left-0 z-50">
-          <ProfileSidebar isLoggedIn={true} onLogout={onLogout} />
+          <ProfileSidebar
+            isLoggedIn={isAuthenticated}
+            nickname={user?.nickName}
+            intro={(user as { introduction?: string })?.introduction}
+            profileUrl={(user as { profileUrl?: string })?.profileUrl}
+            onLogout={onLogout ?? logout}
+            onLogin={() => setShowLoginModal(true)}
+          />
         </aside>
+      )}
+      {showLoginModal && (
+        <ModalWrapper
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
+          <LoginModal onClose={() => setShowLoginModal(false)} />
+        </ModalWrapper>
       )}
     </div>
   );

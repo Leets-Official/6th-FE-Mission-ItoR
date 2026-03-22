@@ -20,8 +20,12 @@ export const useRegisterMutation = () => {
     onSuccess: (data) => {
       console.log('회원가입 성공:', data);
     },
-    onError: (error) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
       console.error('회원가입 요청 실패:', error);
+      if (error.response?.data) {
+        console.error('서버 응답:', error.response.data);
+      }
     },
   });
 };

@@ -1,4 +1,5 @@
-import React, {
+/* eslint-disable react-refresh/only-export-components */
+import {
   createContext,
   useContext,
   useEffect,
@@ -6,12 +7,18 @@ import React, {
   type ReactNode,
 } from 'react';
 import axiosInstance from '@/api/axiosInstance';
+import { getMyInfo, type MyInfoDTO } from '@/api/userAPI';
 import { tokenStorage } from '@/utils/tokenStorage';
 import { useAuthToken } from '@/hooks/useAuthToken';
 
 type User = {
   nickName?: string;
   profileUrl?: string;
+  introduction?: string;
+  email?: string;
+  name?: string;
+  isSocialLogin?: boolean;
+  memberId?: number | string;
 } | null;
 
 type AuthContextValue = {
@@ -29,7 +36,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
   const [user, setUser] = useState<User>(null);
 
-  // reuse existing token refresh logic (sets axios header / redirects on failure)
   useAuthToken();
 
   useEffect(() => {
@@ -37,6 +43,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       axiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`;
       setIsAuthenticated(true);
+      // fetch current user info to populate sidebar/profile
+      getMyInfo()
+        .then((data: MyInfoDTO) => {
+          const isSocial = Boolean(
+            data.kakaoId ||
+              data.oauthProvider ||
+              data.provider ||
+              data.socialType,
+          );
+          setUser({
+            nickName: data.nickname,
+            profileUrl: data.profilePicture,
+            introduction: data.introduction,
+            email: data.email,
+            name: data.name,
+            isSocialLogin: isSocial,
+            // backend may use different field names for id
+            memberId: data.memberId ?? data.id ?? data.userId,
+          });
+        })
+        .catch((err) => {
+          console.error('현재 사용자 정보 조회 실패', err);
+          // token이 유효하지 않다면 로그아웃 처리
+          // (선택적) 여기서는 토큰 무효화 시 자동 로그아웃을 수행하지 않습니다.
+        });
     } else {
       setIsAuthenticated(false);
     }
@@ -52,6 +83,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(true);
     if (userInfo) setUser(userInfo);
   };
+
+  // listen for requests to refresh current user info (e.g., after profile picture upload)
+  useEffect(() => {
+    const handler = () => {
+      const token = tokenStorage.getAccessToken();
+      if (!token) return;
+      getMyInfo()
+        .then((data: MyInfoDTO) => {
+          const isSocial = Boolean(
+            data.kakaoId ||
+              data.oauthProvider ||
+              data.provider ||
+              data.socialType,
+          );
+          setUser({
+            nickName: data.nickname,
+            profileUrl: data.profilePicture,
+            introduction: data.introduction,
+            email: data.email,
+            name: data.name,
+            isSocialLogin: isSocial,
+            memberId: data.memberId ?? data.id ?? data.userId,
+          });
+        })
+        .catch((err) => console.error('refresh-user 처리 실패', err));
+    };
+
+    window.addEventListener('refresh-user', handler as EventListener);
+    return () =>
+      window.removeEventListener('refresh-user', handler as EventListener);
+  }, []);
 
   const logout = () => {
     tokenStorage.clearTokens();

@@ -7,7 +7,7 @@ import {
 
 export const useProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileUrl, setProfileUrl] = useState<string | undefined>('');
+  const [profileUrl, setProfileUrl] = useState<string>('');
 
   const [nickname, setNickname] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -50,6 +50,9 @@ export const useProfileForm = () => {
   };
 
   const validateForm = () => {
+    // 비밀번호 변경은 선택 사항: 둘 다 비어있으면 검증 통과
+    if (!password && !passwordConfirm) return true;
+
     const passwordErr = validatePassword(password);
     const passwordConfirmErr = validatePasswordConfirm(
       password,
